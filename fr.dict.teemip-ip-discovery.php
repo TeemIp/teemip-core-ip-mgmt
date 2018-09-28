@@ -1,0 +1,159 @@
+<?php
+// Copyright (C) 2016 TeemIp
+//
+//   This file is part of TeemIp.
+//
+//   TeemIp is free software; you can redistribute it and/or modify	
+//   it under the terms of the GNU Affero General Public License as published by
+//   the Free Software Foundation, either version 3 of the License, or
+//   (at your option) any later version.
+//
+//   TeemIp is distributed in the hope that it will be useful,
+//   but WITHOUT ANY WARRANTY; without even the implied warranty of
+//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//   GNU Affero General Public License for more details.
+//
+//   You should have received a copy of the GNU Affero General Public License
+//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
+
+/**
+ * @copyright   Copyright (C) 2016 TeemIp
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+//////////////////////////////////////////////////////////////////////
+// Classes in 'teemip-discovery Module'
+//////////////////////////////////////////////////////////////////////
+//
+
+//
+// Class: IPDiscovery
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IPDiscovery' => 'Application de découverte IPs',
+	'Class:IPDiscovery+' => '',
+	'Class:IPDiscovery/Name' => '%1$s',
+	'Class:IPDiscovery/Attribute:ping_enabled' => 'Ping activé',
+	'Class:IPDiscovery/Attribute:ping_enabled+' => '',
+	'Class:IPDiscovery/Attribute:ping_enabled/Value:yes' => 'Oui',
+	'Class:IPDiscovery/Attribute:ping_enabled/Value:no' => 'Non',
+	'Class:IPDiscovery/Attribute:ping_timeout' => 'Ping timeout (s)',
+	'Class:IPDiscovery/Attribute:ping_timeout+' => '',
+	'Class:IPDiscovery/Attribute:iplookup_enabled' => 'IP lookup activé',
+	'Class:IPDiscovery/Attribute:iplookup_enabled/Value:yes' => 'Oui',
+	'Class:IPDiscovery/Attribute:iplookup_enabled/Value:no' => 'Non',
+	'Class:IPDiscovery/Attribute:dns1' => 'Serveur DNS #1',
+	'Class:IPDiscovery/Attribute:dns1+' => '',
+	'Class:IPDiscovery/Attribute:dns2' => 'Serveur DNS #2',
+	'Class:IPDiscovery/Attribute:dns2+' => '',
+	'Class:IPDiscovery/Attribute:scan_enabled' => 'Scan activé',
+	'Class:IPDiscovery/Attribute:scan_enabled+' => '',
+	'Class:IPDiscovery/Attribute:scan_enabled/Value:yes' => 'Oui',
+	'Class:IPDiscovery/Attribute:scan_enabled/Value:no' => 'Non',
+	'Class:IPDiscovery/Attribute:port_number' => 'Numéro de port',
+	'Class:IPDiscovery/Attribute:port_number+' => '',
+	'Class:IPDiscovery/Attribute:protocol' => 'Protocole',
+	'Class:IPDiscovery/Attribute:protocol+' => '',
+	'Class:IPDiscovery/Attribute:protocol/Value:udp' => 'UDP',
+	'Class:IPDiscovery/Attribute:protocol/Value:tcp' => 'TCP',
+	'Class:IPDiscovery/Attribute:protocol/Value:both' => 'Les deux',
+	'Class:IPDiscovery/Attribute:scan_timeout' => 'Scan timeout (s)',
+	'Class:IPDiscovery/Attribute:scan_timeout+' => '',
+	'Class:IPDiscovery/Attribute:ipv4subnets_list' => 'Sous-réseaux IPv4 gérés',
+	'Class:IPDiscovery/Attribute:ipv4subnets_list+' => '',
+	'Class:IPDiscovery:baseinfo' => 'Information Générale',
+	'Class:IPDiscovery:pinginfo' => 'Fonction Ping',
+	'Class:IPDiscovery:iplookupinfo' => 'Fonction IP lookup',
+	'Class:IPDiscovery:scaninfo' => 'Fonction Scan',
+));
+
+//
+// Class: IPSubnet
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IPSubnet/Attribute:ipdiscovery_id' => 'Application de découverte IPs',
+	'Class:IPSubnet/Attribute:ipdiscovery_id+' => '',
+	'Class:IPAddress/Attribute:ipdiscovery_name' => 'Application de découverte IPs',
+	'Class:IPAddress/Attribute:ipdiscovery_name+' => '',
+	'Class:IPSubnet/Attribute:last_discovery_date' => 'Date de dernière découverte',
+	'Class:IPSubnet/Attribute:last_discovery_date+' => 'Date à laquelle le subnet a été découvert pour la dernière fois',
+	'Class:IPSubnet/Attribute:ipdiscovery_ping_enabled' => 'Ping activé par l\'application',
+	'Class:IPSubnet/Attribute:ipdiscovery_ping_enabled+' => '',
+	'Class:IPSubnet/Attribute:ipdiscovery_iplookup_enabled' => 'IP lookup activé par l\'application',
+	'Class:IPSubnet/Attribute:ipdiscovery_iplookup_enabled+' => '',
+	'Class:IPSubnet/Attribute:ipdiscovery_scan_enabled' => 'Scan activé par l\'application',
+	'Class:IPSubnet/Attribute:ipdiscovery_scan_enabled+' => '',
+	'Class:IPSubnet/Attribute:ping_enabled' => 'Ping activé pour le sous-réseau',
+	'Class:IPSubnet/Attribute:ping_enabled+' => '',
+	'Class:IPSubnet/Attribute:ping_enabled/Value:yes' => 'Oui',
+	'Class:IPSubnet/Attribute:ping_enabled/Value:no' => 'Non',
+	'Class:IPSubnet/Attribute:iplookup_enabled' => 'IP lookup activé pour le sous-réseau',
+	'Class:IPSubnet/Attribute:iplookup_enabled+' => '',
+	'Class:IPSubnet/Attribute:iplookup_enabled/Value:yes' => 'Oui',
+	'Class:IPSubnet/Attribute:iplookup_enabled/Value:no' => 'Non',
+	'Class:IPSubnet/Attribute:scan_enabled' => 'Scan activé pour le sous-réseau',
+	'Class:IPSubnet/Attribute:scan_enabled+' => '',
+	'Class:IPSubnet/Attribute:scan_enabled/Value:yes' => 'Oui',
+	'Class:IPSubnet/Attribute:scan_enabled/Value:no' => 'Non',
+	'Class:IPSubnet/Attribute:ping_duration' => 'Durée du ping',
+	'Class:IPSubnet/Attribute:ping_duration+' => 'Temps qu\'il a fallu pour \'pinger\' toutes les IPs du sous-réseau',
+	'Class:IPSubnet/Attribute:iplookup_duration' => 'Durée del\'IP lookup',
+	'Class:IPSubnet/Attribute:iplookup_duration+' => 'Temps qu\'il a fallu pour faire un IP Lookup sur toutes les IPs du sous-réseau',
+	'Class:IPSubnet/Attribute:scan_duration' => 'Durée du scan',
+	'Class:IPSubnet/Attribute:scan_duration+' => 'Temps qu\'il a fallu pour \'scaner\' toutes les IPs du sous-réseau',
+	'Class:IPSubnet:discoveryinfo' => 'Informations de découverte',
+));
+
+//
+// Class: IPAddress
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:IPAddress/Attribute:last_discovery_date' => 'Date de dernière découverte',
+	'Class:IPAddress/Attribute:last_discovery_date+' => 'Date à laquelle l\'adresse a été découvertel pour la dernière fois',
+	'Class:IPAddress/Attribute:responds_to_ping' => 'Répond au ping',
+	'Class:IPAddress/Attribute:responds_to_ping+' => '',
+	'Class:IPAddress/Attribute:responds_to_ping/Value:yes' => 'Oui',
+	'Class:IPAddress/Attribute:responds_to_ping/Value:no' => 'Non',
+	'Class:IPAddress/Attribute:responds_to_ping/Value:na' => 'N/A',
+	'Class:IPAddress/Attribute:responds_to_iplookup' => 'Répond à l\'IP lookup',
+	'Class:IPAddress/Attribute:responds_to_iplookup+' => '',
+	'Class:IPAddress/Attribute:responds_to_iplookup/Value:yes' => 'Oui',
+	'Class:IPAddress/Attribute:responds_to_iplookup/Value:no' => 'Non',
+	'Class:IPAddress/Attribute:responds_to_iplookup/Value:na' => 'N/A',
+	'Class:IPAddress/Attribute:fqdn_from_iplookup' => 'FQDN vu par l\'IP lookup',
+	'Class:IPAddress/Attribute:fqdn_from_iplookup+' => '',
+	'Class:IPAddress/Attribute:responds_to_scan' => 'Répond au scan',
+	'Class:IPAddress/Attribute:responds_to_scan+' => '',
+	'Class:IPAddress/Attribute:responds_to_scan/Value:yes' => 'Oui',
+	'Class:IPAddress/Attribute:responds_to_scan/Value:no' => 'Non',
+	'Class:IPAddress/Attribute:responds_to_scan/Value:na' => 'N/A',
+	'Class:IPAddress:discoveryinfo' => 'Informations de découverte',
+));
+
+//
+// Application Menu
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:IPDiscovery' => 'Découverte IP',
+	'Menu:IPDiscoveryApplication' => 'Applications de découverte IPs',
+	'Menu:IPDiscoveryApplication+' => 'Toutes les applications de découverte IPs',
+	'Menu:IPDiscovery:IPv4Statistics' => 'Statistiques IPv4',
+	'Menu:IPDiscovery:IPv6Statistics' => 'Statistiques IPv6',
+	'Menu:IPDiscovery:IPv4Status' => 'IPv4 Addresses par status',
+	'Menu:IPDiscovery:IPv4Ping' => 'IPv4 Addresses qui \'ping\'',
+	'Menu:IPDiscovery:IPv4Scan' => 'IPv4 Addresses qui répondent au scan',
+	'Menu:IPDiscovery:IPv4Lookup' => 'IPv4 Addresses avec une entrée DNS',
+	'Menu:IPDiscovery:IPv6Status' => 'IPv6 Addresses par status',
+	'Menu:IPDiscovery:IPv6Ping' => 'IPv6 Addresses qui \'ping\'',
+	'Menu:IPDiscovery:IPv6Scan' => 'IPv6 Addresses qui répondent au scan',
+	'Menu:IPDiscovery:IPv6Lookup' => 'IPv6 Address avec une entrée DNS',
+	'Menu:IPDiscovery:IPv4DiscoveredSubnets' => 'Sous-réseaux IPv4 liés à un application de découverte IPs',
+	'Menu:IPDiscovery:IPv6DiscoveredSubnets' => 'Sous-réseaux IPv6 liés à un application de découverte IPs',
+	
+	'UI:IPDiscovery:Action:New:UUIDCollision' => 'L\'attribut UUIDs doit être unique !',
+	'UI:IPDiscovery:Action:New:ScanWithNoPort' => 'Un numéro de port doit être spécifié quand la fonction de Scan est mise en oeuvre !'
+));
