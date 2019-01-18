@@ -75,7 +75,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Attribute:ipdiscovery_id' => 'Application de découverte IPs',
 	'Class:IPSubnet/Attribute:ipdiscovery_id+' => '',
-	'Class:IPAddress/Attribute:ipdiscovery_name' => 'Application de découverte IPs',
+	'Class:IPAddress/Attribute:ipdiscovery_name' => 'Nom de l\'application de découverte IPs',
 	'Class:IPAddress/Attribute:ipdiscovery_name+' => '',
 	'Class:IPSubnet/Attribute:last_discovery_date' => 'Date de dernière découverte',
 	'Class:IPSubnet/Attribute:last_discovery_date+' => 'Date à laquelle le subnet a été découvert pour la dernière fois',
@@ -112,7 +112,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPAddress/Attribute:last_discovery_date' => 'Date de dernière découverte',
-	'Class:IPAddress/Attribute:last_discovery_date+' => 'Date à laquelle l\'adresse a été découvertel pour la dernière fois',
+	'Class:IPAddress/Attribute:last_discovery_date+' => 'Date à laquelle l\'adresse a été découverte pour la dernière fois',
 	'Class:IPAddress/Attribute:responds_to_ping' => 'Répond au ping',
 	'Class:IPAddress/Attribute:responds_to_ping+' => '',
 	'Class:IPAddress/Attribute:responds_to_ping/Value:yes' => 'Oui',
