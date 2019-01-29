@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<extension_code>teemip-dhcp-mgmt</extension_code>
+	<version>0.1.0</version>
+	<label><![CDATA[TeemIp DHCP Management]]></label>
+	<description><![CDATA[TeemIp extension to manage DHCP options]]></description>
+	<mandatory>false</mandatory>
+	<more_info_url>https://wiki.teemip.net/doku.php?id=extensions:teemip-dhcp-mgmt</more_info_url>
+</extension>

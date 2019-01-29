@@ -1,0 +1,1562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="PhysicalDevice" _created_in="itop-config-mgmt" _delta="must_exist">
+      <fields>
+        <field id="dhcpoptionhosts_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>DHCPOptionHost</linked_class>
+          <ext_key_to_me>physicaldevice_id</ext_key_to_me>
+          <tracking_level/>
+          <edit_mode/>
+        </field>
+      </fields>
+      <methods>
+        <method id="DisplayBareRelations" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[ public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+        // Execute parent function first
+        parent::DisplayBareRelations($oP, $bEditMode);
+
+        if (!$bEditMode)
+        {
+          $aProfiles = UserRights::ListProfiles();
+          if (in_array('DHCP Manager', $aProfiles) || in_array('Administrator', $aProfiles))
+          {
+              // Search for host DHCP options
+              $sOQL = "SELECT DHCPOptionHost WHERE physicaldevice_id = :id";
+              $oOptionSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $this->GetKey()));
+              if ($oOptionSet->CountExceeds(0))
+              {
+                  $iOptions = $oOptionSet->Count();
+                  $oP->SetCurrentTab(Dict::S('Class:PhysicalDevice/Tab:dhcpoptionhosts_list').' ('.$iOptions.')');
+                  $oP->p(MetaModel::GetClassIcon('DHCPOptionHost').'&nbsp;'.Dict::Format('Class:PhysicalDevice/Tab:dhcpoptionhosts_list+'));
+                  self::DisplaySet($oP, $oOptionSet, array('menu' => false));
+              }
+              else
+              {
+                  $oP->SetCurrentTab(Dict::S('Class:PhysicalDevice/Tab:dhcpoptionhosts_list'));
+                  $oP->p(MetaModel::GetClassIcon('DHCPOptionHost').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+              }
+          }
+        }
+    }]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="DHCPClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpclass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+      <parent>Typology</parent>
+    </class>
+    <class id="DHCPSubClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpsubclass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="finalclass"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="dhcpclass_id" xsi:type="AttributeExternalKey">
+          <sql>dhcpclass_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DHCPClass</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="dhcpclass_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>dhcpclass_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="dhcpclass_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>Typology</parent>
+    </class>
+    <class id="DHCPOption" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>dhcpoption</db_table>
+        <reconciliation _revision_id="416">
+          <attributes _revision_id="422">
+            <attribute id="code"/>
+            <attribute id="finalclass"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="isc_name" xsi:type="AttributeString">
+          <sql>isc_name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="code" xsi:type="AttributeInteger">
+          <sql>code</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="dhcpv4" xsi:type="AttributeEnum">
+          <sql>dhcpv4</sql>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <default_value>yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+          <dependencies/>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
+          <sql>type</sql>
+          <values>
+            <value id="ip-address">ip-address</value>
+            <value id="ip6-address">ip6-address</value>
+            <value id="int8">int8</value>
+            <value id="uint8">uint8</value>
+            <value id="int16">int16</value>
+            <value id="uint16">uint16</value>
+            <value id="int32">int32</value>
+            <value id="uint32">uint32</value>
+            <value id="text">text</value>
+            <value id="domain-name">domain-name</value>
+            <value id="domain-list">domain-list</value>
+            <value id="flag">flag</value>
+            <value id="string">string</value>
+          </values>
+          <default_value>string</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies/>
+        </field>
+        <field id="description" xsi:type="AttributeText" _revision_id="437">
+          <sql _revision_id="437">description</sql>
+          <default_value _revision_id="437"/>
+          <is_null_allowed _revision_id="437">true</is_null_allowed>
+          <validation_pattern _revision_id="437"/>
+          <width _revision_id="437"/>
+          <height _revision_id="437"/>
+        </field>
+        <field id="value" xsi:type="AttributeString">
+          <sql>value</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>Organization</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="code">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <details/>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>cmdbAbstractObject</parent>
+    </class>
+    <class id="DHCPOptionGlobal" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionglobal</db_table>
+        <icon>images/global.png</icon>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes _revision_id="424">
+            <attribute id="code"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules _revision_id="450"/>
+      </properties>
+      <fields/>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionGlobal:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionGlobal:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionSharedNetwork" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionsharednetwork</db_table>
+        <icon>images/sharednetwork.png</icon>
+        <naming _revision_id="457">
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes _revision_id="427">
+            <attribute id="code"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="vlan_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules _revision_id="453"/>
+      </properties>
+      <fields>
+        <field id="vlan_id" xsi:type="AttributeExternalKey">
+          <sql>vlan_id</sql>
+          <filter>SELECT VLAN WHERE org_id = :this-&gt;org_id</filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>VLAN</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="vlan_tag" xsi:type="AttributeExternalField">
+          <extkey_attcode>vlan_id</extkey_attcode>
+          <target_attcode>vlan_tag</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionSharedNetwork:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionSharedNetwork:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="vlan_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionSubnet" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionsubnet</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes _revision_id="429">
+            <attribute id="code"/>
+            <attribute id="ipsubnet_id"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <icon>images/subnet.png</icon>
+        <uniqueness_rules _revision_id="455"/>
+      </properties>
+      <fields>
+        <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet_id</sql>
+          <filter _revision_id="432">SELECT IPSubnet WHERE IF(:this-&gt;dhcpv4 = 'yes', org_id = :this-&gt;org_id AND finalclass = 'IPv4Subnet', org_id = :this-&gt;org_id AND finalclass = "IPv6Subnet")</filter>
+          <dependencies _revision_id="461">
+            <attribute id="dhcpv4"/>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>IPSubnet</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <label _revision_id="461">Subnet</label>
+        </field>
+        <field id="ipsubnet_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="ipsubnet_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="ipsubnet_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionSubnet:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionSubnet:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ipsubnet_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="ipsubnet_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionPool" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionpool</db_table>
+        <icon>images/pool.png</icon>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes _revision_id="426">
+            <attribute id="code"/>
+            <attribute id="iprange_id"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules _revision_id="452"/>
+      </properties>
+      <fields>
+        <field id="iprange_id" xsi:type="AttributeExternalKey">
+          <sql>iprange_id</sql>
+          <filter _revision_id="431">SELECT IPRange WHERE IF(:this-&gt;dhcpv4 = 'yes', org_id = :this-&gt;org_id AND finalclass = 'IPv4Range', org_id = :this-&gt;org_id AND finalclass = "IPv6Range")</filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>IPRange</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="iprange_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>iprange_id</extkey_attcode>
+          <target_attcode>range</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionPool:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionPool:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="iprange_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionclass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="code"/>
+            <attribute id="dhcpclass_id"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <icon>images/class.png</icon>
+        <uniqueness_rules/>
+      </properties>
+      <fields>
+        <field id="dhcpclass_id" xsi:type="AttributeExternalKey">
+          <sql>dhcpclass_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DHCPClass</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <label _revision_id="462">Class</label>
+        </field>
+        <field id="dhcpclass_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>dhcpclass_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionClass:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionClass:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="dhcpclass_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionSubClass" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionsubclass</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="code"/>
+            <attribute id="dhcpsubclass_id"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <icon>images/subclass.png</icon>
+        <uniqueness_rules/>
+      </properties>
+      <fields>
+        <field id="dhcpclass_id" xsi:type="AttributeExternalKey">
+          <sql>dhcpclass_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DHCPClass</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <label>DHCP Class</label>
+        </field>
+        <field id="dhcpclass_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>dhcpclass_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="dhcpsubclass_id" xsi:type="AttributeExternalKey">
+          <sql>dhcpsubclass_id</sql>
+          <filter>SELECT DHCPSubClass WHERE dhcpclass_id = :this-&gt;dhcpclass_id</filter>
+          <dependencies>
+            <attribute id="dhcpclass_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>DHCPSubClass</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <label>DHCP SubClass</label>
+        </field>
+        <field id="dhcpsubclass_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>dhcpsubclass_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionSubClass:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionSubClass:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="dhcpclass_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="dhcpsubclass_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="dhcpclass_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+    <class id="DHCPOptionHost" _delta="define">
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>dhcpoptionhost</db_table>
+        <icon>images/host.png</icon>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes _revision_id="425">
+            <attribute id="code"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+            <attribute id="physicaldevice_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules _revision_id="451"/>
+      </properties>
+      <fields>
+        <field id="physicaldevice_id" xsi:type="AttributeExternalKey">
+          <sql>physicaldevice_id</sql>
+          <filter>SELECT PhysicalDevice WHERE org_id = :this-&gt;org_id</filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <target_class>PhysicalDevice</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="physicaldevice_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>physicaldevice_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <list>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="physicaldevice_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="code">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="physicaldevice_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <details>
+          <items>
+            <item id="col:col0">
+              <items>
+                <item id="fieldset:DHCPOptionHost:General">
+                  <items>
+                    <item id="dhcpv4">
+                      <rank>10</rank>
+                    </item>
+                    <item id="code">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="isc_name">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                    <item id="value">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>10</rank>
+            </item>
+            <item id="col:col1">
+              <items>
+                <item id="fieldset:DHCPOptionHost:Scope">
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="physicaldevice_id">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                  <rank>10</rank>
+                </item>
+              </items>
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="code">
+              <rank>10</rank>
+            </item>
+            <item id="isc_name">
+              <rank>20</rank>
+            </item>
+            <item id="value">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="physicaldevice_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+      <parent>DHCPOption</parent>
+    </class>
+  </classes>
+  <menus>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _created_in="itop-config-mgmt" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="0" _delta="must_exist">
+            <dashlets>
+              <dashlet id="11" xsi:type="DashletBadge" _delta="define">
+                <rank>20</rank>
+                <class>DHCPClass</class>
+              </dashlet>
+              <dashlet id="12" xsi:type="DashletBadge" _delta="define">
+                <rank>30</rank>
+                <class>DHCPSubClass</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="DHCPManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>28</rank>
+      <enable_class>DHCPOption</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
+      <enable_admin_only>0</enable_admin_only>
+    </menu>
+    <menu id="DHCPSpace" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>DHCPManagement</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          <cell id="teemip-dhcp-200">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="teemip-dhcp-201" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>DHCP Options</title>
+                <icon>teemip-dhcp-mgmt/images/dhcpobject.png</icon>
+              </dashlet>
+              <dashlet id="teemip-dhcp-202" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>DHCPOptionGlobal</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-203" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>DHCPOptionSharedNetwork</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-204" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>DHCPOptionSubnet</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-205" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>DHCPOptionPool</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-206" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>DHCPOptionClass</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-207" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>DHCPOptionSubClass</class>
+              </dashlet>
+              <dashlet id="teemip-dhcp-208" xsi:type="DashletBadge">
+                <rank>7</rank>
+                <class>DHCPOptionHost</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu xsi:type="NewObjectMenuNode" id="NewDHCPOption" _delta="define">
+      <parent>DHCPSpace</parent>
+      <rank>0</rank>
+      <class>DHCPOption</class>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="SearchDHCPOption" _delta="define">
+      <parent>DHCPSpace</parent>
+      <rank>1</rank>
+      <oql>SELECT DHCPOption</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="TemplateMenuNode" id="DHCPShortcut" _delta="define">
+      <parent>DHCPManagement</parent>
+      <rank>20</rank>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPGlobalOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>1</rank>
+      <oql>SELECT DHCPOptionGlobal</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPSharedNetworkOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>2</rank>
+      <oql>SELECT DHCPOptionSharedNetwork</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPSubnetOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>3</rank>
+      <oql>SELECT DHCPOptionSubnet</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPPoolOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>4</rank>
+      <oql>SELECT DHCPOptionPool</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPClassOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>5</rank>
+      <oql>SELECT DHCPOptionClass</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPSubClassOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>6</rank>
+      <oql>SELECT DHCPOptionSubClass</oql>
+      <do_search>1</do_search>
+    </menu>
+    <menu xsi:type="OQLMenuNode" id="DHCPHostOption" _delta="define">
+      <parent>DHCPShortcut</parent>
+      <rank>7</rank>
+      <oql>SELECT DHCPOptionHost</oql>
+      <do_search>1</do_search>
+    </menu>
+  </menus>
+  <user_rights>
+    <profiles>
+      <profile id="5325" _delta="define">
+        <name>DHCP Manager</name>
+        <description>Person handling the DHCP space</description>
+        <groups>
+          <group id="DHCPObject">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
+    <groups>
+      <group id="DHCPObject" _delta="define">
+        <classes>
+          <class id="DHCPOption"/>
+          <class id="DHCPClass"/>
+          <class id="DHCPSubClass"/>
+        </classes>
+      </group>
+    </groups>
+  </user_rights>
+</itop_design>
