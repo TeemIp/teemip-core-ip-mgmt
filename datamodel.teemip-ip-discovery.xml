@@ -400,6 +400,7 @@
           <sql>last_discovery_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="ping_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>ping_enabled</sql>
@@ -416,6 +417,7 @@
           <sql>ping_duration</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="iplookup_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>iplookup_enabled</sql>
@@ -432,6 +434,7 @@
           <sql>iplookup_duration</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="scan_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>scan_enabled</sql>
@@ -448,6 +451,7 @@
           <sql>scan_duration</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
       </fields>
       <presentation>
@@ -556,6 +560,7 @@
           <sql>last_discovery_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="responds_to_ping" xsi:type="AttributeEnum" _delta="define">
           <sql>responds_to_ping</sql>
