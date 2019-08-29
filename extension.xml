@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<extension format="1.0">
-	<extension_code>teemip-ip-discovery</extension_code>
-	<version>0.2.1</version>
-	<label><![CDATA[IP discovery]]></label>
-	<description><![CDATA[TeemIp extension that discovers active IPs within subnets]]></description>
-	<mandatory>false</mandatory>
-	<more_info_url>https://wiki.teemip.net/doku.php?id=extensions:teemip-ip-discovery</more_info_url>
-</extension>

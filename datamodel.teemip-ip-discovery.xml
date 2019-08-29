@@ -97,31 +97,6 @@
         </field>
       </fields>
       <methods>
-        <method id="OnInsert">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function OnInsert()
-	{
-		parent::OnInsert();
-
-        // Generate an ID until (very likely) it is unique amongst the existing UUID
-        //
-        $oSearchDup = DBObjectSearch::FromOQL_AllData("SELECT IPDiscovery WHERE uuid LIKE :sUUID");
-        do
-        {
-            $sId = strtoupper(md5(uniqid(rand(), true)));
-            $sFinalId = substr($sId, 0, 4).'_'.substr($sId, 4, 4).'_'.substr($sId, 8, 4).'_'.substr($sId, 12, 4);
-
-            $oDupSet = new DBObjectSet($oSearchDup, array(), array('sUUID' => $sFinalId));
-            $bFound = ($oDupSet->Count() > 0);
-        }
-        while ($bFound);
-        $this->Set('uuid', $sFinalId);
-
-    }]]></code>
-        </method>
         <method id="DoCheckToWrite">
           <comment/>
           <static>false</static>
@@ -140,46 +115,6 @@
 				return;
 			}
 		}
-    }]]></code>
-        </method>
-        <method id="DisplayBareRelations">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-	{
-		parent::DisplayBareRelations($oPage, $bEditMode);
-
-		$oPage->RemoveTab(Dict::S('Class:FunctionalCI/Tab:OpenedTickets'));
-
-    }]]></code>
-        </method>
-        <method id="GetAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		if ($sAttCode == 'uuid')
-		{
-				return OPT_ATT_READONLY;
-		}
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-    }]]></code>
-        </method>
-        <method id="GetInitialStateAttributeFlags">
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-	{
-		if ($sAttCode == 'uuid')
-		{
-				return OPT_ATT_READONLY;
-		}
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
     }]]></code>
         </method>
       </methods>
