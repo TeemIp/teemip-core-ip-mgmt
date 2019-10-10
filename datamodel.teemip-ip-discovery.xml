@@ -388,6 +388,17 @@
           <is_null_allowed>true</is_null_allowed>
           <tracking_level>none</tracking_level>
         </field>
+        <field id="ipdiscovery_enabled" xsi:type="AttributeEnum" _delta="define">
+          <sql>ipdiscovery_enabled</sql>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+          <dependencies/>
+        </field>
       </fields>
       <presentation>
         <search _delta="must_exist">
@@ -398,8 +409,11 @@
             <item id="ping_enabled">
               <rank>90</rank>
             </item>
-            <item id="scan_enabled">
+            <item id="iplookup_enabled">
               <rank>100</rank>
+            </item>
+            <item id="scan_enabled">
+              <rank>110</rank>
             </item>
           </items>
         </search>
@@ -423,35 +437,38 @@
                     <item id="ipdiscovery_id">
                       <rank>10</rank>
                     </item>
-                    <item id="last_discovery_date" _delta="define">
+                    <item id="ipdiscovery_enabled">
                       <rank>20</rank>
                     </item>
-                    <item id="ipdiscovery_ping_enabled">
+                    <item id="last_discovery_date" _delta="define">
                       <rank>30</rank>
                     </item>
-                    <item id="ping_enabled">
+                    <item id="ipdiscovery_ping_enabled">
                       <rank>40</rank>
                     </item>
-                    <item id="ping_duration">
+                    <item id="ping_enabled">
                       <rank>50</rank>
                     </item>
-                    <item id="ipdiscovery_iplookup_enabled">
+                    <item id="ping_duration">
                       <rank>60</rank>
                     </item>
-                    <item id="iplookup_enabled">
+                    <item id="ipdiscovery_iplookup_enabled">
                       <rank>70</rank>
                     </item>
-                    <item id="iplookup_duration">
+                    <item id="iplookup_enabled">
                       <rank>80</rank>
                     </item>
-                    <item id="ipdiscovery_scan_enabled">
+                    <item id="iplookup_duration">
                       <rank>90</rank>
                     </item>
-                    <item id="scan_enabled">
+                    <item id="ipdiscovery_scan_enabled">
                       <rank>100</rank>
                     </item>
-                    <item id="scan_duration">
+                    <item id="scan_enabled">
                       <rank>110</rank>
+                    </item>
+                    <item id="scan_duration">
+                      <rank>120</rank>
                     </item>
                   </items>
                   <rank>20</rank>
@@ -466,17 +483,20 @@
              <item id="ipdiscovery_id" _delta="define">
               <rank>210</rank>
             </item>
-            <item id="last_discovery_date" _delta="define">
+            <item id="ipdiscovery_enabled" _delta="define">
               <rank>220</rank>
             </item>
-            <item id="ping_enabled" _delta="define">
+            <item id="last_discovery_date" _delta="define">
               <rank>230</rank>
             </item>
-            <item id="iplookup_enabled" _delta="define">
+            <item id="ping_enabled" _delta="define">
               <rank>240</rank>
             </item>
-            <item id="scan_enabled" _delta="define">
+            <item id="iplookup_enabled" _delta="define">
               <rank>250</rank>
+            </item>
+            <item id="scan_enabled" _delta="define">
+              <rank>260</rank>
             </item>
           </items>
         </search>
@@ -487,6 +507,16 @@
             </item>
           </items>
         </default_search>
+        <list _delta="must_exist">
+          <items>
+            <item id="ipdiscovery_id">
+              <rank>90</rank>
+            </item>
+            <item id="ipdiscovery_enabled">
+              <rank>100</rank>
+            </item>
+          </items>
+        </list>
       </presentation>
     </class>
     <class id="IPAddress" _created_in="teemip-ip-mgmt" _delta="must_exist">

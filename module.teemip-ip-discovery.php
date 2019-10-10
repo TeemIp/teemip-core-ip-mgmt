@@ -1,7 +1,7 @@
 <?php
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-discovery/0.3.0',
+	'teemip-ip-discovery/0.4.0',
 	array(
 		// Identification
 		//
