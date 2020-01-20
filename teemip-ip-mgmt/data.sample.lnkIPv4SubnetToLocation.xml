@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="1">
+<ipsubnet_id>1</ipsubnet_id>
+<location_id>2</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="2">
+<ipsubnet_id>2</ipsubnet_id>
+<location_id>2</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="3">
+<ipsubnet_id>3</ipsubnet_id>
+<location_id>2</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="4">
+<ipsubnet_id>4</ipsubnet_id>
+<location_id>3</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="5">
+<ipsubnet_id>6</ipsubnet_id>
+<location_id>3</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="6">
+<ipsubnet_id>6</ipsubnet_id>
+<location_id>2</location_id>
+</lnkIPSubnetToLocation>
+<lnkIPSubnetToLocation alias="lnkIPSubnetToLocation" id="7">
+<ipsubnet_id>7</ipsubnet_id>
+<location_id>2</location_id>
+</lnkIPSubnetToLocation>
+</Set>

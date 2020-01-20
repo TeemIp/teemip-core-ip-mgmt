@@ -1,0 +1,39 @@
+.ipv4_address {
+    width: 120px;
+    display: inline-block;
+}
+li .ip_status {
+    width: 71px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: text-bottom; 
+}
+li .ip_fqdn {
+    width: 250px;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: text-bottom; 
+}
+li .ip_ping_img {
+    width: 50px;
+    display: inline-block;
+}
+li .ip_scan_img {
+    width: 54px;
+    display: inline-block;
+}
+li .ip_lookup_img {
+    width: 82px;
+    display: inline-block;
+}
+
+.teemip_page_header {
+	margin-top: 5px;
+}
+.teemip_message_error {
+	margin-top: 5px;
+}

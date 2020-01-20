@@ -1,0 +1,3494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="IPObject" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <php_parent>
+        <name>_IPObject</name>
+        <file>_ipobject.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <comment><![CDATA[/**
+ * Persistent classes for IP Mgmt 
+ *
+ * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */]]></comment>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipobject</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field>finalclass</db_final_class_field>
+        <naming>
+          <format>IPObject</format>
+          <attributes/>
+        </naming>
+        <display_template/>
+        <icon>images/ipobject.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id=""/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value>reserved</value>
+            <value>allocated</value>
+            <value>released</value>
+            <value>unassigned</value>
+          </values>
+          <sql>status</sql>
+          <default_value>allocated</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="comment" xsi:type="AttributeText">
+          <sql>comment</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="requestor_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p WHERE p.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>requestor_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="requestor_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>requestor_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="allocation_date" xsi:type="AttributeDateTime">
+          <sql>allocation_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="release_date" xsi:type="AttributeDateTime">
+          <sql>release_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkContactToIPObject</linked_class>
+          <ext_key_to_me>ipobject_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>contact_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="document_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkDocToIPObject</linked_class>
+          <ext_key_to_me>ipobject_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>document_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <default_search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="lnkContactToIPObject" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkcontacttoipobject</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="contact_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipobject_id" xsi:type="AttributeExternalKey">
+          <sql>ipobject_id</sql>
+          <target_class>IPObject</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="contact_id" xsi:type="AttributeExternalKey">
+          <sql>contact_id</sql>
+          <target_class>Contact</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="contact_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>contact_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="contact_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkDocToIPObject" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkdoctoipobject</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="document_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipobject_id" xsi:type="AttributeExternalKey">
+          <sql>ipobject_id</sql>
+          <target_class>IPObject</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="document_id" xsi:type="AttributeExternalKey">
+          <sql>document_id</sql>
+          <target_class>Document</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="document_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>document_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="document_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPObjectToTicket" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipobjecttoticket</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="ticket_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipobject_id"/>
+            <attribute id="ticket_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipobject_id" xsi:type="AttributeExternalKey">
+          <sql>ipobject_id</sql>
+          <target_class>IPObject</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ticket_id" xsi:type="AttributeExternalKey">
+          <sql>ticket_id</sql>
+          <target_class>Ticket</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ticket_ref" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>ref</target_attcode>
+        </field>
+        <field id="ticket_title" xsi:type="AttributeExternalField">
+          <extkey_attcode>ticket_id</extkey_attcode>
+          <target_attcode>title</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="ticket_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="ticket_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipobject_id">
+              <rank>10</rank>
+            </item>
+            <item id="ticket_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPBlock" _delta="define">
+      <parent>IPObject</parent>
+      <php_parent>
+        <name>_IPBlock</name>
+        <file>_ipblock.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipblock</db_table>
+        <db_key_field>id</db_key_field>
+        <naming>
+          <format>IPBlock</format>
+          <attributes/>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeString">
+          <sql>type</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="parent_org_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Organization AS parent JOIN Organization AS child ON child.parent_id BELOW STRICT parent.id WHERE child.id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>parent_org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="parent_org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="write_reason" xsi:type="AttributeEnum">
+          <values>
+            <value>none</value>
+            <value>shrink</value>
+            <value>split</value>
+            <value>expand</value>
+            <value>is_delete</value>
+            <value>parent_is_delete</value>
+          </values>
+          <sql>write_reason</sql>
+          <default_value>none</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="occupancy" xsi:type="AttributeIPPercentage">
+          <sql>occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="children_occupancy" xsi:type="AttributeIPPercentage">
+          <sql>children_occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="subnet_occupancy" xsi:type="AttributeIPPercentage">
+          <sql>subnet_occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="location_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPBlockToLocation</linked_class>
+          <ext_key_to_me>ipblock_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>location_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+         </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>40</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="type">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPBlockToLocation" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipblocktolocation</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="location_id"/>
+            <attribute id="ipblock_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="location_id"/>
+            <attribute id="ipblock_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipblock_id" xsi:type="AttributeExternalKey">
+          <sql>ipblock_id</sql>
+          <target_class>IPBlock</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipblock_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipblock_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipblock_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipblock_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipblock_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPv4Block" _delta="define">
+      <parent>IPBlock</parent>
+      <php_parent>
+        <name>_IPv4Block</name>
+        <file>_ipv4block.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipblockv4</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/ipblock.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="firstip" ascending="true"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="parent_id" xsi:type="AttributeHierarchicalKey">
+          <dependencies>
+            <attribute id="org_id"/>
+            <attribute id="parent_org_id"/>
+          </dependencies>
+          <sql>parent_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MOVEUP</on_target_delete>
+          <filter><![CDATA[SELECT IPv4Block AS b WHERE (b.org_id = :this->org_id AND :this->parent_org_id = 0) OR (b.org_id = :this->parent_org_id)]]></filter>
+          <default_value>null</default_value>
+        </field>
+        <field id="parent_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="firstip" xsi:type="AttributeIPAddress">
+          <sql>firstip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="lastip" xsi:type="AttributeIPAddress">
+          <sql>lastip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="location_list">
+              <rank>10</rank>
+            </item>
+            <item id="contact_list">
+              <rank>20</rank>
+            </item>   
+            <item id="document_list">
+              <rank>30</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:IPBlock:baseinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="org_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="parent_org_id">
+		              <rank>20</rank>
+		            </item>
+		            <item id="parent_id">
+		              <rank>30</rank>
+		            </item>
+		            <item id="name">
+		              <rank>40</rank>
+		            </item>
+		            <item id="type">
+		              <rank>50</rank>
+		            </item>
+		            <item id="comment">
+		              <rank>60</rank>
+		            </item>
+		            <item id="requestor_id">
+		              <rank>90</rank>
+		            </item>
+		 		    <item id="allocation_date">
+				      <rank>100</rank>
+				    </item>
+                 </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>50</rank>
+              <items>
+                <item id="fieldset:Class:IPBlock:ipinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="firstip">
+		              <rank>10</rank>
+		            </item>
+		            <item id="lastip">
+		              <rank>20</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item> 
+            <item id="type">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="parent_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="firstip">
+              <rank>30</rank>
+            </item>
+            <item id="lastip">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="parent_org_id">
+              <rank>70</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>80</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>90</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="parent_id">
+              <rank>10</rank>
+            </item>
+            <item id="firstip">
+              <rank>20</rank>
+            </item>
+            <item id="lastip">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item> 
+            <item id="occupancy">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="parent_org_id">
+              <rank>70</rank>
+            </item>
+		    <item id="allocation_date">
+		      <rank>80</rank>
+		    </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPSubnet" _delta="define">
+      <parent>IPObject</parent>
+      <php_parent>
+        <name>_IPSubnet</name>
+        <file>_ipsubnet.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipsubnet</db_table>
+        <db_key_field>id</db_key_field>
+        <naming>
+          <format>IPSubnet</format>
+          <attributes/>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeString">
+          <sql>type</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="write_reason" xsi:type="AttributeEnum"> 
+          <values>
+		    <value>none</value>
+			<value>shrink</value>
+			<value>split</value>
+			<value>expand</value>
+			<value>is_delete</value></values>
+          <sql>write_reason</sql>
+          <default_value>none</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ip_occupancy" xsi:type="AttributeIPPercentage">
+          <sql>ip_occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="range_occupancy" xsi:type="AttributeIPPercentage">
+          <sql>range_occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="alarm_water_mark" xsi:type="AttributeEnum">
+          <values>
+            <value>no_alarm</value>
+            <value>high_sent</value>
+            <value>low_sent</value>
+          </values>
+          <sql>alarm_water_mark</sql>
+          <default_value>no_alarm</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPSubnetToVLAN</linked_class>
+          <ext_key_to_me>ipsubnet_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>vlan_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="vrfs_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPSubnetToVRF</linked_class>
+          <ext_key_to_me>ipsubnet_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>vrf_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="location_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPSubnetToLocation</linked_class>
+          <ext_key_to_me>ipsubnet_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>location_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>50</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>60</rank>
+            </item>
+            <item id="release_date">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="release_date">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPSubnetToVLAN" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipsubnettovlan</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipsubnet_id"/>
+            <attribute id="vlan_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipsubnet_id"/>
+            <attribute id="vlan_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet_id</sql>
+          <target_class>IPSubnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ipsubnet_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="vlan_id" xsi:type="AttributeExternalKey">
+          <sql>vlan_id</sql>
+          <target_class>VLAN</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="vlan_tag" xsi:type="AttributeExternalField">
+          <extkey_attcode>vlan_id</extkey_attcode>
+          <target_attcode>vlan_tag</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipsubnet_name">
+              <rank>20</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPSubnetToVRF" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipsubnettovrf</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipsubnet_id"/>
+            <attribute id="vrf_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipsubnet_id"/>
+            <attribute id="vrf_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet_id</sql>
+          <target_class>IPSubnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="ipsubnet_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="vrf_id" xsi:type="AttributeExternalKey">
+          <sql>vrf_id</sql>
+          <target_class>VRF</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="vrf_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="vrf_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipsubnet_name">
+              <rank>20</rank>
+            </item>
+            <item id="vrf_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPSubnetToLocation" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipsubnettolocation</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="location_id"/>
+            <attribute id="ipsubnet_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="location_id"/>
+            <attribute id="ipsubnet_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet_id</sql>
+          <target_class>IPSubnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipsubnet_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipsubnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPv4Subnet" _delta="define">
+      <parent>IPSubnet</parent>
+      <php_parent>
+        <name>_IPv4Subnet</name>
+        <file>_ipv4subnet.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipsubnetv4</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="ip"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/ipsubnet.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="ip"/>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="ip" ascending="true"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="block_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPv4Block AS b WHERE b.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>block_id</sql>
+          <target_class>IPv4Block</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="block_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>block_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ip" xsi:type="AttributeIPAddress">
+          <sql>ip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="mask" xsi:type="AttributeEnum">
+          <values>
+            <value>255.255.0.0</value>
+            <value>255.255.128.0</value>
+            <value>255.255.192.0</value>
+            <value>255.255.224.0</value>
+            <value>255.255.240.0</value>
+            <value>255.255.248.0</value>
+            <value>255.255.252.0</value>
+            <value>255.255.254.0</value>
+            <value>255.255.255.0</value>
+            <value>255.255.255.128</value>
+            <value>255.255.255.192</value>
+            <value>255.255.255.224</value>
+            <value>255.255.255.240</value>
+            <value>255.255.255.248</value>
+            <value>255.255.255.252</value>
+            <value>255.255.255.254</value>
+            <value>255.255.255.255</value>
+          </values>
+          <sql>mask</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="gatewayip" xsi:type="AttributeIPAddress">
+          <dependencies>
+            <attribute id="ip"/>
+            <attribute id="mask"/>
+          </dependencies>
+          <sql>gatewayip</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="broadcastip" xsi:type="AttributeIPAddress">
+          <dependencies>
+            <attribute id="ip"/>
+            <attribute id="mask"/>
+          </dependencies>
+          <sql>broadcastip</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="location_list">
+              <rank>10</rank>
+            </item>
+            <item id="contact_list">
+              <rank>20</rank>
+            </item>
+            <item id="document_list">
+              <rank>30</rank>
+            </item>
+            <item id="vlans_list">
+              <rank>40</rank>
+            </item>
+            <item id="vrfs_list">
+              <rank>50</rank>
+            </item>
+            <item id="col:col1">
+              <rank>60</rank>
+              <items>
+                <item id="fieldset:Class:IPSubnet:baseinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="org_id">
+        		      <rank>10</rank>
+		            </item>
+        		    <item id="name">
+		              <rank>20</rank>
+        		    </item>
+		            <item id="status">
+		              <rank>30</rank>
+		            </item>
+		            <item id="type">
+		              <rank>40</rank>
+		            </item>
+		            <item id="comment">
+		              <rank>50</rank>
+		            </item>
+		            <item id="requestor_id">
+		              <rank>60</rank>
+		            </item>
+		            <item id="allocation_date">
+		              <rank>70</rank>
+		            </item>
+		            <item id="release_date">
+		              <rank>80</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>70</rank>
+              <items>
+                <item id="fieldset:Class:IPSubnet:ipinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="block_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="ip">
+		              <rank>20</rank>
+		            </item>
+		            <item id="mask">
+		              <rank>30</rank>
+		            </item>
+		            <item id="gatewayip">
+		              <rank>40</rank>
+		            </item>
+		            <item id="broadcastip">
+		              <rank>50</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="mask">
+              <rank>20</rank>
+            </item>
+            <item id="name">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="block_id">
+              <rank>20</rank>
+            </item>
+            <item id="ip">
+              <rank>30</rank>
+            </item>
+            <item id="mask">
+              <rank>40</rank>
+            </item>
+            <item id="status">
+              <rank>50</rank>
+            </item>
+            <item id="type">
+              <rank>60</rank>
+            </item>
+            <item id="org_id">
+              <rank>70</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>80</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>90</rank>
+            </item>
+            <item id="release_date">
+              <rank>100</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="mask">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+            <item id="ip_occupancy">
+              <rank>50</rank>
+            </item>
+            <item id="org_id">
+              <rank>60</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>70</rank>
+            </item>
+            <item id="release_date">
+              <rank>80</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPRange" _delta="define">
+      <parent>IPObject</parent>
+      <php_parent>
+        <name>_IPRange</name>
+        <file>_iprange.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>iprange</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>IPRange</format>
+          <attributes/>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="range"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="range" xsi:type="AttributeString">
+          <sql>range</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="usage_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPRangeUsage AS r WHERE r.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>usage_id</sql>
+          <target_class>IPRangeUsage</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="usage_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>usage_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="dhcp" xsi:type="AttributeEnum">
+          <values>
+            <value>dhcp_no</value>
+            <value>dhcp_yes</value>
+          </values>
+          <sql>dhcp</sql>
+          <default_value>dhcp_no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="write_reason" xsi:type="AttributeEnum">
+          <values>
+            <value>none</value>
+            <value>shrink</value>
+            <value>split</value>
+            <value>expand</value>
+            <value>is_delete</value>
+          </values>
+          <sql>write_reason</sql>
+          <default_value>none</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="occupancy" xsi:type="AttributeIPPercentage">
+          <sql>occupancy</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="alarm_water_mark" xsi:type="AttributeEnum">
+          <values>
+            <value>no_alarm</value>
+            <value>high_sent</value>
+            <value>low_sent</value>
+          </values>
+          <sql>alarm_water_mark</sql>
+          <default_value>no_alarm</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <default_search>
+          <items>
+            <item id="range">
+              <rank>10</rank>
+            </item>
+            <item id="usage_id">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="range">
+              <rank>10</rank>
+            </item>
+            <item id="usage_id">
+              <rank>20</rank>
+            </item>
+            <item id="dhcp">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>50</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="usage_id">
+              <rank>10</rank>
+            </item>
+            <item id="dhcp">
+              <rank>20</rank>
+            </item>
+            <item id="occupancy">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPv4Range" _delta="define">
+      <parent>IPRange</parent>
+      <php_parent>
+        <name>_IPv4Range</name>
+        <file>_ipv4range.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>iprangev4</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="range"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/iprange.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="subnet_ip"/>
+            <attribute id="range"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="firstip" ascending="true"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="subnet_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPv4Subnet AS s WHERE s.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>subnet_id</sql>
+          <target_class>IPv4Subnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="subnet_ip" xsi:type="AttributeExternalField">
+          <extkey_attcode>subnet_id</extkey_attcode>
+          <target_attcode>ip</target_attcode>
+        </field>
+        <field id="firstip" xsi:type="AttributeIPAddress">
+          <sql>firstip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="lastip" xsi:type="AttributeIPAddress">
+          <sql>lastip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="contact_list">
+              <rank>10</rank>
+            </item>
+            <item id="document_list">
+              <rank>20</rank>
+            </item>
+            <item id="col:col1">
+              <rank>30</rank>
+              <items>
+                <item id="fieldset:Class:IPRange:baseinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="org_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="usage_id">
+		              <rank>20</rank>
+		            </item>
+		            <item id="dhcp">
+		              <rank>30</rank>
+		            </item>
+		            <item id="comment">
+		              <rank>40</rank>
+		            </item>
+		            <item id="requestor_id">
+		              <rank>50</rank>
+		            </item>
+		            <item id="allocation_date">
+		              <rank>60</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:IPRange:ipinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="subnet_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="range">
+		              <rank>20</rank>
+		            </item>
+		            <item id="firstip">
+		              <rank>30</rank>
+		            </item>
+		            <item id="lastip">
+		              <rank>40</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="range">
+              <rank>10</rank>
+            </item>
+            <item id="firstip">
+              <rank>20</rank>
+            </item>
+            <item id="lastip">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="range">
+              <rank>10</rank>
+            </item>
+            <item id="subnet_id">
+              <rank>20</rank>
+            </item>
+            <item id="firstip">
+              <rank>30</rank>
+            </item>
+            <item id="lastip">
+              <rank>40</rank>
+            </item>
+            <item id="usage_id">
+              <rank>50</rank>
+            </item>
+            <item id="dhcp">
+              <rank>60</rank>
+            </item>
+            <item id="org_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="subnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="firstip">
+              <rank>20</rank>
+            </item>
+            <item id="lastip">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+            <item id="dhcp">
+              <rank>50</rank>
+            </item>
+            <item id="occupancy">
+              <rank>60</rank>
+            </item>
+            <item id="org_id">
+              <rank>70</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>80</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPAddress" _delta="define">
+      <parent>IPObject</parent>
+      <php_parent>
+        <name>_IPAddress</name>
+        <file>_ipaddress.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipaddress</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>IPAddress</format>
+          <attributes/>
+        </naming>
+        <display_template/>
+        <icon>images/ipaddress.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="fqdn"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="short_name" xsi:type="AttributeHostName">
+          <sql>short_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="domain_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Domain AS d WHERE d.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>domain_id</sql>
+          <filter/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Domain</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="domain_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>domain_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="fqdn" xsi:type="AttributeDomainName">
+          <dependencies>
+            <attribute id="short_name"/>
+            <attribute id="domain_id"/>
+          </dependencies>
+          <sql>fqdn</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="aliases" xsi:type="AttributeAliasList">
+          <sql>aliases</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="usage_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPUsage AS i WHERE i.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>usage_id</sql>
+          <target_class>IPUsage</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="usage_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>usage_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ip_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPAdressToIPAddress</linked_class>
+          <ext_key_to_me>ip1_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ip2_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <default_search>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="fqdn">
+              <rank>20</rank>
+            </item>
+            <item id="usage_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="fqdn">
+              <rank>20</rank>
+            </item>
+            <item id="aliases">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>60</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>70</rank>
+            </item>
+            <item id="release_date">
+              <rank>80</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="fqdn">
+              <rank>20</rank>
+            </item>
+            <item id="aliases">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPAdressToIPAddress" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipaddresstoipaddress</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ip2_id"/>
+            <attribute id="ip1_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ip2_id"/>
+            <attribute id="ip1_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ip1_id" xsi:type="AttributeExternalKey">
+          <sql>ip1_id</sql>
+          <target_class>IPAddress</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ip1_fqdn" xsi:type="AttributeExternalField">
+          <extkey_attcode>ip1_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
+        </field>
+        <field id="ip2_id" xsi:type="AttributeExternalKey">
+          <sql>ip2_id</sql>
+          <target_class>IPAddress</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ip2_fqdn" xsi:type="AttributeExternalField">
+          <extkey_attcode>ip2_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="DoCheckToWrite">
+          <comment>/**&#13;
+	 * Check validity of new subnet attributes before creation&#13;
+   */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  function DoCheckToWrite()
+  {
+    // Run standard iTop checks first
+    parent::DoCheckToWrite();
+    
+    // Make sure we don't link IP to itself
+    if ($this->Get('ip1_id') == $this->Get('ip2_id'))
+    {
+  		$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame');
+  		return;
+    }
+  }]]></code>
+        </method>
+        <method id="AfterInsert" _revision_id="1689">
+          <comment/>
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function AfterInsert()
+	{
+		parent::AfterInsert();
+
+		$iIP1 = $this->Get('ip1_id');
+		$iIP2 = $this->Get('ip2_id');
+        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+        if (!$oLnkSet->CountExceeds(0))
+        {
+  		    $oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
+    		$oLnk->Set('ip1_id', $iIP2);
+	    	$oLnk->Set('ip2_id', $iIP1);
+		    $oLnk->DBInsert();
+        }
+	}]]></code>
+        </method>
+        <method id="AfterDelete" _revision_id="1687">
+          <comment/>
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function AfterDelete()
+	{
+		parent::AfterDelete();
+
+		$iIP1 = $this->Get('ip1_id');
+		$iIP2 = $this->Get('ip2_id');
+        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+        while ($oLnk = $oLnkSet->Fetch())
+        {
+            $oLnk->DBDelete();
+        }
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="ip1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ip2_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ip1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ip2_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ip1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ip1_fqdn">
+              <rank>20</rank>
+            </item>
+            <item id="ip2_id">
+              <rank>30</rank>
+            </item>
+            <item id="ip2_fqdn">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPInterfaceToIPAddress" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipinterfacetoipaddress</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipinterface_id"/>
+            <attribute id="ipaddress_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipinterface_id"/>
+            <attribute id="ipaddress_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipinterface_id" xsi:type="AttributeExternalKey">
+          <sql>ipinterface_id</sql>
+          <target_class>IPInterface</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipinterface_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipinterface_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ipaddress_id" xsi:type="AttributeExternalKey">
+          <sql>ipaddress_id</sql>
+          <target_class>IPAddress</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+      </fields>
+      <methods>
+        <method id="AfterInsert" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterInsert()
+    {
+		parent::AfterInsert();
+		
+		$iIpId = $this->Get('ipaddress_id');
+		if ($iIpId != null)
+		{
+			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+			if (!is_null($oIP)) 
+			{
+				$oIP->Set('status', 'allocated');	
+				$oIP->DBUpdate();
+			}
+		}
+	}]]></code>
+        </method>
+        <method id="AfterDelete" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function OnDelete()
+    {
+		parent::AfterDelete();
+		
+		$iIpIntId = $this->Get('ipinterface_id');
+		$iIpId = $this->Get('ipaddress_id');
+		if ($iIpId != null)
+		{
+			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+			if ($oIP != null)
+			{
+				if ($oIP->Get('status') == 'allocated')
+				{
+					// Reset status only of IP is not set on another interface
+					$oIPInterfaceToIPAddressSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress AS l WHERE l.ipaddress_id = $iIpId AND l.ipinterface_id != $iIpIntId");
+					$oIPInterfaceToIPAddressSet = new CMDBObjectSet($oIPInterfaceToIPAddressSearch);
+					if (!$oIPInterfaceToIPAddressSet->CountExceeds(0))
+					{
+						$oIP->Set('status', 'unassigned');	
+						$oIP->DBUpdate();
+					}
+				}
+			}
+		}
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPv4Address" _delta="define">
+      <parent>IPAddress</parent>
+      <php_parent>
+        <name>_IPv4Address</name>
+        <file>_ipv4address.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipaddressv4</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="ip"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/ipaddress.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="fqdn"/>
+            <attribute id="ip"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+        <order>
+          <columns>
+            <column id="ip" ascending="true"/>
+          </columns>
+        </order>
+      </properties>
+      <fields>
+        <field id="subnet_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPv4Subnet AS s WHERE s.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+         </dependencies>
+          <sql>subnet_id</sql>
+          <target_class>IPv4Subnet</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="subnet_ip" xsi:type="AttributeExternalField">
+          <extkey_attcode>subnet_id</extkey_attcode>
+          <target_attcode>ip</target_attcode>
+        </field>
+        <field id="range_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPv4Range AS r WHERE r.subnet_id = :this->subnet_id AND r.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="subnet_id"/>
+          </dependencies>
+          <sql>range_id</sql>
+          <target_class>IPv4Range</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="range_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>range_id</extkey_attcode>
+          <target_attcode>range</target_attcode>
+        </field>
+        <field id="ip" xsi:type="AttributeIPAddress">
+          <sql>ip</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="contact_list">
+              <rank>10</rank>
+            </item>
+            <item id="document_list">
+              <rank>20</rank>
+            </item>
+            <item id="ip_list">
+              <rank>30</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:IPAddress:baseinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="org_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="status">
+		              <rank>20</rank>
+		            </item>
+		            <item id="usage_id">
+		              <rank>30</rank>
+		            </item>
+		            <item id="comment">
+		              <rank>40</rank>
+		            </item>
+		            <item id="requestor_id">
+		              <rank>50</rank>
+		            </item>
+		            <item id="allocation_date">
+		              <rank>60</rank>
+		            </item>
+		            <item id="release_date">
+		              <rank>70</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>50</rank>
+              <items>
+                <item id="fieldset:Class:IPAddress:dnsinfo">
+                  <rank>10</rank>
+                  <items>
+		            <item id="short_name">
+		              <rank>10</rank>
+		            </item>
+		            <item id="domain_id">
+		              <rank>20</rank>
+		            </item>
+		            <item id="fqdn">
+		              <rank>30</rank>
+		            </item>
+ 		            <item id="aliases">
+              		  <rank>40</rank>
+            		</item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPAddress:ipinfo">
+                  <rank>20</rank>
+                  <items>
+		            <item id="subnet_id">
+		              <rank>10</rank>
+		            </item>
+		            <item id="range_id">
+		              <rank>20</rank>
+		            </item>
+		            <item id="ip">
+		              <rank>30</rank>
+		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="fqdn">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="ip">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="fqdn">
+              <rank>30</rank>
+            </item>
+            <item id="aliases">
+              <rank>40</rank>
+            </item>
+            <item id="usage_id">
+              <rank>50</rank>
+            </item>
+            <item id="subnet_id">
+              <rank>60</rank>
+            </item>
+            <item id="org_id">
+              <rank>70</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>80</rank>
+            </item>
+		    <item id="allocation_date">
+		      <rank>90</rank>
+		    </item>
+            <item id="release_date">
+              <rank>100</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="short_name">
+              <rank>20</rank>
+            </item>
+            <item id="fqdn">
+              <rank>30</rank>
+            </item>
+            <item id="aliases">
+              <rank>40</rank>
+            </item>
+            <item id="usage_id">
+              <rank>50</rank>
+            </item>
+            <item id="subnet_id">
+              <rank>60</rank>
+            </item>
+            <item id="org_id">
+              <rank>70</rank>
+            </item>
+		    <item id="allocation_date">
+		      <rank>80</rank>
+		    </item>
+            <item id="release_date">
+              <rank>90</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPConfig" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <php_parent>
+        <name>_IPConfig</name>
+        <file>_ipconfig.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipconfig</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/ipconfig.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value>IP Settings</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="requestor_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT Person AS p WHERE p.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>requestor_id</sql>
+          <target_class>Person</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="requestor_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>requestor_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
+          <sql>ipv4_block_min_size</sql>
+          <default_value>256</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ipv4_block_cidr_aligned" xsi:type="AttributeEnum">
+          <values>
+            <value>bca_yes</value>
+            <value>bca_no</value>
+          </values>
+          <sql>ipv4_block_cidr_aligned</sql>
+          <default_value>bca_yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="delegate_to_children_only" xsi:type="AttributeEnum">
+          <values>
+            <value>dtc_yes</value>
+            <value>dtc_no</value>
+          </values>
+          <sql>delegate_to_children_only</sql>
+          <default_value>dtc_yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
+          <values>
+            <value>reserve_no</value>
+            <value>reserve_yes</value>
+          </values>
+          <sql>reserve_subnet_IPs</sql>
+          <default_value>reserve_no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="ipv4_gateway_ip_format" xsi:type="AttributeEnum">
+          <values>
+            <value>subnetip_plus_1</value>
+            <value>broadcastip_minus_1</value>
+            <value>free_setup</value>
+          </values>
+          <sql>ipv4_gateway_ip_format</sql>
+          <default_value>subnetip_plus_1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="subnet_low_watermark" xsi:type="AttributeInteger">
+          <sql>subnet_low_watermark</sql>
+          <default_value>60</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="subnet_high_watermark" xsi:type="AttributeInteger">
+          <sql>subnet_high_watermark</sql>
+          <default_value>80</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="iprange_low_watermark" xsi:type="AttributeInteger">
+          <sql>iprange_low_watermark</sql>
+          <default_value>60</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="iprange_high_watermark" xsi:type="AttributeInteger">
+          <sql>iprange_high_watermark</sql>
+          <default_value>80</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
+          <values>
+            <value>ipdup_no</value>
+            <value>ipdup_yes</value>
+          </values>
+          <sql>ip_allow_duplicate_name</sql>
+          <default_value>ipdup_no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="mac_address_format" xsi:type="AttributeEnum">
+          <values>
+            <value>colons</value>
+            <value>hyphens</value>
+            <value>dots</value>
+          </values>
+          <sql>mac_address_format</sql>
+          <default_value>colons</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ping_before_assign" xsi:type="AttributeEnum">
+          <values>
+            <value>ping_no</value>
+            <value>ping_yes</value>
+          </values>
+          <sql>ping_before_assign</sql>
+          <default_value>ping_no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="ip_copy_ci_name_to_shortname" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>ip_copy_ci_name_to_shortname</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="ip_release_on_ci_obsolete" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>ip_release_on_ci_obsolete</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="ip_allocate_on_ci_production" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>ip_allocate_on_ci_production</sql>
+          <default_value>yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
+          <values>
+            <value>dtc_yes</value>
+            <value>dtc_no</value>
+          </values>
+          <sql>delegate_domain_to_children_only</sql>
+          <default_value>dtc_yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:Class:IPConfig:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="requestor_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPConfig:blockinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="ipv4_block_min_size">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ipv4_block_cidr_aligned">
+                      <rank>30</rank>
+                    </item>
+                    <item id="delegate_to_children_only">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:Class:IPConfig:subnetinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="reserve_subnet_IPs">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ipv4_gateway_ip_format">
+                      <rank>20</rank>
+                    </item>
+                    <item id="subnet_low_watermark">
+                      <rank>40</rank>
+                    </item>
+                    <item id="subnet_high_watermark">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPConfig:iprangeinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="iprange_low_watermark">
+                      <rank>10</rank>
+                    </item>
+                    <item id="iprange_high_watermark">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPConfig:ipinfo">
+                  <rank>30</rank>
+                  <items>
+                    <item id="ip_allow_duplicate_name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ping_before_assign">
+                      <rank>20</rank>
+                    </item>
+                    <item id="ip_copy_ci_name_to_shortname">
+                      <rank>30</rank>
+                    </item>
+                    <item id="ip_release_on_ci_obsolete">
+                      <rank>40</rank>
+                    </item>
+                    <item id="ip_allocate_on_ci_production">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col3">
+              <rank>30</rank>
+              <items>
+                <item id="fieldset:Class:IPConfig:domaininfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="delegate_domain_to_children_only">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPConfig:otherinfo">
+                  <rank>50</rank>
+                  <items>
+                    <item id="mac_address_format">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="ipv4_block_min_size">
+              <rank>10</rank>
+            </item>
+            <item id="ipv4_block_cidr_aligned">
+              <rank>30</rank>
+            </item>
+            <item id="delegate_to_children_only">
+              <rank>50</rank>
+            </item>
+            <item id="reserve_subnet_IPs">
+              <rank>60</rank>
+            </item>
+            <item id="ipv4_gateway_ip_format">
+              <rank>70</rank>
+            </item>
+            <item id="subnet_low_watermark">
+              <rank>90</rank>
+            </item>
+            <item id="subnet_high_watermark">
+              <rank>100</rank>
+            </item>
+            <item id="iprange_low_watermark">
+              <rank>110</rank>
+            </item>
+            <item id="iprange_high_watermark">
+              <rank>120</rank>
+            </item>
+            <item id="ip_allow_duplicate_name">
+              <rank>130</rank>
+            </item>
+            <item id="mac_address_format">
+              <rank>140</rank>
+            </item>
+            <item id="ping_before_assign">
+              <rank>150</rank>
+            </item>
+            <item id="org_id">
+              <rank>160</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>170</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>150</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPRangeUsage" _delta="define">
+      <parent>Typology</parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>iprangeusage</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeString">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ipranges_list" xsi:type="AttributeLinkedSet">
+          <linked_class>IPRange</linked_class>
+          <ext_key_to_me>usage_id</ext_key_to_me>
+          <tracking_level/>
+          <edit_mode/>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipranges_list">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="name">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="description">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPUsage" _delta="define">
+      <parent>Typology</parent>
+      <php_parent>
+        <name>_IPUsage</name>
+        <file>_ipusage.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>ipusage</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s</format>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="org_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="description" xsi:type="AttributeString">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ips_list" xsi:type="AttributeLinkedSet">
+          <linked_class>IPAddress</linked_class>
+          <ext_key_to_me>usage_id</ext_key_to_me>
+          <tracking_level/>
+          <edit_mode/>
+        </field>
+      </fields>
+      <methods>
+        <method id="CreateBasicIpUsages">
+          <comment/>
+          <static>true</static>
+          <access>public</access>
+          <type>custom</type>
+          <code><![CDATA[ public static function CreateBasicIpUsages($sOrgId)
+	{
+		IPUsage::GetIpUsageId($sOrgId, NETWORK_IP_CODE);
+		IPUsage::GetIpUsageId($sOrgId, GATEWAY_IP_CODE);
+		IPUsage::GetIpUsageId($sOrgId, BROADCAST_IP_CODE);
+	}]]></code>
+        </method>
+        <method id="GetIpUsageId">
+          <comment/>
+          <static>true</static>
+          <access>public</access>
+          <type>custom</type>
+          <code><![CDATA[ public static function GetIpUsageId($sOrgId, $sCode)
+	{
+		$oIpUsage = MetaModel::GetObjectFromOQL("SELECT IPUsage AS i WHERE i.name = '$sCode' AND i.org_id = $sOrgId", null, false);
+		if ($oIpUsage == null)
+		{
+			$oIpUsage = MetaModel::NewObject('IPUsage');
+			$oIpUsage->Set('org_id', $sOrgId);
+			$oIpUsage->Set('name', $sCode);
+			switch ($sCode)
+			{
+				case NETWORK_IP_CODE:
+					$sDesc = NETWORK_IP_DESC;
+					break;
+					
+				case GATEWAY_IP_CODE:
+					$sDesc = GATEWAY_IP_DESC;
+					break;
+					
+				case BROADCAST_IP_CODE:
+					$sDesc = BROADCAST_IP_DESC;
+					
+				default:
+					$sDesc = "";
+					break;
+			}
+			$oIpUsage->Set('description', $sDesc);
+			$oIpUsage->DBInsert();
+		}
+		return ($oIpUsage->GetKey());
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="ips_list">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="name">
+              <rank>30</rank>
+            </item>
+            <item id="description">
+              <rank>40</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+           <item id="description">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="IPApplication" _created_in="teemip-ip-mgmt" _delta="define">
+      <parent>FunctionalCI</parent>
+      <php_parent>
+        <name>_IPApplication</name>
+        <file>_ipapplication.class.inc.php</file>
+      </php_parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>true</abstract>
+        <db_table>ipapplication</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="uuid" xsi:type="AttributeString">
+          <sql>uuid</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <validation_pattern/>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <sql>status</sql>
+          <values>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+            <value id="obsolete">obsolete</value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <dependencies/>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <sql>location_id</sql>
+          <filter/>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>Location</target_class>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="uuid">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="move2production">
+              <rank>60</rank>
+            </item>
+            <item id="uuid">
+              <rank>70</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="location_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="IPManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>25</rank>
+    </menu>
+    <menu id="IPSpace" xsi:type="DashboardMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>IPManagement</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title/>
+        <cells>
+          <cell id="teemip-100">
+		  	<rank>1</rank>
+            <dashlets>
+              <dashlet id="teemip-101" xsi:type="DashletHeaderStatic">
+                <rank>1</rank>
+                <title>Menu:IPSpace:IPv4Objects</title>
+                <icon>teemip-ip-mgmt/images/ipobject.png</icon>
+              </dashlet>
+              <dashlet id="teemip-111" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>IPv4Block</class>
+              </dashlet>
+              <dashlet id="teemip-112" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>IPv4Subnet</class>
+              </dashlet>
+              <dashlet id="teemip-113" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>IPv4Range</class>
+              </dashlet>
+              <dashlet id="teemip-114" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>IPv4Address</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="teemip-300">
+		  	<rank>3</rank>
+            <dashlets>
+              <dashlet id="teemip-301" xsi:type="DashletHeaderStatic">
+                <rank>1</rank>
+                <title>Menu:IPSpace:Options</title>
+                <icon>teemip-ip-mgmt/images/ipconfig.png</icon>
+              </dashlet>
+              <dashlet id="teemip-311" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>IPConfig</class>
+              </dashlet>
+              <dashlet id="teemip-312" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>IPRangeUsage</class>
+              </dashlet>
+              <dashlet id="teemip-313" xsi:type="DashletBadge">
+                <rank>4</rank>
+                <class>IPUsage</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+    <menu id="NewIPObject" xsi:type="NewObjectMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>IPSpace</parent>
+      <class>IPObject</class>
+    </menu>
+    <menu id="SearchIPObject" xsi:type="SearchMenuNode" _delta="define">
+      <rank>30</rank>
+      <parent>IPSpace</parent>
+      <class>IPObject</class>
+    </menu>
+    <menu id="Ipv4ShortCut" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>40</rank>
+      <parent>IPManagement</parent>
+      <template_file/>
+    </menu>
+    <menu id="IPv4Block" xsi:type="OQLMenuNode" _delta="define">
+      <rank>10</rank>
+      <parent>Ipv4ShortCut</parent>
+      <oql>SELECT IPv4Block</oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="IPv4Subnet" xsi:type="OQLMenuNode" _delta="define">
+      <rank>20</rank>
+      <parent>Ipv4ShortCut</parent>
+      <oql>SELECT IPv4Subnet</oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="IPv4Range" xsi:type="OQLMenuNode" _delta="define">
+      <rank>30</rank>
+      <parent>Ipv4ShortCut</parent>
+      <oql>SELECT IPv4Range</oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="IPv4Address" xsi:type="OQLMenuNode" _delta="define">
+      <rank>40</rank>
+      <parent>Ipv4ShortCut</parent>
+      <oql>SELECT IPv4Address</oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="IPConfig" xsi:type="OQLMenuNode" _delta="define">
+      <rank>15</rank>
+      <parent>Configuration</parent>
+      <oql>SELECT IPConfig</oql>
+      <do_search>1</do_search>
+      <auto_reload>fast</auto_reload>
+    </menu>
+	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
+	  <definition>
+	     <cells>
+	      <cell id="0">
+	        <dashlets>
+	          <dashlet id="teemip-1001" xsi:type="DashletBadge" _delta="define">
+	            <rank>10.5</rank>
+	            <class>IPRangeUsage</class>
+	          </dashlet>
+	          <dashlet id="teemip-1002" xsi:type="DashletBadge" _delta="define">
+	            <rank>10.6</rank>
+	            <class>IPUsage</class>
+	          </dashlet>
+	        </dashlets>
+	      </cell>
+	    </cells>
+	  </definition>
+    </menu>
+  </menus>
+  <user_rights>
+    <groups>
+       <group id="IPObject" _delta="define">
+        <classes>
+          <class id="IPObject"/>
+          <class id="IPConfig"/>
+          <class id="IPRangeUsage"/>
+          <class id="IPUsage"/>
+        </classes>
+      </group>
+      <group id="LnkToIPObject" _delta="define">
+        <classes>
+          <class id="lnkContactToIPObject"/>
+          <class id="lnkDocToIPObject"/>
+          <class id="lnkIPObjectToTicket"/>
+          <class id="lnkIPBlockToLocation"/>
+          <class id="lnkIPSubnetToVLAN"/>
+          <class id="lnkIPSubnetToLocation"/>
+          <class id="lnkIPAdressToIPAddress"/>
+        </classes>
+      </group>
+      <group id="IPAddress" _delta="define">
+        <classes>
+          <class id="IPAddress"/>
+          <class id="lnkContactToIPObject"/>
+          <class id="lnkDocToIPObject"/>
+        </classes>
+      </group>
+      <group id="IPApplication" _delta="define">
+        <classes>
+          <class id="IPApplication"/>
+          <class id="lnkContactToFunctionalCI"/>
+          <class id="lnkDocumentToFunctionalCI"/>
+        </classes>
+      </group>
+    </groups>
+    <profiles>
+      <profile id="3" _delta="must_exist">
+        <groups>
+          <group id="IPAddress" _delta="define">
+            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
+            </actions>
+          </group>
+         <group id="LnkToIPObject" _delta="define">
+            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
+             </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="20" _delta="define">
+        <name>Hostmaster</name>
+        <description>Person handling the IP space and looking after the IP changes</description>
+        <groups>
+          <group id="IPObject">
+            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
+              <action xsi:type="bulk delete">allow</action>
+             </actions>
+          </group>
+          <group id="LnkToIPObject">
+            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
+              <action xsi:type="bulk delete">allow</action>
+             </actions>
+          </group>
+          <group id="IPApplication" _delta="define">
+            <actions>
+              <action xsi:type="write">allow</action>
+              <action xsi:type="bulk write">allow</action>
+              <action xsi:type="delete">allow</action>
+              <action xsi:type="bulk delete">allow</action>
+            </actions>
+          </group>
+          <group id="DNSObject" _delta="define">
+            <actions>
+             <action xsi:type="write">allow</action>
+             <action xsi:type="bulk write">allow</action>
+             <action xsi:type="delete">allow</action>
+             <action xsi:type="bulk delete">allow</action>
+            </actions>
+          </group>
+          <group id="*">
+            <actions>
+              <action xsi:type="read">allow</action>
+              <action xsi:type="bulk read">allow</action>
+            </actions>
+          </group>
+         </groups>
+      </profile>
+      <profile id="5323" _delta="define">
+        <name>CMDB Guest</name>
+        <description>Person with read only rights (no bulk read allowed) on CMDB and IP objects (only)</description>
+        <groups>
+          <group id="Incident" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="Problem" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="Change" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="Service" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="UserRequest" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="NormalChange" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="EmergencyChange" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="RoutineChange" _delta="if_exists">
+            <actions>
+              <action xsi:type="read">deny</action>
+            </actions>
+          </group>
+          <group id="*">
+            <actions>
+              <action xsi:type="read">allow</action>
+             </actions>
+          </group>
+        </groups>
+      </profile>
+      <profile id="11" _delta="must_exist">
+        <groups>
+          <group id="LnkToIPObject" _delta="define">
+            <actions>
+              <action xsi:type="delete">allow</action>        
+            </actions>
+          </group>
+        </groups>
+      </profile>
+    </profiles>
+  </user_rights>
+</itop_design>

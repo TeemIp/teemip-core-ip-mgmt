@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPUsage alias="IPUsage" id="10">
+<org_id>2</org_id>
+<name>Console</name>
+<description></description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="11">
+<org_id>2</org_id>
+<name>GLPB</name>
+<description>IP used within Gateway Load Balancing Protocol</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="13">
+<org_id>2</org_id>
+<name>High Availability</name>
+<description>IP used within HA protocol</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="14">
+<org_id>2</org_id>
+<name>HSRP</name>
+<description>IP used within Hot Standby Routing Protocol</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="15">
+<org_id>2</org_id>
+<name>Loopback</name>
+<description>Loopback IP</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="16">
+<org_id>2</org_id>
+<name>Management</name>
+<description>Management IP</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="17">
+<org_id>2</org_id>
+<name>NAT</name>
+<description>NAT IP</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="18">
+<org_id>2</org_id>
+<name>Network Device</name>
+<description></description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="19">
+<org_id>2</org_id>
+<name>PC</name>
+<description>Personnal computer</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="20">
+<org_id>2</org_id>
+<name>Primary IP</name>
+<description>Primary IP of a subnet</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="21">
+<org_id>2</org_id>
+<name>Printer</name>
+<description></description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="22">
+<org_id>2</org_id>
+<name>Secondary IP</name>
+<description>Secondary IP of a subnet</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="23">
+<org_id>2</org_id>
+<name>Server</name>
+<description></description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="24">
+<org_id>2</org_id>
+<name>Terminal</name>
+<description></description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="25">
+<org_id>2</org_id>
+<name>Undefined</name>
+<description>Usage of IP address undefined</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="26">
+<org_id>2</org_id>
+<name>Virtual</name>
+<description>Virtual IP</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="27">
+<org_id>2</org_id>
+<name>VRRP</name>
+<description>IP used within Virtual Router Redundancy Protocol</description>
+</IPUsage>
+
+<IPUsage alias="IPUsage" id="28">
+<org_id>2</org_id>
+<name>Workstation</name>
+<description></description>
+</IPUsage>
+</Set>

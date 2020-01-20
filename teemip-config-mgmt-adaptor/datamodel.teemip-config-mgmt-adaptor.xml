@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="ConnectableCI" _delta="must_exist">
+      <methods>
+        <method id="DisplayBareRelations" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+		parent::DisplayBareRelations($oP, $bEditMode);
+		
+        if (! $bEditMode)
+        {
+	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $this->GetKey()));
+	        if ($oLnkSet->CountExceeds(0))
+	        {
+		        $iIPs = $oLnkSet->Count();
+		        $oP->SetCurrentTab(Dict::S('Class:ConnectableCI/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:ConnectableCI/Tab:ipaddresses_list+'));
+		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	        }
+	        else
+	        {
+		        $oP->SetCurrentTab(Dict::S('Class:ConnectableCI/Tab:ipaddresses_list'));
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	        }
+        }
+	}]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="DatacenterDevice" _delta="must_exist">
+      <fields>
+        <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
+        <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">
+          <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status NOT IN ('allocated', 'reserved') OR ip.id = :this->managementip_id) AND ip.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+         </dependencies>
+          <sql>managementip_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>IPAddress</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="managementip_name" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>managementip_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="AfterInsert" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterInsert()
+    {
+		parent::AfterInsert();
+		
+		$iIpId = $this->Get('managementip_id');
+		IPAddress::SetStatusOnAttachment($iIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
+
+	}]]></code>
+        </method>
+        <method id="AfterUpdate" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterUpdate()
+    {
+		parent::AfterUpdate();
+		
+		$iIpId = $this->Get('managementip_id');
+		$iPreviousIpId = $this->GetOriginal('managementip_id');
+		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
+
+	}]]></code>
+        </method>
+        <method id="OnDelete" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function OnDelete()
+    {
+		parent::OnDelete();
+		
+		$iIpId = $this->Get('managementip_id');
+		IPAddress::SetStatusOnDetachment($iIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
+
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <default_search _delta="must_exist">
+          <items>
+            <item id="managementip"  _delta="delete"/>
+            <item id="managementip_id"  _delta="define">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+    <class id="NetworkDevice" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>80</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>45</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>55</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="Server" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>120</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>45</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>55</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="Subnet" _delta="delete"/>
+    <class id="VLAN" _delta="must_exist">
+      <fields>
+        <field id="subnets_list" xsi:type="AttributeLinkedSetIndirect" _delta="delete"/>
+        <field id="subnets_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkIPSubnetToVLAN</linked_class>
+          <ext_key_to_me>vlan_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ipsubnet_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+    </class>
+    <class id="lnkSubnetToVLAN" _delta="delete"/>
+    <class id="IPInterface" _delta="must_exist">
+      <fields>
+        <field id="ipaddress" xsi:type="AttributeIPAddress" _delta="delete"/>
+        <field id="ip_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkIPInterfaceToIPAddress</linked_class>
+          <ext_key_to_me>ipinterface_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ipaddress_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="macaddress" xsi:type="AttributeString" _delta="delete"/>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ipgateway" xsi:type="AttributeIPAddress" _delta="delete"/>
+        <field id="ipmask" xsi:type="AttributeIPAddress" _delta="delete"/>
+      </fields>
+      <methods>
+        <method id="GetAttributeParams" _delta="define">
+          <comment>/**&#13;
+	 * Provides attributes' parameters &#13;
+   */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetAttributeParams($sAttCode)
+    {
+      if ($sAttCode == 'macaddress')
+      {
+      		$oObject = null;
+			$sClass = get_class($this);
+			if (MetaModel::IsValidAttCode($sClass, 'connectableci_id'))
+			{
+				$iConnectableCIId = $this->Get('connectableci_id');
+				$oObject = MetaModel::GetObject('ConnectableCI', $iConnectableCIId, false /* MustBeFound */);
+			}
+			else if (MetaModel::IsValidAttCode($sClass, 'virtualmachine_id'))
+			{
+				$iVirtualMachineId = $this->Get('virtualmachine_id');
+				$oObject = MetaModel::GetObject('VirtualMachine', $iVirtualMachineId, false /* MustBeFound */);
+			}
+			if ($oObject != null)
+			{
+				$sOrgId = $oObject->Get('org_id');
+				if ($sOrgId != null)
+				{
+					return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $sOrgId));
+				}
+			}
+			return('colons');
+      }
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+		  	<item id="ip_list">
+			  <rank>5</rank>
+			</item>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="PhysicalInterface" _delta="must_exist">
+      <fields>
+        <field id="vrfs_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkPhysicalInterfaceToVRF</linked_class>
+          <ext_key_to_me>physicalinterface_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>vrf_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+		  	<item id="vrfs_list">
+			  <rank>4</rank>
+			</item>
+		  	<item id="ip_list">
+			  <rank>5</rank>
+			</item>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="4">
+            <dashlets>
+              <dashlet id="16" xsi:type="DashletBadge" _delta="delete"/>
+              <dashlet id="17" xsi:type="DashletBadge" _delta="delete"/>
+              <dashlet id="vlan" xsi:type="DashletBadge" _delta="delete"/>
+		    </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
+</itop_design>

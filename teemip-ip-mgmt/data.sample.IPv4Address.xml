@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv4Address alias="IPv4Address" id="21">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<ip>10.129.2.1</ip>
+<status>allocated</status>
+<short_name>hqgw</short_name>
+<domain_id>1</domain_id>
+<usage_id>14</usage_id>
+<comment>Gateway</comment>
+<requestor_id>0</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="22">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<ip>10.129.2.10</ip>
+<status>allocated</status>
+<short_name>hqsw1</short_name>
+<domain_id>1</domain_id>
+<usage_id>18</usage_id>    
+<requestor_id>0</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="23">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<ip>10.129.2.2</ip>
+<status>allocated</status>
+<short_name>hqgw1</short_name>
+<domain_id>1</domain_id>
+<usage_id>18</usage_id>
+<mac_address>00:11:22:33:44:55</mac_address>
+<requestor_id>3</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="24">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<ip>10.129.2.3</ip>
+<status>reserved</status>
+<short_name>hqgw2</short_name>
+<domain_id>1</domain_id>
+<usage_id>18</usage_id>
+<comment>Reserved for future usage</comment>
+<requestor_id>0</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="25">
+<org_id>2</org_id>
+<subnet_id>6</subnet_id>
+<ip>10.171.77.50</ip>
+<status>allocated</status>
+<short_name>fileserver</short_name>
+<domain_id>1</domain_id>
+<usage_id>23</usage_id>
+<comment></comment>
+<requestor_id>0</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="26">
+<org_id>2</org_id>
+<subnet_id>4</subnet_id>
+<ip>10.171.1.3</ip>
+<status>allocated</status>
+<short_name></short_name>
+<domain_id></domain_id>
+<usage_id>23</usage_id>
+<comment></comment>
+<requestor_id>0</requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="27">
+<org_id>2</org_id>
+<subnet_id>4</subnet_id>
+<ip>10.171.1.4</ip>
+<status>allocated</status>
+<short_name></short_name>
+<domain_id></domain_id>
+<usage_id>23</usage_id>
+<comment></comment>
+<requestor_id></requestor_id>
+</IPv4Address>
+
+<IPv4Address alias="IPv4Address" id="28">
+<org_id>2</org_id>
+<subnet_id>6</subnet_id>
+<ip>10.171.77.55</ip>
+<status>allocated</status>
+<short_name>webserver</short_name>
+<domain_id>demo.com</domain_id>
+<usage_id>16</usage_id>
+<comment></comment>
+<requestor_id></requestor_id>
+</IPv4Address>
+</Set>

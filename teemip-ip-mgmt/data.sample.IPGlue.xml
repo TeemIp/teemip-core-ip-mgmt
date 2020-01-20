@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<Person alias="Person" id="10">
+<name>Matisse</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>henri@combodo.com</email>
+<first_name>Henri</first_name>
+<location_id>3</location_id>
+</Person>
+
+<Team alias="Team" id="11">
+<name>Hostmaster</name>
+<status>active</status>
+<org_id>2</org_id>
+<email>hostmaster@combodo.com</email>
+<location_id>3</location_id>
+</Team>
+
+<ContactType alias="ContactType" id="20">
+<name>IPAM specialist</name>
+</ContactType>
+
+<lnkPersonToTeam alias="lnkPersonToTeam" id="12">
+<team_id>11</team_id>
+<person_id>10</person_id>
+<role_id>20</role_id>
+</lnkPersonToTeam>
+</Set>
