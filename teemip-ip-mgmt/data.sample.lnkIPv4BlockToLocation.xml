@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<lnkIPBlockToLocation alias="lnkIPBlockToLocation" id="1">
+<ipblock_id>5</ipblock_id>
+<location_id>2</location_id>
+</lnkIPBlockToLocation>
+<lnkIPBlockToLocation alias="lnkIPBlockToLocation" id="2">
+<ipblock_id>4</ipblock_id>
+<location_id>3</location_id>
+</lnkIPBlockToLocation>
+</Set>

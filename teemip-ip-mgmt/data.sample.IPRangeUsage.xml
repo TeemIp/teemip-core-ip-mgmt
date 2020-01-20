@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPRangeUsage alias="IPRangeUsage" id="10">
+<org_id>2</org_id>
+<name>Consoles</name>
+<description></description>
+</IPRangeUsage>
+
+<IPRangeUsage alias="IPRangeUsage" id="11">
+<org_id>2</org_id>
+<name>Mixed</name>
+<description></description>
+</IPRangeUsage>
+
+<IPRangeUsage alias="IPRangeUsage" id="12">
+<org_id>2</org_id>
+<name>Network Equipments</name>
+<description></description>
+</IPRangeUsage>
+
+<IPRangeUsage alias="IPRangeUsage" id="13">
+<org_id>2</org_id>
+<name>Printers</name>
+<description></description>
+</IPRangeUsage>
+
+<IPRangeUsage alias="IPRangeUsage" id="14">
+<org_id>2</org_id>
+<name>Servers</name>
+<description></description>
+</IPRangeUsage>
+
+<IPRangeUsage alias="IPRangeUsage" id="15">
+<org_id>2</org_id>
+<name>Users</name>
+<description></description>
+</IPRangeUsage>
+</Set>

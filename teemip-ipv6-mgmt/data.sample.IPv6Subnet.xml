@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv6Subnet alias="IPv6Subnet" id="11">
+<org_id>2</org_id>
+<block_id>13</block_id>
+<ip>FC01:0:1964:0A02::</ip>
+<mask>64</mask>
+<name>DC-VLAN50</name>
+<status>allocated</status>
+<type>Application</type>
+<comment>Front end</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Subnet>
+
+<IPv6Subnet alias="IPv6Subnet" id="12">
+<org_id>2</org_id>
+<block_id>13</block_id>
+<ip>FC01:0:1964:0A05::</ip>
+<mask>64</mask>
+<name>DC-VLAN10</name>
+<status>allocated</status>
+<type>Application</type>
+<comment>Back end</comment>
+<requestor_id>3</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Subnet>
+
+<IPv6Subnet alias="IPv6Subnet" id="13">
+<org_id>2</org_id>
+<block_id>13</block_id>
+<ip>FC01:0:1964:0AFF::</ip>
+<mask>64</mask>
+<status>reserved</status>
+<type>Monitoring</type>
+<comment>Monitoring LAN</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Subnet>
+
+<IPv6Subnet alias="IPv6Subnet" id="14">
+<org_id>2</org_id>
+<block_id>12</block_id>
+<ip>FC01:0:1964:0404::</ip>
+<mask>64</mask>
+<name>Paris User</name>
+<status>allocated</status>
+<type>User LAN</type>
+<comment>User space in Paris</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Subnet>
+</Set>

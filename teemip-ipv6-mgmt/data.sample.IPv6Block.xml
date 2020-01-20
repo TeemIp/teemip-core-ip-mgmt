@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv6Block alias="IPv6Block" id="11">
+<org_id>2</org_id>
+<name>Net FC01:0:1964::</name>
+<parent_id>0</parent_id>
+<firstip>FC01:0:1964::</firstip>
+<lastip>FC01:0:1964:FFFF:FFFF:FFFF:FFFF:FFFF</lastip>
+<type>ULA Space</type>
+<comment>ULA space for the company Intranet.</comment>
+<requestor_id>0</requestor_id>
+</IPv6Block>
+
+<IPv6Block alias="IPv6Block" id="12">
+<org_id>2</org_id>
+<name>Net FC01:0:1964:0400::</name>
+<parent_id>11</parent_id>
+<firstip>FC01:0:1964:0400::</firstip>
+<lastip>FC01:0:1964:04FF:FFFF:FFFF:FFFF:FFFF</lastip>
+<type>Intranet - General</type>
+<comment>EMEA Intranet Space</comment>
+<requestor_id>0</requestor_id>
+</IPv6Block>
+
+<IPv6Block alias="IPv6Block" id="13">
+<org_id>2</org_id>
+<name>Net FC01:0:1964:0A00::</name>
+<parent_id>11</parent_id>
+<firstip>FC01:0:1964:0A00::</firstip>
+<lastip>FC01:0:1964:0AFF:FFFF:FFFF:FFFF:FFFF</lastip>
+<type>Data Center</type>
+<comment>Data Center Space</comment>
+<requestor_id>3</requestor_id>
+</IPv6Block>
+</Set>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPTriggerOnWaterMark alias="IPTriggerOnWaterMark" id="10">
+<org_id>2</org_id>
+<description>High Water Mark is reached in a subnet</description>
+<target_class>IPv4Subnet</target_class>
+<event>cross_high</event>
+</IPTriggerOnWaterMark>
+
+<ActionEmail alias="ActionEmail" id="10">
+<name>Notify Hostmaster that a subnet High Water Mark is crossed</name>
+<description>This action informs the Hostmaster team that the high water mark has been crossed within a subnet</description>
+<status>enabled</status>
+<test_recipient>recipient@yourdomain.com</test_recipient>
+<from>server@yourdomain.com</from>
+<to>SELECT Person WHERE email = 'recipient@yourdomain.com'</to>
+<subject>High Water Mark has been crossed within subnet $this->ip$</subject>
+<body>
+<html>
+<body>
+<p>Dear Hostmasters,</p>
+<p>The number of IPs allocated within subnet $this->hyperlink()$ has reached the High Water Mark.</p>
+<p>IP: $this->ip$</p>
+<p>Mask: $this->mask$</p>
+<p>Type: $this->type$</p>
+<p>Your TeemIp application</p>
+</body>
+</html>
+</body>
+<importance>normal</importance>
+</ActionEmail>
+
+<lnkTriggerAction alias="lnkTriggerAction" id="10">
+<action_id>10</action_id>
+<trigger_id>10</trigger_id>
+<order>0</order>
+</lnkTriggerAction>
+</Set>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv4Subnet alias="IPv4Subnet" id="1">
+<org_id>2</org_id>
+<block_id>3</block_id>
+<ip>10.128.0.0</ip>
+<mask>255.255.254.0</mask>
+<broadcastip>10.128.1.255</broadcastip>
+<name>GRE-VLAN50</name>
+<status>allocated</status>
+<type>User</type>
+<comment>Grenoble user LAN #1</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="2">
+<org_id>2</org_id>
+<block_id>3</block_id>
+<ip>10.129.2.0</ip>
+<mask>255.255.254.0</mask>
+<broadcastip>10.129.3.255</broadcastip>
+<name>HQ-VLAN50</name>
+<status>allocated</status>
+<type>User</type>
+<comment>HQ user LAN #1</comment>
+<requestor_id>3</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="3">
+<org_id>2</org_id>
+<block_id>4</block_id>
+<ip>10.145.64.0</ip>
+<mask>255.255.255.0</mask>
+<broadcastip>10.145.64.255</broadcastip>
+<status>reserved</status>
+<type>Monitoring</type>
+<comment>Monitoring LAN</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="4">
+<org_id>2</org_id>
+<block_id>5</block_id>
+<ip>10.171.0.0</ip>
+<mask>255.255.252.0</mask>
+<broadcastip>10.171.3.255</broadcastip>
+<name>HQ-VLAN11</name>
+<status>allocated</status>
+<type>Application</type>
+<comment>Subnet dedicated to generic applications</comment>
+<requestor_id>0</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="5">
+<org_id>2</org_id>
+<block_id>5</block_id>
+<ip>10.171.64.0</ip>
+<mask>255.255.255.0</mask>
+<broadcastip>10.171.64.255</broadcastip>
+<name>HQ-VLAN20</name>
+<status>allocated</status>
+<type>Monitoring</type>
+<comment>Montoring LAN</comment>
+<requestor_id>2</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="6">
+<org_id>2</org_id>
+<block_id>5</block_id>
+<ip>10.171.77.0</ip>
+<mask>255.255.255.0</mask>
+<broadcastip>10.171.77.255</broadcastip>
+<name>GRE-VLAN10</name>
+<status>allocated</status>
+<type>Application</type>
+<comment>Old application subnet</comment>
+<requestor_id>2</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+
+<IPv4Subnet alias="IPv4Subnet" id="7">
+<org_id>2</org_id>
+<block_id>6</block_id>
+<ip>240.25.128.0</ip>
+<mask>255.255.254.0</mask>
+<broadcastip>240.25.129.255</broadcastip>
+<name>HQ-VLAN70</name>
+<status>allocated</status>
+<type>DMZ</type>
+<comment>DMZ in Data Center</comment>
+<requestor_id>2</requestor_id>
+<ip_occupancy>0</ip_occupancy>
+<range_occupancy>0</range_occupancy>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Subnet>
+</Set>

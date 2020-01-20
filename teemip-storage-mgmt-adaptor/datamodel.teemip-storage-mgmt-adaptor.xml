@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="StorageSystem" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>25</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>75</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="SANSwitch" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>35</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>75</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="TapeLibrary" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>25</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>75</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="NAS" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>25</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>75</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+  </classes>
+</itop_design>

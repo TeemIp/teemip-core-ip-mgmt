@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+  <classes>
+    <class id="VirtualMachine" _delta="must_exist">
+      <fields>
+        <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
+        <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">
+          <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status NOT IN ('allocated', 'reserved') OR ip.id = :this->managementip_id) AND ip.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+         </dependencies>
+          <sql>managementip_id</sql>
+          <is_null_allowed>true</is_null_allowed>
+          <target_class>IPAddress</target_class>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="managementip_name" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>managementip_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="AfterInsert" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterInsert()
+    {
+		parent::AfterInsert();
+		
+		$iIpId = $this->Get('managementip_id');
+		IPAddress::SetStatusOnAttachment($iIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'));
+
+	}]]></code>
+        </method>
+        <method id="AfterUpdate" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterUpdate()
+    {
+		parent::AfterUpdate();
+		
+		$iIpId = $this->Get('managementip_id');
+		$iPreviousIpId = $this->GetOriginal('managementip_id');
+		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
+
+	}]]></code>
+        </method>
+        <method id="OnDelete" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function OnDelete()
+    {
+		parent::OnDelete();
+		
+		$iIpId = $this->Get('managementip_id');
+		IPAddress::SetStatusOnDetachment($iIpId);
+		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
+
+	}]]></code>
+        </method>
+        <method id="DisplayBareRelations" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+		parent::DisplayBareRelations($oP, $bEditMode);
+		
+        if (! $bEditMode)
+        {
+	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN LogicalInterface AS int ON l.ipinterface_id = int.id JOIN VirtualMachine AS vm ON int.virtualmachine_id = vm.id WHERE vm.id = :vm_id";
+	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vm_id' => $this->GetKey()));
+	        if ($oLnkSet->CountExceeds(0))
+	        {
+		        $iIPs = $oLnkSet->Count();
+		        $oP->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VirtualMachine/Tab:ipaddresses_list+'));
+		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+		        $oBlock->Display($oP, 'lnkipinterfacetoipaddress', array('menu' => false, 'view_link' => false));
+	        }
+	        else
+	        {
+      			$oP->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list'));
+      			$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	        }
+        }
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>90</rank>
+              <items>
+                <item id="fieldset:Server:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="managementip" _delta="delete"/>
+                    <item id="managementip_id" _delta="define">
+                      <rank>25</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
+              <rank>25</rank>
+            </item>
+          </items>
+        </search>
+      </presentation>
+    </class>
+    <class id="LogicalInterface" _created_in="itop-virtualization-mgmt" _delta="must_exist">
+      <presentation>
+        <details>
+          <items>
+		  	<item id="ip_list">
+			  <rank>5</rank>
+			</item>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+            <item id="ipgateway" _delta="delete"/>
+            <item id="ipmask" _delta="delete"/>
+          </items>
+        </list>
+      </presentation>
+    </class>
+  </classes>
+</itop_design>

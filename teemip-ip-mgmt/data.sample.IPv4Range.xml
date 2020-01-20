@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv4Range alias="IPv4Range" id="3">
+<org_id>2</org_id>
+<subnet_id>5</subnet_id>
+<range>DC Paris Consoles</range>
+<firstip>10.171.64.128</firstip>
+<lastip>10.171.64.255</lastip>
+<usage_id>10</usage_id>
+<dhcp>dhcp_no</dhcp>
+<requestor_id>0</requestor_id>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Range>
+
+<IPv4Range alias="IPv4Range" id="1">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<range>DHCP Pool</range>
+<firstip>10.129.2.128</firstip>
+<lastip>10.129.2.254</lastip>
+<usage_id>11</usage_id>
+<dhcp>dhcp_yes</dhcp>
+<requestor_id>0</requestor_id>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Range>
+
+<IPv4Range alias="IPv4Range" id="2">
+<org_id>2</org_id>
+<subnet_id>2</subnet_id>
+<range>HQ Printers</range>
+<firstip>10.129.2.64</firstip>
+<lastip>10.129.2.80</lastip>
+<usage_id>13</usage_id>
+<dhcp>dhcp_no</dhcp>
+<requestor_id>0</requestor_id>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv4Range>
+</Set>

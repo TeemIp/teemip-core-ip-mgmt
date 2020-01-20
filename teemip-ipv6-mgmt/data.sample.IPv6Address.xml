@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv6Address alias="IPv6Address" id="41">
+<org_id>2</org_id>
+<subnet_id>14</subnet_id>
+<ip>FC01:0:1964:0404::1</ip>
+<status>allocated</status>
+<short_name>hqgw6</short_name>
+<domain_id>1</domain_id>
+<usage_id>14</usage_id>
+<comment>Gateway</comment>
+<requestor_id>0</requestor_id>
+</IPv6Address>
+
+<IPv6Address alias="IPv6Address" id="42">
+<org_id>2</org_id>
+<subnet_id>14</subnet_id>
+<ip>FC01:0:1964:0404::11</ip>
+<status>allocated</status>
+<short_name>hqsw61</short_name>
+<domain_id>1</domain_id>
+<usage_id>18</usage_id>    
+<requestor_id>0</requestor_id>
+</IPv6Address>
+
+<IPv6Address alias="IPv6Address" id="43">
+<org_id>2</org_id>
+<subnet_id>14</subnet_id>
+<ip>FC01:0:1964:0404:A::24</ip>
+<status>reserved</status>
+<short_name>prn24</short_name>
+<domain_id>1</domain_id>
+<usage_id>21</usage_id>
+<comment>Reserved for future usage</comment>
+<requestor_id>0</requestor_id>
+</IPv6Address>
+
+<IPv6Address alias="IPv6Address" id="25">
+<org_id>2</org_id>
+<subnet_id>11</subnet_id>
+<ip>FC01:0:1964:0A02::5F</ip>
+<status>allocated</status>
+<short_name>fileserver6</short_name>
+<domain_id>1</domain_id>
+<usage_id>23</usage_id>
+<comment></comment>
+<requestor_id>0</requestor_id>
+</IPv6Address>
+
+<IPv6Address alias="IPv6Address" id="46">
+<org_id>2</org_id>
+<subnet_id>11</subnet_id>
+<ip>FC01:0:1964:0A02::40</ip>
+<status>allocated</status>
+<short_name>webserver6</short_name>
+<domain_id>demo.com</domain_id>
+<usage_id>16</usage_id>
+<comment></comment>
+<requestor_id></requestor_id>
+</IPv6Address>
+</Set>

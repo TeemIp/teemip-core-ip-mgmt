@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<IPv6Range alias="IPv6Range" id="11">
+<org_id>2</org_id>
+<subnet_id>12</subnet_id>
+<range>DC Consoles</range>
+<firstip>FC01:0:1964:0A05::F:0</firstip>
+<lastip>FC01:0:1964:0A05::F:FFFF</lastip>
+<usage_id>10</usage_id>
+<dhcp>dhcp_no</dhcp>
+<requestor_id>0</requestor_id>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Range>
+
+<IPv6Range alias="IPv6Range" id="12">
+<org_id>2</org_id>
+<subnet_id>14</subnet_id>
+<range>HQ Printers</range>
+<firstip>FC01:0:1964:0404:A::</firstip>
+<lastip>FC01:0:1964:0404:A::FFFF</lastip>
+<usage_id>13</usage_id>
+<dhcp>dhcp_no</dhcp>
+<requestor_id>0</requestor_id>
+<alarm_water_mark>no_alarm</alarm_water_mark>
+</IPv6Range>
+</Set>
