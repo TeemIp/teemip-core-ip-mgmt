@@ -10,8 +10,7 @@ TeemIp Core IP Management alias IPAM for iTop is the extension version of TeemIp
 - [Network Management][2] : Document WAN links, VLANs, Network devices & interfaces, VRFs, AS numbers…
 - [Domain name Management][3] : Manage your DNS domain space.
 - [Configuration Managment Data Base][4] : Alter iTop's CMDB to link CIs with IPs
-
-...together with associated [WEB Services][5].
+- [WEB Services][5]: REST/JSON API with TeemIp features. 
 
 
 ## Documentation
