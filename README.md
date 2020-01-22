@@ -9,3 +9,4 @@ TeemIp extension that provides zone management features
 
 Comprehensive documentation can be found on TeemIp’s [wiki][3], namely in the chapter dedicated to the extension:
 
+[3]: https://wiki.teemip.net
