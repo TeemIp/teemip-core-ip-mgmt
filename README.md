@@ -4,7 +4,7 @@ Core modules of TeemIp, a WEB based IP Address Management tool
 
 ## Description
 
-TeemIp Core IP Management alias IPAM for iTop is the extension version of TeemIp that can be integrated on an existing iTop instance. It provides the core IP management features embbeded in TeemIp standalone:
+TeemIp Core IP Management alias IPAM for iTop is the extension version of TeemIp that can be integrated on an existing iTop instance. It provides the core IP management features of TeemIp project:
 
 - [IP Address Management][1] : Manage your IPv4 and IPv6 spaces: blocks, subnets, ranges and addresses.
 - [Network Management][2] : Document WAN links, VLANs, Network devices & interfaces, VRFs, AS numbers…
