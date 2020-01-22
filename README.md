@@ -26,5 +26,5 @@ Comprehensive documentation can be found on TeemIp’s dedicated [wiki][6], name
 [3]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip-network-mgmt#domain
 [4]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip_cmdb
 [5]: https://wiki.teemip.net/doku.php?id=2_x:integrate:rest_json
-[7]: https://wiki.teemip.net
-[6]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip-ip-mgmt
+[6]: https://wiki.teemip.net
+[7]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip-ip-mgmt
