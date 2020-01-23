@@ -17,8 +17,8 @@ TeemIp Core IP Management alias IPAM for iTop is the extension version of TeemIp
 
 Comprehensive documentation can be found on TeemIp’s dedicated [wiki][6], namely in the chapters:
 
-- [Configuration Management Data Base][4]
 - [IP Management][7]
+- [Configuration Management Data Base][4]
 
 [1]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip-ip-mgmt
 [2]: https://wiki.teemip.net/doku.php?id=2_x:datamodel:teemip-network-mgmt
