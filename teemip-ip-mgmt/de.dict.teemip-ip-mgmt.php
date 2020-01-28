@@ -966,6 +966,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> wurde delegiert.',
 
 	// Undelegate action on subnet blocks
+	'UI:IPManagement:Action:Undelegate:IPBlock:CannotBeUndelegated' => 'Delegierung kann nicht entfernt werden: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Delegierung aufheben',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Delegierung aufheben',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> - Delegierung entfernt.',
@@ -1196,6 +1197,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Zielklasse',
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'Funktionales CI',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'Attribute der Adresse',
+	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'In dieser Organisation gibt es keine instanziierten CIs mit IP-Adressattributen !',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Funktionales CI existiert nicht !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Das Attribut kann nicht gespeichert werden, da es von einer externen Quelle synchronisiert wird !',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'Die Adresse ist nicht allokiert !',

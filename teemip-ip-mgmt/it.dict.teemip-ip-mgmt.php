@@ -964,6 +964,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> è stato delegato.',
 
 	// Undelegate action on subnet blocks
+	'UI:IPManagement:Action:Undelegate:IPv4Block:CannotBeUndelegated' => 'La delega non può essere annullata: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Non-delegato',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Non-delegato',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> è stato non-delegato.',
@@ -1194,6 +1195,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Target class',
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'Functional CI',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'IP attribut',
+	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'There are no instanciated CIs with IP Address attributes in this organization!',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Attribute cannot be stored because it is synchronized from an external source!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated !',
