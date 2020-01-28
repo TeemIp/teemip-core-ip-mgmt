@@ -964,6 +964,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a été délégué.',
 
 	// Undelegate action on subnet blocks
+	'UI:IPManagement:Action:Undelegate:IPv4Block:CannotBeUndelegated' => 'La délégation ne peut pas être retirée : %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Retirer la délégation',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Retirer',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a eu sa délégation retirée.',
@@ -1194,6 +1195,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Classe cible',
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'CI Fonctionel',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'Attribut IP',
+	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'Il n\'y a pas de CI instancié qui porte des attributs de type Adresse IP dans cette organisation !',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI Fonctionel n\'existe pas !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut ne peut être enregistré car synchronisé depuis une source externe !',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'L\'adresse n\'est pas allouée !',

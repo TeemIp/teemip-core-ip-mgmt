@@ -1195,6 +1195,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Target class',
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'Functional CI',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'IP attribute',
+	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'There are no instanciated CIs with IP Address attributes in this organization!',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Attribute cannot be stored because it is synchronized from an external source!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated !',

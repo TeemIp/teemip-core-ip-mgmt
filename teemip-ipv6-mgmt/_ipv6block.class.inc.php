@@ -1320,18 +1320,19 @@ EOF
 			case 'delegate':
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:IPv6Block:ChildBlock');
 			
-				// Get block's children (list should not be empty at this stage)
 				$iOrgId = $this->Get('org_id');
-				$iCurrentParentOrgId = $this->Get('parent_org_id');
-				// If block has already been delegated, delegation can be changed but to sister organization (same level)
-				// If not, block can be delegated to child organization
-				if ($iCurrentParentOrgId != 0)
+				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_to_children_only', $iOrgId);
+				if ($sDelegateToChildrenOnly == 'dtc_yes')
 				{
-					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.parent_id = $iCurrentParentOrgId"));
+					// Block can only be delegated to children (or grand children) organization
+					// Get block's children (list should not be empty at this stage)
+					// Block is not already delegated (checked previously)so it can be delegated to child organization
+					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = $iOrgId AND child.id != $iOrgId"));
 				}
 				else
 				{
-					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.parent_id = $iOrgId"));
+					// Block can be delegated to any organization
+					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.id != $iOrgId"));
 				}
 
 				// Display list of choices now

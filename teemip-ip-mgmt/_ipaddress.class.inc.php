@@ -343,12 +343,15 @@ class _IPAddress extends IPObject
 				$sClassInputId = 'field_'.$iFormId.'_ciclass';
 				$sHTMLValue = "<select name=\"attr_ciclass\" id=\"$sClassInputId\" >";
 				$bIsDefaultSet = false;
+				$bEmptyListOfCIs = true;
 				foreach($aCIClassesWithIp as $sCIClass => $sKey)
 				{
 					$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT FunctionalCI AS ci WHERE ci.org_id = :org_id AND ci.finalclass = :ciclass"),
 					array(), array('org_id' => $iOrgId, 'ciclass' => $sCIClass));
 					if ($oCISet->CountExceeds(0))
 					{
+						$bEmptyListOfCIs = false;
+
 						// Propose only CIs that are already instanciated
 						$sClassName = MetaModel::GetName($sCIClass);
 						if ($bIsDefaultSet)
@@ -364,82 +367,102 @@ class _IPAddress extends IPObject
 					}
 				}
 				$sHTMLValue .= "</select>";
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
-
-				// Functional CI
-				$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT FunctionalCI AS ci WHERE ci.org_id = :org_id AND ci.finalclass = :ciclass"), array(), array('org_id' => $iOrgId, 'ciclass' => $sFirstCIClassInList));
-				$oCISet->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oCISet->Rewind();
-
-				$sCIInputId = 'field_'.$iFormId.'_ci_id';
-				$sHTMLValue = "<div class=\"field_select_wrapper\">";
-				$sHTMLValue .= "<div><span id=\"v_ci_id\">";
-				$sHTMLValue .= "<select title=\"\" name=\"attr_ci_id\" id=\"$sCIInputId\" >";
-				while ($oObj = $oCISet->Fetch())
+				if (!$bEmptyListOfCIs)
 				{
-					$key = $oObj->GetKey();
-					$display_value = $oObj->GetName();
+					// There are instantiated CIs with IP address attributes in the given organization
 
-					$sHTMLValue .= "<option value=\"$key\">$display_value</option>";
-				}
-				$sHTMLValue .= "</select>";
-				$sHTMLValue .= "</span></div></div>";
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
+					$aDetails[] = array(
+						'label' => '<span title="">'.$sLabelOfAction1.'</span>',
+						'value' => $sHTMLValue
+					);
 
-				// IPAddress attribute
-				$sAttributeInputId = 'field_'.$iFormId.'_ipattribute';
-				$sHTMLValue = "<div class=\"field_select_wrapper\">";
-				$sHTMLValue .= "<div><span id=\"v_att_id\">";
-				$sHTMLValue .= "<select name=\"attr_ipattribute\" id=\"$sAttributeInputId\" >";
-				foreach($aCIClassesWithIp[$sFirstCIClassInList]['IPAddress'] as $sKey => $sAttribute)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sFirstCIClassInList, $sAttribute);
-					$sAttributeName = $oAttDef->GetLabel();
-					$sHTMLValue .= "<option value=\"$sAttribute\">$sAttributeName</option>\n";
-				}
-				foreach($aCIClassesWithIp[$sFirstCIClassInList][$sClass] as $sKey => $sAttribute)
-				{
-					$oAttDef = MetaModel::GetAttributeDef($sFirstCIClassInList, $sAttribute);
-					$sAttributeName = $oAttDef->GetLabel();
-					$sHTMLValue .= "<option value=\"$sAttribute\">$sAttributeName</option>\n";
-				}
-				$sHTMLValue .= "</select>";
-				$sHTMLValue .= "</span></div></div>";
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction3.'</span>', 'value' => $sHTMLValue);
+					// Functional CI
+					$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT FunctionalCI AS ci WHERE ci.org_id = :org_id AND ci.finalclass = :ciclass"),
+						array(), array('org_id' => $iOrgId, 'ciclass' => $sFirstCIClassInList));
+					$oCISet->SetShowObsoleteData(utils::ShowObsoleteData());
+					$oCISet->Rewind();
 
-				$oPage->Details($aDetails);
-				$oPage->add('</td></tr>');
+					$sCIInputId = 'field_'.$iFormId.'_ci_id';
+					$sHTMLValue = "<div class=\"field_select_wrapper\">";
+					$sHTMLValue .= "<div><span id=\"v_ci_id\">";
+					$sHTMLValue .= "<select title=\"\" name=\"attr_ci_id\" id=\"$sCIInputId\" >";
+					while ($oObj = $oCISet->Fetch())
+					{
+						$key = $oObj->GetKey();
+						$display_value = $oObj->GetName();
 
-				$sHTMLValue = "<img src=\"'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/images/ipindicator-xs.gif\" />";
-				$oPage->add_ready_script(
+						$sHTMLValue .= "<option value=\"$key\">$display_value</option>";
+					}
+					$sHTMLValue .= "</select>";
+					$sHTMLValue .= "</span></div></div>";
+					$aDetails[] = array(
+						'label' => '<span title="">'.$sLabelOfAction2.'</span>',
+						'value' => $sHTMLValue
+					);
+
+					// IPAddress attribute
+					$sAttributeInputId = 'field_'.$iFormId.'_ipattribute';
+					$sHTMLValue = "<div class=\"field_select_wrapper\">";
+					$sHTMLValue .= "<div><span id=\"v_att_id\">";
+					$sHTMLValue .= "<select name=\"attr_ipattribute\" id=\"$sAttributeInputId\" >";
+					foreach($aCIClassesWithIp[$sFirstCIClassInList]['IPAddress'] as $sKey => $sAttribute)
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sFirstCIClassInList, $sAttribute);
+						$sAttributeName = $oAttDef->GetLabel();
+						$sHTMLValue .= "<option value=\"$sAttribute\">$sAttributeName</option>\n";
+					}
+					foreach($aCIClassesWithIp[$sFirstCIClassInList][$sClass] as $sKey => $sAttribute)
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sFirstCIClassInList, $sAttribute);
+						$sAttributeName = $oAttDef->GetLabel();
+						$sHTMLValue .= "<option value=\"$sAttribute\">$sAttributeName</option>\n";
+					}
+					$sHTMLValue .= "</select>";
+					$sHTMLValue .= "</span></div></div>";
+					$aDetails[] = array(
+						'label' => '<span title="">'.$sLabelOfAction3.'</span>',
+						'value' => $sHTMLValue
+					);
+
+					$oPage->Details($aDetails);
+					$oPage->add('</td></tr>');
+
+					$sHTMLValue = "<img src=\"'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/images/ipindicator-xs.gif\" />";
+					$oPage->add_ready_script(
 <<<EOF
-			    $('#$sClassInputId').bind('change', function() {			        
-					var oParams = { 
-						operation: 'get_cis_to_allocate',
-						vid: '$sCIInputId',
-						class: '$sClass',
-						default: {'org_id': '$iOrgId', 'ciclass': $('#$sClassInputId').val()}
-						}
-					$('#v_ci_id').html( $('#v_ci_id').html() ).append('$sHTMLValue');
-					$.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php', oParams, function(data) { $('#v_ci_id').html(data); });
-					});					
+				    $('#$sClassInputId').bind('change', function() {			        
+						var oParams = { 
+							operation: 'get_cis_to_allocate',
+							vid: '$sCIInputId',
+							class: '$sClass',
+							default: {'org_id': '$iOrgId', 'ciclass': $('#$sClassInputId').val()}
+							}
+						$('#v_ci_id').html( $('#v_ci_id').html() ).append('$sHTMLValue');
+						$.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php', oParams, function(data) { $('#v_ci_id').html(data); });
+						});					
 EOF
-				);
-				$sClassesWithIP = json_encode($aCIClassesWithIp);
-				$oPage->add_ready_script(
+					);
+					$sClassesWithIP = json_encode($aCIClassesWithIp);
+					$oPage->add_ready_script(
 <<<EOF
-			    $('#$sClassInputId').bind('change', function() {			        
-					var oParams = { 
-						operation: 'get_attribute_to_allocate',
-						vid: '$sAttributeInputId',
-						class: '$sClass',
-						default: {'ciclasseswithip': '$sClassesWithIP', 'ciclass': $('#$sClassInputId').val()}
-						}
-					$('#v_att_id').html( $('#v_att_id').html() ).append('$sHTMLValue');
-					$.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php', oParams, function(data) { $('#v_att_id').html(data); });
-					});					
+				    $('#$sClassInputId').bind('change', function() {			        
+						var oParams = { 
+							operation: 'get_attribute_to_allocate',
+							vid: '$sAttributeInputId',
+							class: '$sClass',
+							default: {'ciclasseswithip': '$sClassesWithIP', 'ciclass': $('#$sClassInputId').val()}
+							}
+						$('#v_att_id').html( $('#v_att_id').html() ).append('$sHTMLValue');
+						$.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php', oParams, function(data) { $('#v_att_id').html(data); });
+						});					
 EOF
-				);
+					);
+				}
+				else
+				{
+					$oPage->p(Dict::S('UI:IPManagement:Action:Allocate:IPAddress:NoCI'));
+					$oPage->add('</td></tr>');
+				}
 				break;
 
 			default:
@@ -450,7 +473,10 @@ EOF
 		$oPage->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
 
 		// Apply button
-		$oPage->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
+		if (!$bEmptyListOfCIs)
+		{
+			$oPage->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
+		}
 
 		$oPage->add("</table>");
 	}
