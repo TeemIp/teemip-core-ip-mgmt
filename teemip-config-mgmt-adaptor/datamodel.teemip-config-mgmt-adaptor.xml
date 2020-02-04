@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
+    <class id="FunctionalCI" _delta="must_exist">
+      <methods>
+        <method id="GetNameForIpAttribute" _delta="define">
+          <comment>/**
+            * Compute name of given IP Attribute
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function GetNameForIpAttribute($sIpAttCode)
+	{
+		// Append IP label to name
+		$sName = $this->Get('name').'-'.$this->GetLabel($sIpAttCode);
+		// Replace space char in name by '-' and lower the case
+		$sName = strtolower(str_replace(' ', '-', $sName));
+
+		return $sName;
+
+	}]]></code>
+        </method>
+      </methods>
+    </class>
     <class id="ConnectableCI" _delta="must_exist">
       <methods>
         <method id="DisplayBareRelations" _delta="define">
@@ -52,54 +74,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('managementip_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('managementip_id');
-		$iPreviousIpId = $this->GetOriginal('managementip_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('managementip_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <default_search _delta="must_exist">
           <items>
@@ -332,4 +306,137 @@
       </definition>
     </menu>
   </menus>
+  <snippets>
+    <snippet id="TeemIpConfigMgmtAdaptor" _delta="define">
+      <placement>module</placement>
+      <module>teemip-config-mgmt-adaptor</module>
+      <rank>10</rank>
+      <content><![CDATA[
+/***************************************************************************
+ * Plugin to handle impacts on IPs when a CI is created, changed or deleted
+ */
+class TeemIpConfigMgmtAdaptor implements iApplicationObjectExtension
+{
+	public function OnIsModified($oObject)
+	{
+	}
+
+	public function OnCheckToWrite($oObject)
+	{
+	}
+
+	public function OnCheckToDelete($oObject)
+	{
+	}
+
+	/**
+	 * @noinspection PhpUnhandledExceptionInspection
+	 */
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+		if ($oObject instanceof FunctionalCI)
+		{
+			// Check if $oObject has IP Attributes
+			$sCiClass = get_class($oObject);
+			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIpsOfClass))
+			{
+				return;
+			}
+
+			// Check if these or name have changed
+			$aListChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
+			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			$iOrgId = $oObject->Get('org_id');
+			foreach ($aIPAttributes AS $key => $sIPAttribute)
+			{
+				$iIpId = $oObject->Get($sIPAttribute);
+
+				// Change IPs status if IP has changed
+				if (array_key_exists($sIPAttribute, $aListChanges))
+				{
+					$iPreviousIpId = $aListChanges[$sIPAttribute];
+					IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
+				}
+
+				// Change IPs name if name has changed or IP has changed
+				if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges))
+				{
+					$iPreviousIpId = $aListChanges[$sIPAttribute];
+					$sName = $oObject->GetNameForIpAttribute($sIPAttribute);
+					IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIpId, $iPreviousIpId);
+				}
+			}
+
+			return;
+		}
+	}
+
+	/**
+	 * @noinspection PhpUnhandledExceptionInspection
+	 */
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+		if ($oObject instanceof FunctionalCI)
+		{
+			// Check if $oObject has IP Attributes
+			$sCiClass = get_class($oObject);
+			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIpsOfClass))
+			{
+				return;
+			}
+
+			// Check if these or name are set
+			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			$iOrgId = $oObject->Get('org_id');
+			foreach ($aIPAttributes AS $key => $sIPAttribute)
+			{
+				$iIpId = $oObject->Get($sIPAttribute);
+				$sName = $oObject->GetNameForIpAttribute($sIPAttribute);
+				if ($iIpId != 0)
+				{
+					IPAddress::SetStatusOnAttachment($iIpId);
+					IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIpId);
+				}
+			}
+
+			return;
+		}
+	}
+
+	/**
+	 * @noinspection PhpUnhandledExceptionInspection
+	 */
+	public function OnDBDelete($oObject, $oChange = null)
+	{
+		if ($oObject instanceof FunctionalCI)
+		{
+			// Check if $oObject has IP Attributes
+			$sCiClass = get_class($oObject);
+			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIpsOfClass))
+			{
+				return;
+			}
+
+			// Check if these or name are set
+			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			foreach ($aIPAttributes AS $key => $sIPAttribute)
+			{
+				$iIpId = $oObject->Get($sIPAttribute);
+				if ($iIpId != 0)
+				{
+					IPAddress::SetStatusOnDetachment($iIpId);
+					IPAddress::SetShortNameOnDetachment($iIpId);
+				}
+			}
+
+			return;
+		}
+	}
+
+}]]></content>
+    </snippet>
+  </snippets>
 </itop_design>
