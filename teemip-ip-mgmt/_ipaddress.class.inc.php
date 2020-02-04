@@ -41,6 +41,13 @@ class _IPAddress extends IPObject
 
 	/**
 	 * Check if IP's FQDN is unique.
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function IsFqdnUnique()
 	{
@@ -80,9 +87,13 @@ class _IPAddress extends IPObject
 		return true;
 	}
 
-	/*
-	 * Compute attributes before writing object 
-	 */     
+	/**
+	 * Compute attributes before writing object
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function ComputeValues()
 	{
 		// Set FQDN
@@ -255,6 +266,10 @@ class _IPAddress extends IPObject
   	
   	/**
 	 * Check validity of new IP attributes before creation
+  	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
 	public function DoCheckToWrite()
 	{
@@ -271,6 +286,12 @@ class _IPAddress extends IPObject
 
 	/**
 	 * Check if operation is feasible on current object
+	 *
+	 * @param $sOperation
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckOperation($sOperation)
 	{
@@ -298,6 +319,10 @@ class _IPAddress extends IPObject
 
 	/**
 	 * Get parameters used for operation
+	 *
+	 * @param $sOperation
+	 *
+	 * @return array
 	 */
 	public function GetPostedParam($sOperation)
 	{
@@ -311,8 +336,6 @@ class _IPAddress extends IPObject
 				break;
 
 			case 'dounallocateip':
-				break;
-
 			default:
 				break;
 		}
@@ -321,6 +344,20 @@ class _IPAddress extends IPObject
 
 	/**
 	 * Display attributes associated operation
+	 *
+	 * @param \WebPage $oPage
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayActionFieldsForOperation(WebPage $oPage, $sOperation, $iFormId, $aDefault)
 	{
@@ -497,6 +534,12 @@ EOF
 
 	/**
 	 * Check if IP can be allocated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckToAllocate($aParam)
 	{
@@ -523,6 +566,12 @@ EOF
 
 	/**
 	 * Check if CI can be allocated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckToUnallocate($aParam)
 	{
@@ -535,6 +584,15 @@ EOF
 
 	/**
 	 * Allocated CI
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function DoAllocate($aParam)
 	{
@@ -558,6 +616,12 @@ EOF
 
 	/**
 	 * Remove IP from the CIs it is attached to
+	 *
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function RemoveFromCIs()
 	{
@@ -580,8 +644,17 @@ EOF
 		}
 	}
 
-	/*
+	/**
 	 * Remove IP from the interfaces it is attached to
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function RemoveFromInterfaces()
 	{
@@ -596,6 +669,14 @@ EOF
 
 	/**
 	 * Unallocated CI
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
 	public function DoUnallocate($aParam)
 	{
@@ -614,6 +695,12 @@ EOF
 
 	/**
 	 * Change flag of attributes that shouldn't be modified beside creation.
+	 *
+	 * @param $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
@@ -636,9 +723,15 @@ EOF
 		}
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
-	
+
 	/**
 	 * Change flag of attributes that shouldn't be modified at creation.
+	 *
+	 * @param $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
@@ -657,10 +750,18 @@ EOF
 		}
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
-	
+
 	/**
-	 * Manage status of IP when attached to a device 
-	 */					   
+	 * Manage status of IP when attached to a device
+	 *
+	 * @param null $iIpId
+	 * @param null $iPreviousIpId
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public static function SetStatusOnAttachment ($iIpId = null, $iPreviousIpId = null)
 	{
 		if ($iIpId != $iPreviousIpId) 
@@ -691,9 +792,16 @@ EOF
 			}
 		}
 	}
-	
+
 	/**
-	 * Manage status of IP when deattached from a device 
+	 * Manage status of IP when detached from a device
+	 *
+	 * @param null $iIpId
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public static function SetStatusOnDetachment ($iIpId = null)
 	{
@@ -713,6 +821,17 @@ EOF
 
 	/**
 	 * Manage shortname of IP when attached to a device
+	 *
+	 * @param null $iOrgId
+	 * @param string $sShortName
+	 * @param null $iIpId
+	 * @param null $iPreviousIpId
+	 *
+	 * @noinspection PhpUnhandledExceptionInspection
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	public static function SetShortNameOnAttachment ($iOrgId = null, $sShortName = '', $iIpId = null, $iPreviousIpId = null)
 	{
@@ -721,7 +840,7 @@ EOF
 			$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 			if ($sCopyCINameToShortName == 'yes')
 			{
-				if ($iPreviousIpId != null)
+				if (($iPreviousIpId != $iIpId) && ($iPreviousIpId != null))
 				{
 					$oIP = MetaModel::GetObject('IPAddress', $iPreviousIpId, false /* MustBeFound */);
 					if ($oIP != null)
@@ -747,10 +866,88 @@ EOF
 		}
 	}
 
-	/*
+	/**
+	 * Manage shortname of IP when detached from a device
+	 *
+	 * @param null $iIpId
+	 *
+	 * @noinspection PhpUnhandledExceptionInspection
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	public static function SetShortNameOnDetachment ($iIpId = null)
+	{
+		if ($iIpId != null)
+		{
+			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+			if ($oIP != null)
+			{
+				$iOrgId = $oIP->Get('org_id');
+				$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
+				if ($sCopyCINameToShortName == 'yes')
+				{
+					$oIP->Set('short_name', '');
+					$oIP->DBUpdate();
+				}
+			}
+		}
+	}
+
+	/**
+	 * Get the list of IPAttributes (external key toward an IP(v4-6)Address class
+	 *
+	 * @param $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public static function GetListOfIPAttributes($sClass)
+	{
+		$aIpsOfClass = array();
+		if (MetaModel::IsAbstract($sClass))
+		{
+			return $aIpsOfClass;
+		}
+		$aExternalKeys = MetaModel::GetExternalKeys($sClass);
+		$aIPAttributes = array();
+		$aIPv4Attributes = array();
+		$aIPv6Attributes = array();
+		foreach ($aExternalKeys AS $oExternalKey)
+		{
+			$sTargetClass = $oExternalKey->GetTargetClass();
+			if ($sTargetClass == 'IPAddress')
+			{
+				$aIPAttributes[] = $oExternalKey->GetCode();
+			}
+			elseif ($sTargetClass == 'IPv4Address')
+			{
+				$aIPv4Attributes[] = $oExternalKey->GetCode();
+			}
+			elseif ($sTargetClass == 'IPv6Address')
+			{
+				$aIPv6Attributes[] = $oExternalKey->GetCode();
+			}
+		}
+		if ((sizeof ($aIPAttributes) != 0) || (sizeof ($aIPv4Attributes) != 0) || (sizeof ($aIPv6Attributes) != 0))
+		{
+			$aIpsOfClass['IPAddress'] = $aIPAttributes;
+			$aIpsOfClass['IPv4Address'] = $aIPv4Attributes;
+			$aIpsOfClass['IPv6Address'] = $aIPv6Attributes;
+		}
+		return $aIpsOfClass;
+	}
+
+	/**
 	 * Get the list of classes referencing the IPAddress class
 	 * Restrict list to non abstract classes inherited from 'FunctionalCI'
 	 * For each class, we get an array of all attributes being an external key to an IPAddress object
+	 *
+	 * @param string $sMode
+	 *
+	 * @return array
+	 * @throws \CoreException
 	 */
 	public static function GetListOfClassesWIthIP($sMode = 'leaf')
 	{
@@ -758,46 +955,19 @@ EOF
 		$aIPClasses = array();
 		switch ($sMode)
 		{
-			case 'root':
-				break;
-
 			case 'leaf':
 				foreach ($aFunctionalCIChildClasses AS $sClass)
 				{
-					if (MetaModel::IsAbstract($sClass))
+					$aIpsOfClass = IPAddress::GetListOfIPAttributes($sClass);
+					if (!empty($aIpsOfClass))
 					{
-						continue;
-					}
-					$aExternalKeys = MetaModel::GetExternalKeys($sClass);
-					$aIPAttributes = array();
-					$aIPv4Attributes = array();
-					$aIPv6Attributes = array();
-					foreach ($aExternalKeys AS $oExternalKey)
-					{
-						$sTargetClass = $oExternalKey->GetTargetClass();
-						if ($sTargetClass == 'IPAddress')
-						{
-							$aIPAttributes[] = $oExternalKey->GetCode();
-						}
-						elseif ($sTargetClass == 'IPv4Address')
-						{
-							$aIPv4Attributes[] = $oExternalKey->GetCode();
-						}
-						elseif ($sTargetClass == 'IPv6Address')
-						{
-							$aIPv6Attributes[] = $oExternalKey->GetCode();
-						}
-					}
-					if ((sizeof ($aIPAttributes) != 0) || (sizeof ($aIPv4Attributes) != 0) || (sizeof ($aIPv6Attributes) != 0))
-					{
-						$aIPClasses[$sClass]['IPAddress'] = $aIPAttributes;
-						$aIPClasses[$sClass]['IPv4Address'] = $aIPv4Attributes;
-						$aIPClasses[$sClass]['IPv6Address'] = $aIPv6Attributes;
+						$aIPClasses[$sClass] = $aIpsOfClass;
 					}
 				}
 				ksort($aIPClasses);
 				break;
 
+			case 'root':
 			default:
 				break;
 		}
@@ -822,8 +992,11 @@ EOF
 
 	}
 
-	/*
+	/**
 	 * Perform actions after new object inserted in DB
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function AfterInsert()
 	{
@@ -846,8 +1019,38 @@ EOF
 		}
 	}
 
-	/*
+	/**
+	 * Perform actions when object is updated in DB
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exceptio
+	 */
+	public function OnUpdate()
+	{
+		parent::OnUpdate();
+
+		$sStatus = $this->Get('status');
+		if ($sStatus == 'released')
+		{
+			$sOriginalStatus = $this->GetOriginal('status');
+			if ($sStatus != $sOriginalStatus)
+			{
+				$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $this->Get('org_id'));
+				if ($sCopyCINameToShortName == 'yes')
+				{
+					$this->Set('short_name', '');
+				}
+			}
+		}
+	}
+
+		/**
 	 * Perform actions after object is updated in DB
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function AfterUpdate()
 	{
@@ -857,13 +1060,12 @@ EOF
 		$sStatus = $this->Get('status');
 		if ($sStatus == 'released')
 		{
-			$aChanges = $this->ListChanges();
-			// $aChanges will remain empty for iTop <= 2.6. So, do the change anyway until then.
-			//if (array_key_exists('status', $aChanges))
-			//{
+			$aChanges = $this->ListPreviousValuesForUpdatedAttributes();
+			if (array_key_exists('status', $aChanges))
+			{
 				$this->RemoveFromCIs();
 				$this->RemoveFromInterfaces();
-			//}
+			}
 		}
 
 		if (MetaModel::IsValidClass('Zone'))
@@ -884,8 +1086,11 @@ EOF
 		}
 	}
 
-	/*
+	/**
 	 * Perform actions after object is removed from DB
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function AfterDelete()
 	{
@@ -901,6 +1106,5 @@ EOF
 			}
 		}
 	}
-
 
 }
