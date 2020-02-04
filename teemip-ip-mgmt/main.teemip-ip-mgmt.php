@@ -268,8 +268,8 @@ class AttributeMacAddress extends AttributeString
 	}
 }
 
-/***********************
- * Percentage Attribute
+/**************************
+ * IP Percentage Attribute
  */
 
 class AttributeIPPercentage extends AttributeInteger
