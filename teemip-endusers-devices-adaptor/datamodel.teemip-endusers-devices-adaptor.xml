@@ -18,54 +18,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		$iPreviousIpId = $this->GetOriginal('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -100,54 +52,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		$iPreviousIpId = $this->GetOriginal('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -182,54 +86,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		$iPreviousIpId = $this->GetOriginal('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -264,54 +120,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  public function AfterInsert()
-    {
-        parent::AfterInsert();
-      
-        $iIpId = $this->Get('ipaddress_id');
-        IPAddress::SetStatusOnAttachment($iIpId);
-    	IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-   }]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  public function AfterUpdate()
-    {
-        parent::AfterUpdate();
-      
-        $iIpId = $this->Get('ipaddress_id');
-        $iPreviousIpId = $this->GetOriginal('ipaddress_id');
-        IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-   }]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  public function OnDelete()
-    {
-        parent::OnDelete();
-      
-        $iIpId = $this->Get('ipaddress_id');
-        IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-   }]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -346,54 +154,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		$iPreviousIpId = $this->GetOriginal('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -436,54 +196,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId);
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		$iPreviousIpId = $this->GetOriginal('ipaddress_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('ipaddress_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
