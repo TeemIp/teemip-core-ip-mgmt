@@ -20,52 +20,6 @@
         </field>
       </fields>
       <methods>
-        <method id="AfterInsert" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-		
-		$iIpId = $this->Get('managementip_id');
-		IPAddress::SetStatusOnAttachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'));
-
-	}]]></code>
-        </method>
-        <method id="AfterUpdate" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterUpdate()
-    {
-		parent::AfterUpdate();
-		
-		$iIpId = $this->Get('managementip_id');
-		$iPreviousIpId = $this->GetOriginal('managementip_id');
-		IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), $this->Get('name'), $iIpId, $iPreviousIpId);
-
-	}]]></code>
-        </method>
-        <method id="OnDelete" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
-    {
-		parent::OnDelete();
-		
-		$iIpId = $this->Get('managementip_id');
-		IPAddress::SetStatusOnDetachment($iIpId);
-		IPAddress::SetShortNameOnAttachment ($this->Get('org_id'), '', $iIpId);
-
-	}]]></code>
-        </method>
         <method id="DisplayBareRelations" _delta="define">
           <comment/>
           <static>false</static>
