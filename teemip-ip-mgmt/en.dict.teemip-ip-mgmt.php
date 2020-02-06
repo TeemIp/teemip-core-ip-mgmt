@@ -509,6 +509,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_short_name+' => 'Left label of the FQDN',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_domain_name' => 'Domain Name',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_domain_name+' => 'Name of the DNS domain',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port' => 'External service port',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port+' => 'To be used if port forwarding is ON',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port' => 'Map to port',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'To be used if port forwarding is ON',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol' => 'Protocol',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => '',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:udp' => 'UDP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:tcp' => 'TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:both' => 'UDP / TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:sctp' => 'SCTP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:icmp' => 'ICMP',
 ));
 
 //
@@ -625,13 +636,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_no+' => '',
 	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_yes' => 'Yes',
 	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_yes+' => '',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname' => 'Copy CI\'s name into IP\' short name',
+	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname' => 'Copy CI\'s name into IP\'s short name',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Yes',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Release IPs of CIs that become obsolete',
+	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Release IPs from CIs that become obsolete',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no+' => '',
@@ -649,6 +660,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_no+' => '',
 	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_yes' => 'Yes',
 	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_yes+' => '',
+	'Class:IPConfig/Attribute:ip_symetrical_nat' => 'Symetrical IP NAT',
+	'Class:IPConfig/Attribute:ip_symetrical_nat+' => '',
+	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:yes+' => '',
+	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no' => 'No',
+	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no+' => '',
 ));
 
 //
