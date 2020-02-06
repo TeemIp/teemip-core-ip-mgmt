@@ -612,6 +612,8 @@
       <fields>
         <field id="parent_id" xsi:type="AttributeHierarchicalKey">
           <dependencies>
+            <attribute id="firstip"/>
+            <attribute id="lastip"/>
             <attribute id="org_id"/>
             <attribute id="parent_org_id"/>
           </dependencies>
@@ -1985,6 +1987,28 @@
           <extkey_attcode>ip2_id</extkey_attcode>
           <target_attcode>fqdn</target_attcode>
         </field>
+        <field id="external_service_port" xsi:type="AttributeInteger">
+          <sql>external_service_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="map_to_port" xsi:type="AttributeInteger">
+          <sql>map_to_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="protocol" xsi:type="AttributeEnum">
+          <values>
+            <value>tcp</value>
+            <value>udp</value>
+            <value>both</value>
+            <value>sctp</value>
+            <value>icmp</value>
+          </values>
+          <sql>protocol</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
         <method id="DoCheckToWrite">
@@ -2007,7 +2031,7 @@
     }
   }]]></code>
         </method>
-        <method id="AfterInsert" _revision_id="1689">
+        <method id="AfterInsert">
           <comment/>
           <static>false</static>
           <access>public </access>
@@ -2016,19 +2040,28 @@
 		parent::AfterInsert();
 
 		$iIP1 = $this->Get('ip1_id');
-		$iIP2 = $this->Get('ip2_id');
-        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
-        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
-        if (!$oLnkSet->CountExceeds(0))
-        {
-  		    $oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
-    		$oLnk->Set('ip1_id', $iIP2);
-	    	$oLnk->Set('ip2_id', $iIP1);
-		    $oLnk->DBInsert();
+		$oIP1 = MetaModel::GetObject('IPAddress', $iIP1, false /* MustBeFound */);
+		if (!is_null($oIP1))
+		{
+			$iOrgId = $oIP1->Get('org_id');
+			$sIPSymetricalNAT = IPConfig::GetFromGlobalIPConfig('ip_symetrical_nat', $iOrgId);
+			if ($sIPSymetricalNAT == 'yes')
+			{
+				$iIP2 = $this->Get('ip2_id');
+		        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+		        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+		        if (!$oLnkSet->CountExceeds(0))
+		        {
+		            $oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
+		            $oLnk->Set('ip1_id', $iIP2);
+			        $oLnk->Set('ip2_id', $iIP1);
+				    $oLnk->DBInsert();
+		        }
+	        }
         }
 	}]]></code>
         </method>
-        <method id="AfterDelete" _revision_id="1687">
+        <method id="AfterDelete">
           <comment/>
           <static>false</static>
           <access>public </access>
@@ -2037,13 +2070,22 @@
 		parent::AfterDelete();
 
 		$iIP1 = $this->Get('ip1_id');
-		$iIP2 = $this->Get('ip2_id');
-        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
-        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
-        while ($oLnk = $oLnkSet->Fetch())
-        {
-            $oLnk->DBDelete();
-        }
+		$oIP1 = MetaModel::GetObject('IPAddress', $iIP1, false /* MustBeFound */);
+		if (!is_null($oIP1))
+		{
+    		$iOrgId = $oIP1->Get('org_id');
+	    	$sIPSymetricalNAT = IPConfig::GetFromGlobalIPConfig('ip_symetrical_nat', $iOrgId);
+		    if ($sIPSymetricalNAT == 'yes')
+    		{
+    			$iIP2 = $this->Get('ip2_id');
+	            $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+	            $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+	            while ($oLnk = $oLnkSet->Fetch())
+    	        {
+	                $oLnk->DBDelete();
+	            }
+            }
+		}
 	}]]></code>
         </method>
       </methods>
@@ -2056,6 +2098,15 @@
             <item id="ip2_id">
               <rank>20</rank>
             </item>
+            <item id="external_service_port">
+              <rank>30</rank>
+            </item>
+            <item id="map_to_port">
+              <rank>40</rank>
+            </item>
+            <item id="protocol">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -2065,6 +2116,15 @@
             </item>
             <item id="ip2_id">
               <rank>20</rank>
+            </item>
+            <item id="external_service_port">
+              <rank>30</rank>
+            </item>
+            <item id="map_to_port">
+              <rank>40</rank>
+            </item>
+            <item id="protocol">
+              <rank>50</rank>
             </item>
           </items>
         </search>
@@ -2081,6 +2141,15 @@
             </item>
             <item id="ip2_fqdn">
               <rank>40</rank>
+            </item>
+            <item id="external_service_port">
+              <rank>50</rank>
+            </item>
+            <item id="map_to_port">
+              <rank>60</rank>
+            </item>
+            <item id="protocol">
+              <rank>70</rank>
             </item>
           </items>
         </list>
@@ -2146,7 +2215,7 @@
 		if ($iIpId != null)
 		{
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if (!is_null($oIP)) 
+			if (!is_null($oIP))
 			{
 				$oIP->Set('status', 'allocated');	
 				$oIP->DBUpdate();
@@ -2644,6 +2713,16 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
+        <field id="ip_symetrical_nat" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>ip_symetrical_nat</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
           <values>
             <value>dtc_yes</value>
@@ -2738,7 +2817,10 @@
                       <rank>40</rank>
                     </item>
                     <item id="ip_allocate_on_ci_production">
-                      <rank>40</rank>
+                      <rank>50</rank>
+                    </item>
+                    <item id="ip_symetrical_nat">
+                      <rank>60</rank>
                     </item>
                   </items>
                 </item>
