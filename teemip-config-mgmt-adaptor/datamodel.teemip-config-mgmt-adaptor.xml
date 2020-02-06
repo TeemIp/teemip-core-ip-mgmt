@@ -3,17 +3,17 @@
   <classes>
     <class id="FunctionalCI" _delta="must_exist">
       <methods>
-        <method id="GetNameForIpAttribute" _delta="define">
+        <method id="GetNameForIPAttribute" _delta="define">
           <comment>/**
             * Compute name of given IP Attribute
             */</comment>
           <static>false</static>
           <access>public</access>
           <type>Custom</type>
-          <code><![CDATA[	public function GetNameForIpAttribute($sIpAttCode)
+          <code><![CDATA[	public function GetNameForIPAttribute($sIPAttCode)
 	{
 		// Append IP label to name
-		$sName = $this->Get('name').'-'.$this->GetLabel($sIpAttCode);
+		$sName = $this->Get('name').'-'.$this->GetLabel($sIPAttCode);
 		// Replace space char in name by '-' and lower the case
 		$sName = strtolower(str_replace(' ', '-', $sName));
 
@@ -338,33 +338,33 @@ class TeemIpConfigMgmtAdaptor implements iApplicationObjectExtension
 		{
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
-			if (empty($aIpsOfClass))
+			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIPsOfClass))
 			{
 				return;
 			}
 
 			// Check if these or name have changed
 			$aListChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
-			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
 			$iOrgId = $oObject->Get('org_id');
 			foreach ($aIPAttributes AS $key => $sIPAttribute)
 			{
-				$iIpId = $oObject->Get($sIPAttribute);
+				$iIPId = $oObject->Get($sIPAttribute);
 
 				// Change IPs status if IP has changed
 				if (array_key_exists($sIPAttribute, $aListChanges))
 				{
-					$iPreviousIpId = $aListChanges[$sIPAttribute];
-					IPAddress::SetStatusOnAttachment($iIpId, $iPreviousIpId);
+					$iPreviousIPId = $aListChanges[$sIPAttribute];
+					IPAddress::SetStatusOnAttachment($iIPId, $iPreviousIPId);
 				}
 
 				// Change IPs name if name has changed or IP has changed
 				if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges))
 				{
-					$iPreviousIpId = $aListChanges[$sIPAttribute];
-					$sName = $oObject->GetNameForIpAttribute($sIPAttribute);
-					IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIpId, $iPreviousIpId);
+					$iPreviousIPId = $aListChanges[$sIPAttribute];
+					$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
+					IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId, $iPreviousIPId);
 				}
 			}
 
@@ -381,23 +381,23 @@ class TeemIpConfigMgmtAdaptor implements iApplicationObjectExtension
 		{
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
-			if (empty($aIpsOfClass))
+			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIPsOfClass))
 			{
 				return;
 			}
 
 			// Check if these or name are set
-			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
 			$iOrgId = $oObject->Get('org_id');
 			foreach ($aIPAttributes AS $key => $sIPAttribute)
 			{
-				$iIpId = $oObject->Get($sIPAttribute);
-				$sName = $oObject->GetNameForIpAttribute($sIPAttribute);
-				if ($iIpId != 0)
+				$iIPId = $oObject->Get($sIPAttribute);
+				$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
+				if ($iIPId != 0)
 				{
-					IPAddress::SetStatusOnAttachment($iIpId);
-					IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIpId);
+					IPAddress::SetStatusOnAttachment($iIPId);
+					IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
 				}
 			}
 
@@ -414,21 +414,21 @@ class TeemIpConfigMgmtAdaptor implements iApplicationObjectExtension
 		{
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIpsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
-			if (empty($aIpsOfClass))
+			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			if (empty($aIPsOfClass))
 			{
 				return;
 			}
 
 			// Check if these or name are set
-			$aIPAttributes = array_merge($aIpsOfClass['IPAddress'], $aIpsOfClass['IPv4Address'], $aIpsOfClass['IPv6Address']);
+			$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
 			foreach ($aIPAttributes AS $key => $sIPAttribute)
 			{
-				$iIpId = $oObject->Get($sIPAttribute);
-				if ($iIpId != 0)
+				$iIPId = $oObject->Get($sIPAttribute);
+				if ($iIPId != 0)
 				{
-					IPAddress::SetStatusOnDetachment($iIpId);
-					IPAddress::SetShortNameOnDetachment($iIpId);
+					IPAddress::SetStatusOnDetachment($iIPId);
+					IPAddress::SetShortNameOnDetachment($iIPId);
 				}
 			}
 
