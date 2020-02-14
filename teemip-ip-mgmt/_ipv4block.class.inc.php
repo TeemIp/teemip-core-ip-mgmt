@@ -25,6 +25,12 @@ class _IPv4Block extends IPBlock
 {
 	/**
 	 * Returns icon to be displayed
+	 *
+	 * @param bool $bImgTag
+	 * @param bool $bXsIcon
+	 *
+	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetIcon($bImgTag = true, $bXsIcon = false)
 	{
@@ -36,11 +42,15 @@ class _IPv4Block extends IPBlock
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/ipblock.png';
 		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+		return ("<img src=\"$sIcon\" alt=\"IP Block\" style=\"vertical-align:middle;\"/>");
 	}
 
 	/**
 	 * Returns name to be displayed within trees
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetNameForTree()
 	{
@@ -49,22 +59,24 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Returns size of block
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetSize()
 	{
 		return(myip2long($this->Get('lastip')) - myip2long($this->Get('firstip')) + 1);
 	}
 
-	// To be deprecated
-	public function GetBlockSize()
-	{
-		return ($this->GetSize());
-	}
-
 	/**
 	 * Returns minimum block size required
+	 *
+	 * @return bool|int|mixed|string|string[]|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function GetMinBlockSize()
+	public function GetMinBlockSize()
 	{
 		$iBlockMinSize = utils::ReadPostedParam('attr_ipv4_block_min_size', '');
 		if (empty($iBlockMinSize))
@@ -85,6 +97,15 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Return % of occupancy of objects linked to $this
+	 *
+	 * @param $sObject
+	 *
+	 * @return float|int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetOccupancy($sObject)
 	{
@@ -109,7 +130,7 @@ class _IPv4Block extends IPBlock
 			case 'IPv4Subnet':
 				// Look for all child subnets
 				$iSubnetSize = 0;
-				$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $sOrgId"));
+				$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $sOrgId"));
 				while ($oSubnet = $oSubnetSet->Fetch())
 				{
 					$iSubnetSize += $oSubnet->GetSize();
@@ -123,6 +144,16 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Find space within the block to create child block or subnet
+	 *
+	 * @param $iSize
+	 * @param $iMaxOffer
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetFreeSpace($iSize, $iMaxOffer)
 	{
@@ -136,7 +167,6 @@ class _IPv4Block extends IPBlock
 		$iObjFirstIp = myip2long($sFirstIp);
 		$sLastIp = $this->Get('lastip');
 		$iObjLastIp = myip2long($sLastIp);
-		$iBlockSize = $this->GetSize();
 		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $sOrgId"));
 
@@ -203,9 +233,6 @@ class _IPv4Block extends IPBlock
 			$aFreeList[0]['lastip'] = $iObjLastIp;
 		}
 
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
-
 		// Store possible choices in array
 		if ($iSizeFreeArray != 0)
 		{
@@ -242,8 +269,15 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Check if block is CIDR aligned
+	 *
+	 * @param int $iNewFirstIp
+	 * @param int $iNewLastIp
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckCIDRAligned($iNewFirstIp = 0, $iNewLastIp = 0)
+	public function DoCheckCIDRAligned($iNewFirstIp = 0, $iNewLastIp = 0)
 	{
 		$sBlockCidrAligned = utils::ReadPostedParam('attr_ipv4_block_cidr_aligned', '');
 		if (empty($sBlockCidrAligned))
@@ -274,8 +308,12 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Get parameters used for operation
+	 *
+	 * @param $sOperation
+	 *
+	 * @return array
 	 */
-	function GetPostedParam($sOperation)
+	public function GetPostedParam($sOperation)
 	{
 		$aParam = array();
 		switch ($sOperation)
@@ -290,6 +328,7 @@ class _IPv4Block extends IPBlock
 			break;
 
 			case 'doshrinkblock':
+			case 'doexpandblock':
 				$aParam['firstip'] = filter_var(utils::ReadPostedParam('attr_firstip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['lastip'] = filter_var(utils::ReadPostedParam('attr_lastip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
@@ -300,14 +339,6 @@ class _IPv4Block extends IPBlock
 			case 'dosplitblock':
 				$aParam['ip'] = filter_var(utils::ReadPostedParam('attr_ip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['newname'] = utils::ReadPostedParam('newname', '', 'raw_data');
-				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
-				$aParam['ipv4_block_min_size'] = utils::ReadPostedParam('attr_ipv4_block_min_size', IPV4_BLOCK_MIN_SIZE);
-				$aParam['ipv4_block_cidr_aligned'] = utils::ReadPostedParam('attr_ipv4_block_cidr_aligned', 1);
-			break;
-
-			case 'doexpandblock':
-				$aParam['firstip'] = filter_var(utils::ReadPostedParam('attr_firstip', '', 'raw_data'), FILTER_VALIDATE_IP);
-				$aParam['lastip'] = filter_var(utils::ReadPostedParam('attr_lastip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
 				$aParam['ipv4_block_min_size'] = utils::ReadPostedParam('attr_ipv4_block_min_size', IPV4_BLOCK_MIN_SIZE);
 				$aParam['ipv4_block_cidr_aligned'] = utils::ReadPostedParam('attr_ipv4_block_cidr_aligned', 1);
@@ -325,16 +356,31 @@ class _IPv4Block extends IPBlock
 
 	/**
 	 * Check if space can be searched
- 	 */
-	function DoCheckToDisplayAvailableSpace($aParam)
+ 	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 */
+	public function DoCheckToDisplayAvailableSpace($aParam)
 	{
 		return '';
 	}
 
 	/**
 	 * Displays available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter)
+	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter)
 	{
 		$iId = $this->GetKey();
 		$sOrgId = $this->Get('org_id');
@@ -425,8 +471,17 @@ EOF
 
 	/**
 	 * Check if block can be shrunk
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	function DoCheckToShrink($aParam)
+	public function DoCheckToShrink($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
@@ -507,17 +562,24 @@ EOF
 
 	/**
 	 * Shrink the block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DoShrink($aParam)
+	public function DoShrink($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$sOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
-		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = myip2long($sFirstIpCurrentBlock);
-		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = myip2long($sLastIpCurrentBlock);
 		$sNewFirstIp = $aParam['firstip'];
 		$iNewFirstIp = myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
@@ -566,8 +628,17 @@ EOF
 
 	/**
 	 * Check if block can be split
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	function DoCheckToSplit($aParam)
+	public function DoCheckToSplit($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
@@ -644,16 +715,24 @@ EOF
 
 	/**
 	 * Split the block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DoSplit($aParam)
+	public function DoSplit($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$sOrgId = $this->Get('org_id');
-		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = myip2long($sFirstIpCurrentBlock);
 		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = myip2long($sLastIpCurrentBlock);
 		$sSplitIp = $aParam['ip'];
 		$iSplitIp = myip2long($sSplitIp);
 		$sNewName = $aParam['newname'];
@@ -747,8 +826,17 @@ EOF
 
 	/**
 	 * Check if block can be expanded
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	function DoCheckToExpand($aParam)
+	public function DoCheckToExpand($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
@@ -854,17 +942,24 @@ EOF
 
 	/**
 	 * Expand block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DoExpand($aParam)
+	public function DoExpand($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$sOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
-		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = myip2long($sFirstIpCurrentBlock);
-		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = myip2long($sLastIpCurrentBlock);
 		$sNewFirstIp = $aParam['firstip'];
 		$iNewFirstIp = myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
@@ -918,19 +1013,28 @@ EOF
 
 	/**
 	 * Check if block can be delegated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	function DoCheckToDelegate($aParam)
+	public function DoCheckToDelegate($aParam)
 	{
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iBlockId = $this->GetKey();
-		$iParentId = $this->Get('parent_id');
 		$sFirstIpBlockToDel = $this->Get('firstip');
 		$iFirstIpBlockToDel = myip2long($sFirstIpBlockToDel);
 		$sLastIpBlockToDel = $this->Get('lastip');
 		$iLastIpBlockToDel = myip2long($sLastIpBlockToDel);
 		$iChildOrgId = $aParam['child_org_id'];
-		$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_to_children_only', $iOrgId);
 
 		// If block should be delegated to children only and if it's already delegated,
 		// 	Make sure redelegation is done at the same level of organization.
@@ -981,8 +1085,17 @@ EOF
 
 	/**
 	 * Delegate block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
-	function DoDelegate($aParam)
+	public function DoDelegate($aParam)
 	{
 		$iOrgId = $this->Get('org_id');
 		$iChildOrgId = $aParam['child_org_id'];
@@ -998,8 +1111,18 @@ EOF
 
 	/**
 	 * Check if block can be undelegated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	function DoCheckToUndelegate($aParam)
+	public function DoCheckToUndelegate($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
@@ -1028,8 +1151,17 @@ EOF
 
 	/**
 	 * Undelegate block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
 	 */
-	function DoUndelegate($aParam)
+	public function DoUndelegate($aParam)
 	{
 		$iParentOrgId = $this->Get('parent_org_id');
 
@@ -1044,8 +1176,21 @@ EOF
 
 	/**
 	 * Display block and child subnets as tree leaf
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bWithSubnet
+	 * @param $sTreeOrgId
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	function DisplayAsLeaf(WebPage $oP, $bWithSubnet = false, $sTreeOrgId)
+	public function DisplayAsLeaf(WebPage $oP, $bWithSubnet, $sTreeOrgId)
 	{
 		if	($bWithSubnet)
 		{
@@ -1097,8 +1242,19 @@ EOF
 
 	/**
 	 * Display main block attributes
+	 *
+	 * @param \WebPage $oP
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $sPrefix
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
 	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
+	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
 	{
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).'Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
@@ -1136,8 +1292,15 @@ EOF
 
 	/**
 	 * Display global block parameters
+	 *
+	 * @param \WebPage $oP
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
-	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault)
+	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault)
 	{
 		$sLabelOfAction = Dict::Format('Class:IPBlock/Tab:globalparam');
 		$aParameter = array ('ipv4_block_min_size', 'ipv4_block_cidr_aligned');
@@ -1155,8 +1318,21 @@ EOF
 
 	/**
 	 * Display fields required for action
+	 *
+	 * @param \WebPage $oP
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
-	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
+	public function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
@@ -1349,6 +1525,15 @@ EOF
 
 	/**
 	 * Displays all space (used and non used within block)
+	 *
+	 * @param \WebPage $oP
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DisplayAllSpace(WebPage $oP)
 	{
@@ -1458,6 +1643,18 @@ EOF
 
 	/**
 	 * Displays the tabs listing the child blocks and the subnets belonging to a block
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
 	{
@@ -1530,7 +1727,55 @@ EOF
 	}
 
 	/**
+	 * Compute attributes before writing object
+	 *
+	 * @noinspection PhpUnhandledExceptionInspection
+	 */
+	public function ComputeValues()
+	{
+		if ($this->IsNew())
+		{
+			// At creation, compute parent_id only in the case where no delegation is done at creation.
+			$iParentOrgId = $this->Get('parent_org_id');
+			if ($iParentOrgId == 0)
+			{
+				$iOrgId = $this->Get('org_id');
+				$sFirstIp = $this->Get('firstip');
+				$sLastIp = $this->Get('lastip');
+
+				// Look for all blocks containing the new block
+				// Pick the smallest one
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE INET_ATON(b.firstip) <= INET_ATON('$sFirstIp') AND INET_ATON('$sLastIp') <= INET_ATON(b.lastip) AND b.org_id = $iOrgId"));
+				$iMinSize = 0;
+				$iNewParentId = 0;
+				while ($oSRange = $oSRangeSet->Fetch())
+				{
+					$iSRangeSize = $oSRange->GetSize();
+					if (($iMinSize == 0) || ($iSRangeSize < $iMinSize))
+					{
+						$iMinSize = $iSRangeSize;
+						$iNewParentId = $oSRange->GetKey();
+					}
+				}
+				if ($iNewParentId != 0)
+				{
+					$this->Set('parent_id', $iNewParentId);
+				}
+			}
+		}
+	}
+
+
+	/**
 	 * Check validity of new block attributes before creation
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DoCheckToWrite()
 	{
@@ -1618,10 +1863,10 @@ EOF
 			// Make sure range doesn't collide with another range attached to the same parent.
 			//		If no parent is specified (null), then check is done with all such blocks with null parent specified.
 			//		It is done on blocks belonging to the same parent otherwise
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != '$iKey'"));
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != $iKey"));
 			if ($iParentId == 0)
 			{
-				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $sOrgId AND b.id != '$iKey'"));
+				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $sOrgId AND b.id != $iKey"));
 				$oSRangeSet->Append($oSRangeSet2);
 			}
 			while ($oSRange = $oSRangeSet->Fetch())
@@ -1698,7 +1943,14 @@ EOF
 
 	/**
 	 * Perform specific tasks related to block creation
-	 **/
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	public function AfterInsert()
 	{
 		parent::AfterInsert();
@@ -1712,7 +1964,7 @@ EOF
 
 		// Look for all blocks attached to parent of block being created and contained within new block
 		// Attach them to new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND b.org_id = $sOrgId AND b.id != '$iKey'"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND (b.org_id = $sOrgId OR bvalval  .parent_org_id = $sOrgId) AND b.id != $iKey"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oSRange->Set('parent_id', $iKey);
@@ -1747,6 +1999,14 @@ EOF
 
 	/**
 	 * Perform specific tasks related to block modification
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function AfterUpdate()
 	{
@@ -1761,7 +2021,7 @@ EOF
 			// Look for all subnets attached to block that may have fallen out of block
 			//	Attach them to parent block
 			//	Note: previous check have made sure a parent block exists
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $sOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch())
 			{
 				$iCurrentFirstIp = ip2long($oSubnet->Get('ip'));
@@ -1784,6 +2044,13 @@ EOF
 
 	/**
 	 * Change default flag of attribute.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
@@ -1793,6 +2060,58 @@ EOF
 			return OPT_ATT_READONLY;
 		}
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+}
+
+/***************************************************************************
+ * Plugin to handle impacts on IPs when a CI is created, changed or deleted
+ */
+class TeemIpIPBlockAdaptor implements iApplicationObjectExtension
+{
+	public function OnIsModified($oObject)
+	{
+	}
+
+	public function OnCheckToWrite($oObject)
+	{
+	}
+
+	public function OnCheckToDelete($oObject)
+	{
+	}
+
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+	}
+
+	/**
+	 * @noinspection PhpUnhandledExceptionInspection
+	 */
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+/*		if ($oObject instanceof IPBlock)
+		{
+			$sOrgId = $oObject->Get('org_id');
+			$iKey = $oObject->GetKey();
+			$iParentOrgId = $oObject->Get('parent_org_id');
+			$iParentId = $oObject->Get('parent_id');
+			$sFirstIp = $oObject->Get('firstip');
+			$sLastIp = $oObject->Get('lastip');
+
+			// Look for all blocks attached to parent of block being created and contained within new block
+			// Attach them to new block
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND b.org_id = $sOrgId AND b.id != $iKey"));
+			while ($oSRange = $oSRangeSet->Fetch())
+			{
+				$oSRange->Set('parent_id', $iKey);
+				$oSRange->DBUpdate();
+			}
+		}*/
+	}
+
+	public function OnDBDelete($oObject, $oChange = null)
+	{
 	}
 
 }

@@ -1486,6 +1486,18 @@ EOF
 
 	/**
 	 * Displays the tabs listing the child blocks and the subnets belonging to a block
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
 	{
@@ -1558,28 +1570,86 @@ EOF
 			
 	/**
 	 * Compute attributes before writing object 
-	 */     
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	public function ComputeValues()
 	{
-		// Preset LastIP to save the typing of too many 'f'
-		$oFirstIp = $this->Get('firstip');
-		$iPreviousFirstIp = $this->GetOriginal('firstip');
-		$oLastIp = $this->Get('lastip');	 
-		$oZero = new ormIPv6('::');
-
-		if (! $oFirstIp->IsEqual($oZero))
+		if ($this->IsNew())
 		{
-			if ($oLastIp->IsEqual($oZero))
+			// Preset LastIP to save the typing of too many 'f'
+			$oFirstIp = $this->Get('firstip');
+			$oLastIp = $this->Get('lastip');
+			$oZero = new ormIPv6('::');
+
+			if (! $oFirstIp->IsEqual($oZero))
 			{
-				$oMask = new ormIPv6(IPV6_BLOCK_MIN_MASK);
-				$oLastIp = $oFirstIp->BitwiseOr($oMask->BitwiseNot());
-				$this->Set('lastip', $oLastIp);			
+				if ($oLastIp->IsEqual($oZero))
+				{
+					$oMask = new ormIPv6(IPV6_BLOCK_MIN_MASK);
+					$oLastIp = $oFirstIp->BitwiseOr($oMask->BitwiseNot());
+					$this->Set('lastip', $oLastIp);
+				}
+			}
+
+			// Compute parent_id only in the case where no delegation is done at creation.
+			$iParentOrgId = $this->Get('parent_org_id');
+			if ($iParentOrgId == 0)
+			{
+				$iOrgId = $this->Get('org_id');
+				$sFirstIp = $this->Get('firstip');
+				$sLastIp = $this->Get('lastip');
+
+				// Look for all blocks containing the new block
+				// Pick the smallest one
+				// Absorb brother blocks
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = $iOrgId"));
+				$iMinSize = 0;
+				$iNewParentId = 0;
+				while ($oSRange = $oSRangeSet->Fetch())
+				{
+					$oCurrentFirstIp = $oSRange->Get('firstip');
+					$oCurrentLastIp = $oSRange->Get('lastip');
+					if ($oCurrentFirstIp->IsSmallerOrEqual($oFirstIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp))
+					{
+						$iSRangeSize = $oSRange->GetSize();
+						if (($iMinSize == 0) || ($iSRangeSize < $iMinSize))
+						{
+							$iMinSize = $iSRangeSize;
+							$iNewParentId = $oSRange->GetKey();
+						}
+					}
+				}
+				if ($iNewParentId != 0)
+				{
+					$this->Set('parent_id', $iNewParentId);
+				}
 			}
 		}
 	}
 
 	/**
- 	 * Check validity of new block attributes before creation
+	 * Check
+	 * validity
+	 * of
+	 * new
+	 * block
+	 * attributes
+	 * before
+	 * creation
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function DoCheckToWrite()
 	{
@@ -1755,6 +1825,13 @@ EOF
 	
 	/**
 	 * Perform specific tasks related to block creation
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function AfterInsert()
 	{
@@ -1818,6 +1895,14 @@ EOF
 				
 	/**
 	 * Perform specific tasks related to block modification
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function AfterUpdate()
 	{
@@ -1856,6 +1941,13 @@ EOF
 		
 	/**
 	 * Change default flag of attribute.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
