@@ -845,6 +845,14 @@
           <default_value>no_alarm</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="subnets_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkIPSubnetToIPSubnet</linked_class>
+          <ext_key_to_me>ipsubnet1_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ipsubnet2_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
         <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkIPSubnetToVLAN</linked_class>
           <ext_key_to_me>ipsubnet_id</ext_key_to_me>
@@ -929,6 +937,174 @@
             </item>
             <item id="release_date">
               <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkIPSubnetToIPSubnet" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkipsubnettoipsubnet</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="ipsubnet2_id"/>
+            <attribute id="ipsubnet1_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="ipsubnet2_id"/>
+            <attribute id="ipsubnet1_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="ipsubnet1_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet1_id</sql>
+          <target_class>IPSubnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipsubnet1_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet1_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ipsubnet2_id" xsi:type="AttributeExternalKey">
+          <sql>ipsubnet2_id</sql>
+          <target_class>IPSubnet</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipsubnet2_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipsubnet2_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods>
+        <method id="DoCheckToWrite">
+          <comment>/**&#13;
+            * Check validity of new subnet attributes before creation&#13;
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  function DoCheckToWrite()
+  {
+    // Run standard iTop checks first
+    parent::DoCheckToWrite();
+
+    // Make sure we don't link IP to itself
+    if ($this->Get('ipsubnet1_id') == $this->Get('ipsubnet2_id'))
+    {
+  		$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:NatSubnetsAretheSame');
+  		return;
+    }
+  }]]></code>
+        </method>
+        <method id="AfterInsert">
+          <comment/>
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function AfterInsert()
+	{
+		parent::AfterInsert();
+
+		$iIPSubnet1 = $this->Get('ipsubnet1_id');
+		$oIPSubnet1 = MetaModel::GetObject('IPSubnet', $iIPSubnet1, false /* MustBeFound */);
+		if (!is_null($oIPSubnet1))
+		{
+			$iOrgId = $oIPSubnet1->Get('org_id');
+			$sSubnetSymetricalNAT = IPConfig::GetFromGlobalIPConfig('subnet_symetrical_nat', $iOrgId);
+			if ($sSubnetSymetricalNAT == 'yes')
+			{
+				$iIPSubnet2 = $this->Get('ipsubnet2_id');
+		        $sOQL = "SELECT lnkIPSubnetToIPSubnet WHERE ipsubnet1_id = :ipsubnet2 AND ipsubnet2_id = :ipsubnet1";
+		        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ipsubnet1' => $iIPSubnet1, 'ipsubnet2' => $iIPSubnet2));
+		        if (!$oLnkSet->CountExceeds(0))
+		        {
+		            $oLnk = MetaModel::NewObject('lnkIPSubnetToIPSubnet');
+		            $oLnk->Set('ipsubnet1_id', $iIPSubnet2);
+			        $oLnk->Set('ipsubnet2_id', $iIPSubnet1);
+				    $oLnk->DBInsert();
+		        }
+	        }
+        }
+	}]]></code>
+        </method>
+        <method id="AfterDelete">
+          <comment/>
+          <static>false</static>
+          <access>public </access>
+          <code><![CDATA[	public function AfterDelete()
+	{
+		parent::AfterDelete();
+
+		$iIPSubnet1 = $this->Get('ipsubnet1_id');
+		$oIPSubnet1 = MetaModel::GetObject('IPSubnet', $iIPSubnet1, false /* MustBeFound */);
+		if (!is_null($oIPSubnet1))
+		{
+    		$iOrgId = $oIPSubnet1->Get('org_id');
+			$sSubnetSymetricalNAT = IPConfig::GetFromGlobalIPConfig('subnet_symetrical_nat', $iOrgId);
+			if ($sSubnetSymetricalNAT == 'yes')
+    		{
+				$iIPSubnet2 = $this->Get('ipsubnet2_id');
+		        $sOQL = "SELECT lnkIPSubnetToIPSubnet WHERE ipsubnet1_id = :ipsubnet2 AND ipsubnet2_id = :ipsubnet1";
+		        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ipsubnet1' => $iIPSubnet1, 'ipsubnet2' => $iIPSubnet2));
+	            while ($oLnk = $oLnkSet->Fetch())
+    	        {
+	                $oLnk->DBDelete();
+	            }
+            }
+		}
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="ipsubnet1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipsubnet2_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="ipsubnet1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipsubnet2_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="ipsubnet1_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipsubnet1_name">
+              <rank>20</rank>
+            </item>
+            <item id="ipsubnet2_id">
+              <rank>30</rank>
+            </item>
+            <item id="ipsubnet2_name">
+              <rank>40</rank>
             </item>
           </items>
         </list>
@@ -1296,14 +1472,17 @@
             <item id="document_list">
               <rank>30</rank>
             </item>
-            <item id="vlans_list">
+            <item id="subnets_list">
               <rank>40</rank>
             </item>
-            <item id="vrfs_list">
+            <item id="vlans_list">
               <rank>50</rank>
             </item>
-            <item id="col:col1">
+            <item id="vrfs_list">
               <rank>60</rank>
+            </item>
+            <item id="col:col1">
+              <rank>70</rank>
               <items>
                 <item id="fieldset:Class:IPSubnet:baseinfo">
                   <rank>10</rank>
@@ -1337,7 +1516,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>70</rank>
+              <rank>80</rank>
               <items>
                 <item id="fieldset:Class:IPSubnet:ipinfo">
                   <rank>10</rank>
@@ -2723,6 +2902,16 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
+        <field id="subnet_symetrical_nat" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>subnet_symetrical_nat</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
           <values>
             <value>dtc_yes</value>
@@ -2782,11 +2971,14 @@
                     <item id="ipv4_gateway_ip_format">
                       <rank>20</rank>
                     </item>
-                    <item id="subnet_low_watermark">
+                    <item id="subnet_symetrical_nat">
                       <rank>40</rank>
                     </item>
-                    <item id="subnet_high_watermark">
+                    <item id="subnet_low_watermark">
                       <rank>50</rank>
+                    </item>
+                    <item id="subnet_high_watermark">
+                      <rank>60</rank>
                     </item>
                   </items>
                 </item>
@@ -3388,7 +3580,7 @@
     </menu>
     <menu id="IPConfig" xsi:type="OQLMenuNode" _delta="define">
       <rank>15</rank>
-      <parent>Configuration</parent>
+      <parent>ConfigurationTools</parent>
       <oql>SELECT IPConfig</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>

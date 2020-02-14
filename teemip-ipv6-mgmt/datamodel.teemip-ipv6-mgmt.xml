@@ -44,6 +44,8 @@
       <fields>
         <field id="parent_id" xsi:type="AttributeHierarchicalKey">
           <dependencies>
+            <attribute id="firstip"/>
+            <attribute id="lastip"/>
             <attribute id="org_id"/>
             <attribute id="parent_org_id"/>
           </dependencies>
@@ -370,14 +372,17 @@
             <item id="document_list">
               <rank>30</rank>
             </item>
-            <item id="vlans_list">
+            <item id="subnets_list">
               <rank>40</rank>
             </item>
-            <item id="vrfs_list">
+            <item id="vlans_list">
               <rank>50</rank>
             </item>
-            <item id="col:col1">
+            <item id="vrfs_list">
               <rank>60</rank>
+            </item>
+            <item id="col:col1">
+              <rank>70</rank>
               <items>
                 <item id="fieldset:Class:IPSubnet:baseinfo">
                   <rank>10</rank>
@@ -411,7 +416,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>70</rank>
+              <rank>80</rank>
               <items>
                 <item id="fieldset:Class:IPSubnet:ipinfo">
                   <rank>10</rank>

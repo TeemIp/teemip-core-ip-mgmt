@@ -232,6 +232,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'No alarm has been sent yet',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Low water mark alarm has been sent',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'High water mark alarm has been sent',
+	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Subnets',
+	'Class:IPSubnet/Attribute:subnets_list+' => 'List of NAT subnets',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
 	'Class:IPSubnet/Attribute:vlans_list+' => '',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
@@ -260,6 +262,25 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Tab:requests+' => 'IP Requests related to this subnet',
 	'Class:IPSubnet/Tab:changes' => 'IP Changes',
 	'Class:IPSubnet/Tab:changes+' => 'IP Changes related to this subnet',
+));
+
+//
+// Class: lnkIPSubnetToIPSubnet
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkIPSubnetToIPSubnet' => 'Link Subnet / NAT Subnet',
+	'Class:lnkIPSubnetToIPSubnet+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Subnet Type',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id' => 'Subnet',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id+' => 'Subnet to be translated',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id' => 'NAT Subnet',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id+' => 'Translated subnet',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name' => 'Name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name+' => 'Subnet\'s name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name' => 'Name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name+' => 'Subnet\'s name',
 ));
 
 //
@@ -498,9 +519,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_id_finalclass_recall' => 'IP Type',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_id_finalclass_recall+' => '',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip1_id' => 'IP Address',
-	'Class:lnkIPAdressToIPAddress/Attribute:ip1_id+' => '',
+	'Class:lnkIPAdressToIPAddress/Attribute:ip1_id+' => 'IP to be translated',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_id' => 'NAT IP',
-	'Class:lnkIPAdressToIPAddress/Attribute:ip2_id+' => '',
+	'Class:lnkIPAdressToIPAddress/Attribute:ip2_id+' => 'Translated IP',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip1_short_name' => 'Short Name',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip1_short_name+' => 'Left label of the FQDN',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip1_domain_name' => 'Domain Name',
@@ -514,7 +535,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port' => 'Map to port',
 	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'To be used if port forwarding is ON',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol' => 'Protocol',
-	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => '',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => 'Leave empty for all',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:udp' => 'UDP',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:tcp' => 'TCP',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:both' => 'UDP / TCP',
@@ -666,6 +687,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no+' => '',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat' => 'Symetrical Subnet NAT',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat+' => '',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:yes+' => '',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no' => 'No',
+	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no+' => '',
 ));
 
 //
