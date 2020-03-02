@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 TeemIp
+// Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2016 TeemIp
+ * @copyright   Copyright (C) 2020 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -232,6 +232,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Aucune alarme n\'a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Une alarme de Seuil Bas a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Une alarme de Seuil Haut a été envoyée',
+	'Class:IPSubnet/Attribute:subnets_list' => 'Sous-réseaux NATés',
+	'Class:IPSubnet/Attribute:subnets_list+' => 'Liste de tous les sous-réseaux NATés',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
 	'Class:IPSubnet/Attribute:vlans_list+' => '',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
@@ -260,6 +262,25 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Tab:requests+' => 'Demandes IP liés à ce sous-réseau',
 	'Class:IPSubnet/Tab:changes' => 'Changements IP',
 	'Class:IPSubnet/Tab:changes+' => 'Changements IP liés à ce sous-réseau',
+));
+
+//
+// Class: lnkIPSubnetToIPSubnet
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkIPSubnetToIPSubnet' => 'Lien Sous-réseau / Sous réseau NATé',
+	'Class:lnkIPSubnetToIPSubnet+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Type de sous-réseau',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id' => 'Sous-réseau',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id+' => 'Sous-réseau à translater',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id' => 'Sous-réseau NATé',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id+' => 'Sous-réseau translaté',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name' => 'Nom',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name+' => 'Nom du Sous-réseau',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name' => 'Nom',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name+' => 'Nom du Sous-réseau',
 ));
 
 //

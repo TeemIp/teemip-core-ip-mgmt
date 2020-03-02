@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 TeemIp
+// Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2016 TeemIp
+ * @copyright   Copyright (C) 2020 TeemIp
  * @copyright   Copyright (C) 2016 ITOMIG GmbH (deutsche Übersetzung)
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -233,6 +233,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Es wurde noch kein Alarm gesendent',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Niedrig Alarm gesendet',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Hoch Alarm gesendet ',
+	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Subnetze',
+	'Class:IPSubnet/Attribute:subnets_list+' => 'Liste der NAT Subnetze',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
 	'Class:IPSubnet/Attribute:vlans_list+' => '',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
@@ -261,6 +263,25 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPSubnet/Tab:requests+' => 'IP Anforderung in Verbindung mit diesem Subnetz',
 	'Class:IPSubnet/Tab:changes' => 'IP Änderungen',
 	'Class:IPSubnet/Tab:changes+' => 'IP Änderungen in Verbindung mit diesem Subnetz',
+));
+
+//
+// Class: lnkIPSubnetToIPSubnet
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkIPSubnetToIPSubnet' => 'Verknüpfung Subnetz / NAT Subnetz',
+	'Class:lnkIPSubnetToIPSubnet+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Subnetz Type',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id' => 'Subnetz',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id' => 'NAT Subnetz',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name' => 'Name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name+' => 'Subnetz Name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name' => 'Name',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name+' => 'Subnetz Name',
 ));
 
 //

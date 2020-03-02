@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 TeemIp
+// Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2016 TeemIp
+ * @copyright   Copyright (C) 2020 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -232,6 +232,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Nessun allerme è stato ancora inviato',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Allarme sul livello basso è stato inviato',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Allarme sul livello alto è stato inviato',
+	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Sottorete',
+	'Class:IPSubnet/Attribute:subnets_list+' => 'Lista degli Sottorete di NAT',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
 	'Class:IPSubnet/Attribute:vlans_list+' => '',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
@@ -263,6 +265,25 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
+// Class: lnkIPSubnetToIPSubnet
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkIPSubnetToIPSubnet' => 'Link Sottorete / NAT Sottorete',
+	'Class:lnkIPSubnetToIPSubnet+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Tipo Sottorete',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id' => 'Sottorete',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id' => 'NAT Sottorete',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name' => 'Nome',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name+' => 'Sottorete nome',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name' => 'Nome',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name+' => 'Sottorete nome',
+));
+
+//
 // Class: lnkIPSubnetToVLAN
 //
 
@@ -273,7 +294,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id_finalclass_recall+' => '',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id' => 'Sottorete',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id+' => '',
-	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_name' => 'Sottorete name',
+	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_name' => 'Sottorete nome',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_name+' => '',
 	'Class:lnkIPSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkIPSubnetToVLAN/Attribute:vlan_id+' => '',
