@@ -35,10 +35,11 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-endusers-devices/2.7.0',
 			'teemip-ip-mgmt/2.6.0',
+			'teemip-config-mgmt-adaptor/2.6.0'
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
- 		'auto_select' => 'SetupInfo::ModuleIsSelected("teemip-ip-mgmt") && SetupInfo::ModuleIsSelected("itop-endusers-devices")',
+ 		'auto_select' => 'SetupInfo::ModuleIsSelected("itop-endusers-devices") && SetupInfo::ModuleIsSelected("teemip-ip-mgmt") && SetupInfo::ModuleIsSelected("teemip-config-mgmt-adaptor")',
 
 		// Components
 		//

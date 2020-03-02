@@ -3,6 +3,11 @@
   <classes>
     <class id="MobilePhone" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -21,6 +26,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>104</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>105</rank>
             </item>
@@ -28,6 +36,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>104</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>105</rank>
             </item>
@@ -37,6 +48,11 @@
     </class>
     <class id="IPPhone" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -55,6 +71,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>84</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>85</rank>
             </item>
@@ -62,6 +81,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>84</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>85</rank>
             </item>
@@ -71,6 +93,11 @@
     </class>
     <class id="Tablet" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -89,6 +116,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -96,6 +126,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -105,6 +138,11 @@
     </class>
     <class id="Peripheral" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -123,6 +161,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -130,6 +171,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -139,6 +183,11 @@
     </class>
     <class id="PC" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -161,6 +210,9 @@
               <items>
                 <item id="fieldset:Server:moreinfo" _delta="must_exist">
                   <items>
+                    <item id="macaddress" _delta="define">
+                      <rank>74</rank>
+                    </item>
                     <item id="ipaddress_id" _delta="define">
                       <rank>75</rank>
                     </item>
@@ -172,6 +224,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -181,6 +236,11 @@
     </class>
     <class id="Printer" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -203,6 +263,9 @@
               <items>
                 <item id="fieldset:Server:moreinfo" _delta="must_exist">
                   <items>
+                    <item id="macaddress" _delta="define">
+                      <rank>24</rank>
+                    </item>
                     <item id="ipaddress_id" _delta="define">
                       <rank>25</rank>
                     </item>
@@ -214,6 +277,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
              <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
