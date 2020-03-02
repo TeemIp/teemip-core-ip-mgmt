@@ -1,4 +1,4 @@
-// Copyright (C) 2014 TeemIp
+// Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -16,7 +16,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2014 TeemIp
+ * @copyright   Copyright (C) 2020 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 TeemIp
+// Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2016 TeemIp
+ * @copyright   Copyright (C) 2020 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -232,6 +232,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'No se han enviado alertamientos',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Alertamiento de baja marca de agua ha sido enviado',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Alertamiento de alta marca de agua ha sido enviado',
+	'Class:IPSubnet/Attribute:subnets_list' => 'Subreds con NAT',
+	'Class:IPSubnet/Attribute:subnets_list+' => 'List de subreds con NAT',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
 	'Class:IPSubnet/Attribute:vlans_list+' => '',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
@@ -260,6 +262,25 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPSubnet/Tab:requests+' => 'IP Requests related to this subnet',
 	'Class:IPSubnet/Tab:changes' => 'Cambios de IP',
 	'Class:IPSubnet/Tab:changes+' => 'IP Changes related to this subnet',
+));
+
+//
+// Class: lnkIPSubnetToIPSubnet
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkIPSubnetToIPSubnet' => 'Relación Subred / NAT Subred',
+	'Class:lnkIPSubnetToIPSubnet+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Tipo de Subred',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id' => 'Subred',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id' => 'NAT Subred',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id+' => '',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name' => 'Nombre',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet1_name+' => 'Nombre Subred',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name' => 'Nombre',
+	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_name+' => 'Nombre Subred',
 ));
 
 //
@@ -459,7 +480,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPAddress/Attribute:release_date' => 'Fecha Liberación',
 	'Class:IPAddress/Attribute:release_date+' => 'Date when IP address has been released and is not used anymore.',
 	'Class:IPAddress/Attribute:ip_list' => 'IPs con NAT',
-	'Class:IPAddress/Attribute:ip_list+' => 'List of NAT IPs',
+	'Class:IPAddress/Attribute:ip_list+' => 'List de IPs con NAT',
 	'Class:IPAddress/Attribute:finalclass' => 'Clase',
 	'Class:IPAddress/Attribute:finalclass+' => '',
 ));
