@@ -23,6 +23,31 @@
         </method>
       </methods>
     </class>
+    <class id="PhysicalDevice" _delta="must_exist">
+      <methods>
+        <method id="GetAttributeParams" _delta="define">
+          <comment>/**&#13;
+            * Provides attributes' parameters &#13;
+            */</comment>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetAttributeParams($sAttCode)
+    {
+        if ($sAttCode == 'macaddress')
+	    {
+			$iOrgId = $this->Get('org_id');
+			if ($iOrgId != null)
+			{
+				return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $iOrgId));
+			}
+			return('colons');
+	    }
+	    return '';
+	}]]></code>
+        </method>
+      </methods>
+    </class>
     <class id="ConnectableCI" _delta="must_exist">
       <methods>
         <method id="DisplayBareRelations" _delta="define">
@@ -190,9 +215,9 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function GetAttributeParams($sAttCode)
     {
-      if ($sAttCode == 'macaddress')
-      {
-      		$oObject = null;
+        if ($sAttCode == 'macaddress')
+	    {
+	        $oObject = null;
 			$sClass = get_class($this);
 			if (MetaModel::IsValidAttCode($sClass, 'connectableci_id'))
 			{
@@ -206,14 +231,15 @@
 			}
 			if ($oObject != null)
 			{
-				$sOrgId = $oObject->Get('org_id');
-				if ($sOrgId != null)
+				$iOrgId = $oObject->Get('org_id');
+				if ($iOrgId != null)
 				{
-					return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $sOrgId));
+					return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $iOrgId));
 				}
 			}
 			return('colons');
-      }
+	    }
+	    return '';
 	}]]></code>
         </method>
       </methods>
