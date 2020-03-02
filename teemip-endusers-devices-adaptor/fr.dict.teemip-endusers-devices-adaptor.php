@@ -26,6 +26,8 @@
 //
  
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:MobilePhone/Attribute:macaddress' => 'Adresse MAC',
+	'Class:MobilePhone/Attribute:macaddress+' => '',
 	'Class:MobilePhone/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:MobilePhone/Attribute:ipaddress_id+' => '',
 	'Class:MobilePhone/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -37,6 +39,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:IPPhone/Attribute:macaddress' => 'Adresse MAC',
+	'Class:IPPhone/Attribute:macaddress+' => '',
 	'Class:IPPhone/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:IPPhone/Attribute:ipaddress_id+' => '',
 	'Class:IPPhone/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -48,6 +52,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:Tablet/Attribute:macaddress' => 'Adresse MAC',
+	'Class:Tablet/Attribute:macaddress+' => '',
 	'Class:Tablet/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:Tablet/Attribute:ipaddress_id+' => '',
 	'Class:Tablet/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -59,6 +65,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:Peripheral/Attribute:macaddress' => 'Adresse MAC',
+	'Class:Peripheral/Attribute:macaddress+' => '',
 	'Class:Peripheral/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:Peripheral/Attribute:ipaddress_id+' => '',
 	'Class:Peripheral/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -70,6 +78,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:PC/Attribute:macaddress' => 'Adresse MAC',
+	'Class:PC/Attribute:macaddress+' => '',
 	'Class:PC/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:PC/Attribute:ipaddress_id+' => '',
 	'Class:PC/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -81,6 +91,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:Printer/Attribute:macaddress' => 'Adresse MAC',
+	'Class:Printer/Attribute:macaddress+' => '',
 	'Class:Printer/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:Printer/Attribute:ipaddress_id+' => '',
 	'Class:Printer/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
