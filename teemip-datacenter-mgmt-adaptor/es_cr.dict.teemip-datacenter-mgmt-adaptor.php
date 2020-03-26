@@ -24,13 +24,13 @@
 //
 // Class: Rack
 //
- 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Rack/Attribute:macaddress' => 'MAC Address',
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Rack/Attribute:macaddress' => 'Dirección MAC',
 	'Class:Rack/Attribute:macaddress+' => '',
-	'Class:Rack/Attribute:ipaddress_id' => 'IP Address',
+	'Class:Rack/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:Rack/Attribute:ipaddress_id+' => '',
-	'Class:Rack/Attribute:ipaddress_name' => 'IP Address Name',
+	'Class:Rack/Attribute:ipaddress_name' => 'Nombre',
 	'Class:Rack/Attribute:ipaddress_name+' => '',
 ));
 
@@ -38,12 +38,12 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: Enclosure
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:Enclosure/Attribute:macaddress' => 'MAC Address',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Enclosure/Attribute:macaddress' => 'Dirección MAC',
 	'Class:Enclosure/Attribute:macaddress+' => '',
-	'Class:Enclosure/Attribute:ipaddress_id' => 'IP Address',
+	'Class:Enclosure/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:Enclosure/Attribute:ipaddress_id+' => '',
-	'Class:Enclosure/Attribute:ipaddress_name' => 'IP Address Name',
+	'Class:Enclosure/Attribute:ipaddress_name' => 'Nombre',
 	'Class:Enclosure/Attribute:ipaddress_name+' => '',
 ));
 
@@ -51,12 +51,12 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: PowerConnection
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:PowerConnection/Attribute:macaddress' => 'MAC Address',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PowerConnection/Attribute:macaddress' => 'Dirección MAC',
 	'Class:PowerConnection/Attribute:macaddress+' => '',
-	'Class:PowerConnection/Attribute:ipaddress_id' => 'IP Address',
+	'Class:PowerConnection/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PowerConnection/Attribute:ipaddress_id+' => '',
-	'Class:PowerConnection/Attribute:ipaddress_name' => 'IP Address Name',
+	'Class:PowerConnection/Attribute:ipaddress_name' => 'Nombre',
 	'Class:PowerConnection/Attribute:ipaddress_name+' => '',
 ));
 
@@ -64,12 +64,12 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: PowerSource
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:PowerSource/Attribute:macaddress' => 'MAC Address',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PowerSource/Attribute:macaddress' => 'Dirección MAC',
 	'Class:PowerSource/Attribute:macaddress+' => '',
-	'Class:PowerSource/Attribute:ipaddress_id' => 'IP Address',
+	'Class:PowerSource/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PowerSource/Attribute:ipaddress_id+' => '',
-	'Class:PowerSource/Attribute:ipaddress_name' => 'IP Address Name',
+	'Class:PowerSource/Attribute:ipaddress_name' => 'Nombre',
 	'Class:PowerSource/Attribute:ipaddress_name+' => '',
 ));
 
@@ -77,11 +77,11 @@ Dict::Add('EN US', 'English', 'English', array(
 // Class: PDU
 //
 
-Dict::Add('EN US', 'English', 'English', array(
-	'Class:PDU/Attribute:macaddress' => 'MAC Address',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:PDU/Attribute:macaddress' => 'Dirección MAC',
 	'Class:PDU/Attribute:macaddress+' => '',
-	'Class:PDU/Attribute:ipaddress_id' => 'IP Address',
+	'Class:PDU/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PDU/Attribute:ipaddress_id+' => '',
-	'Class:PDU/Attribute:ipaddress_name' => 'IP Address Name',
+	'Class:PDU/Attribute:ipaddress_name' => 'Nombre',
 	'Class:PDU/Attribute:ipaddress_name+' => '',
 ));

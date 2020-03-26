@@ -3,6 +3,11 @@
   <classes>
     <class id="Rack" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -21,6 +26,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -28,7 +36,10 @@
         </details>
         <search>
           <items>
-             <item id="ipaddress_id" _delta="define">
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
+            <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
           </items>
@@ -37,6 +48,11 @@
     </class>
     <class id="Enclosure" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -55,6 +71,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>85</rank>
             </item>
@@ -62,7 +81,10 @@
         </details>
         <search>
           <items>
-             <item id="ipaddress_id" _delta="define">
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
+            <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
           </items>
@@ -71,6 +93,11 @@
     </class>
     <class id="PowerConnection" _delta="must_exist">
       <fields>
+        <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
+          <sql>macaddress</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
@@ -89,6 +116,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -96,7 +126,10 @@
         </details>
         <search>
           <items>
-             <item id="ipaddress_id" _delta="define">
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
+            <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
           </items>
@@ -107,6 +140,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
@@ -114,7 +150,10 @@
         </details>
         <search>
           <items>
-             <item id="ipaddress_id" _delta="define">
+            <item id="macaddress" _delta="define">
+              <rank>74</rank>
+            </item>
+            <item id="ipaddress_id" _delta="define">
               <rank>75</rank>
             </item>
           </items>
@@ -125,6 +164,9 @@
       <presentation>
         <details>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>94</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>95</rank>
             </item>
@@ -132,6 +174,9 @@
         </details>
         <search>
           <items>
+            <item id="macaddress" _delta="define">
+              <rank>84</rank>
+            </item>
             <item id="ipaddress_id" _delta="define">
               <rank>85</rank>
             </item>

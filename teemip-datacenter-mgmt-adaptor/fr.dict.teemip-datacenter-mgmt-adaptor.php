@@ -26,6 +26,8 @@
 //
  
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:Rack/Attribute:macaddress' => 'Adresse MAC',
+	'Class:Rack/Attribute:macaddress+' => '',
 	'Class:Rack/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:Rack/Attribute:ipaddress_id+' => '',
 	'Class:Rack/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -37,6 +39,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:Enclosure/Attribute:macaddress' => 'Adresse MAC',
+	'Class:Enclosure/Attribute:macaddress+' => '',
 	'Class:Enclosure/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:Enclosure/Attribute:ipaddress_id+' => '',
 	'Class:Enclosure/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -48,6 +52,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:PowerConnection/Attribute:macaddress' => 'Adresse MAC',
+	'Class:PowerConnection/Attribute:macaddress+' => '',
 	'Class:PowerConnection/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:PowerConnection/Attribute:ipaddress_id+' => '',
 	'Class:PowerConnection/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -59,6 +65,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:PowerSource/Attribute:macaddress' => 'Adresse MAC',
+	'Class:PowerSource/Attribute:macaddress+' => '',
 	'Class:PowerSource/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:PowerSource/Attribute:ipaddress_id+' => '',
 	'Class:PowerSource/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
@@ -70,6 +78,8 @@ Dict::Add('FR FR', 'English', 'English', array(
 //
 
 Dict::Add('FR FR', 'English', 'English', array(
+	'Class:PDU/Attribute:macaddress' => 'Adresse MAC',
+	'Class:PDU/Attribute:macaddress+' => '',
 	'Class:PDU/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:PDU/Attribute:ipaddress_id+' => '',
 	'Class:PDU/Attribute:ipaddress_name' => 'Nom de l\'adresse IP',
