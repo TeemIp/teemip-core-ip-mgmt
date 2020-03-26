@@ -773,7 +773,8 @@ EOF
 				{
 					if ($oIP->Get('status') != 'allocated')
 					{
-						$oIP->Set('status', 'allocated');	
+						$oIP->Set('status', 'allocated');
+						$oIP->Set('allocation_date', time());
 						$oIP->DBUpdate();
 					}
 				}
@@ -785,7 +786,8 @@ EOF
 				{
 					if ($oIP->Get('status') == 'allocated')
 					{
-						$oIP->Set('status', 'unassigned');	
+						$oIP->Set('status', 'released');
+						$oIP->Set('release_date', time());
 						$oIP->DBUpdate();
 					}
 				}
@@ -812,7 +814,8 @@ EOF
 			{
 				if ($oIP->Get('status') == 'allocated')
 				{
-					$oIP->Set('status', 'unassigned');
+					$oIP->Set('status', 'released');
+					$oIP->Set('release_date', time());
 					$oIP->DBUpdate();
 				}
 			}
