@@ -47,7 +47,7 @@ class _IPApplication extends FunctionalCI
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		$oPage->RemoveTab(Dict::S('Class:FunctionalCI/Tab:OpenedTickets'));
+		$oPage->RemoveTab('Class:FunctionalCI/Tab:OpenedTickets');
 	}
 
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
