@@ -1964,7 +1964,7 @@ EOF
 
 		// Look for all blocks attached to parent of block being created and contained within new block
 		// Attach them to new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND (b.org_id = $sOrgId OR bvalval  .parent_org_id = $sOrgId) AND b.id != $iKey"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != $iKey"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oSRange->Set('parent_id', $iKey);
