@@ -12,8 +12,17 @@
           <type>Custom</type>
           <code><![CDATA[	public function GetNameForIPAttribute($sIPAttCode)
 	{
-		// Append IP label to name
-		$sName = $this->Get('name').'-'.$this->GetLabel($sIPAttCode);
+		// Append IP label to name beside default IP attributes
+		switch ($sIPAttCode)
+		{
+		    case 'managementip_id':
+		    case 'ipaddress_id':
+		        $sName = $this->Get('name');
+		        break;
+
+		    default:
+        		$sName = $this->Get('name').'-'.$this->GetLabel($sIPAttCode);
+		}
 		// Replace space char in name by '-' and lower the case
 		$sName = strtolower(str_replace(' ', '-', $sName));
 
