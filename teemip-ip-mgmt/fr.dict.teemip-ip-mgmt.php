@@ -537,7 +537,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkIPInterfaceToIPAddress' => 'Lien interface IP / Adresse IP',
+	'Class:lnkIPInterfaceToIPAddress' => 'Lien Interface IP / Adresse IP',
 	'Class:lnkIPInterfaceToIPAddress+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall' => 'Type d\'IP',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall+' => '',

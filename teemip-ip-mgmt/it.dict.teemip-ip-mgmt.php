@@ -537,7 +537,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkIPInterfaceToIPAddress' => 'Link intraccia IP/ Indirizzo IP',
+	'Class:lnkIPInterfaceToIPAddress' => 'Link Intraccia IP/ Indirizzo IP',
 	'Class:lnkIPInterfaceToIPAddress+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall' => 'Tipo IP',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall+' => '',

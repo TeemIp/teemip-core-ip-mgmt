@@ -548,7 +548,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkIPInterfaceToIPAddress' => 'Link IP interface/ IP Address',
+	'Class:lnkIPInterfaceToIPAddress' => 'Link IP Interface/ IP Address',
 	'Class:lnkIPInterfaceToIPAddress+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall' => 'IP Type',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall+' => '',
