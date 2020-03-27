@@ -74,7 +74,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Domain/Attribute:registrar_id+' => 'Organization looking after the allocation of domain names.',
 	'Class:Domain/Attribute:registrar_name' => 'Internet Registrar Name',
 	'Class:Domain/Attribute:registrar_name+' => '',
-	'Class:Domain/Attribute:validity_start' => 'Sart date ',
+	'Class:Domain/Attribute:validity_start' => 'Start date ',
 	'Class:Domain/Attribute:validity_start+' => 'Date after which domain is valid.',
 	'Class:Domain/Attribute:validity_end' => 'End date',
 	'Class:Domain/Attribute:validity_end+' => 'Date after which domain is not valid anymore.',
