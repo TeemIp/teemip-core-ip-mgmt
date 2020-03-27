@@ -2379,6 +2379,10 @@
           <on_target_delete>DEL_AUTO</on_target_delete>
           <jointype/>
         </field>
+        <field id="usage_id" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>ipaddress_id</extkey_attcode>
+          <target_attcode>usage_id</target_attcode>
+        </field>
       </fields>
       <methods>
         <method id="AfterInsert" _delta="define">
@@ -2462,6 +2466,9 @@
             </item>
             <item id="ipaddress_id">
               <rank>20</rank>
+            </item>
+            <item id="usage_id">
+              <rank>30</rank>
             </item>
           </items>
         </list>
