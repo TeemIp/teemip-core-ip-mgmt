@@ -492,24 +492,39 @@ EOF
 			$aExtraParams['menu'] = false;			
 			
 			// Tab for Registered IPs
-			$oIpAssignedSearch = DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON(i.ip) >= INET_ATON('$sFirstIp') AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')	AND i.org_id = $sOrgId");
-			$oIpAssignedSet = new CMDBObjectSet($oIpAssignedSearch);
-			$iCountAssigned = $oIpAssignedSet->Count();
-			if ($iCountAssigned > 0)
+			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON(i.ip) >= INET_ATON('$sFirstIp') AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')	AND i.org_id = $sOrgId");
+			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
+			$iRegistered = $oIpRegisteredSet->Count();
+			if ($iRegistered > 0)
 			{
-				$iCountAllocated = 0;
-				while ($oIpAssigned = $oIpAssignedSet->Fetch())
+				$aStatusRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('status', false);
+				$iReserved = 0;
+				$iAllocated = 0;
+				$iReleased = 0;
+				$i = 0;
+				while ($i < $iRegistered)
 				{
-					if ($oIpAssigned->Get('status') == 'allocated')
+					switch ($aStatusRegisteredIPs[$i++])
 					{
-						$iCountAllocated++;
+						case 'reserved':
+							$iReserved++;
+							break;
+
+						case 'allocated':
+							$iAllocated++;
+							break;
+
+						case 'released':
+							$iReleased++;
+							break;
 					}
+
 				}
-				$iCountReserved = $iCountAssigned - $iCountAllocated;
-				$oP->SetCurrentTab(Dict::Format('Class:IPRange/Tab:ipregistered').' ('.$iCountAssigned.')');
+				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
+				$oP->SetCurrentTab(Dict::Format('Class:IPRange/Tab:ipregistered').' ('.$iRegistered.')');
 				$oP->p(MetaModel::GetClassIcon('IPv4Address').'&nbsp;'.Dict::Format('Class:IPRange/Tab:ipregistered+'));
-				$oP->p($this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iCountReserved, $iCountAllocated, $iSize));
-				$oBlock = new DisplayBlock($oIpAssignedSearch, 'list');
+				$oP->p($this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize));
+				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
 				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
 			}
 			else

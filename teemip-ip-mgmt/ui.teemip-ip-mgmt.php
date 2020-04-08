@@ -1,4 +1,4 @@
-<?php
+  <?php
 // Copyright (C) 2020 TeemIp
 //
 //   This file is part of TeemIp.
@@ -1074,36 +1074,70 @@ try
 		
 		case 'calculator':	// Provides IP related calculations
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			// Check if right parameters have been given
-			if ( empty($sClass))
+			if (!empty($sClass))
 			{
-				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
-			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
-			}
-			
-			// Id may be null. In that case a temporary object is created.
-			if ( empty($id))
-			{
-				$oObj = MetaModel::NewObject($sClass);
-				$id = $oObj->GetKey();
-			}
-			else
-			{
-				// Check if the object exists
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-				if (is_null($oObj))
+				if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
+				}
+
+				$id = utils::ReadParam('id', '');
+				// Id may be null. In that case a temporary object is created.
+				if ( empty($id))
 				{
 					$oObj = MetaModel::NewObject($sClass);
 					$id = $oObj->GetKey();
 				}
+				else
+				{
+					// Check if the object exists
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+					if (is_null($oObj))
+					{
+						$oObj = MetaModel::NewObject($sClass);
+						$id = $oObj->GetKey();
+					}
+				}
+
+				// Display calculation page
+				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
 			}
-			
-			// Display calculation page
-			DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+			else
+			{
+				// Select the subnet class to calculate
+				$sClassLabel = MetaModel::GetName('IPSubnet');
+				$sClassIcon = MetaModel::GetClassIcon('IPv4Subnet');
+				$sHeaderTitle = Dict::S('UI:IPManagement:Action:Calculator:IPSubnet');
+				$oP->set_title($sHeaderTitle);
+				$oP->add(<<<HTML
+	<!-- Display title -->
+	<div class="page_header teemip_page_header">
+		<h1>$sClassIcon $sHeaderTitle</h1>
+	</div>
+	<!-- Beginning of wizContainer -->
+	<div class="wizContainer">
+HTML
+				);
+				$sFormAction= utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
+				$oP->add("<form action=\"$sFormAction\" id=\"form_for_subnet_calculator\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_for_subnet_calculator');\">\n");
+				$oP->add('<p>'.Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType'));
+				$oP->add($oAppContext->GetForForm());
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"calculator\">\n");
+				$oP->add('<select name="class">');
+				$aPossibleClasses = array('IPv4Subnet' => MetaModel::GetName('IPv4Subnet'), 'IPv6Subnet' => MetaModel::GetName('IPv6Subnet'));
+				foreach($aPossibleClasses as $sClassName => $sClassLabel)
+				{
+					$sSelected = ($sClassName == $sClass) ? 'selected' : '';
+					$oP->add("<option $sSelected value=\"$sClassName\">$sClassLabel</option>");
+				}
+				$oP->add('</select>');
+				$oP->add("&nbsp; <input type=\"submit\" value=\"".Dict::S('UI:Button:Apply')."\"></p>");
+				$oP->add('</form>');
+				$oP->add(<<<HTML
+	</div><!-- End of wizContainer -->
+HTML
+				);
+			}
 		break; // End case calculator
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1171,45 +1205,10 @@ try
 				// Set titles
 				SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':', $oObj, $sClassLabel);
 	
-				if ($id <= 0)
-				{
-					$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-
-		 			// Get number of records
-					if ($iCurrentOrganization == '')
-					{
-						$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
-					}
-					else
-					{
-						$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
-					}
-					
-					// Get actions Menu
-					$iListId = $oP->GetUniqueId(); 
-					$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
-					$sActionsMenu = $oMenuBlock->GetRenderContent($oP, array(), $iListId);
-					
-					// Get toolkit menu
-					// Remove "Add To Dashboard" submenu
-					$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-					$aActions = array();	
-					utils::GetPopupMenuItems($oP, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
-					unset($aActions['UI:Menu:AddToDashboard']);
-					unset($aActions['UI:Menu:ShortcutList']);
-					$sHtml .= $oP->RenderPopupMenuItems($aActions);
-					$sToolkitMenu = $sHtml;
-					
-					// Display menu line
-					$sHtml = "<table style=\"width:100%;\">";
-					$sHtml .= "<tr><td class=\"pagination_container\"></td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
-					$sHtml .= "</table>";
-					$oP->Add($sHtml);
-				}
-
 				// Display result
-				$oObj->DisplayCalculatorOutput($oP, $aPostedParam);
-				
+				$oObj->DisplayCalculatorOutput($oP, $oAppContext, $aPostedParam);;
+				$oP->add_ready_script("\$('#tree ul').treeview();\n");
+				$oP->add("<div id=\"dialog_content\"/>\n");
 			}
 		break; // End case docalculator
 		

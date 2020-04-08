@@ -240,6 +240,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPSubnet/Attribute:vrfs_list+' => '',
 	'Class:IPSubnet/Attribute:location_list' => 'Località',
 	'Class:IPSubnet/Attribute:location_list+' => 'Località in cui le Sottorete si espandono',
+	'Class:IPSubnet/Attribute:summary/cell0' => 'IP registrati per stato',
+	'Class:IPSubnet/Attribute:summary/cell0+' => 'Total: %1$s',
 ));
 
 //
@@ -250,7 +252,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPSubnet/Tab:globalparam' => 'Settaggi Globali',
 	'Class:IPSubnet/Tab:ipregistered' => 'IP Registrati',
 	'Class:IPSubnet/Tab:ipregistered+' => 'IP registrati nella Sottorete',
-	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Riservato e %2$s Allocato fuori di %3$s',
+	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Riservato, %2$s Allocato, %3$s Rilasciato, %4$s Non assegnato fuori di %5$s',
 	'Class:IPSubnet/Tab:ipfree-explain' => 'Lista dei primi %1$s indirizzi IP liberi:',
 	'Class:IPSubnet/Tab:ipfree-explainbis' => 'Lista di tutti gli indirizzi IP liberi:',
 	'Class:IPSubnet/Tab:iprange' => 'Intervallo IP',
@@ -389,6 +391,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPv4Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv4Subnet/Attribute:broadcastip' => 'Broadcast IP',
 	'Class:IPv4Subnet/Attribute:broadcastip+' => '',
+	'Class:IPv4Subnet/Attribute:summary' => 'Sommario',
 ));
 
 //
@@ -425,7 +428,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPRange/Tab:ipregistered' => 'IP registrati',
 	'Class:IPRange/Tab:ipregistered+' => 'IP registrati all\'interno dell\'intervallo',
-	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Riservati and %2$s Allocati di %3$s',
+	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Riservato, %2$s Allocato, %3$s Rilasciato, %4$s Non assegnato fuori di %5$s',
 	'Class:IPRange/Tab:ipfree-explain' => 'Lista dei primi %1$s indirizzi IP liberi:',
 	'Class:IPRange/Tab:ipfree-explainbis' => 'Lista di tutti %1$s indirizzi IP:',
 	'Class:IPRange/Tab:notifications' => 'Notifiche',
@@ -787,8 +790,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:NewIPObject+' => 'Creazione di un nuovo oggetto IP',
 	'Menu:SearchIPObject' => 'Ricerca di un oggetto IP',
 	'Menu:SearchIPObject+' => 'Ricerca di un oggetto IP',
-	'Menu:Ipv4ShortCut' => 'Scorciatoia IPv4',
-	'Menu:Ipv4ShortCut+' => 'Scorciatoia IPv4',  
+	'Menu:IPv4ShortCut' => 'Scorciatoia IPv4',
+	'Menu:IPv4ShortCut+' => 'Scorciatoia IPv4',
 	'Menu:IPv4Block' => 'Blocco Sottorete',
 	'Menu:IPv4Block+' => 'Blocco Sottorete IPv4',
 	'Menu:IPv4Subnet' => 'Sottorete',
@@ -799,6 +802,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:IPv4Range+' => 'Intervalli IPv4',
 	'Menu:IPv4Address' => 'Indirizzi IP',
 	'Menu:IPv4Address+' => 'Indirizzi IPv4',
+	'Menu:IPTools' => 'Utensili',
+	'Menu:IPTools+' => '',
+	'Menu:SubnetCalculator' => 'Calcolatrice Sottorete',
+	'Menu:SubnetCalculator+' => '',
 	'Menu:Options' => 'Parametri',
 	'Menu:Options+' => 'Parametri',  
 	'Menu:IPConfig' => 'Settaggi GLobali IP',
@@ -1003,6 +1010,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Collisione della sottorete: broadcast IP appartiene a una subnet esistente!',	
 	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Collisione della sottorete: la nuova sottorete ne include una già esistente!',	
 	'UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet' => 'L\'IP del Gateway non è nei limiti della sottorete!',
+
+	// Subnet calculator
+	'UI:IPManagement:Action:Calculator:IPSubnet' => 'Calcolatrice Sottorete',
+	'UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType' => 'Seleziona il tipo di sottoreti',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation' => 'È possibile registrare i relativi blocchi sottorete o sottorete :',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateSubnet' => 'Crea sottorete',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateSubnet:MaskIsToSmall' => 'Mask è troppo piccola: non è possibile creare la sottorete !',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock' => 'Crea blocco sottorete',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig' => 'Mask è troppo grande: non è possibile creare il blocco sottorete !',
 
 //
 // Management of IPv4 Subnets
