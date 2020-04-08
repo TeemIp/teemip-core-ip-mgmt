@@ -1601,8 +1601,6 @@ EOF
 			if ($iParentOrgId == 0)
 			{
 				$iOrgId = $this->Get('org_id');
-				$sFirstIp = $this->Get('firstip');
-				$sLastIp = $this->Get('lastip');
 
 				// Look for all blocks containing the new block
 				// Pick the smallest one

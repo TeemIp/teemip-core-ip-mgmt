@@ -359,6 +359,14 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
+	 * @return mixed
+	 */
+	public function GetNibbles()
+	{
+		return $this->aNibbles;
+	}
+
+	/**
 	 * Computes the "High" part of the address from the canonicalized representation
 	 */
 	protected function ComputeHighPart()
@@ -630,11 +638,11 @@ class ormIPv6 extends ormIP
 		}
 		for ($i = (IPV6_NIBBLE_NUMBER - 1); $i >= 0; $i--)
 		{
-			if ($this->aNibbles[$i] > $oIp->aNibbles[$i])
+			if ($this->aNibbles[$i] > $oIp->GetNibbles()[$i])
 			{
 				return true;
 			}
-			else if ($this->aNibbles[$i] < $oIp->aNibbles[$i])
+			else if ($this->aNibbles[$i] < $oIp->GetNibbles()[$i])
 			{
 				return false;
 			}
@@ -656,11 +664,11 @@ class ormIPv6 extends ormIP
 		} 
 		for ($i = (IPV6_NIBBLE_NUMBER - 1); $i >= 0; $i--)
 		{
-			if ($this->aNibbles[$i] > $oIp->aNibbles[$i])
+			if ($this->aNibbles[$i] > $oIp->GetNibbles()[$i])
 			{
 				return true;
 			}
-			else if ($this->aNibbles[$i] < $oIp->aNibbles[$i])
+			else if ($this->aNibbles[$i] < $oIp->GetNibbles()[$i])
 			{
 				return false;
 			}
@@ -682,11 +690,11 @@ class ormIPv6 extends ormIP
 		} 
 		for ($i = (IPV6_NIBBLE_NUMBER - 1); $i >= 0; $i--)
 		{
-			if ($this->aNibbles[$i] < $oIp->aNibbles[$i])
+			if ($this->aNibbles[$i] < $oIp->GetNibbles()[$i])
 			{
 				return true;
 			}
-			else if ($this->aNibbles[$i] > $oIp->aNibbles[$i])
+			else if ($this->aNibbles[$i] > $oIp->GetNibbles()[$i])
 			{
 				return false;
 			}
@@ -708,11 +716,11 @@ class ormIPv6 extends ormIP
 		} 
 		for ($i = (IPV6_NIBBLE_NUMBER - 1); $i >= 0; $i--)
 		{
-			if ($this->aNibbles[$i] < $oIp->aNibbles[$i])
+			if ($this->aNibbles[$i] < $oIp->GetNibbles()[$i])
 			{
 				return true;
 			}
-			else if ($this->aNibbles[$i] > $oIp->aNibbles[$i])
+			else if ($this->aNibbles[$i] > $oIp->GetNibbles()[$i])
 			{
 				return false;
 			}
@@ -734,7 +742,7 @@ class ormIPv6 extends ormIP
 		} 
 		for ($i = 0; $i < IPV6_NIBBLE_NUMBER; $i++)
 		{
-			if ($oIp->aNibbles[$i] != $this->aNibbles[$i])
+			if ($oIp->GetNibbles()[$i] != $this->aNibbles[$i])
 			{
 				return false;
 			}
@@ -757,7 +765,7 @@ class ormIPv6 extends ormIP
 		$aHexa = array(); 
 		for ($i = 0; $i < IPV6_NIBBLE_NUMBER; $i++)
 		{
-			$aHexa[$i] = dechex($this->aNibbles[$i] & $oIp->aNibbles[$i]);
+			$aHexa[$i] = dechex($this->aNibbles[$i] & $oIp->GetNibbles()[$i]);
 		}
 		$aHexa = array_reverse($aHexa);
 		$sIPv6 = implode(":", $aHexa);
@@ -779,7 +787,7 @@ class ormIPv6 extends ormIP
 		$aHexa = array(); 
 		for ($i = 0; $i < IPV6_NIBBLE_NUMBER; $i++)
 		{
-			$aHexa[$i] = dechex($this->aNibbles[$i] | $oIp->aNibbles[$i]);
+			$aHexa[$i] = dechex($this->aNibbles[$i] | $oIp->GetNibbles()[$i]);
 		}
 		$aHexa = array_reverse($aHexa);
 		$sIPv6 = implode(":", $aHexa);
@@ -860,7 +868,7 @@ class ormIPv6 extends ormIP
 		$iCarry = 0;
 		for ($i = 0; $i < IPV6_NIBBLE_NUMBER; $i++)
 		{
-			$aAddNibbles[$i] = $this->aNibbles[$i] + $oIp->aNibbles[$i] + $iCarry;
+			$aAddNibbles[$i] = $this->aNibbles[$i] + $oIp->GetNibbles()[$i] + $iCarry;
 			if ($aAddNibbles[$i] >= IPV6_NIBBLE_MAX_VALUE)
 			{
 				$aAddNibbles[$i] -= IPV6_NIBBLE_MAX_VALUE;
