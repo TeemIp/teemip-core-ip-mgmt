@@ -671,8 +671,8 @@
   </classes>
   <menus>
     <menu xsi:type="DashboardMenuNode" id="IPDiscovery" _delta="define">
-      <parent>IPManagement</parent>
-      <rank>60</rank>
+      <parent>IPTools</parent>
+      <rank>100</rank>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
         <title/>
@@ -747,7 +747,7 @@
     </menu>
     <menu xsi:type="OQLMenuNode" id="IPDiscoveryApplication" _delta="define">
       <parent>IPDiscovery</parent>
-      <rank>0</rank>
+      <rank>10</rank>
       <oql>SELECT IPDiscovery</oql>
       <do_search>1</do_search>
     </menu>
