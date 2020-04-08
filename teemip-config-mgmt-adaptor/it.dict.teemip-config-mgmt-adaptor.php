@@ -58,4 +58,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
 ));
-			   
+
+//
+// Class: VLAN
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:VLAN/Tab:ipaddresses_list' => 'Interfacce IP',
+	'Class:VLAN/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce IP collegate all\'elemento della configurazione',
+));

@@ -58,3 +58,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
 ));
+
+//
+// Class: VLAN
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:VLAN/Tab:ipaddresses_list' => 'IPs-Interfaces',
+	'Class:VLAN/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen Schnittstellen',
+));
