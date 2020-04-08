@@ -240,6 +240,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Attribute:vrfs_list+' => '',
 	'Class:IPSubnet/Attribute:location_list' => 'Lieu',
 	'Class:IPSubnet/Attribute:location_list+' => 'Lieux ou le sous-réseau s\'étend',
+	'Class:IPSubnet/Attribute:summary/cell0' => 'IP enregistrées, par état',
+	'Class:IPSubnet/Attribute:summary/cell0+' => 'Total: %1$s',
 ));
 
 //
@@ -250,7 +252,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Tab:globalparam' => 'Paramètres Globaux',
 	'Class:IPSubnet/Tab:ipregistered' => 'IPs enregistrées',
 	'Class:IPSubnet/Tab:ipregistered+' => 'IPs enregistrées dans le Sous-Réseau',
-	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Réservées et %2$s Allouées dans %3$s',
+	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Réservées, %2$s Allouées, %3$s Libérées, %4$s Non assignées sur %5$s',
 	'Class:IPSubnet/Tab:ipfree-explain' => 'Liste des %1$s premières IPs libres :',
 	'Class:IPSubnet/Tab:ipfree-explainbis' => 'Liste de TOUTES les IPs libres :',
 	'Class:IPSubnet/Tab:iprange' => 'Plages d\'IPs',
@@ -389,6 +391,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv4Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv4Subnet/Attribute:broadcastip' => 'IP de broadcast',
 	'Class:IPv4Subnet/Attribute:broadcastip+' => '',
+	'Class:IPv4Subnet/Attribute:summary' => 'Résumé',
 ));
 
 //
@@ -425,7 +428,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPRange/Tab:ipregistered' => 'IPs enregistrées',
 	'Class:IPRange/Tab:ipregistered+' => 'IPs enregistrées dans la Plage d\'IPs',
-	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Réservées et %2$s Allouées dans %3$s',
+	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Réservées, %2$s Allouées, %3$s Libérées, %4$s Non assignées sur %5$s',
 	'Class:IPRange/Tab:ipfree-explain' => 'Liste des %1$s premières IPs libres :',
 	'Class:IPRange/Tab:ipfree-explainbis' => 'Liste de TOUTES les IPs libres :',
 	'Class:IPRange/Tab:notifications' => 'Notifications',
@@ -560,8 +563,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv4Address/Attribute:subnet_id+' => 'Sous-réseau IPv4',
 	'Class:IPv4Address/Attribute:range_id' => 'Plage d\'Adresses',
 	'Class:IPv4Address/Attribute:range_id+' => 'Plage d\'Adresses IPv4',
-	'Class:IPv4Address/Attribute:ip' => 'Addresse',
-	'Class:IPv4Address/Attribute:ip+' => 'Addresse IPv4',
+	'Class:IPv4Address/Attribute:ip' => 'Adresse',
+	'Class:IPv4Address/Attribute:ip+' => 'Adresse IPv4',
 ));
 
 //
@@ -787,8 +790,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:NewIPObject+' => 'Création d\'un nouvel objet IP',
 	'Menu:SearchIPObject' => 'Recherche d\'un objet IP',
 	'Menu:SearchIPObject+' => 'Recherche d\'un objet IP',
-	'Menu:Ipv4ShortCut' => 'Raccourcis IPv4',
-	'Menu:Ipv4ShortCut+' => 'Raccourcis IPv4',  
+	'Menu:IPv4ShortCut' => 'Raccourcis IPv4',
+	'Menu:IPv4ShortCut+' => 'Raccourcis IPv4',
 	'Menu:IPv4Block' => 'Blocs de Sous-réseaux',
 	'Menu:IPv4Block+' => 'Blocs de Sous-réseaux IPv4',
 	'Menu:IPv4Subnet' => 'Sous-réseaux',
@@ -799,6 +802,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:IPv4Range+' => 'Plages d\'Adresses IPv4',
 	'Menu:IPv4Address' => 'Adresses IP',
 	'Menu:IPv4Address+' => 'Adresses IPv4',
+	'Menu:IPTools' => 'Outils',
+	'Menu:IPTools+' => 'Boîte à outils IP',
+	'Menu:SubnetCalculator' => 'Calculateur de Sous-réseaux',
+	'Menu:SubnetCalculator+' => 'Outil pour calculer les parametres d\'un sous réseau à partir d\'une IP et d\'un masque',
 	'Menu:Options' => 'Paramètres',
 	'Menu:Options+' => 'Paramètres',  
 	'Menu:IPConfig' => 'Paramètres Globaux IP',
@@ -1003,6 +1010,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Collision : l\'IP de Broadcast appartient à un Sous-réseau existant !',	
 	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Collision : le nouveau Sous-réseau contient un Sous-réseau existant !!',	
 	'UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet' => 'L\'IP de la passerelle n\'est pas dans les limites du Sous-réseau !',
+
+	// Subnet calculator
+	'UI:IPManagement:Action:Calculator:IPSubnet' => 'Calculateur de Sous-réseaux',
+	'UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType' => 'Sélectionnez le type de Sous-réseaux',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation' => 'Vous pouvez enregistrer ces espaces en tant que blocs de sous-réseaux ou sous-réseaux :',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateSubnet' => 'Créer le sous-réseau',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateSubnet:MaskIsToSmall' => 'Le masque est trop petit: le sous-réseau ne peut être créé !',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock' => 'Créer le bloc de sous-réseaux',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig' => 'Le masque est trop grand: le bloc de sous-réseaux ne peut être créé !',
 
 //
 // Management of IPv4 Subnets

@@ -240,6 +240,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:vrfs_list+' => '',
 	'Class:IPSubnet/Attribute:location_list' => 'Locations',
 	'Class:IPSubnet/Attribute:location_list+' => 'Locations where the Subnet expands',
+	'Class:IPSubnet/Attribute:summary/cell0' => 'Registered IPs by status',
+	'Class:IPSubnet/Attribute:summary/cell0+' => 'Total: %1$s',
 ));
 
 //
@@ -250,7 +252,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Tab:globalparam' => 'Global Settings',
 	'Class:IPSubnet/Tab:ipregistered' => 'Registered IPs',
 	'Class:IPSubnet/Tab:ipregistered+' => 'IPs registered in the Subnet',
-	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Reserved and %2$s Allocated out of %3$s',
+	'Class:IPSubnet/Tab:ipregistered-count' => ' - %1$s Reserved, %2$s Allocated, %3$s Released, %4$s Unassigned out of %5$s',
 	'Class:IPSubnet/Tab:ipfree-explain' => 'List of first %1$s free IP addresses:',
 	'Class:IPSubnet/Tab:ipfree-explainbis' => 'List of ALL free IP addresses:',
 	'Class:IPSubnet/Tab:iprange' => 'IP Ranges',
@@ -389,6 +391,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv4Subnet/Attribute:broadcastip' => 'Broadcast IP',
 	'Class:IPv4Subnet/Attribute:broadcastip+' => '',
+	'Class:IPv4Subnet/Attribute:summary' => 'Summary',
 ));
 
 //
@@ -425,7 +428,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPRange/Tab:ipregistered' => 'Registered IPs',
 	'Class:IPRange/Tab:ipregistered+' => 'IPs registered within the IP Range',
-	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Reserved and %2$s Allocated out of %3$s',
+	'Class:IPRange/Tab:ipregistered-count' => ' - %1$s Reserved, %2$s Allocated, %3$s Released, %4$s Unassigned out of %5$s',
 	'Class:IPRange/Tab:ipfree-explain' => 'List of first %1$s free IP addresses:',
 	'Class:IPRange/Tab:ipfree-explainbis' => 'List of ALL free IP addresses:',
 	'Class:IPRange/Tab:notifications' => 'Notifications',
@@ -810,8 +813,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:NewIPObject+' => 'Creation of a new IP object',
 	'Menu:SearchIPObject' => 'Search for IP object',
 	'Menu:SearchIPObject+' => 'Search for an IP object',
-	'Menu:Ipv4ShortCut' => 'IPv4 Shortcuts',
-	'Menu:Ipv4ShortCut+' => 'IPv4 Shortcuts',  
+	'Menu:IPv4ShortCut' => 'IPv4 Shortcuts',
+	'Menu:IPv4ShortCut+' => 'Shortcut that groups IPv4 objects',
 	'Menu:IPv4Block' => 'Subnet Blocks',
 	'Menu:IPv4Block+' => 'IPv4 Subnet Blocks',
 	'Menu:IPv4Subnet' => 'Subnets',
@@ -822,6 +825,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPv4Range+' => 'IPv4 Ranges',
 	'Menu:IPv4Address' => 'IP Addresses',
 	'Menu:IPv4Address+' => 'IPv4 Addresses',
+	'Menu:IPTools' => 'Tools',
+	'Menu:IPTools+' => 'Set of IP tools',
+	'Menu:SubnetCalculator' => 'Subnet Calculator',
+	'Menu:SubnetCalculator+' => 'Tool to calculate subnet parameters from an IP and a mask',
 	'Menu:Options' => 'Parameters',
 	'Menu:Options+' => 'Parameters',  
 	'Menu:IPConfig' => 'Global IP Settings',
@@ -1026,6 +1033,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Subnet collision : broadcast IP belongs to an existing subnet!',	
 	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Subnet collision : new subnet includes an existing one!',	
 	'UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet' => 'Gateway IP is not within the subnet boundaries!',
+
+	// Subnet calculator
+	'UI:IPManagement:Action:Calculator:IPSubnet' => 'Subnet Calculator',
+	'UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType' => 'Select subnet type',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation' => 'You may register the related subnet blocks or subnets:',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateSubnet' => 'Create the subnet',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateSubnet:MaskIsToSmall' => 'Mask is too small: subnet cannot be created!',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock' => 'Create the subnet block',
+	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig' => 'Mask is too big: subnet block cannot be created!',
 
 //
 // Management of IPv4 Subnets

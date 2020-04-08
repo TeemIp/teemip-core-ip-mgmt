@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
-  <classes>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<classes>
     <class id="IPObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
@@ -1400,6 +1400,8 @@
           <filter><![CDATA[SELECT IPv4Block AS b WHERE b.org_id = :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
+            <attribute id="ip"/>
+            <attribute id="mask"/>
           </dependencies>
           <sql>block_id</sql>
           <target_class>IPv4Block</target_class>
@@ -1458,11 +1460,53 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="summary" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutOneCol</layout>
+            <title/>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="01" xsi:type="DashletHeaderDynamic">
+                    <rank>0</rank>
+                    <title>Class:IPSubnet/Attribute:summary/cell0</title>
+                    <icon>teemip-ip-mgmt/images/ipaddress.png</icon>
+                    <subtitle>Class:IPSubnet/Attribute:summary/cell0+</subtitle>
+                    <query>SELECT IPv4Address WHERE subnet_id = :this->id</query>
+                    <group_by>status</group_by>
+                    <values>allocated,released,unassigned,reserved</values>
+                  </dashlet>
+                  <dashlet id="02" xsi:type="DashletGroupByPie">
+                    <rank>1</rank>
+                    <title/>
+                    <query>SELECT IPv4Address WHERE subnet_id = :this->id</query>
+                    <group_by>status</group_by>
+                    <style>pie</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute/>
+                    <limit/>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
+            <item id="summary">
+              <rank>5</rank>
+            </item>
             <item id="location_list">
               <rank>10</rank>
             </item>
@@ -3484,7 +3528,7 @@
     <menu id="IPManagement" xsi:type="MenuGroup" _delta="define">
       <rank>25</rank>
     </menu>
-    <menu id="IPSpace" xsi:type="DashboardMenuNode" _delta="define">
+    l<menu id="IPSpace" xsi:type="DashboardMenuNode" _delta="define">
       <rank>10</rank>
       <parent>IPManagement</parent>
       <definition>
@@ -3544,43 +3588,43 @@
     </menu>
     <menu id="NewIPObject" xsi:type="NewObjectMenuNode" _delta="define">
       <rank>20</rank>
-      <parent>IPSpace</parent>
+      <parent>IPManagement</parent>
       <class>IPObject</class>
     </menu>
     <menu id="SearchIPObject" xsi:type="SearchMenuNode" _delta="define">
       <rank>30</rank>
-      <parent>IPSpace</parent>
+      <parent>IPManagement</parent>
       <class>IPObject</class>
     </menu>
-    <menu id="Ipv4ShortCut" xsi:type="TemplateMenuNode" _delta="define">
+    <menu id="IPv4ShortCut" xsi:type="TemplateMenuNode" _delta="define">
       <rank>40</rank>
       <parent>IPManagement</parent>
       <template_file/>
     </menu>
     <menu id="IPv4Block" xsi:type="OQLMenuNode" _delta="define">
       <rank>10</rank>
-      <parent>Ipv4ShortCut</parent>
+      <parent>IPv4ShortCut</parent>
       <oql>SELECT IPv4Block</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="IPv4Subnet" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
-      <parent>Ipv4ShortCut</parent>
+      <parent>IPv4ShortCut</parent>
       <oql>SELECT IPv4Subnet</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="IPv4Range" xsi:type="OQLMenuNode" _delta="define">
       <rank>30</rank>
-      <parent>Ipv4ShortCut</parent>
+      <parent>IPv4ShortCut</parent>
       <oql>SELECT IPv4Range</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="IPv4Address" xsi:type="OQLMenuNode" _delta="define">
       <rank>40</rank>
-      <parent>Ipv4ShortCut</parent>
+      <parent>IPv4ShortCut</parent>
       <oql>SELECT IPv4Address</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
@@ -3591,6 +3635,16 @@
       <oql>SELECT IPConfig</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
+    </menu>
+    <menu id="IPTools" xsi:type="TemplateMenuNode" _delta="define">
+      <rank>60</rank>
+      <parent>IPManagement</parent>
+      <template_file/>
+    </menu>
+    <menu id="SubnetCalculator" xsi:type="WebPageMenuNode" _delta="define">>
+      <rank>10</rank>
+      <parent>IPTools</parent>
+      <url>$pages/exec.php?exec_module=teemip-ip-mgmt&amp;exec_page=ui.teemip-ip-mgmt.php&amp;c[menu]=SubnetCalculator&amp;operation=calculator</url>
     </menu>
 	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
 	  <definition>

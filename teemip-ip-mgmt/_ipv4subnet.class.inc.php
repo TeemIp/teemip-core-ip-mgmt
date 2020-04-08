@@ -1725,8 +1725,13 @@ EOF
 
 	/**
 	 * Displays result of IPv4 calculator
+	 * @param \WebPage $oP
+	 * @param $oAppContext
+	 * @param $aParam
+	 *
+	 * @throws \Exception
 	 */
-	function DisplayCalculatorOutput(WebPage $oP, $aParam)
+	function DisplayCalculatorOutput(WebPage $oP, $oAppContext, $aParam)
 	{
 	    $sIp = $aParam['ip'];
 	    $sMask = $aParam['mask'];
@@ -1779,8 +1784,9 @@ EOF
 			$iNextSubnetIp = $iSubnetIp + $this->MaskToSize($sMask);
 			$sNextSubnetIp = mylong2ip($iNextSubnetIp);
 		}
-		
-		$oP->add('<table><tr><td style="vertical-align:top">');
+
+		$oP->add('<table style="vertical-align:top;"><tr><td>');
+		$oP->add('<div id="tree">');
 		// IP address
 		$oP->add('&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv4Subnet:IP').":</td><td>$sIp</td></tr>");
 		$oP->add('<tr><td height=10></td></tr>');
@@ -1813,9 +1819,103 @@ EOF
 		
 		// Next network
 		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv4Subnet:NextSubnet').":</td><td>$sNextSubnetIp</td></tr>");
-				
-		$oP->add('</table>');
-			
+		$oP->add('<tr><td height=10></td></tr>');
+
+		// As an option, create subnet or block with calculated parameters (previous, current or next one)
+		$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv4Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+		$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv4Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+		if (!$UserHasRightsToCreateBlocks && !$UserHasRightsToCreateSubnets)
+		{
+			return;
+		}
+
+		$oP->add('<tr><td>&nbsp;&nbsp;</td><td colspan="2">'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation').'</td></tr>');
+		if ($this->GetKey() > 0)
+		{
+			$iOrgId = $this->Get('org_id');
+			$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $iOrgId);
+		}
+		else
+		{
+			$iBlockMinSize = IPV4_BLOCK_MIN_SIZE;
+		}
+		$bOfferBlock = ($iIpNumber >= $iBlockMinSize) ? true : false;
+		$bOfferSubnet = ($iCidr >= IPV4_SUBNET_MAX_PREFIX) ? true : false;
+
+		$iVIdCounter = 1;
+		$iId = $this->GetKey();
+		$iOrgId = $this->Get('org_id');
+		$aSubnetIps = array();
+		if ($sSubnetIp != '0.0.0.0')
+		{
+			$aSubnetIps[$sPreviousSubnetIp ] = mylong2ip($iSubnetIp - 1);
+		}
+		$aSubnetIps[$sSubnetIp] = $sBroadcastIp;
+		if ($sBroadcastIp != '255.255.255.255')
+		{
+			$aSubnetIps[$sNextSubnetIp] = mylong2ip(ip2long($sNextSubnetIp) + $this->MaskToSize($sMask) - 1);
+		}
+		foreach ($aSubnetIps as $sFirstIp => $sLastIp)
+		{
+			if ($sFirstIp == $sSubnetIp)
+			{
+				$oP->add('<tr><td></td><td>&nbsp;&nbsp;</td><td><b>'.$sFirstIp.' /'.$iCidr.'</b></td>');
+			}
+			else
+			{
+				$oP->add('<tr><td></td><td>&nbsp;&nbsp;</td><td>'.$sFirstIp.' /'.$iCidr.'</td>');
+			}
+
+			$sHTMLValue = '';
+			if ($UserHasRightsToCreateBlocks)
+			{
+				if ($bOfferBlock)
+				{
+					$iVId = $iVIdCounter++;
+					$sHTMLValue .= "<td><div><span id=\"v_{$iVId}\">";
+					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/images/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock')."&nbsp;&nbsp;";
+					$sHTMLValue .= "</span></div></td></tr>";
+					$oP->add($sHTMLValue);
+					$oP->add_ready_script(
+<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstIp", 'lastip': '$sLastIp'});
+EOF
+					);
+				}
+				else
+				{
+					$sHTMLValue .= '<td>'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig').'</td></tr>';
+					$oP->add($sHTMLValue);
+				}
+				$sHTMLValue = "<tr><td></td><td></td><td></td>";
+			}
+			if ($UserHasRightsToCreateSubnets)
+			{
+				if ($bOfferSubnet)
+				{
+					$iVId = $iVIdCounter++;
+					$sHTMLValue .= "<td><div><span id=\"v_{$iVId}\">";
+					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/images/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoCalculator:IPSubnet:CreateSubnet')."&nbsp;&nbsp;";
+					$sHTMLValue .= "</span></div></td>";
+					$oP->add($sHTMLValue);
+					$oP->add_ready_script(
+<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstIp", 'mask': '$sMask'});
+EOF
+					);
+				}
+				else
+				{
+					$sHTMLValue .= "<td>".Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateSubnet:MaskIsToSmall')."</td></tr>";
+					$oP->add($sHTMLValue);
+				}
+			}
+
+		}
+		$oP->add('</div></td></tr></table>');
+		$oP->add('</div>');     // ??
 	}
 	
 	/**
@@ -1860,23 +1960,36 @@ EOF
 			// Tab for Registered IPs
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId");
 			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
-			$iCountRegistered = $oIpRegisteredSet->Count();
-			if ($iCountRegistered > 0)
+			$iRegistered = $oIpRegisteredSet->Count();
+			if ($iRegistered > 0)
 			{
 				$aStatusRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('status', false);
-				$iCountAllocated = 0;
+				$iReserved = 0;
+				$iAllocated = 0;
+				$iReleased = 0;
 				$i = 0;
-				while ($i < $iCountRegistered)
+				while ($i < $iRegistered)
 				{
-					if ($aStatusRegisteredIPs[$i++] == 'allocated')
+					switch ($aStatusRegisteredIPs[$i++])
 					{
-						$iCountAllocated++;
+						case 'reserved':
+							$iReserved++;
+							break;
+
+						case 'allocated':
+							$iAllocated++;
+							break;
+
+						case 'released':
+							$iReleased++;
+							break;
 					}
+
 				}
-				$iCountReserved = $iCountRegistered - $iCountAllocated;
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:ipregistered').' ('.$iCountRegistered.')');
+				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
+				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:ipregistered').' ('.$iRegistered.')');
 				$oP->p(MetaModel::GetClassIcon('IPv4Address').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:ipregistered+'));
-				$oP->p($this->GetAsHTML('ip_occupancy').Dict::Format('Class:IPSubnet/Tab:ipregistered-count', $iCountReserved, $iCountAllocated, $iSubnetSize));
+				$oP->p($this->GetAsHTML('ip_occupancy').Dict::Format('Class:IPSubnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSubnetSize));
 				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
 				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
 			}
@@ -1939,7 +2052,8 @@ EOF
 		
 		// Set Broadcast IP
 		$iIpBroadcast = $iIp + $this->GetSize() - 1;
-		$this->Set('broadcastip', mylong2ip($iIpBroadcast));
+		$sIpBroadcast = mylong2ip($iIpBroadcast);
+		$this->Set('broadcastip', $sIpBroadcast);
 
 		// Set Gateway IP
 		if ($sMask != '255.255.255.255')
@@ -1969,6 +2083,31 @@ EOF
 			$sGatewayIp = $sIp;
 		}
 		$this->Set('gatewayip', $sGatewayIp);
+
+		// Set parent block if not set
+		// Note: this may give incorrect result if only one block exists under the organization since, in such case, framework preset block_id to that unique block as block_id cannot be null
+		if (($sIp != '') && ($sMask != ''))
+		{
+			// Look for all blocks containing the new subnet
+			// Pick the smallest one
+			$iOrgId = $this->Get('org_id');
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE INET_ATON(b.firstip) <= INET_ATON('$sIp') AND INET_ATON('$sIpBroadcast') <= INET_ATON(b.lastip) AND b.org_id = $iOrgId"));
+			$iMinSize = 0;
+			$iBlockId = 0;
+			while ($oSRange = $oSRangeSet->Fetch())
+			{
+				$iSRangeSize = $oSRange->GetSize();
+				if (($iMinSize == 0) || ($iSRangeSize < $iMinSize))
+				{
+					$iMinSize = $iSRangeSize;
+					$iBlockId = $oSRange->GetKey();
+				}
+			}
+			if ($iBlockId != 0)
+			{
+				$this->Set('block_id', $iBlockId);
+			}
+		}
 	}
 
 	/**

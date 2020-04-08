@@ -43,8 +43,6 @@ try
 	$oP = new ajax_page("");
 	$oP->no_cache();
 	
-//	$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/teemip-ip-mgmt.js");
-	
 	$operation = utils::ReadParam('operation', '');
 	$iVId = utils::ReadParam('vid', '');
 	$sClass = utils::ReadParam('class', '');
