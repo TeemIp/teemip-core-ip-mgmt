@@ -1150,7 +1150,7 @@
               <dashlet id="teemip-001" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Network</title>
-                <icon>teemip-config-mgmt-adaptor/images/network.png</icon>
+                <icon>teemip-network-mgmt/images/network.png</icon>
               </dashlet>
 			  <dashlet id="teemip-011" xsi:type="DashletBadge">
         		<rank>1</rank>
