@@ -25,7 +25,7 @@
           <static>false</static>
           <access>public</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+          <code><![CDATA[public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
     {
 		parent::DisplayBareRelations($oP, $bEditMode);
 		
@@ -79,7 +79,63 @@
         </search>
       </presentation>
     </class>
-    <class id="LogicalInterface" _created_in="itop-virtualization-mgmt" _delta="must_exist">
+    <class id="Hypervisor" _delta="must_exist">
+      <methods>
+        <method id="DisplayBareRelations" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+		parent::DisplayBareRelations($oP, $bEditMode);
+
+        if (! $bEditMode)
+        {
+			$iServerId = $this->Get('server_id');
+
+            // Display all physicalInterface associated to the the hypervisor's server
+	        $sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id JOIN Hypervisor AS h ON h.server_id = c.id WHERE h.server_id = :server_id";
+            $oPhysicalInterface =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('server_id' => $iServerId));
+            $oPhysicalInterface->SetShowObsoleteData(utils::ShowObsoleteData());
+	        if ($oPhysicalInterface->CountExceeds(0))
+	        {
+	            $iPhysicalInterface = $oPhysicalInterface->Count();
+	            $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list').' ('.$iPhysicalInterface.')');
+				$oP->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::Format('Class:Hypervisor/Tab:physicalinterfaces_list+'));
+                $oBlock = new DisplayBlock($oPhysicalInterface->GetFilter(), 'list', false);
+                $oBlock->Display($oP, 'physicalinterface', array('menu' => false, 'display_limit'=>true));
+	        }
+	        else
+            {
+                $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list'));
+                $oP->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+            }
+
+			// Display interfaces' IPs
+            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $iServerId));
+			$iLnkSet = $oLnkSet->Count();
+
+		    if ($iLnkSet > 0)
+	        {
+		        $iIPs = $oLnkSet->Count();
+		        $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:Hypervisor/Tab:ipaddresses_list+'));
+		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	        }
+	        else
+	        {
+		        $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list'));
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	        }
+        }
+	}]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="LogicalInterface" _delta="must_exist">
       <presentation>
         <details>
           <items>
@@ -105,6 +161,148 @@
             <item id="ipmask" _delta="delete"/>
           </items>
         </list>
+      </presentation>
+    </class>
+    <class id="lnkLogicalInterfaceToVLAN" _created_in="itop-virtualization-mgmt" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnklogicalinterfacetovlan</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="logicalinterface_id"/>
+            <attribute id="vlan_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="logicalinterface_id"/>
+            <attribute id="vlan_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="logicalinterface_id" xsi:type="AttributeExternalKey">
+          <sql>logicalinterface_id</sql>
+          <target_class>LogicalInterface</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="logicalinterface_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>logicalinterface_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="logicalinterface_device_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>logicalinterface_id</extkey_attcode>
+          <target_attcode>virtualmachine_id</target_attcode>
+        </field>
+        <field id="logicalinterface_device_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>logicalinterface_id</extkey_attcode>
+          <target_attcode>virtualmachine_name</target_attcode>
+        </field>
+        <field id="vlan_id" xsi:type="AttributeExternalKey">
+          <sql>vlan_id</sql>
+          <target_class>VLAN</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="vlan_tag" xsi:type="AttributeExternalField">
+          <extkey_attcode>vlan_id</extkey_attcode>
+          <target_attcode>vlan_tag</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="logicalinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="logicalinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="logicalinterface_id">
+              <rank>10</rank>
+            </item>
+            <item id="vlan_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="VLAN" _delta="must_exist">
+      <fields>
+        <field id="logicalinterfaces_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkLogicalInterfaceToVLAN</linked_class>
+          <ext_key_to_me>vlan_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>logicalinterface_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
+      <methods>
+        <method id="DisplayBareRelations" _delta="redefine">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+		parent::DisplayBareRelations($oP, $bEditMode);
+
+        if (! $bEditMode)
+        {
+            $iVLANId = $this->GetKey();
+
+            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+            $sOQL .= " UNION ";
+            $sOQL .= "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
+			$iLnkSet = $oLnkSet->Count();
+
+		    if ($iLnkSet > 0)
+	        {
+		        $iIPs = $oLnkSet->Count();
+		        $oP->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
+		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	        }
+        }
+	}]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="logicalinterfaces_list" _delta="define">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
       </presentation>
     </class>
   </classes>
