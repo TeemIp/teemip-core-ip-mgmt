@@ -33,4 +33,44 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VirtualMachine/Tab:ipaddresses_list' => 'Interfacce IP',
 	'Class:VirtualMachine/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce logiche collegate al CI',
 ));
-			   
+
+//
+// Class: Hypervisor
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:Hypervisor/Tab:physicalinterfaces_list' => 'Interfacce di rete fisiche',
+	'Class:Hypervisor/Tab:physicalinterfaces_list+' => 'Elenco delle interfacce di rete fisiche ospitate dal server dell\'hypervisor',
+	'Class:Hypervisor/Tab:ipaddresses_list' => 'Interfacce IP',
+	'Class:Hypervisor/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce IP collegate all\'elemento della configurazione',
+));
+
+//
+// Class: VLAN
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:VLAN/Attribute:logicalinterfaces_list' => 'Interfacce di rete logiche',
+	'Class:VLAN/Attribute:logicalinterfaces_list+' => '',
+));
+
+//
+// Class: lnkLogicalInterfaceToVLAN
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:lnkLogicalInterfaceToVLAN' => 'Link Interfaccia logica / VLAN',
+	'Class:lnkLogicalInterfaceToVLAN+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id' => 'Interfaccia logica',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_name' => 'Nome dell\'interfaccia logica',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_name+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_device_id' => 'Dispositivo',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_device_id+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_device_name' => 'Nome del dispositivo',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_device_name+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
+));
