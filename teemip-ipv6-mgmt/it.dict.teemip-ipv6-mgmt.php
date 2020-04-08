@@ -208,7 +208,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:IPv6Subnet/Tab:ipregistered-count' => ' %1$s Riservato and %2$s Allocato',
+	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s Riservato, %2$s Allocato, %3$s Rilasciato e %4$s Non assegnato',
 ));
 
 //

@@ -459,21 +459,36 @@ EOF
 			// Tab for Registered IPs
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $sOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp));
 			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
-			$iCountRegistered = $oIpRegisteredSet->Count();
-			if ($iCountRegistered > 0)
+			$iRegistered = $oIpRegisteredSet->Count();
+			if ($iRegistered > 0)
 			{
-				$iCountAllocated = 0;
-				while ($oIpRegistered = $oIpRegisteredSet->Fetch())
+				$aStatusRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('status', false);
+				$iReserved = 0;
+				$iAllocated = 0;
+				$iReleased = 0;
+				$i = 0;
+				while ($i < $iRegistered)
 				{
-					if ($oIpRegistered->Get('status') == 'allocated')
+					switch ($aStatusRegisteredIPs[$i++])
 					{
-						$iCountAllocated++;
+						case 'reserved':
+							$iReserved++;
+							break;
+
+						case 'allocated':
+							$iAllocated++;
+							break;
+
+						case 'released':
+							$iReleased++;
+							break;
 					}
+
 				}
-				$iCountReserved = $iCountRegistered - $iCountAllocated;
-				$oP->SetCurrentTab(Dict::Format('Class:IPRange/Tab:ipregistered').' ('.$iCountRegistered.')');
+				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
+				$oP->SetCurrentTab(Dict::Format('Class:IPRange/Tab:ipregistered').' ('.$iRegistered.')');
 				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::Format('Class:IPRange/Tab:ipregistered+'));
-				$oP->p($this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iCountReserved, $iCountAllocated, $iSize));
+				$oP->p($this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize));
 				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
 				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
 			}

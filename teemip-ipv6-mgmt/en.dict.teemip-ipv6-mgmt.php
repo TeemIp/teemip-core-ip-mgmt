@@ -208,7 +208,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:IPv6Subnet/Tab:ipregistered-count' => ' %1$s Reserved and %2$s Allocated',
+	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s Reserved, %2$s Allocated, %3$s Released and %4$s Unassigned',
 ));
 
 //
@@ -308,7 +308,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPSpace:IPv6Objects' => 'IPv6 Objects',
 	'Menu:IPSpace:IPv6Objects+' => 'IPv6 Objects',
 	'Menu:Ipv6ShortCut' => 'IPv6 Shortcuts',
-	'Menu:Ipv6ShortCut+' => 'IPv6 Shortcuts',  
+	'Menu:Ipv6ShortCut+' => 'Shortcut that groups IPv6 objects',
+	'Menu:Ipv6ShortCut+' => 'Shortcut that groups IPv6 objects',
 	'Menu:IPv6Block' => 'Subnet Blocks',
 	'Menu:IPv6Block+' => 'IPv6 Subnet Blocks',
 	'Menu:IPv6Subnet' => 'Subnets',

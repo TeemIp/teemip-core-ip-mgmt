@@ -208,7 +208,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:IPv6Subnet/Tab:ipregistered-count' => ' %1$s Réservées et %2$s Allouées',
+	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s Réservées, %2$s Allouées, %3$s Libérées et %4$s Non assignées',
 ));
   
 //

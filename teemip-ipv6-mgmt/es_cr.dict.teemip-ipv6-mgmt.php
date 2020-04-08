@@ -80,7 +80,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:IPv6Subnet/Tab:ipregistered-count' => ' %1$s Reservadas y %2$s Asignadas',
+	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s reservadas, %2$s asignadas, %3$s Liberado y %4$s No Asignado',
 ));
 
 //

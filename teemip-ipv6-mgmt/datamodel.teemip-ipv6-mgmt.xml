@@ -252,6 +252,8 @@
           <filter><![CDATA[SELECT IPv6Block AS b WHERE b.org_id = :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
+            <attribute id="ip"/>
+            <attribute id="mask"/>
           </dependencies>
           <sql>block_id</sql>
           <target_class>IPv6Block</target_class>
@@ -342,6 +344,7 @@
         </field>
         <field id="gatewayip" xsi:type="AttributeIPv6Address">
           <dependencies>
+            <attribute id="org_id"/>
             <attribute id="ip"/>
             <attribute id="mask"/>
           </dependencies>

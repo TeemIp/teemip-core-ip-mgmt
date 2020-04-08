@@ -209,7 +209,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:IPv6Subnet/Tab:ipregistered-count' => ' %1$s Reserviert und %2$s Allokiert',
+	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s reserviert, %2$s allokiert, %3$s freigegeben und %4$s nicht zugeordnet',
 ));
 
 //
