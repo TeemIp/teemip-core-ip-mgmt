@@ -24,8 +24,8 @@
 //
 // Class: Rack
 //
- 
-Dict::Add('DE DE', 'English', 'English', array(
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Rack/Attribute:macaddress' => 'MAC Addresse',
 	'Class:Rack/Attribute:macaddress+' => '',
 	'Class:Rack/Attribute:ipaddress_id' => 'IP Adresse',
@@ -38,7 +38,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: Enclosure
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Enclosure/Attribute:macaddress' => 'MAC Addresse',
 	'Class:Enclosure/Attribute:macaddress+' => '',
 	'Class:Enclosure/Attribute:ipaddress_id' => 'IP Addresse',
@@ -51,7 +51,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: PowerConnection
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PowerConnection/Attribute:macaddress' => 'MAC Adresse',
 	'Class:PowerConnection/Attribute:macaddress+' => '',
 	'Class:PowerConnection/Attribute:ipaddress_id' => 'IP Addresse',
@@ -64,7 +64,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: PowerSource
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PowerSource/Attribute:macaddress' => 'MAC Addresse',
 	'Class:PowerSource/Attribute:macaddress+' => '',
 	'Class:PowerSource/Attribute:ipaddress_id' => 'IP Addresse',
@@ -77,7 +77,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: PDU
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PDU/Attribute:macaddress' => 'MAC Addresse',
 	'Class:PDU/Attribute:macaddress+' => '',
 	'Class:PDU/Attribute:ipaddress_id' => 'IP Addresse',
