@@ -49,4 +49,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
 ));
-			   
+
+
+//
+// Class: VLAN
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VLAN/Tab:ipaddresses_list' => 'IP de interfaces',
+	'Class:VLAN/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas por todas las interfaces IP conectadas al CI',
+));
