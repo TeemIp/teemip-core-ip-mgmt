@@ -59,9 +59,8 @@ class _IPv4Address extends IPAddress
 	/*
 	 * Check if IP pings
 	 */	 
-	function DoCheckIpPings($iTimeToWait)
+	static function DoCheckIpPings($sIp, $iTimeToWait)
 	{
-		$sIp = $this->Get('ip');
 		$sSystemType = strtoupper(php_uname($mode = "s"));
 		if (strpos($sSystemType, 'WIN') === false)
 		{
@@ -171,7 +170,7 @@ class _IPv4Address extends IPAddress
 			}
 			if ($sPingBeforeAssign =='ping_yes')
 			{
-				$aOutput = $this->DoCheckIpPings(TIME_TO_WAIT_FOR_PING_LONG);
+				$aOutput = $this->DoCheckIpPings($this->Get('ip'), TIME_TO_WAIT_FOR_PING_LONG);
 				if (!empty($aOutput))
 				{
 					$sOutput = '<br>'.implode('<br>', $aOutput);
