@@ -21,11 +21,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/*******************
- * Set page titles.
- *
- * @throws \CoreException
- */
+/**
+  * Set page titles.
+  *
+  * @throws \CoreException
+  */
 function SetPageTitles(WebPage $oP, $sUIPath, $oObj, $sClassLabel, $bIcon = true)
 {
 	/** @var \Zone $oObj */

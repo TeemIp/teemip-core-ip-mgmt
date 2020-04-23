@@ -24,7 +24,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-zone-mgmt/2.6.0',
+	'teemip-zone-mgmt/2.6.1',
 	array(
 		// Identification
 		//
@@ -35,6 +35,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'teemip-ip-mgmt/2.6.0',
+			'teemip-ipv6-mgmt/2.6.1',
 			'teemip-network-mgmt/2.6.0',
 		),
 		'mandatory' => false,

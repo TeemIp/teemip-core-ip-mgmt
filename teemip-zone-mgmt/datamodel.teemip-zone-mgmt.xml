@@ -797,7 +797,7 @@
             $iRRecords = 0;
 
             // Search for PTR records
-            $sIp = $this->Get('ip');
+            $sIp = $this->Get('ip')->GetAsCannonical();
             $sPtr = $this->ConvertToZone($sIp);
             $sOQL = "SELECT PTRRecord WHERE name = :ptr";
             $oPTRRecordSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ptr' => $sPtr));
@@ -918,7 +918,7 @@
 
         // Update PTR Record
         // Look for appropriate reverse zone
-        $sIp = $this->Get('ip');
+        $sIp = $this->Get('ip')->GetAsCannonical();
         $sPtr = $this->ConvertToZone($sIp);
         list($sErrorZone, $iZoneId) = Zone::GetZoneFromFqdn($sPtr, $this->Get('view_id'), 'ipv6reverse', $this->Get('org_id'));
         if ($sErrorZone == '')
@@ -957,7 +957,7 @@
         $this->CleanAAAARecord();
 
         // Remove PTR record
-        $sIp = $this->Get('ip');
+        $sIp = $this->Get('ip')->GetAsCannonical();
         $sPtr = $this->ConvertToZone($sIp);
         $this->CleanPTRRecord($sPtr);
     }]]></code>
@@ -1685,10 +1685,6 @@
           <extkey_attcode>ip_id</extkey_attcode>
           <target_attcode>fqdn</target_attcode>
         </field>
-         <field id="ip_address" xsi:type="AttributeExternalField">
-          <extkey_attcode>ip_id</extkey_attcode>
-          <target_attcode>ip</target_attcode>
-        </field>
       </fields>
       <methods>
         <method id="GetDataString">
@@ -1699,13 +1695,15 @@
           <code><![CDATA[ public function GetDataString()
     {
      	$sDataName = $this->GetDataNameForDataString();
+     	$oIp = MetaModel::GetObject('IPv6Address', $this->Get('ip_id'), true /* MustBeFound */);
+     	$sIp = $oIp->GetAsCompressed();
      	if ($this->Get('overwrite_zone_ttl') == 'yes')
      	{
-     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN A     ".$this->Get('ip_address');
+     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN A     ".$sIp;
      	}
      	else
      	{
-     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_CLASS)." IN A     ".$this->Get('ip_address');
+     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_CLASS)." IN A     ".$sIp;
      	}
      	$sComment = $this->Get('comment');
      	if ($sComment == '')
@@ -1863,10 +1861,6 @@
           <extkey_attcode>ip_id</extkey_attcode>
           <target_attcode>fqdn</target_attcode>
         </field>
-        <field id="ip_address" xsi:type="AttributeExternalField">
-          <extkey_attcode>ip_id</extkey_attcode>
-          <target_attcode>ip</target_attcode>
-        </field>
       </fields>
       <methods>
         <method id="GetDataString">
@@ -1877,13 +1871,15 @@
           <code><![CDATA[ public function GetDataString()
     {
      	$sDataName = $this->GetDataNameForDataString();
+        $oIp = MetaModel::GetObject('IPv6Address', $this->Get('ip_id'), true /* MustBeFound */);
+        $sIp = $oIp->GetAsCompressed();
      	if ($this->Get('overwrite_zone_ttl') == 'yes')
      	{
-     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN AAAA  ".$this->Get('ip_address');
+     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN AAAA  ".$sIp;
      	}
      	else
      	{
-     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_CLASS)." IN AAAA  ".$this->Get('ip_address');
+     		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_CLASS)." IN AAAA  ".$sIp;
      	}
      	$sComment = $this->Get('comment');
      	if ($sComment == '')

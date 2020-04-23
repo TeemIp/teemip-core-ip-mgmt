@@ -23,8 +23,12 @@
 
 class _Zone extends DNSObject
 {
-	/*
+	/**
 	 * Check object before storing it
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
 	public function DoCheckToWrite()
 	{
@@ -54,8 +58,13 @@ class _Zone extends DNSObject
 		}
 	}
 
-	/*
+	/**
 	 * Straighten reverse zone name if required
+	 *
+	 * @param $sMapping
+	 * @param $sName
+	 *
+	 * @return string
 	 */
 	private function StraightenReverse($sMapping, $sName)
 	{
@@ -108,8 +117,12 @@ class _Zone extends DNSObject
 		return ($sName);
 	}
 	
-	/*
+	/**
 	 * Perform actions when new object is inserted in DB 
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
 	protected function OnInsert()
     {
@@ -132,10 +145,14 @@ class _Zone extends DNSObject
 	    $this->Set('name', $sName);
     }
    
-	/*
+	/**
 	 * Perform actions when object is updated in DB 
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 */
-    protected function OnUpdate()
+	protected function OnUpdate()
     {
 	    parent::OnUpdate();
 			
@@ -156,10 +173,22 @@ class _Zone extends DNSObject
 		$this->Set('name', $sName);
     }
     
-	/*
+	/**
 	 * Display additional tabs to Zone object 
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-    public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
     {		
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
@@ -320,10 +349,19 @@ class _Zone extends DNSObject
 		}
     }
 
-    /*
+    /**
      * Provides zone in BIND format in a text field
-     */
-    public function GetDataFile($sSortOrder)
+     *
+	 * @param $sSortOrder
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function GetDataFile($sSortOrder)
     {
      	// Default TTL
      	$sHtml = "\$TTL ".$this->Get('ttl')."\n";
@@ -488,15 +526,26 @@ class _Zone extends DNSObject
      	return $sHtml;     	
     }
    
-    /*
+    /**
      * Provides the zone that correspond to a FQDN
-     */
-    static function GetZoneFromFqdn($sFqdn, $iView, $sMapping, $iOrgId)
+     *
+	 * @param $sFqdn
+	 * @param $iView
+	 * @param $sMapping
+	 * @param $iOrgId
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	static function GetZoneFromFqdn($sFqdn, $iView, $sMapping, $iOrgId)
     {
     	$sError = '';
 	    if ((strlen($sFqdn) == 0) || ($iOrgId == 0))
  	    {
-	    	return array(Dict::Format('UI:ZoneManagement:Action:IPAddress:UpdateRRs:Error:CannotFindZone:'.$sMapping));
+	    	return array(Dict::Format('UI:ZoneManagement:Action:IPAddress:UpdateRRs:Error:CannotFindZone:'.$sMapping), 0);
 	    }
    		$sOQL = "SELECT Zone WHERE org_id = :org_id AND view_id = :view_id AND name = :name";
 	    $oZoneSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'view_id' => $iView, 'name' => $sFqdn));
@@ -513,9 +562,13 @@ class _Zone extends DNSObject
     	return array($sError, $iZoneId);
     }
 
-    /*
+    /**
      * Increase serial number
-     */
+     *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function IncreaseSerial()
 	{
 		$iSerial = $this->Get('serial');

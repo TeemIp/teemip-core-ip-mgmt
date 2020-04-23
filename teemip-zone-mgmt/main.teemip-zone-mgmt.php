@@ -38,6 +38,9 @@ define('SPACE_TO_COMMENT', 96);
  * Plugin to extend the Popup Menus
  */
 
+/**
+ * Class ZoneMgmtExtraMenus
+ */
 class ZoneMgmtExtraMenus implements iPopupMenuExtension
 {
 	public static function EnumItems($iMenuId, $param)
