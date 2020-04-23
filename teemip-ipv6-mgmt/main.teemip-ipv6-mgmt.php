@@ -114,10 +114,9 @@ class AttributeIPv6Address extends AttributeString
 		}
 		$aColumns = array();
 		// Note: to optimize things, the existence of the attribute is determined by the existence of one column with an empty suffix
-		$aColumns[''] = $sPrefix.'_text';
+		$aColumns[''] = $sPrefix.'_comp';
 		$aColumns['_text'] = $sPrefix.'_text';
-		$aColumns['_high'] = $sPrefix.'_high';
-		$aColumns['_low'] = $sPrefix.'_low';
+		$aColumns['_comp'] = $sPrefix.'_comp';
 		return $aColumns;
 	}
 
@@ -129,7 +128,8 @@ class AttributeIPv6Address extends AttributeString
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{
-		return new ormIPv6($aCols[$sPrefix]);
+		// IPv6 is fully defined by its canonical expression
+		return new ormIPv6($aCols[$sPrefix.'_text']);
 	}
 
 	/**
@@ -142,16 +142,14 @@ class AttributeIPv6Address extends AttributeString
 		if ($value instanceOf ormIPv6)
 		{
 			$aValues = array();
-			$aValues[$this->GetCode().'_text'] = $value->ToString();
-			$aValues[$this->GetCode().'_high'] = new orm64bit($value->GetHighULong());
-			$aValues[$this->GetCode().'_low'] = new orm64bit($value->GetLowULong());
+			$aValues[$this->GetCode().'_text'] = $value->GetAsCannonical();
+			$aValues[$this->GetCode().'_comp'] = $value->GetAsCompressed();
 		}
 		else
 		{
 			$aValues = array();
 			$aValues[$this->GetCode().'_text'] = '';
-			$aValues[$this->GetCode().'_high'] = 0;
-			$aValues[$this->GetCode().'_low'] = 0;
+			$aValues[$this->GetCode().'_comp'] = '';
 		}
 		return $aValues;
 	}
@@ -165,8 +163,7 @@ class AttributeIPv6Address extends AttributeString
 	{
 		$aColumns = array();
 		$aColumns[$this->GetCode().'_text'] = 'CHAR(39)';
-		$aColumns[$this->GetCode().'_high'] = 'BIGINT(20) UNSIGNED';
-		$aColumns[$this->GetCode().'_low'] = 'BIGINT(20) UNSIGNED';
+		$aColumns[$this->GetCode().'_comp'] = 'CHAR(39)';
 		return $aColumns;
 	}
 
@@ -178,8 +175,7 @@ class AttributeIPv6Address extends AttributeString
 		return array(
 			$this->GetCode() => new FilterFromAttribute($this),
 			$this->GetCode().'_text' => new FilterFromAttribute($this, '_text'),
-			$this->GetCode().'_high' => new FilterFromAttribute($this, '_high'),
-			$this->GetCode().'_low' => new FilterFromAttribute($this, '_low')
+			$this->GetCode().'_comp' => new FilterFromAttribute($this, '_comp'),
 		);
 	}
 
@@ -240,7 +236,7 @@ class AttributeIPv6Address extends AttributeString
 	{
 		if ($sValue instanceof ormIPv6)
 		{
-			$sValue = $sValue->ToString();
+			$sValue = $sValue->GetAsCompressed();
 		}
 		return $sValue;
 	}
@@ -256,7 +252,7 @@ class AttributeIPv6Address extends AttributeString
 	{
 		if ($value instanceof ormIPv6)
 		{
-			$value = $value->ToString();
+			$value = $value->GetAsCompressed();
 		}
 		return $value;
 	}
@@ -272,7 +268,7 @@ class AttributeIPv6Address extends AttributeString
 	{
 		if ($sValue instanceof ormIPv6)
 		{
-			$sValue = $sValue->ToString();
+			$sValue = $sValue->GetAsCompressed();
 		}
 		return $sValue;
 	}
@@ -304,6 +300,8 @@ class ormIPv6 extends ormIP
 {
 	// String representation of the address, stored in canonical IPv6 format
 	protected $sIPv6;
+	// String representation of the address, stored in compressed IPv6 format
+	protected $sCompressed;
 	// High order 64 bits of the address, stored as string in hexadecimal (without the 0x prefix)
 	protected $sHigh;
 	// Low order 64 bits of the address, stored as string in hexadecimal (without the 0x prefix)
@@ -319,6 +317,7 @@ class ormIPv6 extends ormIP
 	public function __construct($sIPv6 = '0000:0000:0000:0000:0000:0000:0000:0000')
 	{
 		$this->sIPv6 = strtolower($this->Canonicalize($sIPv6));
+		$this->sCompressed = $this->CanToComp($this->sIPv6);
 		$this->ComputeHighPart();
 		$this->ComputeLowPart();
 		$this->ComputeNibbles();
@@ -339,7 +338,7 @@ class ormIPv6 extends ormIP
 	 */
 	public function ToString()
 	{
-		return $this->sIPv6;
+		return $this->sCompressed;
 	}
 
 	/**
@@ -422,7 +421,7 @@ class ormIPv6 extends ormIP
 	 */
 	public function GetAsCompressed()
 	{
-		return $this->CanToComp($this->sIPv6);
+		return $this->sCompressed;
 	}
 
 	/**

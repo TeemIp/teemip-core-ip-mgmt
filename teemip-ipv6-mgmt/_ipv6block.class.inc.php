@@ -21,10 +21,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class _IPv6Block
+ */
 class _IPv6Block extends IPBlock
 {
 	/**
 	 * Returns icon to ne displayed
+	 *
+	 * @param bool $bImgTag
+	 * @param bool $bXsIcon
+	 *
+	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetIcon($bImgTag = true, $bXsIcon = false)
 	{ 
@@ -36,30 +45,41 @@ class _IPv6Block extends IPBlock
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6block.png';
 		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 	}
 
 	/**
 	 * Returns name to be displayed within trees
+	 *
+	 * @return mixed
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetNameForTree()
 	{
-		return $this->Get('firstip')->ToString();
+		return $this->Get('firstip')->GetAsCannonical();
 	}
 	
 	/**
 	 * Returns size of block
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetSize()
 	{
 		$oFirstIp = $this->Get('firstip');
-		$oLastIp = $this->Get('lastip');	 
-		$iSize = $oFirstIp->GetSizeInterval($oLastIp);
-		return $iSize;
+		$oLastIp = $this->Get('lastip');
+		return $oFirstIp->GetSizeInterval($oLastIp);
 	}
 	
 	/**
 	 * Returns higher block prefix, CIDR aligned, contained in block
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetBlockPrefix()
 	{
@@ -70,7 +90,7 @@ class _IPv6Block extends IPBlock
 		while ($iPrefix >= IPV6_BLOCK_MAX_PREFIX)
 		{
 			$oNotMask = $oMask->BitwiseNot();
-			$oIp = $oFirstIp->Add($oNotMask); // This is simillar to a BitWiseOr($oNotMask) with a propagation of carry
+			$oIp = $oFirstIp->Add($oNotMask); // This is similar to a BitWiseOr($oNotMask) with a propagation of carry
 			if ($oIp->IsBiggerStrict($oLastIp))
 			{
 				$iPrefix++;
@@ -79,18 +99,23 @@ class _IPv6Block extends IPBlock
 			$oMask = $oMask->LeftShift();
 			$iPrefix--;
 		}
+		return $iPrefix;
 	}
 
 	/**
 	 * Returns minimum block prefix required
+	 *
+	 * @return bool|int|mixed|\ormLinkSet|string|string[]|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	function GetMinBlockPrefix()
 	{
 		$iBlockMinPrefix = utils::ReadPostedParam('attr_ipv6_block_min_prefix', '');
 		if (empty($iBlockMinPrefix))
 		{
-			$sOrgId = $this->Get('org_id');
-			$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $sOrgId);
+			$iOrgId = $this->Get('org_id');
+			$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $iOrgId);
 		}
 		else
 		{
@@ -106,10 +131,19 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Return % of occupancy of objects linked to $this
+	 *
+	 * @param $sObject
+	 *
+	 * @return float|int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetOccupancy($sObject)
 	{
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$iBlockSize = $this->GetSize();
 		
@@ -119,7 +153,7 @@ class _IPv6Block extends IPBlock
 			case 'IPv6Block':
 				// Look for all child blocks
 				$iChildBlockSize = 0;                                     
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 				while ($oSRange = $oSRangeSet->Fetch())
 				{
 					$iChildBlockSize += $oSRange->GetSize();
@@ -130,7 +164,7 @@ class _IPv6Block extends IPBlock
 			case 'IPv6Subnet':
 				// Look for all child subnets
 				$iSubnetSize = 0;
-				$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $sOrgId"));
+				$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $iOrgId"));
 				while ($oSubnet = $oSubnetSet->Fetch())
 				{
 					$iSubnetSize += $oSubnet->GetSize();
@@ -144,10 +178,20 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Find space within the block to create child block or subnet
+	 *
+	 * @param $iPrefix
+	 * @param $iMaxOffer
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetFreeSpace($iPrefix, $iMaxOffer)
 	{
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$aFreeSpace = array();
 		
@@ -155,23 +199,23 @@ class _IPv6Block extends IPBlock
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
 		$iBlockPrefix = $this->GetBlockPrefix();
-		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $sOrgId"));
+		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
 		
 		$aList = array();
 		$i = 0;
 		while ($oChildBlock = $oChildBlockSet->Fetch())
 		{
 			$aList[$i] = array();
-			$aList[$i]['firstip'] = $oChildBlock->Get('firstip')->ToString();
-			$aList[$i]['lastip'] = $oChildBlock->Get('lastip')->ToString();
+			$aList[$i]['firstip'] = $oChildBlock->Get('firstip')->GetAsCannonical();
+			$aList[$i]['lastip'] = $oChildBlock->Get('lastip')->GetAsCannonical();
 			$i++;
 		}
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			$aList[$i] = array();
-			$aList[$i]['firstip'] = $oSubnet->Get('ip')->ToString();
-			$aList[$i]['lastip'] = $oSubnet->Get('lastip')->ToString();
+			$aList[$i]['firstip'] = $oSubnet->Get('ip')->GetAsCannonical();
+			$aList[$i]['lastip'] = $oSubnet->Get('lastip')->GetAsCannonical();
 			$i++;
 		}
 		// Sort $aList by 'firstip' and create array of free ranges
@@ -195,7 +239,7 @@ class _IPv6Block extends IPBlock
 				{
 					$oAnIp = new ormIPv6($aList[$i]['lastip']);
 					$oAnIp = $oAnIp->GetNextIp();
-					$sAnIp = $oAnIp->ToString();
+					$sAnIp = $oAnIp->GetAsCannonical();
 					$i++; 
 				}
 				if ($oAnIp->IsSmallerStrict($oLastIp))
@@ -207,11 +251,11 @@ class _IPv6Block extends IPBlock
 						$sAnIp = $aList[$i]['firstip'];
 						$oAnIp = new ormIPv6($sAnIp);
 						$oPreviousIp = $oAnIp->GetPreviousIp();
-						$aFreeList[$j]['lastip'] = $oPreviousIp->ToString();
+						$aFreeList[$j]['lastip'] = $oPreviousIp->GetAsCannonical();
 					}
 					else
 					{
-						$aFreeList[$j]['lastip'] = $oLastIp->ToString();
+						$aFreeList[$j]['lastip'] = $oLastIp->GetAsCannonical();
 					}
 					$j++;
 				}
@@ -222,8 +266,8 @@ class _IPv6Block extends IPBlock
 		{
 			$iSizeFreeArray = 1;
 			$aFreeList[0] = array();
-			$aFreeList[0]['firstip'] = $oFirstIp->ToString();
-			$aFreeList[0]['lastip'] = $oLastIp->ToString();
+			$aFreeList[0]['firstip'] = $oFirstIp->GetAsCannonical();
+			$aFreeList[0]['lastip'] = $oLastIp->GetAsCannonical();
 		}
 		
 		$oAppContext = new ApplicationContext();
@@ -274,14 +318,18 @@ class _IPv6Block extends IPBlock
 
 	/**
 	 * Returns higher block prefix, CIDR aligned, contained in block
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckMustBeCIDRAligned()
 	{
 		$sBlockCidrAligned = utils::ReadPostedParam('attr_ipv6_block_cidr_aligned', '');
 		if (empty($sBlockCidrAligned))
 		{
-			$sOrgId = $this->Get('org_id');
-			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv6_block_cidr_aligned', $sOrgId);
+			$iOrgId = $this->Get('org_id');
+			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv6_block_cidr_aligned', $iOrgId);
 		}
 		if ($sBlockCidrAligned == 'bca_yes')
 		{
@@ -292,6 +340,13 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Check if block is CIDR aligned
+	 *
+	 * @param null $oNewFirstIp
+	 * @param null $oNewLastIp
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckCIDRAligned($oNewFirstIp = null, $oNewLastIp = null)
 	{
@@ -325,6 +380,13 @@ class _IPv6Block extends IPBlock
 
 	/**
 	 * Compare size of block with given interval
+	 *
+	 * @param null $oFirstIp
+	 * @param null $oLastIp
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function DoCheckHasMinBlockSize($oFirstIp = null, $oLastIp = null)
 	{
@@ -339,7 +401,7 @@ class _IPv6Block extends IPBlock
 			$oMask = $oMask->LeftShift();
 		}
 		$oMask = $oMask->BitwiseNot();
-		$oIp = $oFirstIp->Add($oMask); // This is simillar to a BitWiseOr($oMask) with a propagation of carry
+		$oIp = $oFirstIp->Add($oMask); // This is similar to a BitWiseOr($oMask) with a propagation of carry
 		if ($oIp->IsSmallerOrEqual($oLastIp))
 		{
 			return true;
@@ -349,6 +411,10 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Get parameters used for operation
+	 *
+	 * @param $sOperation
+	 *
+	 * @return array
 	 */
 	function GetPostedParam($sOperation)
 	{
@@ -365,6 +431,7 @@ class _IPv6Block extends IPBlock
 			break;
 
 			case 'doshrinkblock':
+			case 'doexpandblock':
 				$aParam['firstip'] = filter_var(utils::ReadPostedParam('attr_firstip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['lastip'] = filter_var(utils::ReadPostedParam('attr_lastip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
@@ -380,14 +447,6 @@ class _IPv6Block extends IPBlock
 				$aParam['ipv6_block_cidr_aligned'] = utils::ReadPostedParam('attr_ipv6_block_cidr_aligned', 1);
 			break;
 
-			case 'doexpandblock':
-				$aParam['firstip'] = filter_var(utils::ReadPostedParam('attr_firstip', '', 'raw_data'), FILTER_VALIDATE_IP);
-				$aParam['lastip'] = filter_var(utils::ReadPostedParam('attr_lastip', '', 'raw_data'), FILTER_VALIDATE_IP);
-				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
-				$aParam['ipv6_block_min_prefix'] = utils::ReadPostedParam('attr_ipv6_block_min_prefix', IPV6_BLOCK_MIN_PREFIX);
-				$aParam['ipv6_block_cidr_aligned'] = utils::ReadPostedParam('attr_ipv6_block_cidr_aligned', 1);
-			break;
-			
 			case 'dodelegate':
 				$aParam['child_org_id'] = utils::ReadPostedParam('child_org_id', '', 'raw_data');
 			break;
@@ -400,7 +459,11 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Check if space can be searched
- 	 */
+ 	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 */
 	function DoCheckToDisplayAvailableSpace($aParam)
 	{
 		return '';
@@ -408,18 +471,28 @@ class _IPv6Block extends IPBlock
 	
 	/**
 	 * Displays available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter)
 	{
 		$iId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iPrefix = $aParameter['spacesize'];
 		$iMaxOffer = $aParameter['maxoffer'];
 		$sStatusSubnet = $aParameter['status_subnet'];
 		$sType = $aParameter['type'];
 		$iLocationId = $aParameter['location_id'];
 		$iRequestorId = $aParameter['requestor_id'];
-		$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $sOrgId);
+		$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $iOrgId);
 		$bOfferBlock = ($iPrefix <= $iBlockMinPrefix) ? true : false;
 		$bOfferSubnet = ($iPrefix >= IPV6_SUBNET_MAX_PREFIX) ? true : false;
 		
@@ -445,9 +518,9 @@ class _IPv6Block extends IPBlock
 			$iVIdCounter = 1;
 			do
 			{
-				$sAnIp = $aFreeSpace[$i]['firstip']->ToString();
-				$sLastIp = $aFreeSpace[$i]['lastip']->ToString();
-				$sMask = $aFreeSpace[$i]['mask']->ToString();
+				$sAnIp = $aFreeSpace[$i]['firstip']->GetAsCannonical();
+				$sLastIp = $aFreeSpace[$i]['lastip']->GetAsCannonical();
+				$sMask = $aFreeSpace[$i]['mask']->GetAsCannonical();
 				$oP->add("<li>".$sAnIp." - ".$sLastIp."\n"."<ul>");
 				
 				// If user has rights to create block
@@ -464,7 +537,7 @@ class _IPv6Block extends IPBlock
 						$oP->add($sHTMLValue);	
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', $iChangeId, {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', $iChangeId, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'});
 EOF
 						);
 					}
@@ -483,7 +556,7 @@ EOF
 						$oP->add($sHTMLValue);
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', $iChangeId, {'org_id': '$sOrgId', 'block_id': '$iId', 'ip': '$sAnIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAnIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAnIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAnIp'});
 EOF
 						);
 					}
@@ -498,12 +571,21 @@ EOF
 	
 	/**
 	 * Check if block can be shrunk
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoCheckToShrink($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
@@ -544,7 +626,7 @@ EOF
 		}
 
 		// Make sure that no child block sits accross border
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -556,7 +638,7 @@ EOF
 		}
 							
 		// Make sure that no child subnet sits accross border
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSubnet->Get('ip');
@@ -578,30 +660,40 @@ EOF
 	 
 	/**
 	 * Shrink the block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoShrink($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oNewFirstIp = new ormIPv6($aParam['firstip']);
 		$oNewLastIp =  new ormIPv6($aParam['lastip']);
-		$sRequestor_id = $aParam['requestor_id'];
+		$iRequestorId = $aParam['requestor_id'];
 		
 		// Update initial block and register it.
-		if (!is_null($sRequestor_id))
+		if (!is_null($iRequestorId))
 		{
-			$this->Set('requestor_id', $sRequestor_id);
+			$this->Set('requestor_id', $iRequestorId);
 		}
 		$this->Set('firstip', $oNewFirstIp);
 		$this->Set('lastip', $oNewLastIp);
 		$this->DBUpdate();
 					
 		//	Attach dropped child blocks to parent block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -614,7 +706,7 @@ EOF
 		}
 							
 		//	Attach child subnets to parent block
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSubnet->Get('ip');
@@ -633,12 +725,23 @@ EOF
 	
 	/**
 	 * Check if block can be split
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DoCheckToSplit($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
@@ -668,7 +771,7 @@ EOF
 		} 
 
 		// Make sure that no child block sits accross border
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -680,7 +783,7 @@ EOF
 		}
 							
 		// Make sure that no child subnet sits accross border
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSubnet->Get('ip');
@@ -697,7 +800,7 @@ EOF
 			return (Dict::Format('UI:IPManagement:Action:Split:IPBlock:EmptyNewName'));
 		}
 		$iKey = $this->GetKey();
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.name = '$sNewName' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != $iKey"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.name = '$sNewName' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
 		if ($oSRangeSet->Count() != 0)
 		{
 			return (Dict::Format('UI:IPManagement:Action:Split:IPBlock:NameExist'));
@@ -709,24 +812,34 @@ EOF
 	
 	/**
 	 * Split the block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoSplit($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oSplitIp = new ormIPv6($aParam['ip']);
 		$sNewName = $aParam['newname'];
 		$oPreviousSplitIp = $oSplitIp->GetPreviousIp();
-		$sRequestor_id = $aParam['requestor_id'];
+		$iRequestorId = $aParam['requestor_id'];
 				
 		// Update initial block and register it.
-		if (!is_null($sRequestor_id))
+		if (!is_null($iRequestorId))
 		{
-			$this->Set('requestor_id', $sRequestor_id);
+			$this->Set('requestor_id', $iRequestorId);
 		}
 		$this->Set('lastip', $oPreviousSplitIp);
 		$this->Set('write_reason', 'split');
@@ -734,16 +847,16 @@ EOF
 					
 		//	Create new block
 		$oNewBlock = MetaModel::NewObject('IPv6Block');
-		$oNewBlock->Set('org_id', $sOrgId);
+		$oNewBlock->Set('org_id', $iOrgId);
 		$oNewBlock->Set('name', $sNewName);
 		$oNewBlock->Set('parent_id', $this->Get('parent_id'));
 		$oNewBlock->Set('firstip', $oSplitIp);
 		$oNewBlock->Set('lastip', $oLastIpCurrentBlock);
 		$oNewBlock->Set('type', $this->Get('type'));
 		$oNewBlock->Set('comment', $this->Get('comment'));
-		if (!is_null($sRequestor_id))
+		if (!is_null($iRequestorId))
 		{
-			$oNewBlock->Set('requestor_id', $sRequestor_id);
+			$oNewBlock->Set('requestor_id', $iRequestorId);
 		}
 		$oNewBlock->Set('write_reason', 'split');
 		$oNewBlock->DBInsert();
@@ -780,7 +893,7 @@ EOF
 		}
 					
 		//	Attach child blocks to that new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -793,7 +906,7 @@ EOF
 		}
 							
 		//	Attach child subnets to that new block
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSubnet->Get('ip');
@@ -811,12 +924,21 @@ EOF
 	
 	/**
 	 * Check if block can be expanded
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoCheckToExpand($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
@@ -872,7 +994,7 @@ EOF
 		}
 						
 		// Make sure that new borders don't include existing delegated block
-		$oDelegatedSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $sOrgId")); 
+		$oDelegatedSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $iOrgId"));
 		while ($oDelegatedSRange = $oDelegatedSRangeSet->Fetch())
 		{
 			$oDelegatedSRangeFirstIp = $oDelegatedSRange->Get('firstip');
@@ -884,7 +1006,7 @@ EOF
 		}
 						
 		// Make sure that no brother block sits accross new borders
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND b.org_id = $sOrgId"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND b.org_id = $iOrgId"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -898,7 +1020,7 @@ EOF
 		// Make sure that no subnet attached to the same parent block sits accros new borders
 		if ($iParentId != 0)
 		{
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch())
 			{
 				$oCurrentFirstIp = $oSubnet->Get('ip');
@@ -916,23 +1038,33 @@ EOF
 	
 	/**
 	 * Expand the block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoExpand($aParam)
 	{
 		// Set working variables
 		$iBlockId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oNewFirstIp = new ormIPv6($aParam['firstip']);
 		$oNewLastIp =  new ormIPv6($aParam['lastip']);
-		$sRequestor_id = $aParam['requestor_id'];
+		$iRequestorId = $aParam['requestor_id'];
 				
 		// Update initial block and register it.
-		if (!is_null($sRequestor_id))
+		if (!is_null($iRequestorId))
 		{
-			$this->Set('requestor_id', $sRequestor_id);
+			$this->Set('requestor_id', $iRequestorId);
 		}
 		$this->Set('firstip', $oNewFirstIp);
 		$this->Set('lastip', $oNewLastIp);
@@ -940,7 +1072,7 @@ EOF
 		$this->DBUpdate();
 					
 		// Absorb brother blocks
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -955,7 +1087,7 @@ EOF
 		//	Attach child subnets to parent block
 		if ($iParentId != 0)
 		{
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			$oSubnetSet->Rewind();
 			while ($oSubnet = $oSubnetSet->Fetch())
 			{
@@ -976,6 +1108,17 @@ EOF
 	
 	/**
 	 * Check if block can be delegated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DoCheckToDelegate($aParam)
 	{
@@ -1036,6 +1179,11 @@ EOF
 	
 	/**
 	 * Delegate block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \Exception
 	 */
 	function DoDelegate($aParam)
 	{
@@ -1053,6 +1201,15 @@ EOF
 
 	/**
 	 * Check if block can be undelegated
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DoCheckToUndelegate($aParam)
 	{
@@ -1083,6 +1240,11 @@ EOF
 
 	/**
 	 * Undelegate block
+	 *
+	 * @param $aParam
+	 *
+	 * @return \CMDBObjectSet|\DBObjectSet
+	 * @throws \Exception
 	 */
 	function DoUndelegate($aParam)
 	{
@@ -1099,8 +1261,21 @@ EOF
 
 	/**
 	 * Display block and child subnets as tree leaf
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bWithSubnet
+	 * @param $sTreeOrgId
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	function DisplayAsLeaf(WebPage $oP, $bWithSubnet = false, $sTreeOrgId)
+	function DisplayAsLeaf(WebPage $oP, $bWithSubnet, $sTreeOrgId)
 	{
 		if	($bWithSubnet)
 		{                             
@@ -1113,7 +1288,7 @@ EOF
 		$oP->add($sHtml);
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');	 
-		$oP->add("&nbsp;&nbsp;&nbsp;[".$oFirstIp->CanToComp($oFirstIp)." - ".$oLastIp->CanToComp($oLastIp)."]");
+		$oP->add("&nbsp;&nbsp;&nbsp;[".$oFirstIp->ToString()." - ".$oLastIp->ToString()."]");
 		$oP->add("&nbsp;&nbsp;&nbsp;".$this->Get('type'));
 
 		// Display delegation information if required
@@ -1141,7 +1316,13 @@ EOF
 			if ($oSubnetSet->Count() != 0)
 			{
 				$oP->add("<ul>\n");
+				$aSubnets = array();
 				while ($oSubnet = $oSubnetSet->Fetch())
+				{
+					$aSubnets[$oSubnet->Get('ip')->GetAsCannonical()] = $oSubnet;
+				}
+				ksort($aSubnets);
+				foreach ($aSubnets as $key => $oSubnet)
 				{
 					$oP->add("<li>".$oSubnet->GetHyperlink());
 					$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$oSubnet->Get('mask')));
@@ -1154,6 +1335,14 @@ EOF
 	
 	/**
 	 * Display main block attributes
+	 *
+	 * @param \WebPage $oP
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $sPrefix
+	 * @param $aDefault
+	 *
+	 * @throws \CoreException
 	 */
 	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
 	{
@@ -1193,6 +1382,9 @@ EOF
 	
 	/**
 	 * Display attributes associated operation
+	 *
+	 * @param \WebPage $oP
+	 * @param $aDefault
 	 */
 	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault)
 	{
@@ -1212,6 +1404,18 @@ EOF
 	
 	/**
 	 * Display attributes associated operation
+	 *
+	 * @param \WebPage $oP
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
@@ -1265,7 +1469,7 @@ EOF
 				$sInputId = $iFormId.'_'.'firstip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Block', 'firstip');
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 				
 				// New last IP
@@ -1273,7 +1477,7 @@ EOF
 				$sInputId = $iFormId.'_'.'lastip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Block', 'lastip');
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
 			break;
 			
@@ -1286,7 +1490,7 @@ EOF
 				$sInputId = $iFormId.'_'.'ip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Address', 'ip');
 				$sDefault = (array_key_exists('ip', $aDefault)) ? $aDefault['ip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Address', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Address', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 			
 				// Name of new block
@@ -1297,15 +1501,15 @@ EOF
 			break;
 					
 			case 'expandblock':
-				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Shrink:IPv6Block:NewFirstIP');
-				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Shrink:IPv6Block:NewLastIP');
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Expand:IPv6Block:NewFirstIP');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Expand:IPv6Block:NewLastIP');
 
 				// New first IP
 				$sAttCode = 'firstip';
 				$sInputId = $iFormId.'_'.'firstip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Block', 'firstip');
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 				
 				// New last IP
@@ -1313,7 +1517,7 @@ EOF
 				$sInputId = $iFormId.'_'.'lastip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Block', 'lastip');
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
 			break;
 			
@@ -1375,17 +1579,25 @@ EOF
 	
 	/**
 	 * Displays all space (used and non used within block)
+	 *
+	 * @param \WebPage $oP
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DisplayAllSpace(WebPage $oP)
 	{
 		// Get list of registered blocks and subnets in subnet range
 		$iId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
 		$iBlockSize = $this->GetSize();
-		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iId AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId)"));
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iId AND s.org_id = $sOrgId"));
+		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iId AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iId AND s.org_id = $iOrgId"));
 		
 		$aList = array();
 		$i = 0;
@@ -1393,7 +1605,7 @@ EOF
 		{
 			$aList[$i] = array();
 			$aList[$i]['type'] = 'IPv6Block';
-			$aList[$i]['sfirstip'] = $oChildBlock->Get('firstip')->ToString();
+			$aList[$i]['sfirstip'] = $oChildBlock->Get('firstip')->GetAsCannonical();
 			$aList[$i]['firstip'] = $oChildBlock->Get('firstip');
 			$aList[$i]['lastip'] = $oChildBlock->Get('lastip');
 			$aList[$i]['obj'] = $oChildBlock;
@@ -1403,7 +1615,7 @@ EOF
 		{
 			$aList[$i] = array();
 			$aList[$i]['type'] = 'IPv6Subnet';
-			$aList[$i]['sfirstip'] = $oSubnet->Get('ip')->ToString();
+			$aList[$i]['sfirstip'] = $oSubnet->Get('ip')->GetAsCannonical();
 			$aList[$i]['firstip'] = $oSubnet->Get('ip');
 			$aList[$i]['lastip'] = $oSubnet->Get('lastip');
 			$aList[$i]['obj'] = $oSubnet;
@@ -1442,9 +1654,7 @@ EOF
 					// Display free space
 					$oALastIp = $aList[$i]['firstip']->GetPreviousIp();
 					$iNbIps = $oAnIp->GetSizeInterval($oALastIp);
-//					$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-					$iFormatNbIps = $iNbIps;
-					$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace',$oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100));	
+					$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace',$oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100));
 					$oAnIp = $aList[$i]['firstip'];
 				}
 				else if ($oAnIp->IsEqual($aList[$i]['firstip']))
@@ -1475,8 +1685,7 @@ EOF
 			else
 			{
 				$iNbIps = $oAnIp->GetSizeInterval($oLastIp);
-				$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-				$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace',$oAnIp->GetAsCompressed(), $oLastIp->GetAsCompressed(), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100));
+				$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace',$oAnIp->GetAsCompressed(), $oLastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100));
 				$oAnIp = $oLastIp->GetNextIp();
 			}
 			$oP->add("</li>\n");
@@ -1654,7 +1863,7 @@ EOF
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 	
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		if ($this->IsNew())
 		{
 			$iKey = -1;
@@ -1676,7 +1885,7 @@ EOF
 		}
 
 		// Check name doesn't already exist
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.name = '$sName' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != $iKey"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.name = '$sName' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
 		if ($oSRangeSet->Count() != 0)
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
@@ -1743,10 +1952,10 @@ EOF
 			// Make sure range doesn't collide with another range attached to the same parent.
 			//		If no parent is specified (null), then check is done with all such blocks with null parent specified.
 			//		It is done on blocks belonging to the same parent otherwise
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $sOrgId OR b.parent_org_id = $sOrgId) AND b.id != $iKey"));
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
 			if ($iParentId == 0)
 			{
-				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $sOrgId AND b.id != '$iKey'"));
+				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $iOrgId AND b.id != '$iKey'"));
 				$oSRangeSet->Append($oSRangeSet2);
 			}
 			while ($oSRange = $oSRangeSet->Fetch())
@@ -1781,7 +1990,7 @@ EOF
 			if ($iParentOrgId != 0)
 			{
 				// Make sure block has no parent in current organization - must be at the top of the tree
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.firstip <= :firstip AND :lastip <= b.lastip AND b.org_id = $sOrgId", array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.firstip <= :firstip AND :lastip <= b.lastip AND b.org_id = $iOrgId", array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
 				if ($oSRangeSet->Count() != 0)
 				{
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
@@ -1835,7 +2044,7 @@ EOF
 	{
 		parent::AfterInsert();
 		
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$iParentOrgId = $this->Get('parent_org_id');
 		$iParentId = $this->Get('parent_id');
@@ -1846,7 +2055,7 @@ EOF
 		
 		// Look for all blocks attached to parent of block being created and contained within new block
 		// Attach them to new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.org_id = $sOrgId AND b.id != $iKey"));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.org_id = $iOrgId AND b.id != $iKey"));
 		while ($oSRange = $oSRangeSet->Fetch())
 		{
 			$oRangeFirstIp = $oSRange->Get('firstip');
@@ -1859,11 +2068,11 @@ EOF
 			}
 		}
 		
-		// If block is delegated, look for blocks from $sOrgId at the top of the tree that are contained within new block
+		// If block is delegated, look for blocks from $iOrgId at the top of the tree that are contained within new block
 		// Attach them to new block
 		if ($iParentOrgId != 0)
 		{ 
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = 0 AND :firstip <= b.firstip AND b.lastip <= :lastip AND b.org_id = $sOrgId", array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = 0 AND :firstip <= b.firstip AND b.lastip <= :lastip AND b.org_id = $iOrgId", array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
 			while ($oSRange = $oSRangeSet->Fetch())
 			{
 				$oSRange->Set('parent_id', $iKey);
@@ -1876,7 +2085,7 @@ EOF
 		//	Attach them to new block
 		if ($iParentId != 0)
 		{
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch())
 			{
 				$oSubnetFirstIp = $oSubnet->Get('ip');
@@ -1906,7 +2115,7 @@ EOF
 	{
 		if ($this->Get('write_reason') != 'split')
 		{
-			$sOrgId = $this->Get('org_id');
+			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
 			$iParentId = $this->Get('parent_id');
 			$oFirstIp = $this->Get('firstip');
@@ -1915,7 +2124,7 @@ EOF
 			// Look for all subnets attached to block that may have fallen out of block
 			//	Attach them to parent block 
 			//	Note: previous check have made sure a parent block exists
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch())
 			{
 				$oSubnetFirstIp = $oSubnet->Get('ip');

@@ -21,10 +21,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class _IPv6Range
+ */
 class _IPv6Range extends IPRange
 {
 	/**
 	 * Returns icon to be displayed
+	 *
+	 * @param bool $bImgTag
+	 * @param bool $bXsIcon
+	 *
+	 * @return string
+	 * @throws \Exception
 	 */
 	public function GetIcon($bImgTag = true, $bXsIcon = false)
 	{ 
@@ -36,11 +45,15 @@ class _IPv6Range extends IPRange
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6range.png';
 		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 	}
 
 	/**
 	 * Returns size of range
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetSize()
 	{
@@ -52,20 +65,35 @@ class _IPv6Range extends IPRange
 	
 	/**
 	 * Compute % of IP addresses registered in data base in IP range
+	 *
+	 * @return float|int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function GetOccupancy()
 	{
-		$sOrgId = $this->Get('org_id');
-		$sFirstIp = $this->Get('firstip')->ToString();
-		$sLastIp = $this->Get('lastip')->ToString();
+		$iOrgId = $this->Get('org_id');
+		$sFirstIp = $this->Get('firstip')->GetAsCannonical();
+		$sLastIp = $this->Get('lastip')->GetAsCannonical();
 		
 		$iSize = $this->GetSize();
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $sOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId)));
 		return ($oIpRegisteredSet->Count() / $iSize) * 100;
 	}
 
 	/**
 	 * Automatically get a free IP in the range
+	 *
+	 * @param $iCreationOffset
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
 	public function GetFreeIP($iCreationOffset)
 	{
@@ -78,7 +106,7 @@ class _IPv6Range extends IPRange
 
 		// Get list of registered IPs
 		$iKey = $this->GetKey();
-		$oIPRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS ip WHERE ip.range_id = $iKey"));
+		$oIPRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS ip WHERE ip.range_id = :key"), array(), array('key' => $iKey));
 		$aIPRegistered = $oIPRegisteredSet->GetColumnAsArray('ip', false);
 
 		for ($i = 0; $i < $iCreationOffset; $i++)
@@ -90,7 +118,7 @@ class _IPv6Range extends IPRange
 		{
 			if (!in_array($oAnIp, $aIPRegistered))
 			{
-					return $oAnIp->ToString();
+					return $oAnIp->GetAsCompressed();
 			}
 			$oAnIp = $oAnIp->GetNextIp();
 		}
@@ -100,6 +128,15 @@ class _IPv6Range extends IPRange
 
 	/**
 	 * List IP addresses in IP range in CSV format
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetIPsAsCSV($aParam)
 	{
@@ -126,11 +163,11 @@ class _IPv6Range extends IPRange
 		}		
 		
 		// Get list of registered IPs in range
-		$sOrgId = $this->Get('org_id');
-		$sFirstIp = $oFirstIp->ToString(); 
-		$sLastIp = $oLastIp->ToString(); 
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $sOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
-						
+		$iOrgId = $this->Get('org_id');
+		$sFirstIp = $oFirstIp->GetAsCannonical();
+		$sLastIp = $oLastIp->GetAsCannonical();
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId)));
+
 		// List exported parameters
 		$sHtml = "Registered,Id";
 		$aParam = array('org_name', 'ip', 'status', 'fqdn', 'usage_name', 'comment', 'requestor_name', 'release_date');
@@ -174,6 +211,12 @@ class _IPv6Range extends IPRange
 	
 	/**
 	 * Check if IP is in range
+	 *
+	 * @param $oIp
+	 *
+	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	function DoCheckIpInRange($oIp)
 	{
@@ -188,6 +231,12 @@ class _IPv6Range extends IPRange
 	
 	/**
 	 * Check if IPs can be listed
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	function DoCheckToListIps($aParam)
 	{
@@ -226,6 +275,17 @@ class _IPv6Range extends IPRange
 	
 	/**
 	 * Display list of IPs addresses within GUI
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParam
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoListIps(WebPage $oP, $iChangeId, $aParam)
 	{
@@ -255,10 +315,10 @@ class _IPv6Range extends IPRange
 		
 		// Get list of registered IPs in range
 		$iId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
-		$sFirstIp = $oFirstIp->ToString(); 
-		$sLastIp = $oLastIp->ToString(); 
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $sOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+		$iOrgId = $this->Get('org_id');
+		$sFirstIp = $oFirstIp->GetAsCannonical();
+		$sLastIp = $oLastIp->GetAsCannonical();
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId)));
 		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', false);
 
 		// Preset display of name and range attributes
@@ -315,7 +375,7 @@ class _IPv6Range extends IPRange
 					$oP->add($sHTMLValue);	
 					$oP->add_ready_script(
 <<<EOF
-					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', $iChangeId, {'org_id': '$sOrgId', 'subnet_id': '$iSubnetId', 'range_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
+					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iSubnetId', 'range_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				}
@@ -338,6 +398,12 @@ EOF
 	
 	/**
 	 * Check if IPs can be exported in CSV
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	function DoCheckToCsvExportIps($aParam)
 	{
@@ -376,6 +442,15 @@ EOF
 	
 	/**
 	 * Display attributes associated operation
+	 *
+	 * @param \WebPage $oP
+	 * @param $sOperation
+	 * @param $iFormId
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
 	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
@@ -408,7 +483,7 @@ EOF
 				$sInputId = $iFormId.'_'.'firstip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Range', 'firstip');
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 				
 				// New last IP
@@ -416,7 +491,7 @@ EOF
 				$sInputId = $iFormId.'_'.'lastip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv6Range', 'lastip');
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
 				
 				$oP->Details($aDetails);
@@ -439,6 +514,18 @@ EOF
 
 	/**
 	 * Displays the tabs related to IPv6Ranges
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
 	{
@@ -447,9 +534,9 @@ EOF
 		
 		if (!$this->IsNew())
 		{
-			$sOrgId = $this->Get('org_id');
-			$sFirstIp = $this->Get('firstip')->ToString();
-			$sLastIp = $this->Get('lastip')->ToString();
+			$iOrgId = $this->Get('org_id');
+			$sFirstIp = $this->Get('firstip')->GetAsCannonical();
+			$sLastIp = $this->Get('lastip')->GetAsCannonical();
 			
 			$iSize = $this->GetSize();
 			
@@ -457,7 +544,7 @@ EOF
 			$aExtraParams['menu'] = false;			
 			
 			// Tab for Registered IPs
-			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $sOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp));
+			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId));
 			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
 			$iRegistered = $oIpRegisteredSet->Count();
 			if ($iRegistered > 0)
@@ -503,13 +590,19 @@ EOF
 	
 	/**
 	 * Check validity of new IP attributes before creation
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	function DoCheckToWrite()
 	{
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 		
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		if ($this->IsNew())
 		{
 			$iKey = -1;
@@ -549,7 +642,7 @@ EOF
 			}
 			
 			// Make sure range doesn't collide with another range within subnet
-			$oRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = '$iSubnetId' AND r.org_id = $sOrgId AND r.id != $iKey"));
+			$oRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = '$iSubnetId' AND r.org_id = $iOrgId AND r.id != $iKey"));
 			while ($oRange = $oRangeSet->Fetch())
 			{
 				$oCurrentFirstIp = $oRange->Get('firstip');
@@ -591,19 +684,26 @@ EOF
 	
 	/**
 	 * Perform specific tasks related to IPv6 range creation:
-	 */	 
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected function AfterInsert()
 	{
 		parent::AfterInsert();
 		
 		$iOrgId = $this->Get('org_id');
 		$iId = $this->GetKey();
-		$sFirstIp = $this->Get('firstip')->ToString();
-		$sLastIp = $this->Get('lastip')->ToString();
+		$sFirstIp = $this->Get('firstip')->GetAsCannonical();
+		$sLastIp = $this->Get('lastip')->GetAsCannonical();
 						
 		// Make sure all IPs belonging to range are attached to it
-			
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $iOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId)));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			if ($oIpRegistered->Get('range_id') != $iId)
@@ -616,19 +716,26 @@ EOF
 	
 	/**
 	 * Perform specific tasks related to IPv6 range update:
-	 */	 
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected function AfterUpdate()
 	{
 		parent::AfterUpdate();
 		
 		$iOrgId = $this->Get('org_id');
 		$iId = $this->GetKey();
-		$sFirstIp = $this->Get('firstip')->ToString();
-		$sLastIp = $this->Get('lastip')->ToString();
+		$sFirstIp = $this->Get('firstip')->GetAsCannonical();
+		$sLastIp = $this->Get('lastip')->GetAsCannonical();
 						
 		// Make sure all IPs belonging to range are attached to it
-			
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip AND i.ip <= :lastip AND i.org_id = $iOrgId",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId)));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			if ($oIpRegistered->Get('range_id') != $iId)
@@ -639,7 +746,7 @@ EOF
 		}
 
 		// Make sure all IPs ouside of range are NOT attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.range_id = $iId AND (i.ip < :firstip OR :lastip < i.ip)",  array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.range_id = :id AND (i.ip_text < :firstip OR :lastip < i.ip_text)",  array('id' => $iId, 'firstip' => $sFirstIp, 'lastip' => $sLastIp)));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			$oIpRegistered->Set('range_id', 0);
@@ -649,6 +756,12 @@ EOF
 	
 	/**
 	 * Change flag of attributes that shouldn't be modified beside creation.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
