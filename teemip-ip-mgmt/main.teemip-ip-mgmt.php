@@ -570,9 +570,16 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 		}
 
 		// 3rd step: check IPs allocated to interfaces attached to CIs
-		$sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList 
-		         UNION 
-		         SELECT LogicalInterface AS l JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList";
+		if(class_exists('LogicalInterface'))
+		{
+			$sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList 
+			         UNION 
+			         SELECT LogicalInterface AS l JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList";
+		}
+		else
+		{
+			$sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList";
+		}
 		$oInterfaceSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		while ((time() < $iUnixTimeLimit) && $oInterface = $oInterfaceSet->Fetch())
 		{
@@ -797,9 +804,16 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 		}
 
 		// 3rd step: check IPs attached to interfaces with non allocated status
-		$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated' 
-		         UNION 
-		         SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+		if(class_exists('LogicalInterface'))
+		{
+			$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated' 
+		             UNION 
+		             SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+		}
+		else
+		{
+			$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+		}
 
 		// Correct IP status
 		$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));

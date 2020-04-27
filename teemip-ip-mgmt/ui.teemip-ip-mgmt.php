@@ -1529,7 +1529,10 @@ HTML
 			break; // End case unallocateip
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-		
+
+		//case 'test':
+		//	IPv6Address::IPv6CompressionMigration();
+
 		case 'cancel':	// An action was cancelled
 		case 'displaylist':
 		default: // Menu node rendering (templates)
@@ -1540,7 +1543,7 @@ HTML
 				$oMenuNode->RenderContent($oP, $oAppContext->GetAsHash());
 				$oP->set_title($oMenuNode->GetLabel());
 			}
-		break;
+			break;
 		
 	}
 	$oP->output(); // Display the whole content now !

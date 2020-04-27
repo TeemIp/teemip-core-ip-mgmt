@@ -1219,9 +1219,9 @@
         <groups>
           <group id="Network" _delta="define">
             <actions>
-             <action xsi:type="write">allow</action>
-             <action xsi:type="bulk write">allow</action>
-             <action xsi:type="delete">allow</action>
+             <action id="action:write">allow</action>
+             <action id="action:bulk write">allow</action>
+             <action id="action:delete">allow</action>
             </actions>
           </group>
         </groups>
