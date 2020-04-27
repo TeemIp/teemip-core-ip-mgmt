@@ -86,7 +86,37 @@ class _IPv4Address extends IPAddress
 		}
 		return array();
 	}
-	
+
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		$sOrgId = $this->Get('org_id');
+		$sIp = $this->Get('ip');
+
+		$iSubnetId = $this->Get('subnet_id');
+		if ($iSubnetId == 0)
+		{
+			// No subnet parent set yet. Look for the only one that IP may belong to.
+			// If none -> orphean IP
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(s.broadcastip) AND s.org_id = $sOrgId"));
+			if ($oSubnetSet->Count() != 0)
+			{
+				$oSubnet = $oSubnetSet->Fetch();
+				$this->Set('subnet_id', $oSubnet->GetKey());
+			}
+		}
+	}
+
 	/**
 	 * Check validity of new IP attributes before creation
 	 */
@@ -99,7 +129,6 @@ class _IPv4Address extends IPAddress
 			$this->m_aCheckIssues[] = $sParentCheck;
 			return;
 		}
-		
 		
 		// For new IPs only
 		if ($this->IsNew())
@@ -115,7 +144,19 @@ class _IPv4Address extends IPAddress
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision');
 				return;
 			}
-		
+
+			// If Subnet is selected, make sure IP belongs to it
+			$iSubnetId = $this->Get('subnet_id');
+			if ($iSubnetId != 0)
+			{
+				$oSubnet = MetaModel::GetObject('IPv4Subnet', $iSubnetId, true /* MustBeFound */);
+				if (!$oSubnet->DoCheckIpInSubnet($sIp))
+				{
+					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet');
+					return;
+				}
+			}
+
 			// If IP Range is selected, make sure IP belongs to range
 			$iIpRangeId = $this->Get('range_id');
 			if ($iIpRangeId != null)
@@ -127,38 +168,14 @@ class _IPv4Address extends IPAddress
 					return;
 				}
 			}
-			// If not:
-			// - Look for IP Range that IP may belong to
-			// - Make sure IP belongs to subnet
 			else
 			{
+				// If not look for IP Range that IP may belong to
 				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE INET_ATON(r.firstip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(r.lastip) AND r.org_id = $sOrgId"));
 				if ($oIpRangeSet->Count() != 0)
 				{
 					$oIpRange = $oIpRangeSet->Fetch();
 					$this->Set('range_id', $oIpRange->GetKey());
-				}
-
-				$iSubnetId = $this->Get('subnet_id');
-				if ($iSubnetId != 0)
-				{
-					$oSubnet = MetaModel::GetObject('IPv4Subnet', $iSubnetId, true /* MustBeFound */);
-					if (!$oSubnet->DoCheckIpInSubnet($sIp))
-					{
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet');
-						return;
-					}
-				}
-				else
-				{
-					// Look for subnet that IP may belong to
-					$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(s.broadcastip) AND s.org_id = $sOrgId"));
-					if ($oSubnetSet->Count() != 0)
-					{
-						$oSubnet = $oSubnetSet->Fetch();
-						$this->Set('subnet_id', $oSubnet->GetKey());
-					}
-					// Else there is no subnet where the IP can be attacehd too -> ophean IP
 				}
 			}
 			
