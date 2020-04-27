@@ -3706,16 +3706,16 @@
         <groups>
           <group id="IPAddress" _delta="define">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
          <group id="LnkToIPObject" _delta="define">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
              </actions>
           </group>
         </groups>
@@ -3726,40 +3726,40 @@
         <groups>
           <group id="IPObject">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="bulk delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
              </actions>
           </group>
           <group id="LnkToIPObject">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="bulk delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
              </actions>
           </group>
           <group id="IPApplication" _delta="define">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="bulk delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
             </actions>
           </group>
           <group id="DNSObject" _delta="define">
             <actions>
-             <action xsi:type="write">allow</action>
-             <action xsi:type="bulk write">allow</action>
-             <action xsi:type="delete">allow</action>
-             <action xsi:type="bulk delete">allow</action>
+             <action id="action:write">allow</action>
+             <action id="action:bulk write">allow</action>
+             <action id="action:delete">allow</action>
+             <action id="action:bulk delete">allow</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
          </groups>
@@ -3770,47 +3770,47 @@
         <groups>
           <group id="Incident" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="Problem" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="Change" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="Service" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="UserRequest" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="NormalChange" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="EmergencyChange" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="RoutineChange" _delta="if_exists">
             <actions>
-              <action xsi:type="read">deny</action>
+              <action id="action:read">deny</action>
             </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
+              <action id="action:read">allow</action>
              </actions>
           </group>
         </groups>
@@ -3819,7 +3819,7 @@
         <groups>
           <group id="LnkToIPObject" _delta="define">
             <actions>
-              <action xsi:type="delete">allow</action>        
+              <action id="action:delete">allow</action>        
             </actions>
           </group>
         </groups>

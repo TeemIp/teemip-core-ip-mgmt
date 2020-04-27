@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-mgmt/2.6.0',
+	'teemip-ip-mgmt/2.6.1',
 	array(
 		// Identification
 		//
@@ -45,7 +45,7 @@ SetupWebPage::AddModule(
 		//
 		'datamodel' => array(
 			'model.teemip-ip-mgmt.php',
-			'main.teemip-ip-mgmt.php',
+			'main.teemip-ip-mgmt.php'
 		),
 		'data.struct' => array(
 			//'data.struct.IPAudit.xml',
