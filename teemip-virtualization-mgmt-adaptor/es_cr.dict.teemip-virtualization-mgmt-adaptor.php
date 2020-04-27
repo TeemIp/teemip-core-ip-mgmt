@@ -44,6 +44,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: LogicalInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:LogicalInterface/Attribute:vlans_list' => 'VLANs',
+	'Class:LogicalInterface/Attribute:vlans_list+' => '',
+	'Class:LogicalInterface/Attribute:vrfs_list' => 'VRFs',
+	'Class:LogicalInterface/Attribute:vrfs_list+' => '',
+));
+
+//
 // Class: VLAN
 //
 
