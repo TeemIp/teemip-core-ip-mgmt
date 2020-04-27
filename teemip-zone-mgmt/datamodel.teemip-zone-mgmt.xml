@@ -3590,16 +3590,16 @@
         <groups>
           <group id="DNSObject">
             <actions>
-              <action xsi:type="write">allow</action>
-              <action xsi:type="bulk write">allow</action>
-              <action xsi:type="delete">allow</action>
-              <action xsi:type="bulk delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+              <action id="action:bulk delete">allow</action>
              </actions>
           </group>
           <group id="*">
             <actions>
-              <action xsi:type="read">allow</action>
-              <action xsi:type="bulk read">allow</action>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
             </actions>
           </group>
         </groups>
