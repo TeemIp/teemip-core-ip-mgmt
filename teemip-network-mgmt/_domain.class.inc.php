@@ -277,8 +277,8 @@ class _Domain extends DNSObject
 		// If organization is changing, make sure domain has no host, no child domain and no associated zone.
 		if ($sOrgId != $sOriginalOrgId)
 		{
-			$sOQL = "SELECT Domain AS d WHERE d.parent_id = :org_id";
-			$oChildDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $sOrgId));
+			$sOQL = "SELECT Domain AS d WHERE d.parent_id = :key";
+			$oChildDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('key' => $iKey));
 			if ($oChildDomainSet->CountExceeds(0))
 			{
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasChildren');
