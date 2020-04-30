@@ -553,8 +553,7 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 							$oIPAddress = MetaModel::GetObject('IPAddress', $iIPAddress, false /* MustBeFound */);
 							if (!is_null($oIPAddress))
 							{
-								$oIPAddress->Set('status', 'released');
-								$oIPAddress->Set('release_date', time());
+								$oIPAddress->Set('status', 'released'); // release_date is managed at IPObject level
 								$oIPAddress->DBUpdate();
 
 								$aReport['ipreleased']++;
@@ -599,8 +598,7 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 						$oIPAddress = MetaModel::GetObject('IPAddress', $iIPAddress, false /* MustBeFound */);
 						if (!is_null($oIPAddress))
 						{
-							$oIPAddress->Set('status', 'released');
-							$oIPAddress->Set('release_date', time());
+							$oIPAddress->Set('status', 'released'); // release_date is managed at IPObject level
 							$oIPAddress->DBUpdate();
 
 							$aReport['ipreleased']++;
@@ -804,15 +802,10 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 		}
 
 		// 3rd step: check IPs attached to interfaces with non allocated status
+		$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
 		if(class_exists('LogicalInterface'))
 		{
-			$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated' 
-		             UNION 
-		             SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
-		}
-		else
-		{
-			$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
 		}
 
 		// Correct IP status

@@ -180,10 +180,17 @@ class _IPObject extends cmdbAbstractObject
 	{
 		// Run standard checks first
 		parent::OnUpdate();
-		
-		if (($this->Get('status') == 'allocated') && ($this->GetOriginal('status') != 'allocated'))
+
+		// Set allocation and released date as required
+		$sStatus = $this->Get('status');
+		$soriginalStatus = $this->GetOriginal('status');
+		if (($sStatus == 'allocated') && ($soriginalStatus != 'allocated'))
 		{
 			$this->Set('allocation_date', time());
+		}
+		elseif (($sStatus== 'released') && ($soriginalStatus != 'released'))
+		{
+			$this->Set('release_date', time());
 		}
 	}
 	 

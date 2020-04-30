@@ -55,7 +55,7 @@ class _IPv4Subnet extends IPSubnet
 	 */	 
 	public function GetOccupancy($sObject)
 	{
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 
 		switch ($sObject)
 		{
@@ -65,14 +65,14 @@ class _IPv4Subnet extends IPSubnet
 				//	Note that these IPs can belong to an IP range
 				$sIp = $this->Get('ip');
 				$sIpBroadcast = $this->Get('broadcastip');
-				$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $sOrgId"));
+				$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
 				return ($oIpRegisteredSet->Count() / $this->GetSize()) * 100;
 
 			case 'IPRange':
 			case 'IPv4Range':
 				// Look for all child IP ranges
 				$sSubnet = $this->GetKey();
-				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$sSubnet' AND r.org_id = $sOrgId"));
+				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$sSubnet' AND r.org_id = $iOrgId"));
 				$iSizeRanges = 0;
 				while ($oIpRange = $oIpRangeSet->Fetch())
 				{
@@ -84,17 +84,17 @@ class _IPv4Subnet extends IPSubnet
 				// Look for all IPs within subnets
 				$sIp = $this->Get('ip');
 				$sIpBroadcast = $this->Get('broadcastip');
-				$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $sOrgId"));
+				$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
 				// Look for all child IP ranges
 				$sSubnet = $this->GetKey();
-				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$sSubnet' AND r.org_id = $sOrgId"));
+				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$sSubnet' AND r.org_id = $iOrgId"));
 				$iIpInRanges = 0;
 				$iSizeRanges = 0;
 				while ($oIpRange = $oIpRangeSet->Fetch())
 				{
 					$sIpRangeFirstIp = $oIpRange->Get('firstip');
 					$sIpRangeLastIp = $oIpRange->Get('lastip');
-					$oIpRegisteredInRange = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpRangeFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpRangeLastIp') AND i.org_id = $sOrgId"));
+					$oIpRegisteredInRange = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpRangeFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpRangeLastIp') AND i.org_id = $iOrgId"));
 					$iIpInRanges += $oIpRegisteredInRange->Count();
 					$iSizeRanges += myip2long($oIpRange->Get('lastip')) - myip2long($oIpRange->Get('firstip')) + 1;
 				}
@@ -182,7 +182,7 @@ class _IPv4Subnet extends IPSubnet
 	 */
 	public function GetFreeSpace($iRangeSize, $iMaxOffer)
 	{
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$aFreeSpace = array();
 		
@@ -199,9 +199,9 @@ class _IPv4Subnet extends IPSubnet
 		}
 		else
 		{
-			$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sLastIp') AND i.org_id = $sOrgId"));
+			$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sLastIp') AND i.org_id = $iOrgId"));
 			$aRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('ip', false);
-			$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = $iKey AND r.org_id = $sOrgId"));
+			$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = $iKey AND r.org_id = $iOrgId"));
 			$aRangeIPs = $oIpRangeSet->GetColumnAsArray('firstip', false);
 			
 			$iAnIp = $iFirstIp + 1;
@@ -285,13 +285,13 @@ class _IPv4Subnet extends IPSubnet
 		}
 
 		// Get list of registered IPs in range
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iFirstIp = myip2long($sFirstIp);
 		$iLastIp = myip2long($sLastIp);
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')  AND i.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')  AND i.org_id = $iOrgId"));
 						
 		// Get list of IP Ranges in subnet
-		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE INET_ATON('$sFirstIp') <= INET_ATON(r.firstip) AND INET_ATON(r.lastip) <= INET_ATON('$sLastIp') AND r.org_id = $sOrgId"));
+		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE INET_ATON('$sFirstIp') <= INET_ATON(r.firstip) AND INET_ATON(r.lastip) <= INET_ATON('$sLastIp') AND r.org_id = $iOrgId"));
 		$iCountRange = $oIpRangeSet->Count();
 						
 		// List exported parameters
@@ -523,7 +523,7 @@ class _IPv4Subnet extends IPSubnet
 	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam)
 	{
 		$iId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iRangeSize = $aParam['rangesize'];
 		$iMaxOffer = $aParam['maxoffer'];
 		
@@ -571,7 +571,7 @@ class _IPv4Subnet extends IPSubnet
 						$oP->add($sHTMLValue);
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Range', $iChangeId, {'org_id': '$sOrgId', 'subnet_id': '$iId', 'firstip': '$sRangeFirstIp', 'lastip': '$sRangeLastIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Range', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'firstip': '$sRangeFirstIp', 'lastip': '$sRangeLastIp'});
 EOF
 						);
 						$oP->add("</ul></li>\n");
@@ -653,11 +653,11 @@ EOF
 		
 		// Get list of registered IPs & Ranges in subnet
 		$iId = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sMask = $this->Get('mask');
 		$iFirstIp = myip2long($sFirstIp);
 		$iLastIp = myip2long($sLastIp);
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS ipv4 WHERE INET_ATON('$sFirstIp') <= INET_ATON(ipv4.ip) AND INET_ATON(ipv4.ip) <= INET_ATON('$sLastIp') AND ipv4.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS ipv4 WHERE INET_ATON('$sFirstIp') <= INET_ATON(ipv4.ip) AND INET_ATON(ipv4.ip) <= INET_ATON('$sLastIp') AND ipv4.org_id = $iOrgId"));
 		$aRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('ip', false);
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS rangev4 WHERE rangev4.subnet_id = $iId"));
 		$aRangeIPs = $oIpRangeSet->GetColumnAsArray('firstip', false);
@@ -758,7 +758,7 @@ EOF
 					$oP->add($sHTML);	
 					$oP->add_ready_script(
 <<<EOF
-					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Address', $iChangeId, {'org_id': '$sOrgId', 'subnet_id': '$iId', 'ip': '$sAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
+					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$sAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				}
@@ -854,7 +854,7 @@ EOF
 	{
 		// Set working variables
 		$iSubnetKey = $this->GetKey();
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sIpSubnetToShrink = $this->Get('ip');
 		$iIpSubnetToShrink = myip2long($sIpSubnetToShrink);
 		$sMaskSubnetToShrink = $this->Get('mask');
@@ -956,7 +956,7 @@ EOF
 	{
 		// Set working variables
 		$iSubnetKey = $this->GetKey();;
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sIpSubnetToShrink = $this->Get('ip');
 		$iIpSubnetToShrink = myip2long($sIpSubnetToShrink);
 		$sMaskSubnetToShrink = $this->Get('mask');
@@ -1003,14 +1003,14 @@ EOF
 		
 		// Delete old broadcast IP
 		// Creation of missing broadcast IP is done by IPv4Subnet::AfterUpdate
-		$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcastSubnetToShrink' AND i.org_id = $sOrgId", null, false);
+		$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcastSubnetToShrink' AND i.org_id = $iOrgId", null, false);
 		if (!is_null($oIp))
 		{
 			$oIp->DBDelete();	
 		}
 		
 		// Get list of all IPs that dropped from subnet and make them point to '0' - orphean IPs.
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpBroadcastNewSubnet') < INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastSubnetToShrink') AND i.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpBroadcastNewSubnet') < INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastSubnetToShrink') AND i.org_id = $iOrgId"));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			$oIpRegistered->Set('subnet_id', 0);
@@ -1028,7 +1028,7 @@ EOF
 	function DoCheckToSplit($aParam)
 	{
 		// Set working variables
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iSubnetKey = $this->GetKey();
 		$sIpSubnetToSplit = $this->Get('ip');
 		$iIpSubnetToSplit = myip2long($sIpSubnetToSplit);
@@ -1128,7 +1128,7 @@ EOF
 	function DoSplit($aParam)
 	{
 		// Set working variables
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iSubnetKey = $this->GetKey();
 		$sIpSubnetToSplit = $this->Get('ip');
 		$iIpSubnetToSplit = myip2long($sIpSubnetToSplit);
@@ -1188,7 +1188,7 @@ EOF
 		for ($i = 1; $i < $iSplit; $i++)
 		{
 			$oNewObj[$i] = MetaModel::NewObject('IPv4Subnet');
-			$oNewObj[$i]->Set('org_id', $sOrgId);
+			$oNewObj[$i]->Set('org_id', $iOrgId);
 			$oNewObj[$i]->Set('ip', mylong2ip($iIpNew));	
 			$oNewObj[$i]->Set('mask', $sMaskNewSubnet);
 			$oNewObj[$i]->Set('broadcastip', mylong2ip($iIpNew + $iSizeNewSubnet - 1));
@@ -1242,7 +1242,7 @@ EOF
 			$iSubnetKey	= $oNewObj[$i]->GetKey();
 			$sIpSubnet = $oNewObj[$i]->Get('ip');
 			$sIpBroadcastSubnet = $oNewObj[$i]->Get('broadcastip');
-			$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpSubnet') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastSubnet') AND i.org_id = $sOrgId"));
+			$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpSubnet') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastSubnet') AND i.org_id = $iOrgId"));
 			while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 			{
 				if ($oIpRegistered->Get('subnet_id') != $iSubnetKey)
@@ -1251,7 +1251,7 @@ EOF
 					$oIpRegistered->DBUpdate();	
 				}
 			}
-		}	
+		}
 		
 		// Display result as array
 		$oSet = CMDBobjectSet::FromArray('IPv4Subnet', $oNewObj);
@@ -1264,7 +1264,7 @@ EOF
 	function DoCheckToExpand($aParam)
 	{
 		// Set working variables
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sIpSubnetToExpand = $this->Get('ip');
 		$iIpSubnetToExpand = myip2long($sIpSubnetToExpand);
 		$sMaskSubnetToExpand = $this->Get('mask');
@@ -1353,7 +1353,7 @@ EOF
 	function DoExpand($aParam)
 	{
 		// Set working variables
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iNewSubnetKey = $this->GetKey();
 		$sIpSubnetToExpand = $this->Get('ip');
 		$iIpSubnetToExpand = myip2long($sIpSubnetToExpand);
@@ -1388,7 +1388,7 @@ EOF
 		$sIpBroadcastNewSubnet = mylong2ip($iIpBroadcastNewSubnet);
 		
 		// List subnets currently in range of new subnet and delete them all but the one newly updated one
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(s.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(s.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND s.org_id = $iOrgId"));
 		$CreateNew = true;
 		while ($oSubnet = $oSubnetSet->Fetch()) // While there is a subnet in the list
 		{
@@ -1444,8 +1444,8 @@ EOF
 		
 		// List Subnet IPs in new subnet. Delete them all but the new subnet IP if any
 		// Creation of subnet IP is done by IPv4Subnet::AfterUpdate()
-		$sUsageNetworkIpId = IPUsage::GetIpUsageId($sOrgId, NETWORK_IP_CODE);
-		$oIpSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageNetworkIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $sOrgId"));
+		$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+		$oIpSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageNetworkIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $iOrgId"));
 		while ($oIp = $oIpSubnetSet->Fetch())
 		{
 			if ($oIp->Get('ip') != $sIpNewSubnet)
@@ -1457,8 +1457,8 @@ EOF
 		// List Gateway IPs in new subnet. Delete them all but the new broadcast IP if any
 		// Creation of broadcast IP is done by IPv4Subnet::AfterUpdate()
 		$sIpGatewayIpNewSubnet = $this->Get('gatewayip');
-		$sUsageGatewayIpId = IPUsage::GetIpUsageId($sOrgId, GATEWAY_IP_CODE);
-		$oGatewayIPSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageGatewayIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $sOrgId"));
+		$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+		$oGatewayIPSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageGatewayIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $iOrgId"));
 		while ($oIp = $oGatewayIPSet->Fetch())
 		{
 			if ($oIp->Get('ip') != $sIpGatewayIpNewSubnet)
@@ -1469,8 +1469,8 @@ EOF
 		
 		// List Broadcast IPs in new subnet. Delete them all but the new broadcast IP if any
 		// Creation of broadcast IP is done by IPv4Subnet::AfterUpdate()
-		$sUsageBroadcastIpId = IPUsage::GetIpUsageId($sOrgId, BROADCAST_IP_CODE);
-		$oBroadcastSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageBroadcastIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $sOrgId"));
+		$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
+		$oBroadcastSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.usage_id = $sUsageBroadcastIpId AND INET_ATON(i.ip) >= INET_ATON('$sIpNewSubnet') AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $iOrgId"));
 		while ($oIp = $oBroadcastSet->Fetch())
 		{
 			if ($oIp->Get('ip') != $sIpBroadcastNewSubnet)
@@ -1480,7 +1480,7 @@ EOF
 		}
 		
 		// Get list of all IPs within new subnet and make sure they all point to new subnet.
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpNewSubnet') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIpNewSubnet') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcastNewSubnet') AND i.org_id = $iOrgId"));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			if ($oIpRegistered->Get('subnet_id') != $iNewSubnetKey)
@@ -2058,8 +2058,8 @@ EOF
 		// Set Gateway IP
 		if ($sMask != '255.255.255.255')
 		{
-			$sOrgId = $this->Get('org_id');
-			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $sOrgId);
+			$iOrgId = $this->Get('org_id');
+			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 			switch ($sGatewayIPFormat)
 			{
 				case 'subnetip_plus_1':
@@ -2118,7 +2118,7 @@ EOF
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 		
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		if ($this->IsNew())
 		{
 			$iKey = -1;
@@ -2178,7 +2178,7 @@ EOF
 		}
 		
 		// Make sure subnet doesn't collide with another subnet
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iBlockId AND s.org_id = $sOrgId"));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iBlockId AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch())
 		{
 			// If it's a modification (keys are the same) further checks are not relevant
@@ -2215,7 +2215,7 @@ EOF
 		}
 		
 		// If allocation of Gateway Ip is free, make sure it is contained in subnet
-		$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $sOrgId);
+		$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 		if ($sGatewayIPFormat == 'free_setup')
 		{
 			$sGatewayIp = $this->Get('gatewayip');
@@ -2240,7 +2240,7 @@ EOF
 	{
 		parent::AfterInsert();
 		
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iId = $this->GetKey();
 		$sSubnetIp = $this->Get('ip');
 		$sMask = $this->Get('mask');
@@ -2253,19 +2253,19 @@ EOF
 			$sReserveSubnetIPs = utils::ReadPostedParam('attr_reserve_subnet_IPs', '');
 			if (empty($sReserveSubnetIPs))
 			{
-				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $sOrgId);
+				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
 			}
 			if ($sReserveSubnetIPs == 'reserve_yes')
 			{
 				// Create or update subnet IP
-				$sUsageNetworkIpId = IPUsage::GetIpUsageId($sOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $sOrgId", null, false);
+				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp))
 				{
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sSubnetIp);
-					$oIp->Set('org_id', $sOrgId);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -2284,15 +2284,15 @@ EOF
 				if ($sMask != '255.255.255.254')
 				{
 					// Create or update gateway IP
-					$sUsageGatewayIpId = IPUsage::GetIpUsageId($sOrgId, GATEWAY_IP_CODE);
-					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $sOrgId",
+					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId",
 						null, false);
 					if (is_null($oIp))
 					{
 						$oIp = MetaModel::NewObject('IPv4Address');
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('ip', $sGatewayIp);
-						$oIp->Set('org_id', $sOrgId);
+						$oIp->Set('org_id', $iOrgId);
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageGatewayIpId);
 						$oIp->DBInsert();
@@ -2310,14 +2310,14 @@ EOF
 				}
 	
 				// Create or update broadcast IP
-				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($sOrgId, BROADCAST_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $sOrgId", null, false);
+				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp))
 				{
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sIpBroadcast);
-					$oIp->Set('org_id', $sOrgId);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageBroadcastIpId);
 					$oIp->DBInsert();
@@ -2336,7 +2336,7 @@ EOF
 		}
 		
 		// Make sure all IPs belonging to subnet are attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			if ($oIpRegistered->Get('subnet_id') != $iId)
@@ -2354,7 +2354,7 @@ EOF
 	{
 		parent::AfterUpdate();
 		
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$iId = $this->GetKey();
 		$sSubnetIp = $this->Get('ip');
 		$sMask = $this->Get('mask');
@@ -2363,18 +2363,18 @@ EOF
 					
 		if ($sMask != '255.255.255.255')
 		{
-			$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $sOrgId);
+			$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
 			if ($sReserveSubnetIPs == 'reserve_yes')
 			{
 				// Create or update subnet IP
-				$sUsageNetworkIpId = IPUsage::GetIpUsageId($sOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $sOrgId", null, false);
+				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp))
 				{
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sSubnetIp);
-					$oIp->Set('org_id', $sOrgId);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -2391,14 +2391,14 @@ EOF
 				}
 				
 				// Create or update gateway IP
-				$sUsageGatewayIpId = IPUsage::GetIpUsageId($sOrgId, GATEWAY_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $sOrgId", null, false);
+				$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp))
 				{
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sGatewayIp);
-					$oIp->Set('org_id', $sOrgId);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageGatewayIpId);
 					$oIp->DBInsert();
@@ -2415,14 +2415,14 @@ EOF
 				}
 	
 				// Create or update broadcast IP
-				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($sOrgId, BROADCAST_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $sOrgId", null, false);
+				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp))
 				{
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sIpBroadcast);
-					$oIp->Set('org_id', $sOrgId);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageBroadcastIpId);
 					$oIp->DBInsert();
@@ -2441,7 +2441,7 @@ EOF
 		}
 		
 		// Make sure all IPs belonging to subnet are attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $sOrgId"));
+		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
 		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
 		{
 			if ($oIpRegistered->Get('subnet_id') != $iId)
@@ -2450,14 +2450,30 @@ EOF
 				$oIpRegistered->DBUpdate();	
 			}
 		}
+
+		// Release all subnet's IPs when subnet is released
+		if (($this->Get('status') == 'released') && ($this->GetOriginal('status') != 'released'))
+		{
+			$sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release',$iOrgId);
+			if ($sIpRelease == 'yes')
+			{
+				$sOQL = "SELECT IPv4Address WHERE subnet_id = :id AND status != 'released'";
+				$oIpAddressesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iId));
+				while ($oIpAddress = $oIpAddressesSet->Fetch())
+				{
+					$oIpAddress->Set('status', 'released');
+					$oIpAddress->DBUpdate();
+				}
+			}
+		}
 	}
-	
+
 	/**
 	 * Check validity of deletion request
 	 */
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip');
 		$sIpBroadcast = $this->Get('broadcastip');
 		
@@ -2468,13 +2484,13 @@ EOF
 		{
 			// IPs parent is updated by DoExpand function
 			// Add subnet and broadcast IP to deletion plan if they exist
-			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIp' AND i.org_id = $sOrgId", null, false);
+			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIp' AND i.org_id = $iOrgId", null, false);
 			if (!is_null($oIp))
 			{
 				$oDeletionPlan->AddToDelete($oIp, DEL_AUTO);
 			}
 			
-			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $sOrgId", null, false);
+			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
 			if (!is_null($oIp))
 			{
 				$oDeletionPlan->AddToDelete($oIp, DEL_AUTO);
@@ -2493,8 +2509,8 @@ EOF
 		}
 		if ((!$this->IsNew()) && ($sAttCode == 'gatewayip'))
 		{
-			$sOrgId = $this->Get('org_id');
-			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $sOrgId);
+			$iOrgId = $this->Get('org_id');
+			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 			if ($sGatewayIPFormat != 'free_setup')
 			{
 				return OPT_ATT_READONLY;

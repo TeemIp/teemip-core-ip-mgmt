@@ -2789,6 +2789,7 @@
         </reconciliation>
       </properties>
       <fields>
+        <!--  General information -->
         <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
           <target_class>Organization</target_class>
@@ -2820,6 +2821,7 @@
           <extkey_attcode>requestor_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <!-- Settings for subnet blocks -->
         <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
           <sql>ipv4_block_min_size</sql>
           <default_value>256</default_value>
@@ -2843,6 +2845,7 @@
           <default_value>dtc_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <!-- Settings for subnets -->
         <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
           <values>
             <value>reserve_no</value>
@@ -2863,6 +2866,16 @@
           <default_value>subnetip_plus_1</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="subnet_symetrical_nat" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>subnet_symetrical_nat</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="subnet_low_watermark" xsi:type="AttributeInteger">
           <sql>subnet_low_watermark</sql>
           <default_value>60</default_value>
@@ -2873,6 +2886,7 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <!-- Settings for IP ranges -->
         <field id="iprange_low_watermark" xsi:type="AttributeInteger">
           <sql>iprange_low_watermark</sql>
           <default_value>60</default_value>
@@ -2883,6 +2897,7 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <!-- Settings for IP addresses -->
         <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
           <values>
             <value>ipdup_no</value>
@@ -2892,16 +2907,6 @@
           <default_value>ipdup_no</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
-        </field>
-        <field id="mac_address_format" xsi:type="AttributeEnum">
-          <values>
-            <value>colons</value>
-            <value>hyphens</value>
-            <value>dots</value>
-          </values>
-          <sql>mac_address_format</sql>
-          <default_value>colons</default_value>
-          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="ping_before_assign" xsi:type="AttributeEnum">
           <values>
@@ -2923,12 +2928,12 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <field id="ip_release_on_ci_obsolete" xsi:type="AttributeEnum">
+        <field id="ip_symetrical_nat" xsi:type="AttributeEnum">
           <values>
             <value>no</value>
             <value>yes</value>
           </values>
-          <sql>ip_release_on_ci_obsolete</sql>
+          <sql>ip_symetrical_nat</sql>
           <default_value>no</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
@@ -2943,26 +2948,27 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <field id="ip_symetrical_nat" xsi:type="AttributeEnum">
+        <field id="ip_release_on_ci_obsolete" xsi:type="AttributeEnum">
           <values>
             <value>no</value>
             <value>yes</value>
           </values>
-          <sql>ip_symetrical_nat</sql>
+          <sql>ip_release_on_ci_obsolete</sql>
           <default_value>no</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <field id="subnet_symetrical_nat" xsi:type="AttributeEnum">
+        <field id="ip_release_on_subnet_release" xsi:type="AttributeEnum">
           <values>
             <value>no</value>
             <value>yes</value>
           </values>
-          <sql>subnet_symetrical_nat</sql>
-          <default_value>no</default_value>
+          <sql>ip_release_on_subnet_release</sql>
+          <default_value>yes</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
+        <!-- Settings for Domains -->
         <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
           <values>
             <value>dtc_yes</value>
@@ -2970,6 +2976,17 @@
           </values>
           <sql>delegate_domain_to_children_only</sql>
           <default_value>dtc_yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <!-- Other settings -->
+        <field id="mac_address_format" xsi:type="AttributeEnum">
+          <values>
+            <value>colons</value>
+            <value>hyphens</value>
+            <value>dots</value>
+          </values>
+          <sql>mac_address_format</sql>
+          <default_value>colons</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
@@ -3053,17 +3070,20 @@
                     <item id="ping_before_assign">
                       <rank>20</rank>
                     </item>
-                    <item id="ip_copy_ci_name_to_shortname">
+                    <item id="ip_symetrical_nat">
                       <rank>30</rank>
                     </item>
-                    <item id="ip_release_on_ci_obsolete">
+                    <item id="ip_copy_ci_name_to_shortname">
                       <rank>40</rank>
                     </item>
                     <item id="ip_allocate_on_ci_production">
                       <rank>50</rank>
                     </item>
-                    <item id="ip_symetrical_nat">
+                    <item id="ip_release_on_ci_obsolete">
                       <rank>60</rank>
+                    </item>
+                    <item id="ip_release_on_subnet_release">
+                      <rank>70</rank>
                     </item>
                   </items>
                 </item>

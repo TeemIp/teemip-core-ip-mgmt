@@ -35,7 +35,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-tickets/2.7.0',
-			'teemip-network-mgmt/2.6.0'
+			'teemip-network-mgmt/2.6.1'
 		),
 		'mandatory' => false,
 		'visible' => true,

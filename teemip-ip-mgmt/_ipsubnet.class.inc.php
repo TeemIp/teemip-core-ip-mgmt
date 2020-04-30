@@ -21,10 +21,15 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class _IPSubnet
+ */
 class _IPSubnet extends IPObject
 {
-	/**
+	/*
 	 * Returns size of subnet
+	 *
+	 * @return int
 	 */
 	public function GetSize()
 	{
@@ -33,6 +38,10 @@ class _IPSubnet extends IPObject
 	
 	/**
 	 * Return % of occupancy of objects linked to $this
+	 *
+	 * @param $sObject
+	 *
+	 * @return int
 	 */
 	public function GetOccupancy($sObject)
 	{
@@ -41,6 +50,10 @@ class _IPSubnet extends IPObject
 	
 	/**
 	 * Return next operation after current one
+	 *
+	 * @param $sOperation
+	 *
+	 * @return string
 	 */
 	public function GetNextOperation($sOperation)
 	{
@@ -73,6 +86,11 @@ class _IPSubnet extends IPObject
 	
 	/**
 	 * Get parameters used for operation
+	 *
+	 * @param $sOperation
+	 *
+	 * @return array
+	 * @throws \Exception
 	 */
 	public function GetPostedParam($sOperation)
 	{
@@ -124,7 +142,13 @@ class _IPSubnet extends IPObject
 
 	/**
 	 * Provides attributes' parameters
-	 */		 
+	 *
+	 * @param $sAttCode
+	 *
+	 * @return array|void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function GetAttributeParams($sAttCode)
 	{
 		$aParams = array();
@@ -174,6 +198,10 @@ class _IPSubnet extends IPObject
 
 	/**
 	 * Count number of IPs in subnet, in given status
+	 *
+	 * @param $sStatus
+	 *
+	 * @return int
 	 */
 	public function IPCount($sStatus)
 	{
@@ -182,12 +210,21 @@ class _IPSubnet extends IPObject
 
 	/**
 	 * Automatically get a free IP in the subnet
+	 *
+	 * @param $iCreationOffset
+	 *
+	 * @return string
 	 */
 	public function GetFreeIP($iCreationOffset)
 	{
 		return '';
 	}
 
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function OnInsert()
 	{
 		if (class_exists('IPDiscovery'))
@@ -207,6 +244,11 @@ class _IPSubnet extends IPObject
 		}
 	}
 
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
 	public function OnUpdate()
 	{
 		if (class_exists('IPDiscovery'))
@@ -225,8 +267,16 @@ class _IPSubnet extends IPObject
 			}
 		}
 	}
+
 	/**
 	 * Change flag of attributes that shouldn't be modified beside creation.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
@@ -246,6 +296,12 @@ class _IPSubnet extends IPObject
 
 	/**
 	 * Change flag of attributes that shouldn't be modified at creation.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
