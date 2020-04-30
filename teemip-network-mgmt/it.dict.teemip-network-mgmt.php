@@ -212,6 +212,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VRF' => 'VRF',
 	'Class:VRF+' => 'Virtual Routing e Forwarding',
+	'Class:VRF:baseinfo' => 'Informazioni Generali',
 	'Class:VRF/Attribute:route_dist' => 'Route Distinguisher',
 	'Class:VRF/Attribute:route_dist+' => '',
 	'Class:VRF/Attribute:route_trgt' => 'Route Target',
@@ -220,6 +221,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Interfacce di rete fisiche',
 	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
+));
+
+//
+// Class extensions for VRF
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:VRF/Tab:ipaddresses_list' => 'Interfacce IP',
+	'Class:VRF/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce IP collegate all\'elemento della configurazione',
 ));
 
 //

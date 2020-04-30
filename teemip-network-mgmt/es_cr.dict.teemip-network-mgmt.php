@@ -212,6 +212,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VRF' => 'VRF',
 	'Class:VRF+' => 'Virtual Routing and Forwarding',
+	'Class:VRF:baseinfo' => 'Información General',
 	'Class:VRF/Attribute:route_dist' => 'Distintivo de Ruta',
 	'Class:VRF/Attribute:route_dist+' => '',
 	'Class:VRF/Attribute:route_trgt' => 'Destino de Ruta',
@@ -220,6 +221,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Interfaces físicas de red',
 	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
+));
+
+//
+// Class extensions for VRF
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VRF/Tab:ipaddresses_list' => 'IP de interfaces',
+	'Class:VRF/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas por todas las interfaces IP conectadas al CI',
 ));
 
 //
