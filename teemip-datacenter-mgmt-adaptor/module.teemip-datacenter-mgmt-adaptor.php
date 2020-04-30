@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-datacenter-mgmt-adaptor/2.6.0',
+	'teemip-datacenter-mgmt-adaptor/2.6.1',
 	array(
 		// Identification
 		//
@@ -34,8 +34,8 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-datacenter-mgmt/2.7.0',
-			'teemip-ip-mgmt/2.6.0',
-			'teemip-config-mgmt-adaptor/2.6.0',
+			'teemip-ip-mgmt/2.6.1',
+			'teemip-config-mgmt-adaptor/2.6.1',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
