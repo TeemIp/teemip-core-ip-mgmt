@@ -50,7 +50,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
 ));
 
-
 //
 // Class: VLAN
 //
