@@ -66,6 +66,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
+// Class: VRF
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:VRF/Attribute:logicalinterfaces_list' => 'Logisches Interfaces',
+	'Class:VRF/Attribute:logicalinterfaces_list+' => '',
+));
+
+//
 // Class: lnkLogicalInterfaceToVLAN
 //
 

@@ -35,8 +35,8 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-virtualization-mgmt/2.7.0',
-			'teemip-ip-mgmt/2.6.0',
-			'teemip-config-mgmt-adaptor/2.6.0',
+			'teemip-ip-mgmt/2.6.1',
+			'teemip-config-mgmt-adaptor/2.6.1'
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
