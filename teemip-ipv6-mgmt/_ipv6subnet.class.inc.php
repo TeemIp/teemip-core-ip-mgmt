@@ -1457,7 +1457,7 @@ EOF
 			}
 		}
 		
-		// Check consitency between subnet IP and mask. IP must be aligned with block defined by mask.
+		// Check consistency between subnet IP and mask. IP must be aligned with block defined by mask.
 		if (!$this->DoCheckCIDRAligned())
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpIncorrect');
@@ -1513,10 +1513,10 @@ EOF
 		{
 			$oGatewayIp = $this->Get('gatewayip');
 			if (! $this->DoCheckIpInSubnet($oGatewayIp))
-				{
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet');
-					return;
-				}
+			{
+				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet');
+				return;
+			}
 		}
 	}
 	
@@ -1701,6 +1701,22 @@ EOF
 			{
 				$oIpRegistered->Set('subnet_id', $iId);
 				$oIpRegistered->DBUpdate();	
+			}
+		}
+
+		// Release all subnet's IPs when subnet is released
+		if (($this->Get('status') == 'released') && ($this->GetOriginal('status') != 'released'))
+		{
+			$sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release',$iOrgId);
+			if ($sIpRelease == 'yes')
+			{
+				$sOQL = "SELECT IPv6Address WHERE subnet_id = :id AND status != 'released'";
+				$oIpAddressesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iId));
+				while ($oIpAddress = $oIpAddressesSet->Fetch())
+				{
+					$oIpAddress->Set('status', 'released');
+					$oIpAddress->DBUpdate();
+				}
 			}
 		}
 	}
