@@ -696,6 +696,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:yes+' => '',
 	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no' => 'No',
 	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no+' => '',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release' => 'Release IPs from subnets that are released',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release+' => '',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes+' => '',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no' => 'No',
+	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no+' => '',
 ));
 
 //

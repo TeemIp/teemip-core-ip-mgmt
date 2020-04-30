@@ -786,8 +786,7 @@ EOF
 				{
 					if ($oIP->Get('status') == 'allocated')
 					{
-						$oIP->Set('status', 'released');
-						$oIP->Set('release_date', time());
+						$oIP->Set('status', 'released');    // release_date is managed at IPObject level
 						$oIP->DBUpdate();
 					}
 				}
@@ -814,8 +813,7 @@ EOF
 			{
 				if ($oIP->Get('status') == 'allocated')
 				{
-					$oIP->Set('status', 'released');
-					$oIP->Set('release_date', time());
+					$oIP->Set('status', 'released');    // release_date is managed at IPObject level
 					$oIP->DBUpdate();
 				}
 			}
