@@ -988,30 +988,73 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="DisplayBareRelations">
+        <comment/>
+        <static>false</static>
+        <access>public</access>
+        <type>Overload-DBObject</type>
+        <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+		parent::DisplayBareRelations($oP, $bEditMode);
+
+        if (! $bEditMode)
+        {
+            $iVRFId = $this->GetKey();
+
+            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVRF AS l2 ON l2.physicalinterface_id = int.id JOIN VRF AS v ON l2.vrf_id = v.id WHERE v.id = :vrf_id";
+            if(class_exists('LogicalInterface'))
+            {
+                $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVRF AS l2 ON l2.logicalinterface_id = int.id JOIN VRF AS v ON l2.vrf_id = v.id WHERE v.id = :vrf_id";
+            }
+	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vrf_id' => $iVRFId));
+			$iLnkSet = $oLnkSet->Count();
+
+		    if ($iLnkSet > 0)
+	        {
+		        $iIPs = $oLnkSet->Count();
+		        $oP->SetCurrentTab(Dict::S('Class:VRF/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VRF/Tab:ipaddresses_list+'));
+		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	        }
+        }
+	}]]></code>
+      </method>
+      </methods>
       <presentation>
         <details>
           <items>
-            <item id="org_id">
+            <item id="col:col1">
               <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-            <item id="description">
-              <rank>30</rank>
-            </item>
-            <item id="route_dist">
-              <rank>40</rank>
-            </item>
-            <item id="route_trgt">
-              <rank>50</rank>
+              <items>
+                <item id="fieldset:Class:VRF:baseinfo">
+                <rank>10</rank>
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                    <item id="route_dist">
+                      <rank>40</rank>
+                    </item>
+                    <item id="route_trgt">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
             </item>
             <item id="subnets_list">
-              <rank>60</rank>
+              <rank>20</rank>
             </item>
             <item id="physicalinterfaces_list">
-              <rank>70</rank>
+              <rank>30</rank>
             </item>
           </items>
         </details>

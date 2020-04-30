@@ -213,6 +213,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VRF' => 'VRF',
 	'Class:VRF+' => 'Virtual Routing and Forwarding',
+	'Class:VRF:baseinfo' => 'Allgemeine Informationen',
 	'Class:VRF/Attribute:route_dist' => 'Route Distinguisher',
 	'Class:VRF/Attribute:route_dist+' => '',
 	'Class:VRF/Attribute:route_trgt' => 'Route Target',
@@ -221,6 +222,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Netzwerkinterfaces',
 	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
+));
+
+//
+// Class extensions for VRF
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:VRF/Tab:ipaddresses_list' => 'IPs-Interfaces',
+	'Class:VRF/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen Schnittstellen',
 ));
 
 //
