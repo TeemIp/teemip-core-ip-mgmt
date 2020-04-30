@@ -64,6 +64,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: VRF
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:VRF/Attribute:logicalinterfaces_list' => 'Interfases Logicas de Red',
+	'Class:VRF/Attribute:logicalinterfaces_list+' => '',
+));
+
+//
 // Class: lnkLogicalInterfaceToVLAN
 //
 

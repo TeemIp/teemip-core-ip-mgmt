@@ -377,38 +377,27 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="DisplayBareRelations" _delta="redefine">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-    {
-		parent::DisplayBareRelations($oP, $bEditMode);
-
-        if (! $bEditMode)
-        {
-            $iVLANId = $this->GetKey();
-
-            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
-            $sOQL .= " UNION ";
-            $sOQL .= "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
-	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
-			$iLnkSet = $oLnkSet->Count();
-
-		    if ($iLnkSet > 0)
-	        {
-		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
-		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	        }
-        }
-	}]]></code>
-        </method>
-      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="logicalinterfaces_list" _delta="define">
+              <rank>60</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="VRF" _delta="must_exist">
+      <fields>
+        <field id="logicalinterfaces_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+          <linked_class>lnkLogicalInterfaceToVRF</linked_class>
+          <ext_key_to_me>vrf_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>logicalinterface_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
       <presentation>
         <details>
           <items>
