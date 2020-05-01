@@ -251,6 +251,8 @@ class _IPSubnet extends IPObject
 	 */
 	public function OnUpdate()
 	{
+		parent::OnUpdate();
+
 		if (class_exists('IPDiscovery'))
 		{
 			if ($this->Get('ipdiscovery_ping_enabled') == 'no')
