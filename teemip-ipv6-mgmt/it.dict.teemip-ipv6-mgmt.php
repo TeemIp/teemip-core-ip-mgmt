@@ -201,6 +201,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPv6Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv6Subnet/Attribute:lastip' => 'Ultimo IP della sottorete',
 	'Class:IPv6Subnet/Attribute:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:summary' => 'Sommario',
 ));
 
 //

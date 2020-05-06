@@ -361,11 +361,53 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="summary" xsi:type="AttributeDashboard">
+          <is_user_editable>true</is_user_editable>
+          <definition>
+            <layout>DashboardLayoutOneCol</layout>
+            <title/>
+            <auto_reload>
+              <enabled>false</enabled>
+              <interval>300</interval>
+            </auto_reload>
+            <cells xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+              <cell id="0">
+                <rank>0</rank>
+                <dashlets>
+                  <dashlet id="01" xsi:type="DashletHeaderDynamic">
+                    <rank>0</rank>
+                    <title>Class:IPSubnet/Attribute:summary/cell0</title>
+                    <icon>teemip-ip-mgmt/images/ipaddress.png</icon>
+                    <subtitle>Class:IPSubnet/Attribute:summary/cell0+</subtitle>
+                    <query>SELECT IPv6Address WHERE subnet_id = :this->id</query>
+                    <group_by>status</group_by>
+                    <values>allocated,released,unassigned,reserved</values>
+                  </dashlet>
+                  <dashlet id="02" xsi:type="DashletGroupByPie">
+                    <rank>1</rank>
+                    <title/>
+                    <query>SELECT IPv6Address WHERE subnet_id = :this->id</query>
+                    <group_by>status</group_by>
+                    <style>pie</style>
+                    <aggregation_function>count</aggregation_function>
+                    <aggregation_attribute/>
+                    <limit/>
+                    <order_by>attribute</order_by>
+                    <order_direction>desc</order_direction>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
       </fields>
       <methods/>
       <presentation>
         <details>
           <items>
+            <item id="summary">
+              <rank>5</rank>
+            </item>
             <item id="location_list">
               <rank>10</rank>
             </item>

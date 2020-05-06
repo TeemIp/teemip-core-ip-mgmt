@@ -202,6 +202,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPv6Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv6Subnet/Attribute:lastip' => 'Letzte IP des Subnetzes',
 	'Class:IPv6Subnet/Attribute:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:summary' => 'Zusammenfassung',
 ));
 
 //

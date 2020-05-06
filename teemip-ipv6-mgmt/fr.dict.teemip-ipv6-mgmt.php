@@ -201,6 +201,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv6Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv6Subnet/Attribute:lastip' => 'Dernière IP du sous-réseau',
 	'Class:IPv6Subnet/Attribute:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:summary' => 'Résumé',
 ));
 
 //

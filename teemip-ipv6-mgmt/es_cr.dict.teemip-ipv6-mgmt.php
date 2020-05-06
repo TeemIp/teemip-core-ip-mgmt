@@ -73,6 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv6Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv6Subnet/Attribute:lastip' => 'Última IP de Subred',
 	'Class:IPv6Subnet/Attribute:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:summary' => 'Resumen',
 ));
 
 //
