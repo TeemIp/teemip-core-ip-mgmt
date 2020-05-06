@@ -1771,7 +1771,7 @@ EOF
 			else
 			{
 				$oP->SetCurrentTab(Dict::S('Class:IPBlock/Tab:subnet'));
-				$oP->p(MetaModel::GetClassIcon('IPv4Subnet').'&nbsp;'.Dict::S('Class:IPBlock/Tab:subnet+'));
+				$oP->p(MetaModel::GetClassIcon('IPv6Subnet').'&nbsp;'.Dict::S('Class:IPBlock/Tab:subnet+'));
 				$oP->p(Dict::S('UI:NoObjectToDisplay'));
 			}
 		}
