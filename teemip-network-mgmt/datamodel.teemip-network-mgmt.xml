@@ -62,11 +62,11 @@
 	{
 		// Note: $sZoneName attribute must be fully qualified
 
-        // Add dot
-        $sName .= substr($sName, -1) != '.' ? '.' : null;
-        // Add zone name
+		// Add dot
+		$sName .= substr($sName, -1) != '.' ? '.' : null;
+		// Add zone name
 		$l = strlen($sZoneName);
-        $sName .= substr_compare($sName, $sZoneName, -$l, $l) != 0 ? $sZoneName : null;
+		$sName .= substr_compare($sName, $sZoneName, -$l, $l) != 0 ? $sZoneName : null;
 
 		return $sName;
 	}]]></code>
