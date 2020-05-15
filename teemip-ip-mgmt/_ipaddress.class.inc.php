@@ -96,24 +96,16 @@ class _IPAddress extends IPObject
 	 */
 	public function ComputeValues()
 	{
+		parent::ComputeValues();
+
 		// Set FQDN
-		$sShortName = $this->Get('short_name');
-		if ($sShortName != "")
+		if ($this->Get('short_name') != '')
 		{
-			$sDomainName = $this->Get('domain_name');
-			if ($sDomainName != "")
-			{
-				// Domain names are always fully qualified
-				$this->Set('fqdn', $sShortName.'.'.$sDomainName);			
-			}
-			else
-			{
-				$this->Set('fqdn', $sShortName.'.');			
-			}
+			$this->Set('fqdn', DNSObject::ComputeFqdn($this->Get('short_name'), $this->Get('domain_name')));
 		}
 		else
 		{
-			$this->Set('fqdn', '');			
+			$this->Reset('fqdn');
 		}
 	}
 
