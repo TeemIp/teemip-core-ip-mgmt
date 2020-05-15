@@ -60,29 +60,15 @@
           <type>Internal</type>
           <code><![CDATA[ public static function ComputeFqdn($sName, $sZoneName)
 	{
-		// Note: $sZoneName attribut must be fully qualified
+		// Note: $sZoneName attribute must be fully qualified
 
+        // Add dot
+        $sName .= substr($sName, -1) != '.' ? '.' : null;
+        // Add zone name
 		$l = strlen($sZoneName);
-		if (substr($sName, - 1) == '.')
-		{
-			if (substr_compare($sName, $sZoneName, - $l, $l) != 0)
-			{
-				$sName = $sName.$sZoneName;
-			}
-		}
-		else
-		{
-			if (substr_compare($sName, $sZoneName, - $l + 1, $l - 1) != 0)
-			{
-				$sName = $sName.'.'.$sZoneName;			
-			}
-			else
-			{
-				$sName = $sName.'.';			
-			}
-		}
-		return $sName;
+        $sName .= substr_compare($sName, $sZoneName, -$l, $l) != 0 ? $sZoneName : null;
 
+		return $sName;
 	}]]></code>
         </method>
       </methods>
