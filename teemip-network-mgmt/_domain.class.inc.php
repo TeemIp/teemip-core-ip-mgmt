@@ -224,39 +224,9 @@ class _Domain extends DNSObject
 	 */
 	public function ComputeValues()
 	{
-		$sDomain = $this->Get('name');
-		$sParentDomain = $this->Get('parent_name');
-		if ($sParentDomain == null)
-		{
-			// Make sure domain name ends with '.'
-			if (substr($sDomain, - 1) != '.')
-			{
-				$this->Set('name', $sDomain.'.');			
-			}
-		}
-		else
-		{
-			// Make sure parent_name ends name
-			if (substr($sDomain, - 1) != '.')
-			{
-				$sDomain = $sDomain.'.';
-				if (substr($sDomain, - strlen($sParentDomain)) != $sParentDomain)
-				{
-					$this->Set('name', $sDomain.$sParentDomain);			
-				}
-				else
-				{
-					$this->Set('name', $sDomain);
-				}
-			}
-			else
-			{
-				if (substr($sDomain, - strlen($sParentDomain)) != $sParentDomain)
-				{
-					$this->Set('name', $sDomain.$sParentDomain);			
-				}
-			}
-		}
+		parent::ComputeValues();
+
+		$this->Set('name', static::ComputeFqdn($this->Get('name'), $this->Get('parent_name')));
 	}
 	
 	/**
