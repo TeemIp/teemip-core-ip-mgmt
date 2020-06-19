@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
-    <class id="StorageSystem" _delta="must_exist">
+    <class id="StorageSystem" _delta="if_exists">
       <presentation>
         <details>
           <items>
@@ -31,7 +31,7 @@
         </search>
       </presentation>
     </class>
-    <class id="SANSwitch" _delta="must_exist">
+    <class id="SANSwitch" _delta="if_exists">
       <presentation>
         <details>
           <items>
@@ -61,7 +61,7 @@
         </search>
       </presentation>
     </class>
-    <class id="TapeLibrary" _delta="must_exist">
+    <class id="TapeLibrary" _delta="if_exists">
       <presentation>
         <details>
           <items>
@@ -91,7 +91,7 @@
         </search>
       </presentation>
     </class>
-    <class id="NAS" _delta="must_exist">
+    <class id="NAS" _delta="if_exists">
       <presentation>
         <details>
           <items>

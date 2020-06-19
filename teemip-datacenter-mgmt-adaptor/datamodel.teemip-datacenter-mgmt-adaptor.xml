@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
-    <class id="Rack" _delta="must_exist">
+    <class id="Rack" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -46,7 +46,7 @@
         </search>
       </presentation>
     </class>
-    <class id="Enclosure" _delta="must_exist">
+    <class id="Enclosure" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -91,7 +91,7 @@
         </search>
       </presentation>
     </class>
-    <class id="PowerConnection" _delta="must_exist">
+    <class id="PowerConnection" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -136,7 +136,7 @@
         </search>
       </presentation>
     </class>
-    <class id="PowerSource" _delta="must_exist">
+    <class id="PowerSource" _delta="if_exists">
       <presentation>
         <details>
           <items>
@@ -160,7 +160,7 @@
         </search>
       </presentation>
     </class>
-    <class id="PDU" _delta="must_exist">
+    <class id="PDU" _delta="if_exists">
       <presentation>
         <details>
           <items>

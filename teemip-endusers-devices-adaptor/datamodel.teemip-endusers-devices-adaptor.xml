@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
-    <class id="MobilePhone" _delta="must_exist">
+    <class id="MobilePhone" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -46,7 +46,7 @@
         </search>
       </presentation>
     </class>
-    <class id="IPPhone" _delta="must_exist">
+    <class id="IPPhone" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -91,7 +91,7 @@
         </search>
       </presentation>
     </class>
-    <class id="Tablet" _delta="must_exist">
+    <class id="Tablet" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -136,7 +136,7 @@
         </search>
       </presentation>
     </class>
-    <class id="Peripheral" _delta="must_exist">
+    <class id="Peripheral" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -181,7 +181,7 @@
         </search>
       </presentation>
     </class>
-    <class id="PC" _delta="must_exist">
+    <class id="PC" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>
@@ -234,7 +234,7 @@
         </search>
       </presentation>
     </class>
-    <class id="Printer" _delta="must_exist">
+    <class id="Printer" _delta="if_exists">
       <fields>
         <field id="macaddress" xsi:type="AttributeMacAddress" _delta="define">
           <sql>macaddress</sql>

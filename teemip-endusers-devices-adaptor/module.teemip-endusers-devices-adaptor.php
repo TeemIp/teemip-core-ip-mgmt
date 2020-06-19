@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-endusers-devices-adaptor/2.6.1',
+	'teemip-endusers-devices-adaptor/2.6.2',
 	array(
 		// Identification
 		//

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
-    <class id="VirtualMachine" _delta="must_exist">
+    <class id="VirtualMachine" _delta="if_exists">
       <fields>
         <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
         <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">
@@ -79,7 +79,7 @@
         </search>
       </presentation>
     </class>
-    <class id="Hypervisor" _delta="must_exist">
+    <class id="Hypervisor" _delta="if_exists">
       <methods>
         <method id="DisplayBareRelations" _delta="define">
           <comment/>
@@ -135,7 +135,7 @@
         </method>
       </methods>
     </class>
-    <class id="LogicalInterface" _delta="must_exist">
+    <class id="LogicalInterface" _delta="if_exists">
       <fields>
         <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkLogicalInterfaceToVLAN</linked_class>
