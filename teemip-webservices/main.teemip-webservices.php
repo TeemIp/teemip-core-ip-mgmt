@@ -225,10 +225,21 @@ class TeemIpServices implements iRestServiceProvider
 						{
 							// Subnet exists
 							// Pick first free IP address
+							// If teemip-request-mgmt is installed, use creation offset
 							// Register IP, if any
 							$iOrgId = $oIPSubnet->Get('org_id');
-							$sParameter = ($sParentClass == 'IPv4Subnet') ? 'request_creation_ipv4_offset' : 'request_creation_ipv6_offset';
-							$iCreationOffset = IPConfig::GetFromGlobalIPConfig($sParameter, $iOrgId);
+							$oConfig = MetaModel::GetConfig();
+							$sLatestInstallationDate = CMDBSource::QueryToScalar("SELECT max(installed) FROM ".$oConfig->Get('db_subname')."priv_module_install");
+							$aInstalledTeemIPRequestMgmtModule = CMDBSource::QueryToArray("SELECT * FROM ".$oConfig->Get('db_subname')."priv_module_install WHERE installed = '".$sLatestInstallationDate."' AND name = 'teemip-request-mgmt'");
+							if (empty($aInstalledTeemIPRequestMgmtModule))
+							{
+								$iCreationOffset = 0;
+							}
+							else
+							{
+								$sParameter = ($sParentClass == 'IPv4Subnet') ? 'request_creation_ipv4_offset' : 'request_creation_ipv6_offset';
+								$iCreationOffset = IPConfig::GetFromGlobalIPConfig($sParameter, $iOrgId);
+							}
 
 							$sIP = $oIPSubnet->GetFreeIP($iCreationOffset);
 							if ($sIP != '')
