@@ -61,27 +61,37 @@ class _IPv4Address extends IPAddress
 	 */	 
 	static function DoCheckIpPings($sIp, $iTimeToWait)
 	{
-		$sSystemType = strtoupper(php_uname($mode = "s"));
-		if (strpos($sSystemType, 'WIN') === false)
+		// Disable ping if IP is created from a synchro... which may be the result of a discovery operation.
+		if (!ContextTag::Check('Synchro'))
 		{
-			// Unix type - what else?
-			$sCommand = "ping -c ".NUMBER_OF_PINGS." -W ".$iTimeToWait." ".$sIp;
-		}
-		else
-		{
-			// Windows
-			$sCommand = "ping -n ".NUMBER_OF_PINGS." -w ".($iTimeToWait*1000)." ".$sIp;
-		}
-		exec($sCommand, $aOutput, $iRes);
-		if ($iRes == 0)
-		{
-			//Command got an answer. Make sure it is a positive one.
-			$sOutput = stripos(implode($aOutput), 'ttl');
-			if ($sOutput !== false)
+			$sSystemType = strtoupper(php_uname($mode = "s"));
+			if (strpos($sSystemType,
+					'WIN') === false)
 			{
-				// ttl string is in the answer => IP pings
-				array_unshift($aOutput, $sCommand);
-				return $aOutput;
+				// Unix type - what else?
+				$sCommand = "ping -c ".NUMBER_OF_PINGS." -W ".$iTimeToWait." ".$sIp;
+			}
+			else
+			{
+				// Windows
+				$sCommand = "ping -n ".NUMBER_OF_PINGS." -w ".($iTimeToWait * 1000)." ".$sIp;
+			}
+			exec($sCommand,
+				$aOutput,
+				$iRes);
+			if ($iRes == 0)
+			{
+				//Command got an answer. Make sure it is a positive one.
+				$sOutput = stripos(implode($aOutput),
+					'ttl');
+				if ($sOutput !== false)
+				{
+					// ttl string is in the answer => IP pings
+					array_unshift($aOutput,
+						$sCommand);
+
+					return $aOutput;
+				}
 			}
 		}
 		return array();
