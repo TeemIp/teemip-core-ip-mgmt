@@ -5,9 +5,9 @@
 	<author><![CDATA[Christophe Naud]]></author>
 	<label><![CDATA[TeemIp Zone Management]]></label>
 	<description><![CDATA[TeemIp extension to manage DNS views, zones and DNS records]]></description>
-	<version>2.6.1</version>
-	<release_date>2020-05-08</release_date>
-	<version_description><![CDATA[Enhancements and adaptationq for iTop 2.6 - https://wiki.teemip.net/doku.php?id=extensions:teemip-zone-mgmt]]></version_description>
+	<version>2.6.2</version>
+	<release_date>2020-06-22</release_date>
+	<version_description><![CDATA[Enhancements from 2.6.1: See Wiki at https://wiki.teemip.net/doku.php?id=extensions:teemip-zone-mgmt]]></version_description>
 	<itop_version_min>2.7.0</itop_version_min>
 	<status>stable</status>
 	<mandatory>false</mandatory>
