@@ -187,7 +187,7 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkLogicalInterfaceToVLAN" _created_in="itop-virtualization-mgmt" _delta="define">
+    <class id="lnkLogicalInterfaceToVLAN" _created_in="itop-config-mgmt" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
@@ -276,7 +276,7 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkLogicalInterfaceToVRF" _created_in="itop-virtualization-mgmt" _delta="define">
+    <class id="lnkLogicalInterfaceToVRF" _created_in="teemip-network-mgmt" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
         <is_link>1</is_link>
