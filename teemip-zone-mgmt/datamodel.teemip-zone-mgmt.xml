@@ -1695,8 +1695,8 @@
           <code><![CDATA[ public function GetDataString()
     {
      	$sDataName = $this->GetDataNameForDataString();
-     	$oIp = MetaModel::GetObject('IPv6Address', $this->Get('ip_id'), true /* MustBeFound */);
-     	$sIp = $oIp->GetAsCompressed();
+        $oIp = MetaModel::GetObject('IPv4Address', $this->Get('ip_id'), true /* MustBeFound */);
+        $sIp = $oIp->Get('ip');
      	if ($this->Get('overwrite_zone_ttl') == 'yes')
      	{
      		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN A     ".$sIp;
@@ -1872,7 +1872,7 @@
     {
      	$sDataName = $this->GetDataNameForDataString();
         $oIp = MetaModel::GetObject('IPv6Address', $this->Get('ip_id'), true /* MustBeFound */);
-        $sIp = $oIp->GetAsCompressed();
+        $sIp = $oIp->GetName();
      	if ($this->Get('overwrite_zone_ttl') == 'yes')
      	{
      		$sHtml = str_pad($sDataName, SPACE_OWNER_TO_TTL)." ".str_pad($this->Get('ttl'), SPACE_TTL_TO_CLASS)." IN AAAA  ".$sIp;
