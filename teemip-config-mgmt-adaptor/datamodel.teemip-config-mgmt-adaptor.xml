@@ -32,7 +32,7 @@
         </method>
       </methods>
     </class>
-    <class id="PhysicalDevice" _delta="if_exists">
+    <class id="PhysicalDevice" _delta="must_exist">
       <methods>
         <method id="GetAttributeParams" _delta="define">
           <comment>/**&#13;
@@ -57,7 +57,7 @@
         </method>
       </methods>
     </class>
-    <class id="ConnectableCI" _delta="if_exists">
+    <class id="ConnectableCI" _delta="must_exist">
       <methods>
         <method id="DisplayBareRelations" _delta="define">
           <comment/>
@@ -90,7 +90,7 @@
         </method>
       </methods>
     </class>
-    <class id="DatacenterDevice" _delta="if_exists">
+    <class id="DatacenterDevice" _delta="must_exist">
       <fields>
         <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
         <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">

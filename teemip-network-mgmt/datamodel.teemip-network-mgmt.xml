@@ -575,9 +575,6 @@
 		    <item id="documents_list">
 		      <rank>40</rank>
 		    </item>
-		    <item id="tickets_list">
-		      <rank>50</rank>
-		    </item>
             <item id="applicationsolution_list">
               <rank>60</rank>
             </item>

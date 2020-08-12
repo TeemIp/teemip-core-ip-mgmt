@@ -527,9 +527,16 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 			$sClassesList .= ")";
 
 			// Retrieve concerned CIs
-			$sOQL = "SELECT PhysicalDevice WHERE status IN $sStatusList AND finalclass IN $sClassesList AND org_id IN $sOrgToCleanList 
-			         UNION 
-			         SELECT VirtualDevice WHERE status IN $sStatusList AND finalclass IN $sClassesList AND org_id IN $sOrgToCleanList";
+			if(class_exists('VirtualDevice'))
+			{
+				$sOQL = "SELECT PhysicalDevice WHERE status IN $sStatusList AND finalclass IN $sClassesList AND org_id IN $sOrgToCleanList 
+				         UNION 
+				         SELECT VirtualDevice WHERE status IN $sStatusList AND finalclass IN $sClassesList AND org_id IN $sOrgToCleanList";
+			}
+			else
+			{
+				$sOQL = "SELECT PhysicalDevice WHERE status IN $sStatusList AND finalclass IN $sClassesList AND org_id IN $sOrgToCleanList";
+			}
 			$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 			while ((time() < $iUnixTimeLimit) && $oCI = $oCISet->Fetch())
 			{

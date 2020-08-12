@@ -130,47 +130,50 @@ class _Domain extends DNSObject
 				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 			}
 
-			// Then, display form to select list of hosts
-			$oP->add('<div style="padding: 15px; background: #ddd;">');
-			$oP->add("<form>");
-			$oP->add("<table border=0>");
-
-			$oP->add("<tr>");
-			$sChecked = ($iHostsFilter == 0) ? 'checked' : '';
-			if (!$sChecked)
+			// Then, display form to select list of hosts if domain is not in edition
+			if (!$bEditMode)
 			{
-				$oP->add("<td>");
-				$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"0\">".Dict::S('Class:Domain/Tab:hosts/SelectList0').'</label>');
-				$oP->add("</td>");
-			}
-			$sChecked = ($iHostsFilter == 1) ? 'checked' : '';
-			if (!$sChecked)
-			{
-				$oP->add("<td>");
-				$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"1\">".Dict::S('Class:Domain/Tab:hosts/SelectList1').'</label>');
-				$oP->add("</td>");
-			}
-			$sChecked = ($iHostsFilter == 2) ? 'checked' : '';
-			if (!$sChecked)
-			{
-				$oP->add("<td>");
-				$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"2\">".Dict::S('Class:Domain/Tab:hosts/SelectList2').'</label>');
-				$oP->add("</td>\n");
-			}
-			$oP->add("</tr>\n");
+				$oP->add('<div style="padding: 15px; background: #ddd;">');
+				$oP->add("<form>");
+				$oP->add("<table border=0>");
 
-			$oP->add("</table><br>\n");
+				$oP->add("<tr>");
+				$sChecked = ($iHostsFilter == 0) ? 'checked' : '';
+				if (!$sChecked)
+				{
+					$oP->add("<td>");
+					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"0\">".Dict::S('Class:Domain/Tab:hosts/SelectList0').'</label>');
+					$oP->add("</td>");
+				}
+				$sChecked = ($iHostsFilter == 1) ? 'checked' : '';
+				if (!$sChecked)
+				{
+					$oP->add("<td>");
+					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"1\">".Dict::S('Class:Domain/Tab:hosts/SelectList1').'</label>');
+					$oP->add("</td>");
+				}
+				$sChecked = ($iHostsFilter == 2) ? 'checked' : '';
+				if (!$sChecked)
+				{
+					$oP->add("<td>");
+					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"2\">".Dict::S('Class:Domain/Tab:hosts/SelectList2').'</label>');
+					$oP->add("</td>\n");
+				}
+				$oP->add("</tr>\n");
 
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"Domain\">\n");
-			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$iDomainKey\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oAppContext = new ApplicationContext();
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"submit\" value=\"".Dict::S('Class:Domain/Tab:hosts/SelectList')."\">\n");
+				$oP->add("</table><br>\n");
 
-			$oP->add("</form>\n");
-			$oP->add('</div>');
+				$oP->add("<input type=\"hidden\" name=\"class\" value=\"Domain\">\n");
+				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$iDomainKey\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+				$oAppContext = new ApplicationContext();
+				$oP->add($oAppContext->GetForForm());
+				$oP->add("<input type=\"submit\" value=\"".Dict::S('Class:Domain/Tab:hosts/SelectList')."\">\n");
+
+				$oP->add("</form>\n");
+				$oP->add('</div>');
+			}
 
 			// Display list of hosts if not empty
 			if ($oHostsSet->CountExceeds(0))
