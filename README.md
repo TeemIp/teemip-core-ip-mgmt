@@ -4,7 +4,7 @@ TeemIp extension that enables IP discovery management
 
 ## Description
 
-This extension adapts TeemIp's standard data model to manage remote IP Discovery Applications. It enables communication with the different discovery engine and store their outputs in TeemIp database.
+This extension adapts TeemIp's standard data model to manage remote IP Discovery Applications. It enables communication with the different discovery engines and store their outputs in TeemIp database.
 
 
 ## Documentation
