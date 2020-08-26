@@ -182,23 +182,26 @@
       <presentation>
         <list>
           <items>
-            <item id="org_id">
+            <item id="uuid">
               <rank>10</rank>
             </item>
-            <item id="status">
+            <item id="org_id">
               <rank>20</rank>
             </item>
-            <item id="uuid">
+            <item id="status">
               <rank>30</rank>
             </item>
-            <item id="ping_enabled">
+            <item id="location_id">
               <rank>40</rank>
             </item>
-            <item id="iplookup_enabled">
+            <item id="ping_enabled">
               <rank>50</rank>
             </item>
-            <item id="scan_enabled">
+            <item id="iplookup_enabled">
               <rank>60</rank>
+            </item>
+            <item id="scan_enabled">
+              <rank>70</rank>
             </item>
           </items>
         </list>
