@@ -120,11 +120,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:iplookup_duration+' => 'Time it took for the last discovery to IP lookup the subnet',
 	'Class:IPSubnet/Attribute:scan_duration' => 'Scan duration',
 	'Class:IPSubnet/Attribute:scan_duration+' => 'Time it took for the last discovery to scan the subnet',
+	'Class:IPSubnet/Attribute:ping_discovered' => 'Ping #',
+	'Class:IPSubnet/Attribute:ping_discovered+' => 'Number of IPs discovered by ping',
+	'Class:IPSubnet/Attribute:iplookup_discovered' => 'IP lookup #',
+	'Class:IPSubnet/Attribute:iplookup_discovered+' => 'Number of IPs discovered by IP lookup',
+	'Class:IPSubnet/Attribute:scan_discovered' => 'Scan #',
+	'Class:IPSubnet/Attribute:scan_discovered+' => 'Number of IPs discovered by scan',
 	'Class:IPSubnet/Attribute:scan_cnx_refused_enabled' => 'Consider scan "connection refused" as valid',
 	'Class:IPSubnet/Attribute:scan_cnx_refused_enabled+' => '',
 	'Class:IPSubnet/Attribute:scan_cnx_refused_enabled/Value:yes' => 'Yes',
 	'Class:IPSubnet/Attribute:scan_cnx_refused_enabled/Value:no' => 'No',
-	'Class:IPSubnet:discoveryinfo' => 'Discovery Information',
+	'Class:IPSubnet:discoveryapp' => 'Discovery: application parameters',
+	'Class:IPSubnet:discoverysubnet' => 'Discovery: subnet parameters',
+	'Class:IPSubnet:discoverystats' => 'Discovery: statistics',
 ));
 
 //

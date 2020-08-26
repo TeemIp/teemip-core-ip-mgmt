@@ -412,11 +412,16 @@
           <extkey_attcode>ipdiscovery_id</extkey_attcode>
           <target_attcode>scan_cnx_refused_enabled</target_attcode>
         </field>
-        <field id="last_discovery_date" xsi:type="AttributeDateTime" _delta="define">
-          <sql>last_discovery_date</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
+        <field id="ipdiscovery_enabled" xsi:type="AttributeEnum" _delta="define">
+          <sql>ipdiscovery_enabled</sql>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+          <dependencies/>
         </field>
         <field id="ping_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>ping_enabled</sql>
@@ -429,12 +434,6 @@
           <display_style>radio_horizontal</display_style>
           <dependencies/>
         </field>
-        <field id="ping_duration" xsi:type="AttributeDuration" _delta="define">
-          <sql>ping_duration</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
         <field id="iplookup_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>iplookup_enabled</sql>
           <values>
@@ -445,12 +444,6 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
           <dependencies/>
-        </field>
-        <field id="iplookup_duration" xsi:type="AttributeDuration" _delta="define">
-          <sql>iplookup_duration</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
         </field>
         <field id="scan_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>scan_enabled</sql>
@@ -463,12 +456,6 @@
           <display_style>radio_horizontal</display_style>
           <dependencies/>
         </field>
-        <field id="scan_duration" xsi:type="AttributeDuration" _delta="define">
-          <sql>scan_duration</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-          <tracking_level>none</tracking_level>
-        </field>
         <field id="scan_cnx_refused_enabled" xsi:type="AttributeEnum" _delta="define">
           <sql>scan_cnx_refused_enabled</sql>
           <values>
@@ -480,16 +467,47 @@
           <display_style>radio_horizontal</display_style>
           <dependencies/>
         </field>
-        <field id="ipdiscovery_enabled" xsi:type="AttributeEnum" _delta="define">
-          <sql>ipdiscovery_enabled</sql>
-          <values>
-            <value id="yes">yes</value>
-            <value id="no">no</value>
-          </values>
-          <default_value>no</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>radio_horizontal</display_style>
-          <dependencies/>
+        <field id="last_discovery_date" xsi:type="AttributeDateTime" _delta="define">
+          <sql>last_discovery_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="ping_duration" xsi:type="AttributeDuration" _delta="define">
+          <sql>ping_duration</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="ping_discovered" xsi:type="AttributeInteger" _delta="define">
+          <sql>ping_discovered</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="iplookup_duration" xsi:type="AttributeDuration" _delta="define">
+          <sql>iplookup_duration</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="iplookup_discovered" xsi:type="AttributeInteger" _delta="define">
+          <sql>iplookup_discovered</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="scan_duration" xsi:type="AttributeDuration" _delta="define">
+          <sql>scan_duration</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="scan_discovered" xsi:type="AttributeInteger" _delta="define">
+          <sql>scan_discovered</sql>
+          <default_value>0</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
       </fields>
       <presentation>
@@ -522,57 +540,76 @@
       <presentation>
         <details _delta="must_exist">
           <items>
-             <item id="col:col3" _delta="define">
+            <item id="col:col3" _delta="define">
               <items>
-                <item id="fieldset:Class:IPSubnet:discoveryinfo" _delta="define">
+                <item id="fieldset:Class:IPSubnet:discoveryapp">
                   <items>
                     <item id="ipdiscovery_id">
                       <rank>10</rank>
                     </item>
-                    <item id="ipdiscovery_enabled">
+                    <item id="ipdiscovery_ping_enabled">
                       <rank>20</rank>
                     </item>
-                    <item id="last_discovery_date" _delta="define">
+                    <item id="ipdiscovery_iplookup_enabled">
                       <rank>30</rank>
                     </item>
-                    <item id="ipdiscovery_ping_enabled">
+                    <item id="ipdiscovery_scan_enabled">
                       <rank>40</rank>
                     </item>
-                    <item id="ping_enabled">
+                    <item id="ipdiscovery_scan_cnx_refused_enabled">
                       <rank>50</rank>
                     </item>
-                    <item id="ping_duration">
-                      <rank>60</rank>
+                  </items>
+                  <rank>10</rank>
+                </item>
+                <item id="fieldset:Class:IPSubnet:discoverysubnet">
+                  <items>
+                    <item id="ipdiscovery_enabled">
+                      <rank>10</rank>
                     </item>
-                    <item id="ipdiscovery_iplookup_enabled">
-                      <rank>70</rank>
+                    <item id="ping_enabled">
+                      <rank>20</rank>
                     </item>
                     <item id="iplookup_enabled">
-                      <rank>80</rank>
-                    </item>
-                    <item id="iplookup_duration">
-                      <rank>90</rank>
-                    </item>
-                    <item id="ipdiscovery_scan_enabled">
-                      <rank>100</rank>
+                      <rank>30</rank>
                     </item>
                     <item id="scan_enabled">
-                      <rank>110</rank>
-                    </item>
-                    <item id="ipdiscovery_scan_cnx_refused_enabled">
-                      <rank>120</rank>
+                      <rank>40</rank>
                     </item>
                     <item id="scan_cnx_refused_enabled">
-                      <rank>130</rank>
-                    </item>
-                    <item id="scan_duration">
-                      <rank>140</rank>
+                      <rank>50</rank>
                     </item>
                   </items>
                   <rank>20</rank>
                 </item>
+                <item id="fieldset:Class:IPSubnet:discoverystats" >
+                  <items>
+                    <item id="last_discovery_date" _delta="define">
+                      <rank>10</rank>
+                    </item>
+                    <item id="ping_duration">
+                      <rank>20</rank>
+                    </item>
+                    <item id="ping_discovered">
+                      <rank>30</rank>
+                    </item>
+                    <item id="iplookup_duration">
+                      <rank>40</rank>
+                    </item>
+                    <item id="iplookup_discovered">
+                      <rank>50</rank>
+                    </item>
+                    <item id="scan_duration">
+                      <rank>60</rank>
+                    </item>
+                    <item id="scan_discovered">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                  <rank>30</rank>
+                </item>
               </items>
-              <rank>20</rank>
+              <rank>30</rank>
             </item>
           </items>
         </details>

@@ -120,7 +120,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPSubnet/Attribute:iplookup_duration+' => 'Zeit, die benötigt wurde, um eine IP-Auflösung für alle IPs im Subnetz durchzuführen',
 	'Class:IPSubnet/Attribute:scan_duration' => 'Dauer der IP-Scan',
 	'Class:IPSubnet/Attribute:scan_duration+' => 'Zeit, die benötigt wurde, um alle IP-Adressen im Subnetz zu scan',
-	'Class:IPSubnet:discoveryinfo' => 'Entdeckung informationen',
+	'Class:IPSubnet:discoveryapp' => 'Entdeckung: Anwendungseinstellungen',
+	'Class:IPSubnet:discoverysubnet' => 'Entdeckung: Subnetzeinstellungen',
+	'Class:IPSubnet:discoverystats' => 'Entdeckung: Statistiken',
+
 ));
 
 //
