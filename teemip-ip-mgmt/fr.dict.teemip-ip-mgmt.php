@@ -691,6 +691,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no' => 'Non',
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci' => 'Désalloue les IPs non attachées à un CI',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes' => 'Oui',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'Non',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
 ));
 
 //
@@ -1251,10 +1257,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'CI Fonctionel',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'Attribut IP',
 	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'Il n\'y a pas de CI instancié qui porte des attributs de type Adresse IP dans cette organisation !',
+	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'L\'adresse ne peut pas être allouée au CI: %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI Fonctionel n\'existe pas !',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut ne peut être enregistré car synchronisé depuis une source externe !',
-	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'L\'adresse n\'est pas allouée !',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'L\'attribut est en lecture seule !',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut est synchronisé depuis une source externe !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'L\'adresse ne peut pas être désallouée: %1$s',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'L\'adresse n\'est pas allouée !',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'L\'adresse est attachée à l\'attribut d\'un CI qui est en lecture seule !',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'L\'adresse est attachée à l\'attribut d\'un CI qui est esclave d\'une synchronisation !',
 
 //
 // Management of IPv4 Addresses
@@ -1262,7 +1272,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Allocation to CI / Unallocation from CI
 	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Alloue l\'IP',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Alloue %1$s <span class="hilite">%2$s</span> au CI',
-	'UI:IPManagement:Action:Allocate:IPv4Address:CannotAllocateCI' => 'L\'adresse ne peut pas être allouée au CI: %1$s',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> a été allouée.',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Désalloue l\'IP',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> a été désallouée.',

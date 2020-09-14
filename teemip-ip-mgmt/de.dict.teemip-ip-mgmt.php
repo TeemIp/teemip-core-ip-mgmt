@@ -1253,10 +1253,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'Funktionales CI',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'Attribute der Adresse',
 	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'In dieser Organisation gibt es keine instanziierten CIs mit IP-Adressattributen !',
+	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'Die Adresse kann nicht zum CI allokiert werden : %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Funktionales CI existiert nicht !',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'Das Attribut ist schreibgeschützt !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Das Attribut kann nicht gespeichert werden, da es von einer externen Quelle synchronisiert wird !',
-	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'Die Adresse ist nicht allokiert !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Die Adresse kann nicht freigegeben werden: %1$s',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'Die Adresse ist nicht allokiert !',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'Die Adresse wird an das Attribut eines CI angehängt, das schreibgeschützt ist !',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'Die Adresse wird an das Attribut eines CI angehängt, das ein Slave einer Synchronisation ist !',
 
 //
 // Management of IPv4 Addresses
@@ -1264,7 +1268,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Allocation to CI / Unallocation from CI
 	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Allokiert die IP',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Allokiert %1$s <span class="hilite">%2$s</span> zum CI',
-	'UI:IPManagement:Action:Allocate:IPv4Address:CannotAllocateCI' => 'Die Adresse kann nicht zum CI allokiert werden : %1$s',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> wurde allokiert.',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Freigeben die IP',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> wurde freigegeben.',
