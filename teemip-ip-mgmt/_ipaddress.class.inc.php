@@ -547,9 +547,14 @@ EOF
 		else
 		{
 			$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
+			if ($iFlags & OPT_ATT_READONLY)
+			{
+				// Attribute is read only
+				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly'));
+			}
 			if ($iFlags & OPT_ATT_SLAVE)
 			{
-				// Attribute is actually read only because of a synchro
+				// Attribute is read only because of a synchro
 				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
 			}
 		}
@@ -567,10 +572,40 @@ EOF
 	 */
 	public function DoCheckToUnallocate($aParam)
 	{
+		// Make sure IP is allocated
 		if ($this->Get('status') != 'allocated')
 		{
 			return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated'));
 		}
+
+		// Check if IP is attached to at least one CI's attribute that is R/O or Slave because of a synchro
+		$sCLass = get_class($this);
+		$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
+		$iKey = $this->GetKey();
+		foreach ($aCIsToList as $sCI => $sKey)
+		{
+			$aIPAttributes = array_merge($aCIsToList[$sCI]['IPAddress'], $aCIsToList[$sCI][$sCLass]);
+			foreach ($aIPAttributes AS $key => $sIPAttribute)
+			{
+				$oCISearch = DBObjectSearch::FromOQL("SELECT $sCI WHERE $sIPAttribute = $iKey");
+				$oCISet = new CMDBObjectSet($oCISearch);
+				while ($oCI = $oCISet->Fetch())
+				{
+					$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
+					if ($iFlags & OPT_ATT_READONLY)
+					{
+						// Attribute is read only
+						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly'));
+					}
+					if ($iFlags & OPT_ATT_SLAVE)
+					{
+						// Attribute is read only because of a synchro
+						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized'));
+					}
+				}
+			}
+		}
+
 		return '';
 	}
 
