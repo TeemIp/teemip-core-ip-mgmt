@@ -1415,7 +1415,7 @@ EOF
 				$sInputId = $iFormId.'_'.'firstip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv4Block', 'firstip');
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 
 				// New last IP
@@ -1423,7 +1423,7 @@ EOF
 				$sInputId = $iFormId.'_'.'lastip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv4Block', 'lastip');
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
 			break;
 
@@ -1436,7 +1436,7 @@ EOF
 				$sInputId = $iFormId.'_'.'ip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv4Address', 'ip');
 				$sDefault = (array_key_exists('ip', $aDefault)) ? $aDefault['ip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Address', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Address', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 
 				// Name of new block
@@ -1455,7 +1455,7 @@ EOF
 				$sInputId = $iFormId.'_'.'firstip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv4Block', 'firstip');
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
 
 				// New last IP
@@ -1463,7 +1463,7 @@ EOF
 				$sInputId = $iFormId.'_'.'lastip';
 				$oAttDef = MetaModel::GetAttributeDef('IPv4Block', 'lastip');
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', '', '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Block', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
 			break;
 
