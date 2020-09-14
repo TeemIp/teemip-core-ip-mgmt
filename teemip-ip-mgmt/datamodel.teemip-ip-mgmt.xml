@@ -2958,6 +2958,16 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
+        <field id="ip_unassign_on_no_ci" xsi:type="AttributeEnum">
+          <values>
+            <value>no</value>
+            <value>yes</value>
+          </values>
+          <sql>ip_unassign_on_no_ci</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="ip_release_on_subnet_release" xsi:type="AttributeEnum">
           <values>
             <value>no</value>
@@ -3082,8 +3092,11 @@
                     <item id="ip_release_on_ci_obsolete">
                       <rank>60</rank>
                     </item>
-                    <item id="ip_release_on_subnet_release">
+                    <item id="ip_unassign_on_no_ci">
                       <rank>70</rank>
+                    </item>
+                    <item id="ip_release_on_subnet_release">
+                      <rank>80</rank>
                     </item>
                   </items>
                 </item>
