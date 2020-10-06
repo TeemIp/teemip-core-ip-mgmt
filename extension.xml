@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension format="1.0">
+	<extension_code>teemip-macaddress-lookup</extension_code>
+	<company>TeemIp</company>
+	<author><![CDATA[Christophe Naud]]></author>
+	<label><![CDATA[TeemIp MAC Address Lookup]]></label>
+	<description><![CDATA[TeemIp extension to get vendors information on MAC addresses]]></description>
+	<version>1.0.0</version>
+	<release_date>2020-10-04</release_date>
+	<version_description><![CDATA[Initial release: See Wiki at https://wiki.teemip.net/doku.php?id=extensions:teemip-macaddress-lookup]]></version_description>
+	<itop_version_min>2.7.0</itop_version_min>
+	<status>stable</status>
+	<mandatory>false</mandatory>
+	<more_info_url>https://wiki.teemip.net/doku.php?id=extensions:teemip-macaddress-lookup</more_info_url>
+</extension>
