@@ -1,34 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
-    <classes>
-        <class id="IPv4Address" _created_in="teemip-ip-mgmt" _delta="must_exist">
-            <methods>
-                <method id="DoCheckMacLookupInputs" _delta="define">
-                    <comment/>
-                    <static>false</static>
-                    <access>public</access>
-                    <type>Overload-DBObject</type>
-                    <code><![CDATA[	public function DoCheckMacLookupInputs($aPostedParam)
-    {
-
-        return '';
-	}]]></code>
-                </method>
-                <method id="DisplayMacLookupOutput" _delta="define">
-                    <comment/>
-                    <static>false</static>
-                    <access>public</access>
-                    <type>Overload-DBObject</type>
-                    <code><![CDATA[	public function DisplayMacLookupOutput($aPostedParam)
-    {
-        echo (implode(",", $aPostedParam));
-
-        return '';
-	}]]></code>
-                </method>
-            </methods>
-        </class>
-    </classes>
     <menus>
         <menu id="MACLookup" xsi:type="WebPageMenuNode" _delta="define">>
             <rank>10</rank>

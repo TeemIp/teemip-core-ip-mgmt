@@ -49,8 +49,12 @@ class MacAddressLookupExtraMenus implements iPopupMenuExtension
 				{
 					if ($oAttDef instanceof AttributeMacAddress)
 					{
-						$bHasMacAddressAttribute = true;
-						break;
+						$sMac = $oObj->Get($sAttCode);
+						if ($sMac != '')
+						{
+							$bHasMacAddressAttribute = true;
+							break;
+						}
 					}
 				}
 				if ($bHasMacAddressAttribute)

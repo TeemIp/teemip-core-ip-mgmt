@@ -21,6 +21,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+define('MACADDRESS_LOOKUP_MODULE_CODE', 'teemip-macaddress-lookup');
+define('MACADDRESS_LOOKUP_FUNCTION_SETTING_BASE_URL', 'url');
+define('DEFAULT_MACADDRESS_LOOKUP_FUNCTION_SETTING_BASE_URL', 'https://api.maclookup.app/v2/macs/%1$s');
+
 /**
  * @param \WebPage $oP
  * @param $oAppContext
@@ -51,12 +55,29 @@ HTML
 
 	$oP->add("<table>");
 	$oP->add('<tr><td style="vertical-align:top">');
+
+	// MAC Address
+	$iFormid = rand();
 	$sAttCode = 'macaddress';
-	$sInputId = rand().'_'.'macaddress';
+	$sInputId = $iFormid.'_'.$sAttCode;
 	$oAttDef = MetaModel::GetAttributeDef('IPInterface', 'macaddress');
 	$sDefault = '';
-	$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Address', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
+	$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPInterface', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 	$aDetails[] = array('label' => '<span title="">'.Dict::S('UI:MACLookup:Action:Lookup:SelectMACAddress').'</span>', 'value' => $sHTMLValue);
+
+	// MAC Prefix
+	$sAttCode = 'macprefix';
+	$sInputId = $iFormid.'_'.$sAttCode;
+	$sValidationSpan = "<span class=\"form_validation\" id=\"v_{$sInputId}\"></span>";
+	$sPattern = addslashes('^(\d|([a-f]|[A-F])){6}$'); //'^([0-9]+)$';
+	$sHTMLValue = "<div class=\"field_input_zone field_input_string\"><input title=\"\" type=\"text\" maxlength=\"17\" name=\"attr_macprefix\" value=\"".htmlentities('',ENT_QUOTES, 'UTF-8')."\" id=\"$sInputId\"/></div>{$sValidationSpan}";
+	$sHTMLValue = "<div id=\"field_{$sInputId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"macprefix\">{$sHTMLValue}</div></div>";
+	$aDetails[] = array('label' => '<span title="">'.Dict::S('UI:MACLookup:Action:Lookup:SelectMACPrefix').'</span>', 'value' => $sHTMLValue);
+
+	$aEventsList[] = 'keyup';
+	$aEventsList[] = 'change';
+	$oP->add_ready_script("$('#$sInputId').bind('".implode(' ',$aEventsList)."', function(evt, sFormId) { return ValidateField('$sInputId', '$sPattern', false, sFormId, '', '') } );\n"); // Bind to a custom event: validate
+
 	$oP->Details($aDetails);
 	$oP->add('</td></tr>');
 
@@ -81,7 +102,8 @@ HTML
 function DisplayMacLookupResult(WebPage $oP, $sMacAddress, $sAttribute)
 {
 	// Query info to "MAC Address Lookup" site
-	$sURL = 'https://api.maclookup.app/v2/macs/'.urlencode($sMacAddress);
+	$sBaseUrl = MetaModel::GetModuleSetting(MACADDRESS_LOOKUP_MODULE_CODE, MACADDRESS_LOOKUP_FUNCTION_SETTING_BASE_URL, DEFAULT_MACADDRESS_LOOKUP_FUNCTION_SETTING_BASE_URL);
+	$sURL = sprintf($sBaseUrl, urlencode($sMacAddress));
 	$aEmpty = array();
 	$aCurlOptions = array(CURLOPT_POSTFIELDS => "");
 	$aResults = null;
@@ -111,8 +133,15 @@ function DisplayMacLookupResult(WebPage $oP, $sMacAddress, $sAttribute)
 				}
 
 				// MAC Address
-				$oP->add('&nbsp;&nbsp;</td><td>'.Dict::Format('UI:MACLookup:Action:DoLookup:Result:MACAddress').':</td><td><b>'.$sMacAddress.'</b></td></tr>');
-				$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:MACLookup:Action:DoLookup:Result:MACPrefix').':</td><td>'.$aResults['macPrefix'].'</td></tr>');
+				if (strlen($sMacAddress) > 6)
+				{
+					$oP->add('&nbsp;&nbsp;</td><td>'.Dict::Format('UI:MACLookup:Action:DoLookup:Result:MACAddress').':</td><td><b>'.$sMacAddress.'</b></td></tr>');
+					$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:MACLookup:Action:DoLookup:Result:MACPrefix').':</td><td>'.$aResults['macPrefix'].'</td></tr>');
+				}
+				else
+				{
+					$oP->add('&nbsp;&nbsp;</td><td>'.Dict::Format('UI:MACLookup:Action:DoLookup:Result:MACPrefix').':</td><td><b>'.$aResults['macPrefix'].'</b></td></tr>');
+				}
 				$oP->add('<tr><td height=10></td></tr>');
 
 				// Block
@@ -221,7 +250,8 @@ try
 
 			// Check calculator inputs
 			$sMacAddress = utils::ReadPostedParam('attr_macaddress', '', 'raw_data');
-			if ($sMacAddress == '')
+			$sMacPrefix = utils::ReadPostedParam('attr_macprefix', '', 'raw_data');
+			if (($sMacAddress == '') && ($sMacPrefix == ''))
 			{
 				// Found issues, explain and give the user another chance
 				$sIssueDesc = Dict::Format('UI:MacLookup:Action:DoLookup:CannotRun:EmptyMAC');
@@ -247,7 +277,14 @@ HTML
 				);
 
 				// Run lookup and display result
-				DisplayMacLookupResult($oP, $sMacAddress, '');
+				if ($sMacAddress != '')
+				{
+					DisplayMacLookupResult($oP,$sMacAddress,'');
+				}
+				else
+				{
+					DisplayMacLookupResult($oP,$sMacPrefix,'');
+				}
 			}
 			break; // End case domaclookup
 
@@ -303,7 +340,11 @@ HTML
 					if ($oAttDef instanceof AttributeMacAddress)
 					{
 						$bHasMacAddressAttribute = true;
-						DisplayMacLookupResult($oP,$oObj->get($sAttCode), MetaModel::GetLabel($sClass, $sAttCode));
+						$sMacAddress = $oObj->Get($sAttCode);
+						if ($sMacAddress != '')
+						{
+							DisplayMacLookupResult($oP,$sMacAddress, MetaModel::GetLabel($sClass, $sAttCode));
+						}
 					}
 				}
 				if (!$bHasMacAddressAttribute)
