@@ -281,7 +281,7 @@ HTML
 				{
 					DisplayMacLookupResult($oP,$sMacAddress,'');
 				}
-				else
+				if ($sMacPrefix != '')
 				{
 					DisplayMacLookupResult($oP,$sMacPrefix,'');
 				}
