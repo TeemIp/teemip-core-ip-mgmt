@@ -1,10 +1,10 @@
-# <img src="https://wiki.teemip.net/lib/exe/fetch.php?media=extensions:classicon_zone.png"> TeemIp MACAddress Lookup
+# TeemIp MACAddress Lookup
 TeemIp extension that provides information on MAC address vendors
 
 
 ## Description
 
-This extension allows CMDB managers to get live MAC address information either from a generic request form where a MAC address or prefix can be requested or directely from the CIs that do have MAC address attributes.
+This extension allows CMDB managers to get live MAC address information either from a generic request form where a MAC address or prefix can be requested or directly from the details page of CIs that do have MAC address attributes.
 
 ## Documentation
 
