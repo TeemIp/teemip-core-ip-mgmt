@@ -42,6 +42,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
+// Class: NetworkInterface
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:NetworkInterface:baseinfo' => 'General Information',
+	'Class:NetworkInterface:moreinfo' => 'More Information',
+	'Class:NetworkInterface/Attribute:operational_status' => 'Betriebsstatus',
+	'Class:NetworkInterface/Attribute:operational_status+' => 'Berechnet aus dem Status der untergeordneten Klassen',
+	'Class:NetworkInterface/Attribute:operational_status/Value:active' => 'Aktiv',
+	'Class:NetworkInterface/Attribute:operational_status/Value:active+' => '',
+	'Class:NetworkInterface/Attribute:operational_status/Value:inactive' => 'Inaktiv',
+	'Class:NetworkInterface/Attribute:operational_status/Value:inactive+' => '',
+));
+
+//
 // Class: IPInterface
 //
 
@@ -57,6 +72,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
+	'Class:PhysicalInterface/Attribute:status' => 'Status',
+	'Class:PhysicalInterface/Attribute:status+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:stock' => 'Lager',
+	'Class:PhysicalInterface/Attribute:status/Value:stock+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:active' => 'Aktiv',
+	'Class:PhysicalInterface/Attribute:status/Value:active+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:inactive' => 'Inaktiv',
+	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolet',
+	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
 ));
 
 //

@@ -21,17 +21,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-function GetToolkitMenu(WebPage $oPage, $oSet, $aExtraParams)
-{
-	$aActions = array();
-	$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$this->iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-	utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
-	$sHtml = $oPage->RenderPopupMenuItems($aActions);
-	return $sHtml;
-}
-	
-/**********************************************		
- * Displays Subnet Block tree for a given Org.
+/********************************************************
+ * Displays Subnet Block or Subnet tree for a given Org.
  */
 function DisplayTree(WebPage $oP, $sOrgId, $sClass)
 {
@@ -87,8 +78,8 @@ function DisplayTree(WebPage $oP, $sOrgId, $sClass)
 	}
 }
 
-/*****************************************
- * Displays nodes of a Subnet Block tree.
+/***************************************************
+ * Displays nodes of a Subnet Block or Subnet tree.
  */
 function DumpNodes($oP, $sOrgId, $iRootId, $aTree, $aNodes, $currValue, $bWithSubnet)
 {
@@ -108,106 +99,6 @@ function DumpNodes($oP, $sOrgId, $iRootId, $aTree, $aNodes, $currValue, $bWithSu
 		}
 		$oP->add("</ul>\n");
 	}
-}
-
-/*******************
- * Set page titles.
- */
-function SetPageTitles(WebPage $oP, $sUIPath, $oObj, $sClassLabel, $bIcon = true)
-{
-	$oP->set_title(Dict::Format($sUIPath.'PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-	$oP->add("<div class=\"page_header teemip_page_header\">\n");
-	if ($bIcon)
-	{
-		$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format($sUIPath.'Title_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-	}
-	else
-	{
-		$oP->add("<h1>".Dict::Format($sUIPath.'Title_Class_Object', $sClassLabel, $oObj->GetName())."</h1>\n");
-	}
-	$oP->add("</div>\n");
-}
-
-/*****************************************
- * Displays choices related to operation.
- */			
-function DisplayOperationForm(WebPage $oP, $oAppContext, $sOperation, $sClass, $oObj, $aDefault = array())
-{
-	$id = $oObj->GetKey();
-	$sClassLabel = MetaModel::GetName($sClass);
-	$sUIPath = $oObj->MakeUIPath($sOperation);
-
-	// Make sure action can be performed
-	$CheckOperation = $oObj->DoCheckOperation($sOperation);
-	if ($CheckOperation != '')
-	{
-		// Found issues: explain and display block again
-		// No search bar (2.5 standard)
-
-		$sIssueDesc = Dict::Format($sUIPath.$CheckOperation);
-		cmdbAbstractObject::SetSessionMessage($sClass, $id, $sOperation, $sIssueDesc, 'error', 0, true /* must not exist */);
-		$oObj->DisplayDetails($oP);
-		return;
-	}
-	
-	// Set page titles
-	SetPageTitles($oP, $sUIPath, $oObj, $sClassLabel);
-			
-	// Set blue modification frame 
-	$oP->add("<div class=\"wizContainer\">\n");
-			
-	// Preparation to allow new values to be posted
-	$aFieldsMap = array();
-	$sPrefix = '';
-	$m_iFormId = $oObj->GetNewFormId($sPrefix);
-	$iTransactionId = utils::GetNewTransactionId();
-	$oP->SetTransactionId($iTransactionId);
-	$sFormAction= utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-	$oP->add("<form action=\"$sFormAction\" id=\"form_{$m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$m_iFormId}');\">\n");
-	$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
-
-	if (in_array($sOperation, array('shrinkblock', 'shrinksubnet', 'splitblock', 'splitsubnet', 'expandblock', 'expandsubnet')))
-	//if (!in_array($sOperation, array('findspace', 'listips', 'csvexportips', 'calculator', 'delegate', 'undelegate', 'allocateip', 'unallocateip')))
-	{
-		// Display main tab
-		$oP->AddTabContainer(OBJECT_PROPERTIES_TAB);
-		$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		
-		// Display object attributes
-	    $oObj->DisplayMainAttributesForOperation($oP, $sOperation, $m_iFormId, $sPrefix, $aDefault);
-
-		// Display tab for global parameters
-		$oObj->DisplayGlobalAttributesForOperation($oP, $aDefault);
-		
-		$oP->SetCurrentTab('');
-	}
-	
-	// Display action fields
-	$oObj->DisplayActionFieldsForOperation($oP, $sOperation, $m_iFormId, $aDefault);
-	
-	// Load other parameters to post
-	$sNextOperation = $oObj->GetNextOperation($sOperation);
-	$oP->add($oAppContext->GetForForm());
-	$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");	
-	$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-	$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
-	$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
-	
-	$oP->add('</form>');
-	$oP->add("</div>\n");
-	
-	$iFieldsCount = count($aFieldsMap);
-	$sJsonFieldsMap = json_encode($aFieldsMap);
-	$sState = $oObj->GetState();
-	$oP->add_script(
-<<<EOF
-	// Create the object once at the beginning of the page...
-	var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
-	oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
-	oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
-EOF
-);
-
 }
 
 /*****************************************************************
@@ -372,7 +263,7 @@ try
 				$oBlock->Display($oP, -1);
 				
 				// Set titles
-				SetPageTitles($oP, 'UI:IPManagement:Action:ListSpace:'.$sClass.':', $oObj, $sClassLabel);
+				$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:ListSpace:'.$sClass.':');
 				
 				// Dump space
 				$oP->add('<table style="width:100%"><tr><td colspan="2">');
@@ -409,7 +300,7 @@ try
 			else
 			{
 				// The object can be read - Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 		break; // End case findspace
 		
@@ -460,7 +351,7 @@ try
 						$oP->add($sMessage);
 
 						$sNextOperation = $oObj->GetNextOperation($operation);
-						DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+						$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 					}
 					else
 					{
@@ -473,7 +364,7 @@ try
 						$oBlock->Display($oP, -1);
 						
 						// Set titles
-						SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':', $oObj, $sClassLabel);
+						$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
 						
 						// Dump space
 						$oP->add('<table style="width:100%"><tr><td colspan="2">');
@@ -517,7 +408,7 @@ try
 				if ($iSize >= MAX_NB_OF_IPS_TO_DISPLAY)
 				{
 					// Display subset of IPs only as size is too big to display all IPs once
-					DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 				}
 				else
 				{
@@ -533,7 +424,7 @@ try
 					$oBlock->Display($oP, -1);
 					
 					// Set titles
-					SetPageTitles($oP, 'UI:IPManagement:Action:ListIps:'.$sClass.':', $oObj, $sClassLabel);
+					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:ListIps:'.$sClass.':');
 					
 					// Dump IP Tree
 					$sStatusIp = $oObj->GetDefaultValueAttribute('status');
@@ -590,7 +481,7 @@ try
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 					}
 				else
 				{
@@ -603,7 +494,7 @@ try
 					$oBlock->Display($oP, -1);
 					
 					// Set titles
-					SetPageTitles($oP, 'UI:IPManagement:Action:DoListIps:'.$sClass.':', $oObj, $sClassLabel);
+					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoListIps:'.$sClass.':');
 					
 					// Dump space
 					$oP->add('<table style="width:100%"><tr><td colspan="2">');
@@ -650,7 +541,7 @@ try
 				}
 				
 				// Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 		break; // End case shrink
 		
@@ -696,7 +587,7 @@ try
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{
@@ -757,7 +648,7 @@ try
 				}
 				
 				// Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 		break; // End case split
 		
@@ -803,7 +694,7 @@ try
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{
@@ -864,7 +755,7 @@ try
 				}
 				
 				// Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 		break; // End case expand
 		
@@ -910,7 +801,7 @@ try
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{
@@ -967,7 +858,7 @@ try
 				if ($iSize >= MAX_NB_OF_IPS_TO_DISPLAY)
 				{
 					// Export subset of IPs only as size is too big to export all IPs once
-					DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 				}
 				else
 				{
@@ -983,7 +874,7 @@ try
 					$oBlock->Display($oP, -1);
 					
 					// Set titles
-					SetPageTitles($oP, 'UI:IPManagement:Action:CsvExportIps:'.$sClass.':', $oObj, $sClassLabel);
+					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:CsvExportIps:'.$sClass.':');
 					
 					// Display text area
 					$sParameter = array ('first_ip' => '', 'last_ip' => '');
@@ -1041,7 +932,7 @@ try
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{
@@ -1054,7 +945,7 @@ try
 					$oBlock->Display($oP, -1);
 					
 					// Set titles
-					SetPageTitles($oP, 'UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':', $oObj, $sClassLabel);
+					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':');
 					
 					// Display text area
 					$oP->add("<div id=\"3\" class=\"display_block\">\n"); 
@@ -1100,7 +991,7 @@ try
 				}
 
 				// Display calculation page
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 			else
 			{
@@ -1187,7 +1078,7 @@ HTML
 				$oP->add($sMessage);
 				
 				$sNextOperation = $oObj->GetNextOperation($operation);
-				DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 			}
 			else
 			{	
@@ -1203,7 +1094,7 @@ HTML
 				}
 				
 				// Set titles
-				SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':', $oObj, $sClassLabel);
+				$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':');
 	
 				// Display result
 				$oObj->DisplayCalculatorOutput($oP, $oAppContext, $aPostedParam);;
@@ -1244,7 +1135,7 @@ HTML
 				}
 				
 				// Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 		break; // End case delegate
 		
@@ -1289,7 +1180,7 @@ HTML
 					$oP->add($sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{
@@ -1401,7 +1292,7 @@ HTML
 				}
 
 				// Process request now
-				DisplayOperationForm($oP, $oAppContext, $operation, $sClass, $oObj);
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
 			break; // End case allocateip
 
@@ -1446,7 +1337,7 @@ HTML
 					$oP->add($sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
-					DisplayOperationForm($oP, $oAppContext, $sNextOperation, $sClass, $oObj, $aPostedParam);
+					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				}
 				else
 				{

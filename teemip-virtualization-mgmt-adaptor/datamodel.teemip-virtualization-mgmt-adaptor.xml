@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
-    <class id="VirtualMachine" _delta="if_exists">
+    <class id="VirtualMachine" _delta="must_exist">
       <fields>
         <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
         <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">
@@ -135,8 +135,41 @@
         </method>
       </methods>
     </class>
-    <class id="LogicalInterface" _delta="if_exists">
+    <class id="NetworkInterface" _delta="must_exist">
       <fields>
+        <field id="operational_status" xsi:type="AttributeMetaEnum" _delta="must_exist">
+          <mappings>
+            <mapping id="LogicalInterface" _delta="define">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="active">
+                  <values>
+                    <value id="active"/>
+                  </values>
+                </metavalue>
+                <metavalue id="inactive">
+                  <values>
+                    <value id="inactive"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
+      </fields>
+    </class>
+    <class id="LogicalInterface" _delta="must_exist">
+      <fields>
+        <field id="status" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkLogicalInterfaceToVLAN</linked_class>
           <ext_key_to_me>logicalinterface_id</ext_key_to_me>
@@ -155,20 +188,55 @@
         </field>
       </fields>
       <presentation>
-        <details>
+        <details _delta="redefine">
           <items>
             <item id="vlans_list">
-              <rank>90</rank>
+              <rank>10</rank>
             </item>
             <item id="vrfs_list">
-              <rank>100</rank>
+              <rank>20</rank>
             </item>
-		  	<item id="ip_list">
-			  <rank>110</rank>
-			</item>
-            <item id="ipaddress" _delta="delete"/>
-            <item id="ipgateway" _delta="delete"/>
-            <item id="ipmask" _delta="delete"/>
+            <item id="ip_list">
+              <rank>30</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:NetworkInterface:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="virtualmachine_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="comment">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>50</rank>
+              <items>
+                <item id="fieldset:Class:NetworkInterface:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="macaddress">
+                      <rank>10</rank>
+                    </item>
+                    <item id="speed">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
           </items>
         </details>
         <search>
@@ -178,8 +246,27 @@
             <item id="ipmask" _delta="delete"/>
           </items>
         </search>
+        <default_search _delta="define">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="macaddress">
+              <rank>30</rank>
+            </item>
+            <item id="virtualmachine_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
+            <item id="status" _delta="define">
+              <rank>5</rank>
+            </item>
             <item id="ipaddress" _delta="delete"/>
             <item id="ipgateway" _delta="delete"/>
             <item id="ipmask" _delta="delete"/>

@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-endusers-devices-adaptor/2.6.2',
+	'teemip-endusers-devices-adaptor/2.7.0',
 	array(
 		// Identification
 		//
@@ -34,8 +34,8 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-endusers-devices/2.7.0',
-			'teemip-ip-mgmt/2.6.1',
-			'teemip-config-mgmt-adaptor/2.6.1'
+			'teemip-ip-mgmt/2.7.0',
+			'teemip-config-mgmt-adaptor/2.7.0'
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard

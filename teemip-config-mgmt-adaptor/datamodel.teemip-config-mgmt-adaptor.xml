@@ -71,18 +71,24 @@
         if (! $bEditMode)
         {
 	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+	        $sDisplayClass = 'ConnectableCI';
+            if($this->Get('finalclass') == 'NetworkDevice')
+            {
+                $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";
+                $sDisplayClass = 'NetworkDevice';
+            }
 	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $this->GetKey()));
 	        if ($oLnkSet->CountExceeds(0))
 	        {
 		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:ConnectableCI/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:ConnectableCI/Tab:ipaddresses_list+'));
+		        $oP->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
+		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
 		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
 		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
 	        }
 	        else
 	        {
-		        $oP->SetCurrentTab(Dict::S('Class:ConnectableCI/Tab:ipaddresses_list'));
+		        $oP->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
 		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 	        }
         }
@@ -119,14 +125,14 @@
         </default_search>
       </presentation>
     </class>
-    <class id="NetworkDevice" _delta="if_exists">
+    <class id="NetworkDevice" _delta="must_exist">
       <presentation>
         <details>
           <items>
-            <item id="col:col1">
+            <item id="col:col1" _delta="must_exist">
               <rank>80</rank>
               <items>
-                <item id="fieldset:Server:moreinfo">
+                <item id="fieldset:Server:moreinfo" _delta="must_exist">
                   <rank>20</rank>
                   <items>
                     <item id="managementip" _delta="delete"/>
@@ -233,6 +239,99 @@
       </methods>
     </class>
     <class id="lnkSubnetToVLAN" _delta="delete"/>
+    <class id="NetworkInterface" _created_in="itop-config-mgmt" _delta="must_exist">
+      <properties>
+        <obsolescence _delta="define_if_not_exists">
+          <condition>operational_status = 'inactive'</condition>
+        </obsolescence>
+      </properties>
+      <fields>
+        <field id="operational_status" xsi:type="AttributeMetaEnum" _delta="define">
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>operational_status</sql>
+          <default_value>active</default_value>
+          <mappings>
+            <mapping id="PhysicalInterface">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="active">
+                  <values>
+                    <value id="active"/>
+                  </values>
+                </metavalue>
+                <metavalue id="inactive">
+                  <values>
+                    <value id="stock"/>
+                    <value id="inactive"/>
+                    <value id="obsolete"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+            <mapping id="NetworkdeviceVirtualInterface">
+              <attcode>status</attcode>
+              <metavalues>
+                <metavalue id="active">
+                  <values>
+                    <value id="active"/>
+                  </values>
+                </metavalue>
+                <metavalue id="inactive">
+                  <values>
+                    <value id="inactive"/>
+                  </values>
+                </metavalue>
+              </metavalues>
+            </mapping>
+          </mappings>
+        </field>
+      </fields>
+      <presentation>
+        <details _delta="redefine">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="operational_status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <default_search _delta="redefine">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="operational_status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </default_search>
+        <search _delta="redefine">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="operational_status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list _delta="redefine">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="operational_status">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
     <class id="IPInterface" _delta="must_exist">
       <fields>
         <field id="ipaddress" xsi:type="AttributeIPAddress" _delta="delete"/>
@@ -325,6 +424,18 @@
     </class>
     <class id="PhysicalInterface" _delta="must_exist">
       <fields>
+        <field id="status" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="stock">stock</value>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+            <value id="obsolete">obsolete</value>
+          </values>
+          <sql>status</sql>
+          <default_value>active</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="vrfs_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkPhysicalInterfaceToVRF</linked_class>
           <ext_key_to_me>physicalinterface_id</ext_key_to_me>
@@ -335,17 +446,55 @@
         </field>
       </fields>
       <presentation>
-        <details>
+        <details _delta="redefine">
           <items>
-		  	<item id="vrfs_list">
-			  <rank>4</rank>
-			</item>
-		  	<item id="ip_list">
-			  <rank>5</rank>
-			</item>
-            <item id="ipaddress" _delta="delete"/>
-            <item id="ipgateway" _delta="delete"/>
-            <item id="ipmask" _delta="delete"/>
+            <item id="vlans_list">
+              <rank>10</rank>
+            </item>
+            <item id="vrfs_list">
+              <rank>20</rank>
+            </item>
+            <item id="ip_list">
+              <rank>30</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:NetworkInterface:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="connectableci_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="comment">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>50</rank>
+              <items>
+                <item id="fieldset:Class:NetworkInterface:moreinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="macaddress">
+                      <rank>10</rank>
+                    </item>
+                    <item id="speed">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
           </items>
         </details>
         <search>
@@ -355,8 +504,27 @@
             <item id="ipmask" _delta="delete"/>
           </items>
         </search>
+        <default_search _delta="define">
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="macaddress">
+              <rank>30</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
         <list>
           <items>
+            <item id="status" _delta="define">
+              <rank>5</rank>
+            </item>
             <item id="ipaddress" _delta="delete"/>
             <item id="ipgateway" _delta="delete"/>
             <item id="ipmask" _delta="delete"/>

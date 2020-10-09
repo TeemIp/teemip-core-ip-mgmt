@@ -54,6 +54,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:LogicalInterface/Attribute:vlans_list+' => '',
 	'Class:LogicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:LogicalInterface/Attribute:vrfs_list+' => '',
+	'Class:LogicalInterface/Attribute:status' => 'Status',
+	'Class:LogicalInterface/Attribute:status+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:active' => 'Active',
+	'Class:LogicalInterface/Attribute:status/Value:active+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:inactive' => 'Inactive',
+	'Class:LogicalInterface/Attribute:status/Value:inactive+' => '',
 ));
 
 //
@@ -62,7 +68,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:VLAN/Attribute:logicalinterfaces_list' => 'Logical network interfaces',
-	'Class:VLAN/Attribute:logicalinterfaces_list+' => '',
+	'Class:VLAN/Attribute:logicalinterfaces_list+' => 'List of all logical network interfaces attached to the VLAN',
 ));
 
 //
@@ -71,7 +77,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:VRF/Attribute:logicalinterfaces_list' => 'Logical network interfaces',
-	'Class:VRF/Attribute:logicalinterfaces_list+' => '',
+	'Class:VRF/Attribute:logicalinterfaces_list+' => 'List of all logical network interfaces attached to the VRF',
 ));
 
 //

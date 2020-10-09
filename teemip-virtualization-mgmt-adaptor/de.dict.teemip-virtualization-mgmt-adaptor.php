@@ -54,6 +54,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:LogicalInterface/Attribute:vlans_list+' => '',
 	'Class:LogicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:LogicalInterface/Attribute:vrfs_list+' => '',
+	'Class:LogicalInterface/Attribute:status' => 'Status',
+	'Class:LogicalInterface/Attribute:status+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:active' => 'Aktiv',
+	'Class:LogicalInterface/Attribute:status/Value:active+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:inactive' => 'Inaktiv',
+	'Class:LogicalInterface/Attribute:status/Value:inactive+' => '',
 ));
 
 //

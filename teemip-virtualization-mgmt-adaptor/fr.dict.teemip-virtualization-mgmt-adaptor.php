@@ -54,6 +54,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:LogicalInterface/Attribute:vlans_list+' => '',
 	'Class:LogicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:LogicalInterface/Attribute:vrfs_list+' => '',
+	'Class:LogicalInterface/Attribute:status' => 'Statut',
+	'Class:LogicalInterface/Attribute:status+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:active' => 'Active',
+	'Class:LogicalInterface/Attribute:status/Value:active+' => '',
+	'Class:LogicalInterface/Attribute:status/Value:inactive' => 'Inactive',
+	'Class:LogicalInterface/Attribute:status/Value:inactive+' => '',
 ));
 
 //

@@ -220,14 +220,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VRF/Attribute:subnets_list' => 'Subnets',
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Physical network interfaces',
-	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
-));
-
-//
-// Class extensions for VRF
-//
-
-Dict::Add('EN US', 'English', 'English', array(
+	'Class:VRF/Attribute:physicalinterfaces_list+' => 'List of all physical network interfaces attached to the VRF',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list' => 'Network device virtual interfaces',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list+' => 'List of all network device virtual interfaces attached to the VRF',
 	'Class:VRF/Tab:ipaddresses_list' => 'Interfaces\' IPs',
 	'Class:VRF/Tab:ipaddresses_list+' => 'List of all IP addresses hosted by all IP interfaces attached to the CI',
 ));
@@ -251,6 +246,92 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_id+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:name' => 'Name',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:name+' => '',
+));
+
+//
+// NetworkDevice
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:NetworkDevice/Attribute:physicalinterface_list' => 'Physical network interfaces',
+	'Class:NetworkDevice/Attribute:physicalinterface_list+' => 'List of all physical network interfaces attached to the network device',
+	'Class:NetworkDevice/Attribute:networkdevicevirtualinterfaces_list' => 'Virtual network interfaces',
+	'Class:NetworkDevice/Attribute:networkdevicevirtualinterfaces_list+' => 'List of all virtual network interfaces attached to the network device',
+	'Class:NetworkDevice/Tab:ipaddresses_list' => 'Interfaces\' IPs',
+	'Class:NetworkDevice/Tab:ipaddresses_list+' => 'List of all IP addresses hosted by all physical and virtual interfaces attached to the network device',
+));
+
+//
+// NetworkDeviceVirtualInterface
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:NetworkDeviceVirtualInterface' => 'Network Device Virtual Interface',
+	'Class:NetworkDeviceVirtualInterface+' => 'Virtual interface attached to a network device',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status' => 'Status',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status+' => '',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:active' => 'Active',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:active+' => '',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:inactive' => 'Inactive',
+	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:inactive+' => '',
+	'Class:NetworkDeviceVirtualInterface/Attribute:networkdevice_id' => 'Network device',
+	'Class:NetworkDeviceVirtualInterface/Attribute:networkdevice_id+' => '',
+	'Class:NetworkDeviceVirtualInterface/Attribute:vlans_list' => 'VLANs',
+	'Class:NetworkDeviceVirtualInterface/Attribute:vlans_list+' => '',
+	'Class:NetworkDeviceVirtualInterface/Attribute:vrfs_list' => 'VRFs',
+	'Class:NetworkDeviceVirtualInterface/Attribute:vrfs_list+' => '',
+));
+
+//
+// Class: lnkNetworkDeviceVirtualInterfaceToVLAN
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN' => 'Link Network Device Virtual Interface / VLAN',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_id' => 'Network device virtual interface',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_name' => 'Network device virtual interface name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_name+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_device_id' => 'Network device',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_device_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_device_name' => 'Network device name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_device_name+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_tag' => 'Tag',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_tag+' => '',
+));
+
+//
+// Class: lnkNetworkDeviceVirtualInterfaceToVRF
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF' => 'Link Network Device Virtual Interface / VRF',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_id' => 'Network device virtual interface',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_name' => 'Network device virtual interface name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_name+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_device_id' => 'Network device',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_device_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_device_name' => 'Network device name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_device_name+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_id' => 'VRF',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_id+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_name' => 'Name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_name+' => '',
+));
+
+//
+// VLAN
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:VLAN/Attribute:physicalinterface_list+' => 'List of all physical network interfaces attached to the VLAN',
+	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Network device virtual interfaces',
+	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'List of all network device virtual interfaces attached to the VLAN',
 ));
 
 //
@@ -312,4 +393,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> has been un-delegated.',
 
 ));
-	

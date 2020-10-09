@@ -351,7 +351,7 @@ class _IPAddress extends IPObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DisplayActionFieldsForOperation(WebPage $oPage, $sOperation, $iFormId, $aDefault)
+	protected function DisplayActionFieldsForOperation(WebPage $oPage, $sOperation, $iFormId, $aDefault)
 	{
 		$oPage->add("<table>");
 		$oPage->add('<tr><td style="vertical-align:top">');
@@ -492,19 +492,19 @@ EOF
 					$oPage->p(Dict::S('UI:IPManagement:Action:Allocate:IPAddress:NoCI'));
 					$oPage->add('</td></tr>');
 				}
+
+				// Cancell button
+				$oPage->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
+
+				// Apply button
+				if (!$bEmptyListOfCIs)
+				{
+					$oPage->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
+				}
 				break;
 
 			default:
 				break;
-		}
-
-		// Cancell button
-		$oPage->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('$sClass', $iId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-
-		// Apply button
-		if (!$bEmptyListOfCIs)
-		{
-			$oPage->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
 		}
 
 		$oPage->add("</table>");
@@ -519,7 +519,6 @@ EOF
 		{
 			case 'allocateip': return 'doallocateip';
 			case 'doallocateip': return 'allocateip';
-
 			default: return '';
 		}
 	}

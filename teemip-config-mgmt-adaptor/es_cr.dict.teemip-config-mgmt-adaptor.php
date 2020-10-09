@@ -22,6 +22,15 @@
  */
 
 //
+// Class: ConnectableCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:ConnectableCI/Tab:ipaddresses_list' => 'Dirección IP',
+	'Class:ConnectableCI/Tab:ipaddresses_list+' => '',
+));
+
+//
 // Class: DatacenterDevice
 //
  
@@ -30,6 +39,21 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DatacenterDevice/Attribute:managementip_id+' => '',
 	'Class:DatacenterDevice/Attribute:managementip_name' => 'Nombre',
 	'Class:DatacenterDevice/Attribute:managementip_name+' => '',
+));
+
+//
+// Class: NetworkInterface
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:NetworkInterface:baseinfo' => 'General Information',
+	'Class:NetworkInterface:moreinfo' => 'More Information',
+	'Class:NetworkInterface/Attribute:operational_status' => 'Estatus Operativo',
+	'Class:NetworkInterface/Attribute:operational_status+' => 'Calculado a partir del estado de las clases secundarias',
+	'Class:NetworkInterface/Attribute:operational_status/Value:active' => 'Activo',
+	'Class:NetworkInterface/Attribute:operational_status/Value:active+' => '',
+	'Class:NetworkInterface/Attribute:operational_status/Value:inactive' => 'Inactivo',
+	'Class:NetworkInterface/Attribute:operational_status/Value:inactive+' => '',
 ));
 
 //
@@ -48,6 +72,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PhysicalInterface/Attribute:vrfs_list' => 'VRFs',
 	'Class:PhysicalInterface/Attribute:vrfs_list+' => '',
+	'Class:PhysicalInterface/Attribute:status' => 'Estatus',
+	'Class:PhysicalInterface/Attribute:status+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:stock' => 'En Inventario',
+	'Class:PhysicalInterface/Attribute:status/Value:stock+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:active' => 'Activo',
+	'Class:PhysicalInterface/Attribute:status/Value:active+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:inactive' => 'Inactivo',
+	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
+	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsoleto',
+	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
 ));
 
 //

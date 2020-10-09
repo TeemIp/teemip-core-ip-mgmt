@@ -452,7 +452,7 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');

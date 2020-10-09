@@ -1553,7 +1553,7 @@ EOF
 	/**
 	 * Display attributes associated operation
 	 */
-	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');

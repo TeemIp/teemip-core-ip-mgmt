@@ -855,7 +855,7 @@ EOF
 	 * @param $sPrefix
 	 * @param $aDefault
 	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $iFormId, $sPrefix, $aDefault)
+	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
 	{
 	}
 	
@@ -881,7 +881,7 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
 	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
