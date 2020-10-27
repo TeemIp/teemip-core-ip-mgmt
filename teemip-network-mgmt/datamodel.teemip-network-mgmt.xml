@@ -1610,12 +1610,12 @@
     <groups>
       <group id="Network" _delta="define">
         <classes>
+          <class id="ASNumber"/>
           <class id="Domain"/>
+          <class id="VLAN"/>
+          <class id="VRF"/>
           <class id="WANLink"/>
           <class id="WANType"/>
-          <class id="ASNumber"/>
-          <class id="VRF"/>
-          <class id="lnkPhysicalInterfaceToVRF"/>
         </classes>
       </group>
       <group id="DNSObject" _delta="define">
