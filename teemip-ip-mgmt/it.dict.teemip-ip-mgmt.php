@@ -270,7 +270,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: lnkIPSubnetToIPSubnet
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:lnkIPSubnetToIPSubnet' => 'Link Sottorete / NAT Sottorete',
 	'Class:lnkIPSubnetToIPSubnet+' => '',
 	'Class:lnkIPSubnetToIPSubnet/Attribute:ipsubnet2_id_finalclass_recall' => 'Tipo Sottorete',
