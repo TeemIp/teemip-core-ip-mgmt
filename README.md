@@ -13,4 +13,4 @@ Comprehensive documentation can be found on TeemIp’s [wiki][1], namely in the 
 [MAC Address Lookup][2]
 
 [1]: https://wiki.teemip.net
-[2]: https://wiki.teemip.net/doku.php?id=extensions:teemip-macaddres-lookup
+[2]: https://wiki.teemip.net/doku.php?id=extensions:teemip-macaddress-lookup
