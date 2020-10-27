@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<InterfaceSpeed alias="Layer2Protocol" id="1">
+<name>Ethernet</name>
+</InterfaceSpeed>
+</Set>

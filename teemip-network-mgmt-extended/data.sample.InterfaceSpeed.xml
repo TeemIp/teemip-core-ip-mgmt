@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+<InterfaceSpeed alias="InterfaceSpeed" id="1">
+<name>10 Gb/s</name>
+</InterfaceSpeed>
+</Set>
