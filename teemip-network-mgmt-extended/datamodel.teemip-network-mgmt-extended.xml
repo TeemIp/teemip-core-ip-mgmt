@@ -318,45 +318,6 @@
         </list>
       </presentation>
     </class>
-    <class id="LogicalInterface" _delta="if_exists">
-      <presentation>
-        <details>
-          <items>
-            <item id="col:col2" _delta="must_exist">
-              <rank>50</rank>
-              <items>
-                <item id="fieldset:Class:NetworkInterface:moreinfo" _delta="must_exist">
-                  <items>
-                    <item id="speed" _delta="delete"/>
-                    <item id="interfacespeed_id" _delta="define">
-                      <rank>20</rank>
-                    </item>
-                    <item id="layer2protocol_id" _delta="define">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-          </items>
-        </details>
-        <default_search>
-          <items>
-            <item id="interfacespeed_id" _delta="define">
-              <rank>50</rank>
-            </item>
-          </items>
-        </default_search>
-        <list>
-          <items>
-            <item id="speed" _delta="delete"/>
-            <item id="interfacespeed_id" _delta="define">
-              <rank>10</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
     <class id="PhysicalInterface" _delta="must_exist">
       <fields>
         <field id="interfaceconnector_id" xsi:type="AttributeExternalKey" _delta="define">
@@ -754,9 +715,10 @@
     <groups>
       <group id="Network" _delta="must_exist">
         <classes>
+          <class id="AggregateLink"/>
           <class id="InterfaceConnector"/>
-          <class id="Layer2Protocol"/>
           <class id="InterfaceSpeed"/>
+          <class id="Layer2Protocol"/>
         </classes>
       </group>
     </groups>
