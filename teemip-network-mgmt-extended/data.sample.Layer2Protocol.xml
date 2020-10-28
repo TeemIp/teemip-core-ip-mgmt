@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
-<InterfaceSpeed alias="Layer2Protocol" id="1">
-<name>Ethernet</name>
-</InterfaceSpeed>
+    <Layer2Protocol alias="Layer2Protocol" id="1">
+        <name>Ethernet</name>
+    </Layer2Protocol>
+    <Layer2Protocol alias="Layer2Protocol" id="2">
+        <name>Trunking</name>
+    </Layer2Protocol>
+    <Layer2Protocol alias="Layer2Protocol" id="3">
+        <name>EtherChannel</name>
+    </Layer2Protocol>
 </Set>
