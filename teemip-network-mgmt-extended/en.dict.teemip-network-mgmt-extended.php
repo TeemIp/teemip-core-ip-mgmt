@@ -77,12 +77,135 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: ClusterNetwork
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:ClusterNetwork' => 'Cluster Network',
+	'Class:ClusterNetwork+' => 'Hardware component for network device',
+	'Class:ClusterNetwork:baseinfo' => 'General Information',
+	'Class:ClusterNetwork:moreinfo' => 'More information',
+	'Class:ClusterNetwork:Date' => 'Dates',
+	'Class:ClusterNetwork:otherinfo' => 'Other Information',
+	'Class:ClusterNetwork/Attribute:type' => 'Type',
+	'Class:ClusterNetwork/Attribute:type+' => '',
+	'Class:ClusterNetwork/Attribute:type/Value:loadbalancing' => 'Load balancing',
+	'Class:ClusterNetwork/Attribute:type/Value:loadbalancing+' => '',
+	'Class:ClusterNetwork/Attribute:type/Value:highavailability' => 'High availability',
+	'Class:ClusterNetwork/Attribute:type/Value:highavailability+' => '',
+	'Class:ClusterNetwork/Attribute:type/Value:highperformance' => 'High performance',
+	'Class:ClusterNetwork/Attribute:type/Value:highperformance+' => '',
+	'Class:ClusterNetwork/Attribute:mode' => 'Mode',
+	'Class:ClusterNetwork/Attribute:mode+' => '',
+	'Class:ClusterNetwork/Attribute:mode/Value:active_standby' => 'Active / Standby',
+	'Class:ClusterNetwork/Attribute:mode/Value:active_standby+' => '',
+	'Class:ClusterNetwork/Attribute:mode/Value:active_passive' => 'Active / Passive',
+	'Class:ClusterNetwork/Attribute:mode/Value:active_passive+' => '',
+	'Class:ClusterNetwork/Attribute:mode/Value:active_active' => 'Active / Active',
+    'Class:ClusterNetwork/Attribute:mode/Value:active_active+' => '',
+	'Class:ClusterNetwork/Attribute:status' => 'Status',
+	'Class:ClusterNetwork/Attribute:status+' => '',
+	'Class:ClusterNetwork/Attribute:status/Value:production' => 'Production',
+	'Class:ClusterNetwork/Attribute:status/Value:production+' => '',
+	'Class:ClusterNetwork/Attribute:status/Value:implementation' => 'Implementation',
+	'Class:ClusterNetwork/Attribute:status/Value:implementation+' => '',
+	'Class:ClusterNetwork/Attribute:networkdevices_list' => 'Nodes',
+	'Class:ClusterNetwork/Attribute:networkdevices_list+' => 'List of all network devices within the cluster',
+	'Class:ClusterNetwork/Attribute:ips_list' => 'IP Addresses',
+	'Class:ClusterNetwork/Attribute:ips_list+' => 'List of all IP addresses used by the cluster',
+	'Class:ClusterNetwork/Attribute:connectablecis_list' => 'Devices',
+	'Class:ClusterNetwork/Attribute:connectablecis_list+' => 'List of all the devices connected to this cluster network',
+	'Class:ClusterNetwork/Attribute:redundancy' => 'High availability',
+	'Class:ClusterNetwork/Attribute:redundancy/disabled' => 'The cluster is up if all the network devices are up',
+	'Class:ClusterNetwork/Attribute:redundancy/count' => 'The cluster is up if at least %1$s network device(s) is(are) up',
+	'Class:ClusterNetwork/Attribute:redundancy/percent' => 'The cluster is up if at least %1$s %% of the network devices are up',
+));
+
+//
+// Class: lnkClusterNetworkToIPAddress
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkClusterNetworkToIPAddress' => 'Link Cluster Network / IP Address',
+	'Class:lnkClusterNetworkToIPAddress+' => '',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_id' => 'Cluster network',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_id+' => '',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_name' => 'Cluster network name',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_name+' => '',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:ipaddress_id' => 'IP address',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:ipaddress_id+' => '',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:usage_id' => 'Usage',
+	'Class:lnkClusterNetworkToIPAddress/Attribute:usage_id+' => '',
+));
+
+//
+// Class: lnkClusterNetworkToConnectableCI
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkClusterNetworkToConnectableCI' => 'Link Cluster Network / Device',
+	'Class:lnkClusterNetworkToConnectableCI+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_id' => 'Cluster network',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_id+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_name' => 'Cluster network name',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_name+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_id' => 'Connected device',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_id+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_name' => 'Connected device name',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_name+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type' => 'Connection type',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:downlink' => 'Down link',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:downlink+' => '',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:uplink' => 'Up link',
+	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:uplink+' => '',
+));
+
+//
+// Class: NetworkDeviceComponent
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:NetworkDeviceComponent' => 'Network Device Component',
+	'Class:NetworkDeviceComponent+' => 'Hardware component for network device',
+	'Class:NetworkDeviceComponent:baseinfo' => 'General Information',
+	'Class:NetworkDeviceComponent:moreinfo' => 'More information',
+	'Class:NetworkDeviceComponent:Date' => 'Dates',
+	'Class:NetworkDeviceComponent:otherinfo' => 'Other Information',
+	'Class:NetworkDeviceComponent/Attribute:networkdevice_id' => 'Network device',
+	'Class:NetworkDeviceComponent/Attribute:networkdevice_id+' => 'Network device that hosts the component',
+	'Class:NetworkDeviceComponent/Attribute:networkdevice_name' => 'Network device name',
+	'Class:NetworkDeviceComponent/Attribute:networkdevice_name+' => '',
+));
+
+//
+// Class: NetworkDevice
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:NetworkDevice/Attribute:clusternetwork_id' => 'Cluster network',
+	'Class:NetworkDevice/Attribute:clusternetwork_id+' => 'Cluster that the network device belong to',
+	'Class:NetworkDevice/Attribute:networkdevicecomponents_list' => 'Components',
+	'Class:NetworkDevice/Attribute:networkdevicecomponents_list+' => 'List of all network device components attached to this device',
+));
+
+//
+// Class: Model
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:Model/Attribute:type/Value:NetworkDeviceComponent' => 'Network Device Component',
+	'Class:Model/Attribute:type/Value:NetworkDeviceComponent+' => '',
+));
+
+//
 // Class: AggregateLink
 //
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:AggregateLink' => 'Aggregate Link',
 	'Class:AggregateLink+' => 'Combine multiple network connections in parallel',
+	'Class:AggregateLink:baseinfo' => 'General Information',
 	'Class:AggregateLink/Attribute:macaddress' => 'MAC address',
 	'Class:AggregateLink/Attribute:macaddress+' => '',
 	'Class:AggregateLink/Attribute:layer2protocol_id' => 'Protocol',
@@ -93,6 +216,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:AggregateLink/Attribute:status/Value:active+' => '',
 	'Class:AggregateLink/Attribute:status/Value:inactive' => 'Inactive',
 	'Class:AggregateLink/Attribute:status/Value:inactive+' => '',
+	'Class:AggregateLink/Attribute:connectableci_id' => 'Device',
+	'Class:AggregateLink/Attribute:connectableci_id+' => 'Device that hosts the aggregate link',
+	'Class:AggregateLink/Attribute:connectableci_name' => 'Device name',
+	'Class:AggregateLink/Attribute:connectableci_name+' => '',
 	'Class:AggregateLink/Attribute:description' => 'Description',
 	'Class:AggregateLink/Attribute:description+' => '',
 	'Class:AggregateLink/Attribute:physicalinterfaces_list' => 'Physical Interfaces',

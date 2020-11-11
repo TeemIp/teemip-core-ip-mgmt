@@ -333,6 +333,10 @@
         <field id="aggregatelink_id" xsi:type="AttributeExternalKey" _delta="define">
           <sql>aggregatelink_id</sql>
           <target_class>AggregateLink</target_class>
+          <filter><![CDATA[SELECT AggregateLink WHERE connectableci_id = :this->connectableci_id]]></filter>
+          <dependencies>
+            <attribute id="connectableci_id"/>
+          </dependencies>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
@@ -439,6 +443,712 @@
         </list>
       </presentation>
     </class>
+    <class id="NetworkDeviceComponent" _delta="define">
+      <parent>PhysicalDevice</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>networkdevicecomponent</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="networkdevice_name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/networkdevicecomponent.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="networkdevice_id"/>
+            <attribute id="networkdevice_name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules/>
+      </properties>
+      <fields>
+        <field id="networkdevice_id" xsi:type="AttributeExternalKey">
+          <sql>networkdevice_id</sql>
+          <target_class>NetworkDevice</target_class>
+          <filter><![CDATA[SELECT NetworkDevice WHERE org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="networkdevice_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>networkdevice_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="contacts_list">
+              <rank>10</rank>
+            </item>
+            <item id="documents_list">
+              <rank>20</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>30</rank>
+            </item>
+            <item id="col:col1">
+              <rank>40</rank>
+              <items>
+                <item id="fieldset:Class:NetworkDeviceComponent:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                    <item id="location_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="networkdevice_id">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:NetworkDeviceComponent:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="brand_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="model_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="serialnumber">
+                      <rank>30</rank>
+                    </item>
+                    <item id="asset_number">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>130</rank>
+              <items>
+                <item id="fieldset:Class:NetworkDeviceComponent:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                    <item id="purchase_date">
+                      <rank>20</rank>
+                    </item>
+                    <item id="end_of_warranty">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:NetworkDeviceComponent:otherinfo">
+                  <rank>30</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="location_id">
+              <rank>50</rank>
+            </item>
+            <item id="brand_id">
+              <rank>60</rank>
+            </item>
+            <item id="model_id">
+              <rank>70</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>80</rank>
+            </item>
+            <item id="asset_number">
+              <rank>90</rank>
+            </item>
+            <item id="move2production">
+              <rank>120</rank>
+            </item>
+            <item id="purchase_date">
+              <rank>130</rank>
+            </item>
+            <item id="end_of_warranty">
+              <rank>140</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="location_id">
+              <rank>40</rank>
+            </item>
+            <item id="brand_id">
+              <rank>50</rank>
+            </item>
+            <item id="model_id">
+              <rank>60</rank>
+            </item>
+            <item id="serialnumber">
+              <rank>70</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="ClusterNetwork" _delta="define">
+      <parent>FunctionalCI</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>clusternetwork</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon>images/clusternetwork.png</icon>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules/>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="production">production</value>
+            <value id="implementation">implementation</value>
+          </values>
+          <sql>status</sql>
+          <default_value>production</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="type" xsi:type="AttributeEnum">
+          <values>
+            <value id="loadbalancing">loadbalancing</value>
+            <value id="highavailability">highavailability</value>
+            <value id="highperformance">highperformance</value>
+          </values>
+          <sql>type</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="mode" xsi:type="AttributeEnum">
+          <values>
+            <value id="active_standby">active_standby</value>
+            <value id="active_passive">active_passive</value>
+            <value id="active_active">active_active</value>
+          </values>
+          <sql>mode</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>clusternetwork_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates/>
+        </field>
+        <field id="ips_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkClusterNetworkToIPAddress</linked_class>
+          <ext_key_to_me>clusternetwork_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>ipaddress_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="connectablecis_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkClusterNetworkToConnectableCI</linked_class>
+          <ext_key_to_me>clusternetwork_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>connectableci_id</ext_key_to_remote>
+          <duplicates>true</duplicates>
+        </field>
+        <field id="redundancy" xsi:type="AttributeRedundancySettings">
+          <sql>redundancy</sql>
+          <relation_code>impacts</relation_code>
+          <from_class>NetworkDevice</from_class>
+          <neighbour_id>clusternetwork</neighbour_id>
+          <enabled>true</enabled>
+          <enabled_mode>user</enabled_mode>
+          <min_up>1</min_up>
+          <min_up_type>count</min_up_type>
+          <min_up_mode>user</min_up_mode>
+        </field>
+      </fields>
+      <methods/>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="connectableci">
+              <query_up>SELECT ClusterNetwork AS cn JOIN lnkClusterNetworkToConnectableCI AS l1 ON l1.clusternetwork_id = cn.id WHERE l1.connectableci_id = :this-&gt;id AND l1.connection_type='downlink'</query_up>
+              <query_down>SELECT ConnectableCI AS c JOIN lnkClusterNetworkToConnectableCI AS l1 ON l1.connectableci_id = c.id WHERE l1.clusternetwork_id = :this-&gt;id AND l1.connection_type='downlink'</query_down>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+      <presentation>
+        <details>
+          <items>
+            <item id="contacts_list">
+              <rank>10</rank>
+            </item>
+            <item id="documents_list">
+              <rank>20</rank>
+            </item>
+            <item id="applicationsolution_list">
+              <rank>35</rank>
+            </item>
+            <item id="networkdevices_list">
+              <rank>50</rank>
+            </item>
+            <item id="ips_list">
+              <rank>60</rank>
+            </item>
+            <item id="connectablecis_list">
+              <rank>70</rank>
+            </item>
+            <item id="providercontracts_list">
+              <rank>80</rank>
+            </item>
+            <item id="services_list">
+              <rank>90</rank>
+            </item>
+            <item id="col:col1">
+              <rank>100</rank>
+              <items>
+                <item id="fieldset:Class:ClusterNetwork:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:ClusterNetwork:moreinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="type">
+                      <rank>10</rank>
+                    </item>
+                    <item id="mode">
+                      <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>110</rank>
+              <items>
+                <item id="fieldset:Class:ClusterNetwork:Date">
+                  <rank>10</rank>
+                  <items>
+                    <item id="move2production">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:ClusterNetwork:otherinfo">
+                  <rank>30</rank>
+                  <items>
+                    <item id="description">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>60</rank>
+            </item>
+            <item id="mode">
+              <rank>70</rank>
+            </item>
+            <item id="move2production">
+              <rank>80</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>60</rank>
+            </item>
+            <item id="mode">
+              <rank>70</rank>
+            </item>
+            <item id="move2production">
+              <rank>80</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+            <item id="mode">
+              <rank>60</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkClusterNetworkToIPAddress" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkclusternetworktoipaddress</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <format>%1$s %2$s</format>
+          <attributes>
+            <attribute id="clusternetwork_id"/>
+            <attribute id="ipaddress_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="clusternetwork_id"/>
+            <attribute id="ipaddress_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="clusternetwork_id" xsi:type="AttributeExternalKey">
+          <sql>clusternetwork_id</sql>
+          <target_class>ClusterNetwork</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="clusternetwork_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>clusternetwork_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="ipaddress_id" xsi:type="AttributeExternalKey">
+          <sql>ipaddress_id</sql>
+          <target_class>IPAddress</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="usage_id" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>ipaddress_id</extkey_attcode>
+          <target_attcode>usage_id</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>20</rank>
+            </item>
+            <item id="usage_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="lnkClusterNetworkToConnectableCI" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkclusternetworktoconnectableci</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="clusternetwork_id"/>
+            <attribute id="connectableci_id"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="clusternetwork_id"/>
+            <attribute id="connectableci_id"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="clusternetwork_id" xsi:type="AttributeExternalKey">
+          <sql>clusternetwork_id</sql>
+          <target_class>ClusterNetwork</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="clusternetwork_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>clusternetwork_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="connectableci_id" xsi:type="AttributeExternalKey">
+          <sql>connectableci_id</sql>
+          <target_class>ConnectableCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="connectableci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>connectableci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="connection_type" xsi:type="AttributeEnum">
+          <values>
+            <value id="uplink">uplink</value>
+            <value id="downlink">downlink</value>
+          </values>
+          <sql>type</sql>
+          <default_value>downlink</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>20</rank>
+            </item>
+            <item id="connection_type">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>20</rank>
+            </item>
+            <item id="connection_type">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="clusternetwork_id">
+              <rank>10</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>20</rank>
+            </item>
+            <item id="connection_type">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="NetworkDevice" _delta="must_exist">
+      <fields>
+        <field id="clusternetwork_id" xsi:type="AttributeExternalKey" _delta="define">
+          <sql>clusternetwork_id</sql>
+          <target_class>ClusterNetwork</target_class>
+          <filter><![CDATA[SELECT ClusterNetwork WHERE org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="clusternetwork_name" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>clusternetwork_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="networkdevicecomponents_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>NetworkDeviceComponent</linked_class>
+          <ext_key_to_me>networkdevice_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates/>
+        </field>
+      </fields>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="clusternetwork" _delta="define">
+              <attribute>clusternetwork_id</attribute>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+      <presentation>
+        <details>
+          <items>
+            <item id="networkdevicecomponents_list" _delta="define">
+              <rank>35</rank>
+            </item>
+            <item id="col:col1" _delta="must_exist">
+              <items>
+                <item id="fieldset:Server:baseinfo" _delta="must_exist">
+                  <items>
+                    <item id="clusternetwork_id" _delta="define">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Model" _delta="must_exist">
+      <fields>
+        <field id="type" xsi:type="AttributeEnum" _delta="must_exist">
+          <values _delta="must_exist">
+            <value id="NetworkDeviceComponent" _delta="define">NetworkDeviceComponent</value>
+          </values>
+        </field>
+      </fields>
+    </class>
     <class id="AggregateLink" _delta="define">
       <parent>NetworkInterface</parent>
       <properties>
@@ -449,9 +1159,9 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
+            <attribute id="connectableci_name"/>
           </attributes>
         </naming>
         <display_template/>
@@ -459,6 +1169,8 @@
         <reconciliation>
           <attributes>
             <attribute id="name"/>
+            <attribute id="connectableci_id"/>
+            <attribute id="connectableci_name"/>
           </attributes>
         </reconciliation>
         <uniqueness_rules/>
@@ -475,6 +1187,10 @@
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
+        <field id="layer2protocol_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>layer2protocol_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
             <value id="active">active</value>
@@ -489,6 +1205,18 @@
           <sql>description</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="connectableci_id" xsi:type="AttributeExternalKey">
+          <sql>connectableci_id</sql>
+          <target_class>ConnectableCI</target_class>
+          <filter><![CDATA[SELECT ConnectableCI WHERE finalclass IN ('NetworkDevice')]]></filter>
+          <dependencies/>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="connectableci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>connectableci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <field id="physicalinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
@@ -520,25 +1248,38 @@
       <presentation>
         <details>
           <items>
-            <item id="physicalinterfaces_list">
-              <rank>10</rank>
-            </item>
-            <item id="name">
-              <rank>20</rank>
-            </item>
-            <item id="macaddress">
-              <rank>30</rank>
-            </item>
-            <item id="layer2protocol_id">
-              <rank>40</rank>
-            </item>
-            <item id="status">
-              <rank>50</rank>
-            </item>
-            <item id="description">
-              <rank>60</rank>
-            </item>
-          </items>
+          <item id="physicalinterfaces_list">
+            <rank>10</rank>
+          </item>
+          <item id="col:col1">
+            <rank>20</rank>
+            <items>
+              <item id="fieldset:Class:AggregateLink:baseinfo">
+                <rank>10</rank>
+                <items>
+                  <item id="name">
+                    <rank>20</rank>
+                  </item>
+                  <item id="macaddress">
+                    <rank>30</rank>
+                  </item>
+                  <item id="layer2protocol_id">
+                    <rank>40</rank>
+                  </item>
+                  <item id="status">
+                    <rank>50</rank>
+                  </item>
+                  <item id="connectableci_id">
+                    <rank>60</rank>
+                  </item>
+                  <item id="description">
+                    <rank>70</rank>
+                  </item>
+                </items>
+              </item>
+            </items>
+          </item>
+        </items>
         </details>
         <list>
           <items>
@@ -657,6 +1398,18 @@
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
       <definition>
         <cells>
+          <cell id="0" _delta="must_exist">
+            <dashlets>
+              <dashlet id="teemip-00042" xsi:type="DashletBadge" _delta="define">
+                <rank>4.2</rank>
+               <class>NetworkDeviceComponent</class>
+             </dashlet>
+              <dashlet id="teemip-00043" xsi:type="DashletBadge" _delta="define">
+                <rank>4.3</rank>
+                <class>ClusterNetwork</class>
+              </dashlet>
+            </dashlets>
+          </cell>
           <cell id="teemip-000" _delta="must_exist">
             <dashlets>
               <dashlet id="teemip-0115" xsi:type="DashletBadge" _delta="define">
@@ -716,9 +1469,11 @@
       <group id="Network" _delta="must_exist">
         <classes>
           <class id="AggregateLink"/>
+          <class id="ClusterNetwork"/>
           <class id="InterfaceConnector"/>
           <class id="InterfaceSpeed"/>
           <class id="Layer2Protocol"/>
+          <class id="NetworkDeviceComponent"/>
         </classes>
       </group>
     </groups>
