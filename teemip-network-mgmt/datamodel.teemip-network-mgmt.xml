@@ -1574,7 +1574,7 @@
           		<rank>3</rank>
           		<class>WANLink</class>
         	  </dashlet>
-        	  <dashlet id="teemip-014" xsi:type="DashletBadge">
+              <dashlet id="teemip-014" xsi:type="DashletBadge">
           		<rank>4</rank>
           		<class>Domain</class>
         	  </dashlet>

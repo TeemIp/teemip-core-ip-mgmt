@@ -434,6 +434,37 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: lnkIPRangeToServer
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkIPRangeToServer' => 'Relación Rango de IP / Servidor',
+	'Class:lnkIPRangeToServer+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'Tipo de rango de IP',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'Rango de IP',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'Nombre de rango de IP',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Servidor',
+	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Nombre de servidor',
+	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role' => 'Rol',
+	'Class:lnkIPRangeToServer/Attribute:role+' => 'Rol del servidor para el rango',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secundary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+));
+
+//
 // Class: IPv4Range
 //
 
@@ -1184,7 +1215,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Range already exists!',	
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Range collision : first IP belongs to an existing range!',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision : last IP belongs to an existing range!',	
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : new range includes an existing one!',	
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : new range includes an existing one!',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
 
 //
 // Management of IPv4 ranges

@@ -24,8 +24,8 @@
 //
 // Class: MobilePhone
 //
- 
-Dict::Add('DE DE', 'English', 'English', array(
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:MobilePhone/Attribute:macaddress' => 'MAC Adresse',
 	'Class:MobilePhone/Attribute:macaddress+' => '',
 	'Class:MobilePhone/Attribute:ipaddress_id' => 'IP Adresse',
@@ -38,7 +38,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: IPPhone
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPPhone/Attribute:macaddress' => 'MAC Adresse',
 	'Class:IPPhone/Attribute:macaddress+' => '',
 	'Class:IPPhone/Attribute:ipaddress_id' => 'IP Addresse',
@@ -51,7 +51,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: Tablet
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Tablet/Attribute:macaddress' => 'MAC Adresse',
 	'Class:Tablet/Attribute:macaddress+' => '',
 	'Class:Tablet/Attribute:ipaddress_id' => 'IP Addresse',
@@ -64,7 +64,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: Peripheral
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Peripheral/Attribute:macaddress' => 'MAC Adresse',
 	'Class:Peripheral/Attribute:macaddress+' => '',
 	'Class:Peripheral/Attribute:ipaddress_id' => 'IP Addresse',
@@ -77,7 +77,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: PC
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PC/Attribute:macaddress' => 'MAC Adresse',
 	'Class:PC/Attribute:macaddress+' => '',
 	'Class:PC/Attribute:ipaddress_id' => 'IP Addresse',
@@ -90,7 +90,7 @@ Dict::Add('DE DE', 'English', 'English', array(
 // Class: Printer
 //
 
-Dict::Add('DE DE', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Printer/Attribute:macaddress' => 'MAC Adresse',
 	'Class:Printer/Attribute:macaddress+' => '',
 	'Class:Printer/Attribute:ipaddress_id' => 'IP Addresse',

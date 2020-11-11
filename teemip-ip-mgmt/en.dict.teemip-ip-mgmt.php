@@ -292,7 +292,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPSubnetToVLAN' => 'Link Subnet / VLAN',
 	'Class:lnkIPSubnetToVLAN+' => '',
-	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id_finalclass_recall' => 'Subnet type',
+	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id_finalclass_recall' => 'Subnet Type',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id_finalclass_recall+' => '',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id' => 'Subnet',
 	'Class:lnkIPSubnetToVLAN/Attribute:ipsubnet_id+' => '',
@@ -311,7 +311,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPSubnetToVRF' => 'Link Subnet / VRF',
 	'Class:lnkIPSubnetToVRF+' => '',
-	'Class:lnkIPSubnetToVRF/Attribute:ipsubnet_id_finalclass_recall' => 'Subnet type',
+	'Class:lnkIPSubnetToVRF/Attribute:ipsubnet_id_finalclass_recall' => 'Subnet Type',
 	'Class:lnkIPSubnetToVRF/Attribute:ipsubnet_id_finalclass_recall+' => '',
 	'Class:lnkIPSubnetToVRF/Attribute:ipsubnet_id' => 'Subnet',
 	'Class:lnkIPSubnetToVRF/Attribute:ipsubnet_id+' => '',
@@ -419,6 +419,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'Registered IPs',
 	'Class:IPRange/Attribute:occupancy+' => '',
+	'Class:IPRange/Attribute:servers_list' => 'DHCP Servers',
+	'Class:IPRange/Attribute:servers_list+' => 'List of all DHCP servers looking after that DHCP range',
 ));
 
 //
@@ -433,6 +435,37 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPRange/Tab:ipfree-explainbis' => 'List of ALL free IP addresses:',
 	'Class:IPRange/Tab:notifications' => 'Notifications',
 	'Class:IPRange/Tab:notifications+' => 'Notifications related to this IP range',
+));
+
+//
+// Class: lnkIPRangeToServer
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkIPRangeToServer' => 'Link IP Range / Server',
+	'Class:lnkIPRangeToServer+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'IP Range Type',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Range',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'IP Range name',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
+	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Server name',
+	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role' => 'Role',
+	'Class:lnkIPRangeToServer/Attribute:role+' => 'Role of the server for the range',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secundary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -561,6 +594,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipinterface_name+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id' => 'IP Address',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id' => 'IP Address usage',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name' => 'IP Address organization name',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name+' => '',
 ));
 
 //
@@ -1206,7 +1243,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Range already exists!',	
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Range collision : first IP belongs to an existing range!',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision : last IP belongs to an existing range!',	
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : new range includes an existing one!',	
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : new range includes an existing one!',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
 
 //
 // Management of IPv4 ranges

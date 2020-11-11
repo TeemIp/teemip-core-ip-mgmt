@@ -419,6 +419,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'IPs enregistrées',
 	'Class:IPRange/Attribute:occupancy+' => '',
+	'Class:IPRange/Attribute:servers_list' => 'Servers DHCP',
+	'Class:IPRange/Attribute:servers_list+' => 'Liste de tous les serveurs DHCP en charge de cette plage',
 ));
 
 //
@@ -433,6 +435,35 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPRange/Tab:ipfree-explainbis' => 'Liste de TOUTES les IPs libres :',
 	'Class:IPRange/Tab:notifications' => 'Notifications',
 	'Class:IPRange/Tab:notifications+' => 'Notifications associées à cette plage d\'IPs',
+));
+
+//
+// Class: lnkIPRangeToServer
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkIPRangeToServer' => 'Lien Plage d\'IPs / Serveur',
+	'Class:lnkIPRangeToServer+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'Plage d\'IPs',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'Nom de la plage d\'IPs',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Serveur',
+	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Nom du serveur',
+	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role' => 'Rôle',
+	'Class:lnkIPRangeToServer/Attribute:role+' => 'Rôle du serveur vis à vis de la plage',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primaire',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secondaire',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -533,6 +564,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkIPAdressToIPv4Address/Attribute:ip2_short_name+' => 'Nom de gauche du FQDN',
 	'Class:lnkIPAdressToIPv4Address/Attribute:ip2_domain_name' => 'Nom de Domaine',
 	'Class:lnkIPAdressToIPv4Address/Attribute:ip2_domain_name+' => 'Nom du Domaine DNS',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port' => 'Port de service externe',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port+' => 'A utiliser si le "port forwarding" est actif',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port' => 'Port sur lequel le mapper',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'A utiliser si le "port forwarding" est actif',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol' => 'Protocole',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => 'Ne pas remplir si tous sont utilisés',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:udp' => 'UDP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:tcp' => 'TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:both' => 'UDP / TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:sctp' => 'SCTP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:icmp' => 'ICMP',
 ));
 
 //
@@ -550,6 +592,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipinterface_name+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id' => 'Adresse IP',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id' => 'Utilisation de l\'adresse IP',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name' => 'Nom de l\'organisation de l\'adresse IP',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name+' => '',
 ));
 
 //
@@ -1195,7 +1241,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'La Plage d\'IPs existe déjà !',	
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Collision : la première IP appartient à une plage existante !',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collision : la dernière IP appartient à une plage existante !',	
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collision : la nouvelle plage inclut une plage existante !',	
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collision : la nouvelle plage inclut une plage existante !',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs !',
 
 //
 // Management of IPv4 ranges

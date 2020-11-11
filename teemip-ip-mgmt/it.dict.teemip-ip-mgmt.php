@@ -436,6 +436,37 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
+// Class: lnkIPRangeToServer
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:lnkIPRangeToServer' => 'Link IP Range / Server',
+	'Class:lnkIPRangeToServer+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'Tipo di IP range',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Range',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'Nome IP Range',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
+	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Nome Server',
+	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role' => 'Ruolo',
+	'Class:lnkIPRangeToServer/Attribute:role+' => 'Ruolo del server per l\'IP range',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secundary',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+));
+
+//
 // Class: IPv4Range
 //
 

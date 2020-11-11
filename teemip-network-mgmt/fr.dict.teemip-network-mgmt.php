@@ -209,7 +209,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: VRF
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VRF' => 'VRF',
 	'Class:VRF+' => 'Virtual Routing and Forwarding',
 	'Class:VRF:baseinfo' => 'Information Générale',
@@ -231,7 +231,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // Class: lnkPhysicalInterfaceToVRF
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPhysicalInterfaceToVRF' => 'Lien Interface réseau / VRF',
 	'Class:lnkPhysicalInterfaceToVRF+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_id' => 'Interface réseau',
@@ -252,7 +252,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // NetworkDevice
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice/Attribute:physicalinterface_list' => 'Interfaces réseaux physiques',
 	'Class:NetworkDevice/Attribute:physicalinterface_list+' => 'Liste de toutes les interfaces réseaux physiques liées à l\'équipement réseau',
 	'Class:NetworkDevice/Attribute:networkdevicevirtualinterfaces_list' => 'Interfaces réseaux virtuelles',
@@ -265,7 +265,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // NetworkDeviceVirtualInterface
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDeviceVirtualInterface' => 'Interface Virtuelle d\'Equipement Réseau',
 	'Class:NetworkDeviceVirtualInterface+' => 'Interface réseau virtuelle attachée à un équipement réseau',
 	'Class:NetworkDeviceVirtualInterface/Attribute:status' => 'Statut',
@@ -286,7 +286,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // Class: lnkNetworkDeviceVirtualInterfaceToVLAN
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN' => 'Lien Interface Virtuelle d\'Equipement Réseau / VLAN',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_id' => 'Interface virtuelle d\'équipement réseau',
@@ -307,7 +307,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // Class: lnkNetworkDeviceVirtualInterfaceToVRF
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF' => 'Lien Interface Virtuelle d\'Equipement Réseau / VRF',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_id' => 'Interface virtuelle d\'équipement réseau',
@@ -328,7 +328,7 @@ Dict::Add('FR FR', 'English', 'English', array(
 // VLAN
 //
 
-Dict::Add('FR FR', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VLAN/Attribute:physicalinterface_list+' => 'Liste de toutes les interfaces physiques des CIs liés au VLAN',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Interfaces virtuelles d\'équipements réseaux',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'Liste de toutes les interfaces virtuelles des équipements réseaux liées au VLAN',

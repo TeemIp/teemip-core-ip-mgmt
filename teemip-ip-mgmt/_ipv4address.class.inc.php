@@ -132,14 +132,8 @@ class _IPv4Address extends IPAddress
 	 */
 	public function DoCheckToWrite()
 	{
-		// Run standard iTop checks first
-		$sParentCheck = parent::DoCheckToWrite();
-		if ($sParentCheck != '')
-		{
-			$this->m_aCheckIssues[] = $sParentCheck;
-			return;
-		}
-		
+		parent::DoCheckToWrite();
+
 		// For new IPs only
 		if ($this->IsNew())
 		{

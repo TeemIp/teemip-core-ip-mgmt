@@ -437,6 +437,37 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
+// Class: lnkIPRangeToServer
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkIPRangeToServer' => 'Verknüpfung IP Bereich / Server',
+	'Class:lnkIPRangeToServer+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'IP Bereich Type',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Bereich',
+	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'IP Bereich Name',
+	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
+	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
+	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Server Name',
+	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role' => 'Rolle',
+	'Class:lnkIPRangeToServer/Attribute:role+' => 'Rolle des Servers für den Bereich',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primär',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Sekundär',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
+	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+));
+
+//
 // Class: IPv4Range
 //
 
@@ -479,7 +510,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPAddress/Attribute:usage_name+' => '',
 	'Class:IPAddress/Attribute:ipinterface_id' => 'IP Interface',
 	'Class:IPAddress/Attribute:ipinterface_id+' => '',
-	'Class:IPAddress/Attribute:ipinterface_name' => 'IP Interface name',
+	'Class:IPAddress/Attribute:ipinterface_name' => 'IP Interface Name',
 	'Class:IPAddress/Attribute:ipinterface_name+' => '',
 	'Class:IPAddress/Attribute:allocation_date' => 'Datum der Allokation',
 	'Class:IPAddress/Attribute:allocation_date+' => 'Datum, an dem die IP Adresse allokiert wurde.',
@@ -534,6 +565,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_short_name+' => 'Hostnameteil der FQDN, zb. "host" bei host.example.com',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_domain_name' => 'Domain Name',
 	'Class:lnkIPAdressToIPAddress/Attribute:ip2_domain_name+' => 'Name der DNS Domain',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port' => 'External service port',
+	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port+' => 'To be used if port forwarding is ON',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port' => 'Map to port',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'To be used if port forwarding is ON',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol' => 'Protocol',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => 'Leave empty for all',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:udp' => 'UDP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:tcp' => 'TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:both' => 'UDP / TCP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:sctp' => 'SCTP',
+	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:icmp' => 'ICMP',
 ));
 
 //
@@ -541,7 +583,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkIPInterfaceToIPAddress' => 'Link IP Interface/ IP Address',
+	'Class:lnkIPInterfaceToIPAddress' => 'Verknüpfung IP Interface/ IP Adresse',
 	'Class:lnkIPInterfaceToIPAddress+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall' => 'IP Type',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id_finalclass_recall+' => '',
@@ -549,8 +591,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipinterface_id+' => '',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipinterface_name' => 'IP Interface Name',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipinterface_name+' => '',
-	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id' => 'IP Address',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id' => 'IP Adresse',
 	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id' => 'IP Adresse Verwendungszweck',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:usage_id+' => '',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name' => 'IP Adresse Organisations Name',
+	'Class:lnkIPInterfaceToIPAddress/Attribute:ipaddress_org_name+' => '',
 ));
 
 //
@@ -692,6 +738,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no' => 'Nein',
 	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci' => 'IPs, die nicht an ein CI angehängt sind, werden nicht zugeteilt',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes' => 'Ja',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'Nein',
+	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
 ));
 
 //
@@ -1191,7 +1243,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Bereich existiert bereits!',	
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Bereichs Kollision : die erste IP gehört zu einem schon existierenden Bereich!',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision : die letzte IP gehört zu einem schon existierenden Bereich!',	
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : der Bereich umfasst einen schon bestehenden!',	
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : der Bereich umfasst einen schon bestehenden!',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Nur DHCP-Bereiche können mit DHCP-Servern verknüpft werden!',
 
 //
 // Management of IPv4 ranges
