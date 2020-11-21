@@ -11,7 +11,7 @@ tbc
 
 Comprehensive documentation can be found on TeemIp’s [wiki][1], namely in the chapter dedicated to the extension:
 
-[DNS Zone Management][2]
+[Network Management Extended][2]
 
 [1]: https://wiki.teemip.net
 [2]: https://wiki.teemip.net/doku.php?id=extensions:teemip-network-mgmt-extended
