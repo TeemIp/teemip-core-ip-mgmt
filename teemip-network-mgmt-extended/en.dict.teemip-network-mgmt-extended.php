@@ -44,7 +44,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:Layer2Protocol' => 'Layer 2 protocol',
+	'Class:Layer2Protocol' => 'Layer 2 Protocol',
 	'Class:Layer2Protocol+' => 'Layer 2 protocol used on network interfaces',
 	'Class:Layer2Protocol/Attribute:description' => 'Description',
 	'Class:Layer2Protocol/Attribute:description+' => '',

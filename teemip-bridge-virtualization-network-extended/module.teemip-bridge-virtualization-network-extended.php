@@ -24,7 +24,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-bridge-virtualization-network-extended/2.7.0',
+	'teemip-bridge-virtualization-network-extended/1.0.0',
 	array(
 		// Identification
 		//
