@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-webservices/2.6.2',
+	'teemip-webservices/2.7.0',
 	array(
 		// Identification
 		//
@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-ip-mgmt/2.6.1'
+			'teemip-ip-mgmt/2.7.0'
 		),
 		'mandatory' => true,
 		'visible' => false,
