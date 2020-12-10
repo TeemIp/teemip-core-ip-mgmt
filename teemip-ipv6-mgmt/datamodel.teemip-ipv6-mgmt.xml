@@ -52,12 +52,16 @@
           <sql>parent_id</sql>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MOVEUP</on_target_delete>
-          <filter><![CDATA[SELECT IPv6Block AS b WHERE (b.org_id = :this->org_id AND :this->parent_org_id = 0) OR (b.org_id = :this->parent_org_id)]]></filter>
+          <filter><![CDATA[SELECT IPv6Block AS b WHERE IF (:this->parent_org_id = 0, b.org_id = :this->org_id, b.org_id = :this->parent_org_id)]]></filter>
           <default_value>null</default_value>
         </field>
         <field id="parent_name" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_id</extkey_attcode>
           <target_attcode>name</target_attcode>
+        </field>
+        <field id="parent_origin" xsi:type="AttributeExternalField">
+          <extkey_attcode>parent_id</extkey_attcode>
+          <target_attcode>origin</target_attcode>
         </field>
         <field id="firstip" xsi:type="AttributeIPv6Address">
           <sql>firstip</sql>
@@ -95,26 +99,20 @@
 		            <item id="org_id">
 		              <rank>10</rank>
 		            </item>
-		            <item id="parent_org_id">
+		            <item id="name">
 		              <rank>20</rank>
 		            </item>
-		            <item id="parent_id">
+		            <item id="type">
 		              <rank>30</rank>
 		            </item>
-		            <item id="name">
+		            <item id="comment">
 		              <rank>40</rank>
 		            </item>
-		            <item id="type">
+		            <item id="requestor_id">
 		              <rank>50</rank>
 		            </item>
-		            <item id="comment">
-		              <rank>60</rank>
-		            </item>
-		            <item id="requestor_id">
-		              <rank>90</rank>
-		            </item>
 		 		    <item id="allocation_date">
-				      <rank>100</rank>
+				      <rank>60</rank>
 				    </item>
                   </items>
                 </item>
@@ -123,9 +121,26 @@
             <item id="col:col2">
               <rank>50</rank>
               <items>
-                <item id="fieldset:Class:IPBlock:ipinfo">
+                <item id="fieldset:Class:IPBlock:delegationinfo">
                   <rank>10</rank>
                   <items>
+                    <item id="parent_org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="origin">
+                      <rank>20</rank>
+                    </item>
+                    <item id="registrar_id">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPBlock:ipinfo">
+                  <rank>20</rank>
+                  <items>
+                    <item id="parent_id">
+                      <rank>10</rank>
+                    </item>
 		            <item id="firstip">
 		              <rank>10</rank>
 		            </item>
@@ -148,6 +163,9 @@
             </item>
             <item id="org_id">
               <rank>30</rank>
+            </item>
+            <item id="origin">
+              <rank>40</rank>
             </item>
           </items>
         </default_search>

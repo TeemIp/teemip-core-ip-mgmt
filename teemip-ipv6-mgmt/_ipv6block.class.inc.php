@@ -486,6 +486,7 @@ class _IPv6Block extends IPBlock
 	{
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
+		$sOrigin = $this->Get('origin');
 		$iPrefix = $aParameter['spacesize'];
 		$iMaxOffer = $aParameter['maxoffer'];
 		$sStatusSubnet = $aParameter['status_subnet'];
@@ -494,8 +495,17 @@ class _IPv6Block extends IPBlock
 		$iRequestorId = $aParameter['requestor_id'];
 		$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $iOrgId);
 		$bOfferBlock = ($iPrefix <= $iBlockMinPrefix) ? true : false;
-		$bOfferSubnet = ($iPrefix >= IPV6_SUBNET_MAX_PREFIX) ? true : false;
-		
+		if ($sOrigin == 'rir')
+		{
+			$bOfferSubnet = false;
+			$sTargetOrigin = 'lir';
+		}
+		else
+		{
+			$bOfferSubnet = ($iPrefix >= IPV6_SUBNET_MAX_PREFIX) ? true : false;
+			$sTargetOrigin = 'other';
+		}
+
 		// Get list of free space in subnet range
 		$aFreeSpace = $this->GetFreeSpace($iPrefix, $iMaxOffer);
 		
@@ -534,10 +544,20 @@ class _IPv6Block extends IPBlock
 						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/images/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsBlock')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
-						$oP->add($sHTMLValue);	
+						$oP->add($sHTMLValue);
+						if ($sOrigin == 'rir')
+						{
+							// Creation implies a delegation
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+						}
+						else
+						{
+							//$sPayLoad = {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'}
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+						}
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', $iChangeId, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -1805,9 +1825,11 @@ EOF
 				}
 			}
 
-			// Compute parent_id only in the case where no delegation is done at creation.
+			// At creation, compute parent_id only in the case where no delegation is done.
+			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
 			$iParentOrgId = $this->Get('parent_org_id');
-			if ($iParentOrgId == 0)
+			$sOrigin = $this->Get('origin');
+			if (($iParentOrgId == 0) || ($sOrigin != 'lir'))
 			{
 				$iOrgId = $this->Get('org_id');
 
@@ -1831,10 +1853,7 @@ EOF
 						}
 					}
 				}
-				if ($iNewParentId != 0)
-				{
-					$this->Set('parent_id', $iNewParentId);
-				}
+				$this->Set('parent_id', $iNewParentId);
 			}
 		}
 	}
@@ -1916,8 +1935,8 @@ EOF
 			// Default value may be overwritten but not under absolute minimum value.
 			if (! $this->DoCheckHasMinBlockSize($oFirstIp, $oLastIp))
 			{
-				$iBlockMinPrefix = $this->GetMinBlockPrefix();				
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinPrefix);
+				$iBlockMinPrefix = $this->GetMinBlockPrefix();
+				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinPrefix, $this->Get('org_name'));
 				return;
 			}
 			
@@ -1990,12 +2009,17 @@ EOF
 			if ($iParentOrgId != 0)
 			{
 				// Make sure block has no parent in current organization - must be at the top of the tree
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.firstip <= :firstip AND :lastip <= b.lastip AND b.org_id = $iOrgId", array('firstip' => $sFirstIp, 'lastip' => $sLastIp)));
-				if ($oSRangeSet->Count() != 0)
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = $iOrgId"));
+				while ($oSRange = $oSRangeSet->Fetch())
 				{
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
-					return;
-				}		
+					$oCurrentFirstIp = $oSRange->Get('firstip');
+					$oCurrentLastIp = $oSRange->Get('lastip');
+					if (($oCurrentFirstIp->IsSmallerOrEqual($oFirstIp) && $oFirstIp->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp)))
+					{
+						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
+						return;
+					}
+				}
 
 				// Make sure block has no children block that are delegated blocks
 				// 	This is not possible as delegated blocks may only be provided from parent organization and that blocks with children cannot be delegated
@@ -2097,6 +2121,25 @@ EOF
 					$oSubnet->DBUpdate();
 				}
 			}  
+		}
+
+		// If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
+		if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId))
+		{
+			$iPrefix = $this->GetBlockPrefix();
+			if ($iPrefix >= IPV6_SUBNET_MAX_PREFIX)
+			{
+				$aValues = array(
+					'org_id' => $iOrgId,
+					'requestor_id' => $this->Get('requestor_id'),
+					'block_id' => $iKey,
+					'ip' => $oFirstIp,
+					'mask' => $iPrefix,
+					'allocation_date' => time(),
+				);
+				$oSubnet = MetaModel::NewObject('IPv6Subnet', $aValues);
+				$oSubnet->DBInsert();
+			}
 		}
 	}
 				
