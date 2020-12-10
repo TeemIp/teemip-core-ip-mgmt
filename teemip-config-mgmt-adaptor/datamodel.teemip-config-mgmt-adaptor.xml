@@ -57,45 +57,6 @@
         </method>
       </methods>
     </class>
-    <class id="ConnectableCI" _delta="must_exist">
-      <methods>
-        <method id="DisplayBareRelations" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-    {
-		parent::DisplayBareRelations($oP, $bEditMode);
-		
-        if (! $bEditMode)
-        {
-	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
-	        $sDisplayClass = 'ConnectableCI';
-            if($this->Get('finalclass') == 'NetworkDevice')
-            {
-                $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";
-                $sDisplayClass = 'NetworkDevice';
-            }
-	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $this->GetKey()));
-	        if ($oLnkSet->CountExceeds(0))
-	        {
-		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
-		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	        }
-	        else
-	        {
-		        $oP->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	        }
-        }
-	}]]></code>
-        </method>
-      </methods>
-    </class>
     <class id="DatacenterDevice" _delta="must_exist">
       <fields>
         <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
@@ -198,45 +159,6 @@
           <duplicates/>
         </field>
       </fields>
-      <methods>
-        <method id="DisplayBareRelations" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-    {
-		parent::DisplayBareRelations($oP, $bEditMode);
-
-        if (! $bEditMode)
-        {
-            $iVLANId = $this->GetKey();
-
-	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
-            if(class_exists('LogicalInterface'))
-            {
-	            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
-            }
-	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
-			$iLnkSet = $oLnkSet->Count();
-
-		    if ($iLnkSet > 0)
-	        {
-		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
-		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	        }
-	        else
-	        {
-		        $oP->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list'));
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	        }
-        }
-	}]]></code>
-        </method>
-      </methods>
     </class>
     <class id="lnkSubnetToVLAN" _delta="delete"/>
     <class id="NetworkInterface" _created_in="itop-config-mgmt" _delta="must_exist">
@@ -554,11 +476,144 @@
       <module>teemip-config-mgmt-adaptor</module>
       <rank>10</rank>
       <content><![CDATA[
-/***************************************************************************
- * Plugin to handle impacts on IPs when a CI is created, changed or deleted
+/*************************************************************************************************************************
+ * Plugin to handle DisplayBare methods on non TeemIp classes and impacts on IPs when a CI is created, changed or deleted
  */
-class TeemIpConfigMgmtAdaptor implements iApplicationObjectExtension
+class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationObjectExtension
 {
+	/**
+	 * @param DBObject $oObject The object being displayed
+	 * @param WebPage $oPage The output context
+	 * @param boolean $bEditMode True if the edition form is being displayed
+	 *
+	 * @return void
+	 */
+	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	 * @param DBObject $oObject The object being displayed
+	 * @param WebPage $oPage The output context
+	 * @param boolean $bEditMode True if the edition form is being displayed
+	 *
+	 * @return void
+	 */
+	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
+	{
+		if ($oObject instanceof ConnectableCI)
+		{
+	        if (!$bEditMode)
+	        {
+	            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+	            $sDisplayClass = 'ConnectableCI';
+	            if($oObject->Get('finalclass') == 'NetworkDevice')
+	            {
+	                $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";
+	                $sDisplayClass = 'NetworkDevice';
+	            }
+	            $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $oObject->GetKey()));
+	            if ($oLnkSet->CountExceeds(0))
+	            {
+	                $iIPs = $oLnkSet->Count();
+	                $oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
+	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
+	                $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+	                $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	            }
+	            else
+	            {
+	                $oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
+	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	            }
+	        }
+	    }
+		elseif ($oObject instanceof VLAN)
+		{
+	        if (!$bEditMode)
+            {
+	            $iVLANId = $oObject->GetKey();
+
+		        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	            if(class_exists('LogicalInterface'))
+	            {
+		            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	            }
+		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
+				$iLnkSet = $oLnkSet->Count();
+
+			    if ($iLnkSet > 0)
+		        {
+			        $iIPs = $oLnkSet->Count();
+			        $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
+			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
+			        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+			        $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+		        }
+		        else
+		        {
+			        $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list'));
+			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+		        }
+	        }
+		}
+	}
+
+	/**
+	 * @param DBObject $oObject The object being edited
+	 * @param string $sFormPrefix Prefix given to the HTML form inputs
+	 *
+	 * @return void
+	 */
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+	}
+
+	/**
+	 * @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
+	 *
+	 * @return void
+	 */
+	public function OnFormCancel($sTempId)
+	{
+	}
+
+	/**
+	 * @param DBObject $oObject The object being displayed
+	 *
+	 * @return string[] desc
+	 */
+	public function EnumUsedAttributes($oObject) // Not yet implemented
+	{
+	}
+
+	/**
+	 * @param DBObject $oObject The object being displayed
+	 *
+	 * @return string Path of the icon, relative to the modules directory.
+	 */
+	public function GetIcon($oObject) // Not yet implemented
+	{
+	}
+
+	/**
+	 * @param DBObject $oObject The object being displayed
+	 *
+	 * @return integer The value representing the mood of the object
+	 */
+	public function GetHilightClass($oObject)
+	{
+	}
+
+	/**
+	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
+	 *
+	 * @return string[string]
+	 */
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+	}
+
 	public function OnIsModified($oObject)
 	{
 	}
