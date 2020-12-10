@@ -45,6 +45,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
+			'model.teemip-virtualization-mgmt-adaptor.php',
 		),
 		'data.struct' => array(
 		),

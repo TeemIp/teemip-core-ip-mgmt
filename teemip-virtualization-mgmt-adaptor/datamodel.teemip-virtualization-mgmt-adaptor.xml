@@ -19,37 +19,6 @@
           <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
-      <methods>
-        <method id="DisplayBareRelations" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[ public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-    {
-		parent::DisplayBareRelations($oP, $bEditMode);
-		
-        if (! $bEditMode)
-        {
-	        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN LogicalInterface AS int ON l.ipinterface_id = int.id JOIN VirtualMachine AS vm ON int.virtualmachine_id = vm.id WHERE vm.id = :vm_id";
-	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vm_id' => $this->GetKey()));
-	        if ($oLnkSet->CountExceeds(0))
-	        {
-		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VirtualMachine/Tab:ipaddresses_list+'));
-		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-		        $oBlock->Display($oP, 'lnkipinterfacetoipaddress', array('menu' => false, 'view_link' => false));
-	        }
-	        else
-	        {
-      			$oP->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list'));
-      			$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	        }
-        }
-	}]]></code>
-        </method>
-      </methods>
       <presentation>
         <details>
           <items>
@@ -78,62 +47,6 @@
           </items>
         </search>
       </presentation>
-    </class>
-    <class id="Hypervisor" _delta="if_exists">
-      <methods>
-        <method id="DisplayBareRelations" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-    {
-		parent::DisplayBareRelations($oP, $bEditMode);
-
-        if (! $bEditMode)
-        {
-			$iServerId = $this->Get('server_id');
-
-            // Display all physicalInterface associated to the the hypervisor's server
-	        $sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id JOIN Hypervisor AS h ON h.server_id = c.id WHERE h.server_id = :server_id";
-            $oPhysicalInterface =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('server_id' => $iServerId));
-            $oPhysicalInterface->SetShowObsoleteData(utils::ShowObsoleteData());
-	        if ($oPhysicalInterface->CountExceeds(0))
-	        {
-	            $iPhysicalInterface = $oPhysicalInterface->Count();
-	            $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list').' ('.$iPhysicalInterface.')');
-				$oP->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::Format('Class:Hypervisor/Tab:physicalinterfaces_list+'));
-                $oBlock = new DisplayBlock($oPhysicalInterface->GetFilter(), 'list', false);
-                $oBlock->Display($oP, 'physicalinterface', array('menu' => false, 'display_limit'=>true));
-	        }
-	        else
-            {
-                $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list'));
-                $oP->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-            }
-
-			// Display interfaces' IPs
-            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
-	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $iServerId));
-			$iLnkSet = $oLnkSet->Count();
-
-		    if ($iLnkSet > 0)
-	        {
-		        $iIPs = $oLnkSet->Count();
-		        $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list').' ('.$iIPs.')');
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:Hypervisor/Tab:ipaddresses_list+'));
-		        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	        }
-	        else
-	        {
-		        $oP->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list'));
-		        $oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	        }
-        }
-	}]]></code>
-        </method>
-      </methods>
     </class>
     <class id="NetworkInterface" _delta="must_exist">
       <fields>
@@ -496,4 +409,160 @@
       </presentation>
     </class>
   </classes>
+  <snippets>
+    <snippet id="TeemIpVirtualizationMgmtAdaptor" _delta="define">
+      <placement>module</placement>
+      <module>teemip-virtualization-mgmt-adaptor</module>
+      <rank>10</rank>
+      <content><![CDATA[
+/************************************************************
+* Plugin to handle iisplayBare methods on non TeemIp classes
+*/
+class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
+{
+	/**
+	* @param DBObject $oObject The object being displayed
+	* @param WebPage $oPage The output context
+	* @param boolean $bEditMode True if the edition form is being displayed
+	*
+	* @return void
+	*/
+	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	* @param DBObject $oObject The object being displayed
+	* @param WebPage $oPage The output context
+	* @param boolean $bEditMode True if the edition form is being displayed
+	*
+	* @return void
+	*/
+	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
+	{
+		if ($oObject instanceof VirtualMachine)
+		{
+	        if (!$bEditMode)
+	        {
+		        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN LogicalInterface AS int ON l.ipinterface_id = int.id JOIN VirtualMachine AS vm ON int.virtualmachine_id = vm.id WHERE vm.id = :vm_id";
+		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vm_id' => $oObject->GetKey()));
+		        if ($oLnkSet->CountExceeds(0))
+		        {
+			        $iIPs = $oLnkSet->Count();
+			        $oPage->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list').' ('.$iIPs.')');
+			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VirtualMachine/Tab:ipaddresses_list+'));
+			        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+			        $oBlock->Display($oPage, 'lnkipinterfacetoipaddress', array('menu' => false, 'view_link' => false));
+		        }
+		        else
+		        {
+	                $oPage->SetCurrentTab(Dict::S('Class:VirtualMachine/Tab:ipaddresses_list'));
+	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+		        }
+		    }
+		}
+		elseif ($oObject instanceof Hypervisor)
+		{
+	        if (!$bEditMode)
+	        {
+				$iServerId = $oObject->Get('server_id');
+
+	            // Display all physicalInterface associated to the the hypervisor's server
+		        $sOQL = "SELECT PhysicalInterface AS p JOIN ConnectableCI AS c ON p.connectableci_id = c.id JOIN Hypervisor AS h ON h.server_id = c.id WHERE h.server_id = :server_id";
+	            $oPhysicalInterface =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('server_id' => $iServerId));
+	            $oPhysicalInterface->SetShowObsoleteData(utils::ShowObsoleteData());
+		        if ($oPhysicalInterface->CountExceeds(0))
+		        {
+		            $iPhysicalInterface = $oPhysicalInterface->Count();
+		            $oPage->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list').' ('.$iPhysicalInterface.')');
+					$oPage->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::Format('Class:Hypervisor/Tab:physicalinterfaces_list+'));
+	                $oBlock = new DisplayBlock($oPhysicalInterface->GetFilter(), 'list', false);
+	                $oBlock->Display($oPage, 'physicalinterface', array('menu' => false, 'display_limit'=>true));
+		        }
+		        else
+	            {
+	                $oPage->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:physicalinterfaces_list'));
+	                $oPage->p(MetaModel::GetClassIcon('PhysicalInterface').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	            }
+
+				// Display interfaces' IPs
+	            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $iServerId));
+				$iLnkSet = $oLnkSet->Count();
+
+			    if ($iLnkSet > 0)
+		        {
+			        $iIPs = $oLnkSet->Count();
+			        $oPage->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list').' ('.$iIPs.')');
+			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:Hypervisor/Tab:ipaddresses_list+'));
+			        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+			        $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+		        }
+		        else
+		        {
+			        $oPage->SetCurrentTab(Dict::S('Class:Hypervisor/Tab:ipaddresses_list'));
+			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+		        }
+	        }
+		}
+	}
+
+	/**
+	* @param DBObject $oObject The object being edited
+	* @param string $sFormPrefix Prefix given to the HTML form inputs
+	*
+	* @return void
+	*/
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+	}
+
+	/**
+	* @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
+	*
+	* @return void
+	*/
+	public function OnFormCancel($sTempId)
+	{
+	}
+
+	/**
+	* @param DBObject $oObject The object being displayed
+	*
+	* @return string[] desc
+	*/
+	public function EnumUsedAttributes($oObject) // Not yet implemented
+	{
+	}
+
+	/**
+	* @param DBObject $oObject The object being displayed
+	*
+	* @return string Path of the icon, relative to the modules directory.
+	*/
+	public function GetIcon($oObject) // Not yet implemented
+	{
+	}
+
+	/**
+	* @param DBObject $oObject The object being displayed
+	*
+	* @return integer The value representing the mood of the object
+	*/
+	public function GetHilightClass($oObject)
+	{
+	}
+
+	/**
+	* @param DBObjectSet $oSet A set of persistent objects (DBObject)
+	*
+	* @return string[string]
+	*/
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+	}
+
+}]]></content>
+    </snippet>
+  </snippets>
 </itop_design>
