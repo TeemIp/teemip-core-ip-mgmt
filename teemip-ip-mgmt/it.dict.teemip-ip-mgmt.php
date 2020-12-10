@@ -888,7 +888,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'Il primo IP del blocco Sottorete è pù alto dell\'ultimo IP!',
-	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'La dimensione del blocco non può essere più piccola di%1$s!',	
+	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'La dimensione del blocco non può essere più piccola di%1$s per l\'organizzazione %2$s !',
 	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Il Blocco non è allineato CIDR!',	
 	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Il Blocco Sottorete non è strattamente contenuto all\'itnerno del genitore selezionato!',
 	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Il nome del blocco Sottorete esiste già!',	

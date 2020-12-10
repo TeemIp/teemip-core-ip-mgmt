@@ -72,6 +72,21 @@ try
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			if (count($aErrors) == 0)
 			{
+				if (($sClass == 'IPv4Block') || ($sClass == 'IPv6Block'))
+				{
+					// Work around to allow delegation or RIR blocks from IpWidget
+					// This is necessary because parent_org_id is R/W attribute when origin == lir, what UpdateObjectFromPostedForm cannot see
+					$sOrigin = utils::ReadPostedParam("attr_origin",null,	'raw_data');
+					if ($sOrigin == 'lir')
+					{
+						$sParentOrgId = utils::ReadPostedParam("attr_parent_org_id",0,'raw_data');
+						if ($sParentOrgId != 0)
+						{
+							$oObj->Set('parent_org_id', $sParentOrgId);
+							$oObj->Set('parent_id', utils::ReadPostedParam("attr_parent_id", 0, 'raw_data'));
+						}
+					}
+				}
 				list($bRes, $aIssues) = $oObj->CheckToWrite();
 				if ($bRes)
 				{

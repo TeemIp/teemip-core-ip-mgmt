@@ -132,6 +132,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPBlock' => 'Subnetz Block',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'Allgemeine Information',
+	'Class:IPBlock:delegationinfo' => 'Delegierung Information',
 	'Class:IPBlock:ipinfo' => 'IP Information',
 	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Delegated to organization : </font>%1$s',
 	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization : </font>%1$s',
@@ -153,6 +154,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPBlock/Attribute:subnet_occupancy+' => '',
 	'Class:IPBlock/Attribute:location_list' => 'Standorte',
 	'Class:IPBlock/Attribute:location_list+' => 'Standorte, in die der Subnetz Block reicht',
+	'Class:IPBlock/Attribute:origin' => 'Ursprung',
+	'Class:IPBlock/Attribute:origin+' => 'Woher der Block stammt: regionale oder lokale Internet Registrar oder eine andere Organisation',
+	'Class:IPBlock/Attribute:origin/Value:rir' => 'RIR',
+	'Class:IPBlock/Attribute:origin/Value:rir+' => 'Regional Internet registry',
+	'Class:IPBlock/Attribute:origin/Value:lir' => 'LIR',
+	'Class:IPBlock/Attribute:origin/Value:lir+' => 'Local Internet registry',
+	'Class:IPBlock/Attribute:origin/Value:other' => 'Andere',
+	'Class:IPBlock/Attribute:origin/Value:other+' => 'IT Abteilung...',
+	'Class:IPBlock/Attribute:registrar_id' => 'Registrar',
+	'Class:IPBlock/Attribute:registrar_id+' => 'Verwandte regionale oder lokale Internet Registrar',
+	'Class:IPBlock/Attribute:registrar_name' => 'Registrar name',
+	'Class:IPBlock/Attribute:registrar_name+' => '',
 ));
 
 //
@@ -197,10 +210,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPv4Block' => 'IPv4 Subnetz Block',
 	'Class:IPv4Block+' => '',
-	'Class:IPv4Block/Attribute:parent_id' => 'Parent',
+	'Class:IPv4Block/Attribute:parent_id' => 'Parent Block',
 	'Class:IPv4Block/Attribute:parent_id+' => '',
-	'Class:IPv4Block/Attribute:parent_name' => 'Parent Name',
+	'Class:IPv4Block/Attribute:parent_name' => 'Parent Block Name',
 	'Class:IPv4Block/Attribute:parent_name+' => '',
+	'Class:IPv4Block/Attribute:parent_origin' => 'Parent Block Ursprung',
+	'Class:IPv4Block/Attribute:parent_origin+' => '',
 	'Class:IPv4Block/Attribute:firstip' => 'Erste IP',
 	'Class:IPv4Block/Attribute:firstip+' => 'Erste IP Adresse des Subnetz Blocks',
 	'Class:IPv4Block/Attribute:lastip' => 'Letzte IP',
@@ -420,6 +435,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'Registrierte IPs',
 	'Class:IPRange/Attribute:occupancy+' => '',
+	'Class:IPRange/Attribute:servers_list' => 'DHCP Server',
+	'Class:IPRange/Attribute:servers_list+' => 'Liste aller DHCP Server, die diesen DHCP Bereich verwalten',
 ));
 
 //
@@ -910,7 +927,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'Die erste IP des Subnetz Blocks ist höher als die letzte IP!',
-	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'Die Blockgröße darf nicht kleiner sein als %1$s!',	
+	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'Die Blockgröße darf nicht kleiner sein als %1$s für dir Organisation %2$s !',
 	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Der Block ist nicht an der CIDR ausgerichtet!',	
 	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Der Subnetz Block ist nicht strikt im ausgewählten Parent Block enthalten.',	
 	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Der Name des Subnetz Blocks existiert bereits!',	
@@ -1345,4 +1362,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organisation %1$s',
 	
 ));
-	

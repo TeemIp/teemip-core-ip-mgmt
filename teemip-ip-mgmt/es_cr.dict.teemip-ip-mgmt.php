@@ -884,7 +884,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'Primer IP del Bloque de Subred es mas grande que la última IP!',
-	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'El tamaño del Bloque no puede ser menor que %1$s!',	
+	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'El tamaño del Bloque no puede ser menor que %1$s para la organización %2$s!',
 	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Bloque no está alineado con CIDR!',	
 	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'El Bloque de Subred no está estrictamente contenido dentro del padre seleccionado',	
 	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Ya existe Nombre de Bloque de Subred!',	

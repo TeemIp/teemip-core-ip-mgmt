@@ -384,6 +384,7 @@ class _IPv4Block extends IPBlock
 	{
 		$iId = $this->GetKey();
 		$sOrgId = $this->Get('org_id');
+		$sOrigin = $this->Get('origin');
 		$iSize = $aParameter['spacesize'];
 		$bitMask = IPv4Subnet::SizeToMask($iSize);
 		$iMaxOffer = $aParameter['maxoffer'];
@@ -394,7 +395,16 @@ class _IPv4Block extends IPBlock
 		//$bOfferBlock = ($iChangeId == 0) ? true : false;
 		$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $sOrgId);
 		$bOfferBlock = ($iSize >= $iBlockMinSize) ? true : false;
-		$bOfferSubnet = ($iSize <= IPV4_SUBNET_MAX_SIZE) ? true : false;
+		if ($sOrigin == 'rir')
+		{
+			$bOfferSubnet = false;
+			$sTargetOrigin = 'lir';
+		}
+		else
+		{
+			$bOfferSubnet = ($iSize <= IPV4_SUBNET_MAX_SIZE) ? true : false;
+			$sTargetOrigin = 'other';
+		}
 
 		// Get list of free space in subnet range
 		$aFreeSpace = $this->GetFreeSpace($iSize, $iMaxOffer);
@@ -435,9 +445,19 @@ class _IPv4Block extends IPBlock
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsBlock')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
 						$oP->add($sHTMLValue);
+						if ($sOrigin == 'rir')
+						{
+							// Creation implies a delegation
+							$sPayLoad = '{\'org_id\': \''.$sOrgId.'\', \'parent_org_id\': \''.$sOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+						}
+						else
+						{
+							//$sPayLoad = {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'}
+							$sPayLoad = '{\'org_id\': \''.$sOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+						}
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', $iChangeId, {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -1735,9 +1755,11 @@ EOF
 	{
 		if ($this->IsNew())
 		{
-			// At creation, compute parent_id only in the case where no delegation is done at creation.
+			// At creation, compute parent_id only in the case where no delegation is done.
+			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
 			$iParentOrgId = $this->Get('parent_org_id');
-			if ($iParentOrgId == 0)
+			$sOrigin = $this->Get('origin');
+			if (($iParentOrgId == 0) || ($sOrigin != 'lir'))
 			{
 				$iOrgId = $this->Get('org_id');
 				$sFirstIp = $this->Get('firstip');
@@ -1757,10 +1779,7 @@ EOF
 						$iNewParentId = $oSRange->GetKey();
 					}
 				}
-				if ($iNewParentId != 0)
-				{
-					$this->Set('parent_id', $iNewParentId);
-				}
+				$this->Set('parent_id', $iNewParentId);
 			}
 		}
 	}
@@ -1831,7 +1850,7 @@ EOF
 			$Size = $iLastIp - $iFirstIp + 1;
 			if ($Size < $iBlockMinSize)
 			{
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinSize);
+				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinSize, $this->Get('org_name'));
 				return;
 			}
 
@@ -1993,6 +2012,25 @@ EOF
 			{
 				$oSubnet->Set('block_id', $iKey);
 				$oSubnet->DBUpdate();
+			}
+		}
+
+		// If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
+		if (($this->Get('origin') == 'lir') && ($iParentOrgId != $sOrgId))
+		{
+			$iSize = $this->GetSize();
+			if ($iSize <= IPV4_SUBNET_MAX_SIZE)
+			{
+				$aValues = array(
+					'org_id' => $sOrgId,
+					'requestor_id' => $this->Get('requestor_id'),
+					'block_id' => $iKey,
+					'ip' => $sFirstIp,
+					'mask' => IPv4Subnet::SizeToMask($iSize),
+					'allocation_date' => time(),
+				);
+				$oSubnet = MetaModel::NewObject('IPv4Subnet', $aValues);
+				$oSubnet->DBInsert();
 			}
 		}
 	}

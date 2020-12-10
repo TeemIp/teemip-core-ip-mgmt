@@ -31,21 +31,20 @@ class _IPBlock extends IPObject
 		return 1;
 	}
 
-	// To be depreciated
-	public function GetBlockSize()
-	{
-		return 1;
-	}
 	/**
 	 * Return % of occupancy of objects linked to $this
 	 */
-	public function GetOccupancy($sObject)
+	public function GetOccupancy()
 	{
 		return 0;
 	}
-	
+
 	/**
 	 * Return next operation after current one
+	 *
+	 * @param $sOperation
+	 *
+	 * @return string
 	 */
 	function GetNextOperation($sOperation)
 	{
@@ -69,9 +68,18 @@ class _IPBlock extends IPObject
 			default: return '';
 		}
 	}
-	
+
 	/**
 	 * Check if operation is feasible on current object
+	 *
+	 * @param $sOperation
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DoCheckOperation($sOperation)
 	{
@@ -134,14 +142,18 @@ class _IPBlock extends IPObject
 	/**
 	 * Define scale / limit of operation that can be applied to a block
 	 */
-	function GetScaleOfOperation($sOperation)
+	function GetScaleOfOperation()
 	{
 		return 0;
 	}
 
 	/**
 	 * Provides attributes' parameters
-	 */		 
+	 *
+	 * @param $sAttCode
+	 *
+	 * @return array
+	 */
 	public function GetAttributeParams($sAttCode)
 	{
 		$aParams = array();
@@ -198,18 +210,37 @@ class _IPBlock extends IPObject
 	}
 
 	/**
-	 * Change default flag of attribute.
+	 * Change default flag of attribute at creation
+	 *
+	 * @param $sAttCode
+	 * @param array $aReasons
+	 *
+	 * @return bool
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
 	{
 		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
 		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes))
 		{
+			if ($this->Get('origin') == 'lir')
+			{
+				// If block origin is LIR at creation, it implies that delegation is in progress from a RIR block.
+				return OPT_ATT_NORMAL;
+			}
 			return OPT_ATT_HIDDEN || OPT_ATT_READONLY;
 		}
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
 
+	/**
+	 * Change default flag of attribute
+	 *
+	 * @param $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$aReadOnlyAttributes = array('org_id', 'parent_org_id', 'parent_id', 'occupancy', 'children_occupancy', 'subnet_occupancy');

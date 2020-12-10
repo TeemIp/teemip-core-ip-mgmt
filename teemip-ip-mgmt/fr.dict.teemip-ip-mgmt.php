@@ -131,6 +131,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlock' => 'Bloc de Sous-réseaux',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'Informations Générales',
+	'Class:IPBlock:delegationinfo' => 'Informations de Délégation',
 	'Class:IPBlock:ipinfo' => 'Informations IP',
 	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Délégué à : </font>%1$s',
 	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Délégué de : </font>%1$s',
@@ -152,6 +153,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlock/Attribute:subnet_occupancy+' => '',
 	'Class:IPBlock/Attribute:location_list' => 'Lieux',
 	'Class:IPBlock/Attribute:location_list+' => 'Lieux ou le bloc de Sous-réseaux s\'étend',
+	'Class:IPBlock/Attribute:origin' => 'Origine',
+	'Class:IPBlock/Attribute:origin+' => 'Origine du bloc: registre internet régional ou local ou une autre organisation',
+	'Class:IPBlock/Attribute:origin/Value:rir' => 'RIR',
+	'Class:IPBlock/Attribute:origin/Value:rir+' => 'Regional Internet registry',
+	'Class:IPBlock/Attribute:origin/Value:lir' => 'LIR',
+	'Class:IPBlock/Attribute:origin/Value:lir+' => 'Local Internet registry',
+	'Class:IPBlock/Attribute:origin/Value:other' => 'Other',
+	'Class:IPBlock/Attribute:origin/Value:other+' => 'IT department...',
+	'Class:IPBlock/Attribute:registrar_id' => 'Registrar',
+	'Class:IPBlock/Attribute:registrar_id+' => 'Related regional or local internet registry',
+	'Class:IPBlock/Attribute:registrar_name' => 'Registrar name',
+	'Class:IPBlock/Attribute:registrar_name+' => '',
 ));
 
 //
@@ -196,10 +209,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv4Block' => 'Bloc de Sous-réseaux IPv4',
 	'Class:IPv4Block+' => '',
-	'Class:IPv4Block/Attribute:parent_id' => 'Parent',
+	'Class:IPv4Block/Attribute:parent_id' => 'Bloc parent',
 	'Class:IPv4Block/Attribute:parent_id+' => '',
-	'Class:IPv4Block/Attribute:parent_name' => 'Nom Parent',
+	'Class:IPv4Block/Attribute:parent_name' => 'Nom du bloc parent',
 	'Class:IPv4Block/Attribute:parent_name+' => '',
+	'Class:IPv4Block/Attribute:parent_origin' => 'Origine du bloc parent',
+	'Class:IPv4Block/Attribute:parent_origin+' => '',
 	'Class:IPv4Block/Attribute:firstip' => 'Première IP du Bloc',
 	'Class:IPv4Block/Attribute:firstip+' => 'Première IP du Bloc de Sous-réseaux',
 	'Class:IPv4Block/Attribute:lastip' => 'Dernière IP du Bloc',
@@ -909,7 +924,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'La première IP du Bloc est plus grande que la dernière !',
-	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'La taile d\'un Bloc ne peut être inférieure à %1$s !',	
+	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'La taile d\'un Bloc ne peut être inférieure à %1$s pour l\'organisation %2$s !',
 	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Le Bloc n\'est pas aligné CIDR !',	
 	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Le Bloc de Sous-réseaux n\'est pas strictement contenu dans le bloc parent sélectionné !',	
 	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Le nom du Bloc de Sous-réseaux existe déjà !',	
