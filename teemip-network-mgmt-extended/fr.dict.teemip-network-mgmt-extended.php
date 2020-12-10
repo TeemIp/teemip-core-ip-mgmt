@@ -113,12 +113,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ClusterNetwork/Attribute:networkdevices_list+' => 'Liste de tous les équipements réseau du cluster',
 	'Class:ClusterNetwork/Attribute:ips_list' => 'Adresses IP',
 	'Class:ClusterNetwork/Attribute:ips_list+' => 'Liste de toutes les adresses IP utilisées par le cluster',
-	'Class:ClusterNetwork/Attribute:connectablecis_list' => 'Equipements',
-	'Class:ClusterNetwork/Attribute:connectablecis_list+' => 'Liste de tous les matériels connectés au cluster',
 	'Class:ClusterNetwork/Attribute:redundancy' => 'Haute disponibilité',
 	'Class:ClusterNetwork/Attribute:redundancy/disabled' => 'Le Cluster est opérationnel si tous les équipements réseau qui le composent sont opérationnels',
 	'Class:ClusterNetwork/Attribute:redundancy/count' => 'Nombre minimal d\'équipements réseau pour que le Cluster soit opérationnel : %1$s',
 	'Class:ClusterNetwork/Attribute:redundancy/percent' => 'Pourcentage minimal d\'équipements réseau pour que le Cluster soit opérationnel : %1$s %%',
+	'Class:ClusterNetwork/Tab:connectablecis_list' => 'Equipements',
+	'Class:ClusterNetwork/Tab:connectablecis_list+' => 'Liste de tous les matériels connectés au cluster',
 ));
 
 //
@@ -136,29 +136,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkClusterNetworkToIPAddress/Attribute:ipaddress_id+' => '',
 	'Class:lnkClusterNetworkToIPAddress/Attribute:usage_id' => 'Utilisation',
 	'Class:lnkClusterNetworkToIPAddress/Attribute:usage_id+' => '',
-));
-
-//
-// Class: lnkClusterNetworkToConnectableCI
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkClusterNetworkToConnectableCI' => 'Lien Cluster Réseau / Matériel Connecté',
-	'Class:lnkClusterNetworkToConnectableCI+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_id' => 'Cluster réseau',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_id+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_name' => 'Nom du cluster réseau',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:clusternetwork_name+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_id' => 'Matériel connecté',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_id+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_name' => 'Nom du matériel connecté',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connectableci_name+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type' => 'Type de connexion',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:downlink' => 'Lien descendant',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:downlink+' => '',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:uplink' => 'Lien montant',
-	'Class:lnkClusterNetworkToConnectableCI/Attribute:connection_type/Value:uplink+' => '',
 ));
 
 //
@@ -185,8 +162,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice/Attribute:clusternetwork_id' => 'Cluster réseau',
 	'Class:NetworkDevice/Attribute:clusternetwork_id+' => 'Cluster réseau auquel appartient l\'équipement réseau',
+	'Class:NetworkDevice/Attribute:clusternetwork_role' => 'Rôle cluster',
+	'Class:NetworkDevice/Attribute:clusternetwork_role+' => 'Rôle de l\'équipement au sein du cluster',
+	'Class:NetworkDevice/Attribute:clusternetwork_role/Value:active' => 'Actif',
+	'Class:NetworkDevice/Attribute:clusternetwork_role/Value:active+' => '',
+	'Class:NetworkDevice/Attribute:clusternetwork_role/Value:standby' => 'Standby',
+	'Class:NetworkDevice/Attribute:clusternetwork_role/Value:standby+' => '',
 	'Class:NetworkDevice/Attribute:networkdevicecomponents_list' => 'Composants',
 	'Class:NetworkDevice/Attribute:networkdevicecomponents_list+' => 'Liste de tous les composants réseau attachés à cet équipement',
+	'Class:NetworkDevice/Attribute:aggregatelinks_list' => 'Agrégats de Liens',
+	'Class:NetworkDevice/Attribute:aggregatelinks_list+' => 'Liste de tous les agrégats de liens attachés à cet équipement',
 ));
 
 //
@@ -220,6 +205,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AggregateLink/Attribute:connectableci_id+' => 'Equipement qui héberge l\'agrégat de liens',
 	'Class:AggregateLink/Attribute:connectableci_name' => 'Nom de l\'équipement',
 	'Class:AggregateLink/Attribute:connectableci_name+' => '',
+	'Class:AggregateLink/Attribute:peer_id' => 'Agrégat pair',
+	'Class:AggregateLink/Attribute:peer_id+' => 'Agrégat de liens de l\'équipement connecté à cet agrégat',
 	'Class:AggregateLink/Attribute:description' => 'Description',
 	'Class:AggregateLink/Attribute:description+' => '',
 	'Class:AggregateLink/Attribute:physicalinterfaces_list' => 'Interfaces physiques',

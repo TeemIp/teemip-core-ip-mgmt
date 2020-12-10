@@ -713,14 +713,6 @@
           <ext_key_to_remote>ipaddress_id</ext_key_to_remote>
           <duplicates/>
         </field>
-        <field id="connectablecis_list" xsi:type="AttributeLinkedSetIndirect">
-          <linked_class>lnkClusterNetworkToConnectableCI</linked_class>
-          <ext_key_to_me>clusternetwork_id</ext_key_to_me>
-          <count_min>0</count_min>
-          <count_max>0</count_max>
-          <ext_key_to_remote>connectableci_id</ext_key_to_remote>
-          <duplicates>true</duplicates>
-        </field>
         <field id="redundancy" xsi:type="AttributeRedundancySettings">
           <sql>redundancy</sql>
           <relation_code>impacts</relation_code>
@@ -733,13 +725,45 @@
           <min_up_mode>user</min_up_mode>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="DisplayBareRelations" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[ public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+    {
+        // Execute parent function first
+        parent::DisplayBareRelations($oP, $bEditMode);
+
+        if (!$bEditMode)
+        {
+           // Search for ConnectableCIs linked to NetworkDevices that make the cluster
+            $sOQL = "SELECT ConnectableCI AS c JOIN lnkConnectableCIToNetworkDevice AS l ON l.connectableci_id = c.id JOIN NetworkDevice AS nd ON l.networkdevice_id = nd.id JOIN ClusterNetwork AS cn ON nd.clusternetwork_id = cn.id WHERE cn.id = :id AND l.connection_type='downlink'";
+            $oConnectableCIsSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $this->GetKey()));
+            $iConnectableCIs = $oConnectableCIsSet->Count();
+            if ($iConnectableCIs > 0)
+            {
+                $oP->SetCurrentTab(Dict::S('Class:ClusterNetwork/Tab:connectablecis_list').' ('.$iConnectableCIs.')');
+                $oP->p(MetaModel::GetClassIcon('ConnectableCI').'&nbsp;'.Dict::Format('Class:ClusterNetwork/Tab:connectablecis_list+'));
+                $oBlock = new DisplayBlock($oConnectableCIsSet->GetFilter(), 'list', false);
+                $oBlock->Display($oP, 'connectable_cis', array('menu' => false));
+            }
+            else
+            {
+                $oP->SetCurrentTab(Dict::S('Class:ClusterNetwork/Tab:connectablecis_list'));
+                $oP->p(MetaModel::GetClassIcon('ConnectableCI').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+            }
+        }
+    }]]></code>
+        </method>
+      </methods>
       <relations>
         <relation id="impacts">
           <neighbours>
             <neighbour id="connectableci">
-              <query_up>SELECT ClusterNetwork AS cn JOIN lnkClusterNetworkToConnectableCI AS l1 ON l1.clusternetwork_id = cn.id WHERE l1.connectableci_id = :this-&gt;id AND l1.connection_type='downlink'</query_up>
-              <query_down>SELECT ConnectableCI AS c JOIN lnkClusterNetworkToConnectableCI AS l1 ON l1.connectableci_id = c.id WHERE l1.clusternetwork_id = :this-&gt;id AND l1.connection_type='downlink'</query_down>
+              <query_up>SELECT ClusterNetwork AS cn JOIN NetworkDevice AS nd ON nd.clusternetwork_id = cn.id JOIN lnkConnectableCIToNetworkDevice AS l ON l.networkdevice_id = nd.id WHERE l.connectableci_id = :this->id AND l.connection_type='downlink'</query_up>
+              <query_down>SELECT ConnectableCI AS c JOIN lnkConnectableCIToNetworkDevice AS l ON l.connectableci_id = c.id JOIN NetworkDevice AS nd ON l.networkdevice_id = nd.id JOIN ClusterNetwork AS cn ON nd.clusternetwork_id = cn.id WHERE cn.id = :this->id AND l.connection_type='downlink'</query_down>
             </neighbour>
           </neighbours>
         </relation>
@@ -762,17 +786,14 @@
             <item id="ips_list">
               <rank>60</rank>
             </item>
-            <item id="connectablecis_list">
+            <item id="providercontracts_list">
               <rank>70</rank>
             </item>
-            <item id="providercontracts_list">
+            <item id="services_list">
               <rank>80</rank>
             </item>
-            <item id="services_list">
-              <rank>90</rank>
-            </item>
             <item id="col:col1">
-              <rank>100</rank>
+              <rank>90</rank>
               <items>
                 <item id="fieldset:Class:ClusterNetwork:baseinfo">
                   <rank>10</rank>
@@ -985,106 +1006,6 @@
         </list>
       </presentation>
     </class>
-    <class id="lnkClusterNetworkToConnectableCI" _delta="define">
-      <parent>cmdbAbstractObject</parent>
-      <properties>
-        <is_link>1</is_link>
-        <category>bizmodel</category>
-        <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>lnkclusternetworktoconnectableci</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
-        <naming>
-          <attributes>
-            <attribute id="clusternetwork_id"/>
-            <attribute id="connectableci_id"/>
-          </attributes>
-        </naming>
-        <display_template/>
-        <icon/>
-        <reconciliation>
-          <attributes>
-            <attribute id="clusternetwork_id"/>
-            <attribute id="connectableci_id"/>
-          </attributes>
-        </reconciliation>
-      </properties>
-      <fields>
-        <field id="clusternetwork_id" xsi:type="AttributeExternalKey">
-          <sql>clusternetwork_id</sql>
-          <target_class>ClusterNetwork</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="clusternetwork_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>clusternetwork_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="connectableci_id" xsi:type="AttributeExternalKey">
-          <sql>connectableci_id</sql>
-          <target_class>ConnectableCI</target_class>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="connectableci_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>connectableci_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="connection_type" xsi:type="AttributeEnum">
-          <values>
-            <value id="uplink">uplink</value>
-            <value id="downlink">downlink</value>
-          </values>
-          <sql>type</sql>
-          <default_value>downlink</default_value>
-          <is_null_allowed>false</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-      </fields>
-      <methods/>
-      <presentation>
-        <details>
-          <items>
-            <item id="clusternetwork_id">
-              <rank>10</rank>
-            </item>
-            <item id="connectableci_id">
-              <rank>20</rank>
-            </item>
-            <item id="connection_type">
-              <rank>50</rank>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="clusternetwork_id">
-              <rank>10</rank>
-            </item>
-            <item id="connectableci_id">
-              <rank>20</rank>
-            </item>
-            <item id="connection_type">
-              <rank>50</rank>
-            </item>
-          </items>
-        </search>
-        <list>
-          <items>
-            <item id="clusternetwork_id">
-              <rank>10</rank>
-            </item>
-            <item id="connectableci_id">
-              <rank>20</rank>
-            </item>
-            <item id="connection_type">
-              <rank>50</rank>
-            </item>
-          </items>
-        </list>
-      </presentation>
-    </class>
     <class id="NetworkDevice" _delta="must_exist">
       <fields>
         <field id="clusternetwork_id" xsi:type="AttributeExternalKey" _delta="define">
@@ -1101,9 +1022,27 @@
           <extkey_attcode>clusternetwork_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="clusternetwork_role" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="active">active</value>
+            <value id="standby">standby</value>
+          </values>
+          <sql>clusternetwork_role</sql>
+          <default_value></default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="networkdevicecomponents_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>NetworkDeviceComponent</linked_class>
           <ext_key_to_me>networkdevice_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <duplicates/>
+        </field>
+        <field id="aggregatelinks_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>AggregateLink</linked_class>
+          <ext_key_to_me>connectableci_id</ext_key_to_me>
           <edit_mode>add_only</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
@@ -1116,6 +1055,10 @@
             <neighbour id="clusternetwork" _delta="define">
               <attribute>clusternetwork_id</attribute>
             </neighbour>
+            <neighbour id="connectableci" _delta="redefine">
+             <query_down>SELECT ConnectableCI AS d JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.connectableci_id = d.id JOIN NetworkDevice AS nd ON l1.networkdevice_id = nd.id WHERE nd.id = :this->id AND l1.connection_type='downlink' AND nd.id NOT IN (SELECT NetworkDevice AS nd WHERE nd.clusternetwork_id != 0)</query_down>
+             <query_up>SELECT NetworkDevice AS nw JOIN lnkConnectableCIToNetworkDevice AS l1 ON l1.networkdevice_id = nw.id WHERE l1.connectableci_id = :this->id AND l1.connection_type='downlink' AND nw.clusternetwork_id =0</query_up>
+           </neighbour>
           </neighbours>
         </relation>
       </relations>
@@ -1125,6 +1068,9 @@
             <item id="networkdevicecomponents_list" _delta="define">
               <rank>35</rank>
             </item>
+            <item id="aggregatelinks_list" _delta="define">
+              <rank>47</rank>
+            </item>
             <item id="col:col1" _delta="must_exist">
               <items>
                 <item id="fieldset:Server:baseinfo" _delta="must_exist">
@@ -1132,12 +1078,22 @@
                     <item id="clusternetwork_id" _delta="define">
                       <rank>80</rank>
                     </item>
+                    <item id="clusternetwork_role" _delta="define">
+                      <rank>90</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
           </items>
         </details>
+        <list>
+          <items>
+            <item id="clusternetwork_role" _delta="define">
+              <rank>200</rank>
+            </item>
+          </items>
+        </list>
       </presentation>
     </class>
     <class id="Model" _delta="must_exist">
@@ -1218,6 +1174,18 @@
           <extkey_attcode>connectableci_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="peer_id" xsi:type="AttributeExternalKey">
+          <sql>peer_id</sql>
+          <target_class>AggregateLink</target_class>
+          <filter><![CDATA[SELECT AggregateLink WHERE id != :this->id AND peer_id = 0]]></filter>
+          <dependencies/>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="peer_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>peer_id</extkey_attcode>
+          <target_attcode>friendlyname</target_attcode>
+        </field>
         <field id="physicalinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>aggregatelink_id</ext_key_to_me>
@@ -1228,10 +1196,87 @@
         </field>
       </fields>
       <methods>
+        <method id="AfterInsert" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterInsert()
+    {
+        parent::AfterInsert();
+
+        $iPeerId = $this->Get('peer_id');
+        if ($iPeerId > 0)
+        {
+            $oPeer = MetaModel::GetObject('AggregateLink', $iPeerId, false);
+            if (!is_null($oPeer))
+            {
+                $oPeer->Set('peer_id', $this->GetKey());
+                $oPeer->DBUpdate();
+            }
+        }
+	}]]></code>
+        </method>
+        <method id="AfterUpdate" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterUpdate()
+    {
+        parent::AfterUpdate();
+
+		$aListChanges = $this->ListPreviousValuesForUpdatedAttributes();
+        if (array_key_exists('peer_id', $aListChanges))
+        {
+            // Reset peer on old remote
+            $iPreviousPeerId = $aListChanges['peer_id'];
+            if ($iPreviousPeerId > 0)
+            {
+                $oPreviousPeer = MetaModel::GetObject('AggregateLink', $iPreviousPeerId, false);
+                if (!is_null($oPreviousPeer))
+                {
+                    $oPreviousPeer->Set('peer_id', 0);
+                    $oPreviousPeer->DBUpdate();
+                }
+            }
+            // Set peeron new remote
+            $iPeerId = $this->Get('peer_id');
+            if ($iPeerId > 0)
+            {
+                $oPeer = MetaModel::GetObject('AggregateLink', $iPeerId, false);
+                if (!is_null($oPeer))
+                {
+                    $oPeer->Set('peer_id', $this->GetKey());
+                    $oPeer->DBUpdate();
+                }
+            }
+        }
+	}]]></code>
+        </method>
+        <method id="AfterDelete" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function AfterDelete()
+    {
+        parent::AfterDelete();
+
+        $iPeerId = $this->Get('peer_id');
+        if ($iPeerId > 0)
+        {
+            $oPeer = MetaModel::GetObject('AggregateLink', $iPeerId, false);
+            if (!is_null($oPeer))
+            {
+                $oPeer->Set('peer_id', 0);
+                $oPeer->DBUpdate();
+            }
+        }
+	}]]></code>
+        </method>
         <method id="GetAttributeParams" _delta="define">
-          <comment>/**&#13;
-            * Provides attributes' parameters &#13;
-            */</comment>
+          <comment/>
           <static>false</static>
           <access>public</access>
           <type>Overload-DBObject</type>
@@ -1272,8 +1317,11 @@
                   <item id="connectableci_id">
                     <rank>60</rank>
                   </item>
-                  <item id="description">
+                  <item id="peer_id">
                     <rank>70</rank>
+                  </item>
+                  <item id="description">
+                    <rank>80</rank>
                   </item>
                 </items>
               </item>
@@ -1291,6 +1339,12 @@
             </item>
             <item id="status">
               <rank>30</rank>
+            </item>
+            <item id="connectableci_id">
+              <rank>40</rank>
+            </item>
+            <item id="peer_id">
+              <rank>50</rank>
             </item>
           </items>
         </list>
