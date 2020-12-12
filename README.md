@@ -8,8 +8,8 @@ With TeemIp Network Management Extended:
 
 - Group interfaces together through Aggregate Links,
 - Manage high availability, high performance or load balancing clusters,
-- Add components like power supplies, management boards… to network devices,
-- Use topological object to manage speeds, layer 2 protocols and connectors on your IP Interfaces.
+- Attach components like power supplies, management boards… to network devices,
+- Add topological object to manage speeds, layer 2 protocols and connectors on your IP Interfaces.
     
 
 ## Documentation
