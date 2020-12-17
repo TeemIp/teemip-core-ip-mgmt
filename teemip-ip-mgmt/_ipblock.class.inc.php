@@ -33,8 +33,11 @@ class _IPBlock extends IPObject
 
 	/**
 	 * Return % of occupancy of objects linked to $this
+	 *
+	 * @param $sObject
+	 *
 	 */
-	public function GetOccupancy()
+	public function GetOccupancy($sObject)
 	{
 		return 0;
 	}
