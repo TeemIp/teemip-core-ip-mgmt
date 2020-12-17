@@ -9,7 +9,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
-          <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
+          <filter><![CDATA[SELECT IPAddress AS ip WHERE ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
          </dependencies>
@@ -54,7 +54,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
-          <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
+          <filter><![CDATA[SELECT IPAddress AS ip WHERE ip.status  NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
          </dependencies>
@@ -99,7 +99,7 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
-          <filter><![CDATA[SELECT IPAddress AS ip WHERE (ip.status  NOT IN ('allocated', 'reserved') OR ip.id = :this->ipaddress_id) AND ip.org_id = :this->org_id]]></filter>
+          <filter><![CDATA[SELECT IPAddress AS ip WHERE ip.status  NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id]]></filter>
           <dependencies>
             <attribute id="org_id"/>
          </dependencies>
