@@ -223,9 +223,12 @@
             <item id="parent_org_id">
               <rank>70</rank>
             </item>
- 		    <item id="allocation_date">
-		      <rank>80</rank>
-		    </item>
+            <item id="origin">
+              <rank>80</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>90</rank>
+            </item>
          </items>
         </list>
       </presentation>
