@@ -40,12 +40,9 @@ class _IPv6Block extends IPBlock
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6block-xs.png';
+			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6block.png';
-		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 
 	/**

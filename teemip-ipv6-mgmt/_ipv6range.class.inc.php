@@ -40,12 +40,9 @@ class _IPv6Range extends IPRange
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6range-xs.png';
+			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6range.png';
-		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 
 	/**

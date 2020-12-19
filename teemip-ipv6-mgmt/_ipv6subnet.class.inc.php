@@ -40,12 +40,9 @@ class _IPv6Subnet extends IPSubnet
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6subnet-xs.png';
+			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6subnet.png';
-		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 
 	/**
