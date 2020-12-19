@@ -37,12 +37,9 @@ class _IPv4Block extends IPBlock
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/ipblock-xs.png';
+			return ("<img src=\"$sIcon\" alt=\"IP Block\" style=\"vertical-align:middle;\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/ipblock.png';
-		}
-		return ("<img src=\"$sIcon\" alt=\"IP Block\" style=\"vertical-align:middle;\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 
 	/**

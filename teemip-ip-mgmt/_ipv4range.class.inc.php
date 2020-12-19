@@ -31,12 +31,9 @@ class _IPv4Range extends IPRange
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/iprange-xs.png';
+			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/iprange.png';
-		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 
 	/**

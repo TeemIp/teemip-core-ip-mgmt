@@ -31,12 +31,9 @@ class _IPv4Subnet extends IPSubnet
 		if ($bXsIcon)
 		{
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/ipsubnet-xs.png';
+			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
 		}
-		else
-		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/images/ipsubnet.png';
-		}
-		return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+		return parent::GetIcon($bImgTag);
 	}
 	
 	/**
