@@ -6,7 +6,7 @@
 	<label><![CDATA[IPAM for iTop]]></label>
 	<description><![CDATA[TeemIp application embedded in iTop for full blown IP Address Management]]></description>
 	<version>2.7.0</version>
-	<release_date>2020-xx-yy</release_date>
+	<release_date>2020-12-20</release_date>
 	<version_description><![CDATA[Enhancements and Adaptation for iTop 2.7 - See Wiki at https://wiki.teemip.net/doku.php?id=extensions:teemip-core-ip-mgmt]]></version_description>
 	<itop_version_min>2.7.0</itop_version_min>
 	<status>stable</status>
