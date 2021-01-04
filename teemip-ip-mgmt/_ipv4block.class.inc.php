@@ -251,7 +251,7 @@ class _IPv4Block extends IPBlock
 					$aFreeSpace[$n] = array();
 					$aFreeSpace[$n]['firstip'] = mylong2ip($iAnIp);
 					$aFreeSpace[$n]['lastip'] = mylong2ip($iLastIp);
-					$aFreeSpace[$n]['mask'] = mylong2ip($bitMask);
+					$aFreeSpace[$n]['mask'] = $bitMask;
 					$n++;
 					$iAnIp = $iLastIp + 1;
 					$iLastIp = $iAnIp + $iSize - 1;
@@ -1370,7 +1370,7 @@ EOF
 				{
 					$iMaxSize /= 2;
 				}
-				$bitMask = IPv4Subnet::SizeToMask($iMaxSize);
+				$bitMask = myip2long(IPv4Subnet::SizeToMask($iMaxSize));
 				//	2. Make sure block holds space of $iMaxSize CIDR aligned
 				$iFirstIp = myip2long($this->Get('firstip'));
 				$iLastIp = myip2long($this->Get('lastip'));
