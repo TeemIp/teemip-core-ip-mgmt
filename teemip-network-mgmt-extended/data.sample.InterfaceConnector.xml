@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Set>
     <InterfaceConnector alias="InterfaceConnector" id="1">
-        <name>RJ45</name>
+        <name>RJ 45</name>
+        <description>Standard 8 position 8 contact (8P8C) connector used in the Ethernet context</description>
+    </InterfaceConnector>
+    <InterfaceConnector alias="InterfaceConnector" id="2">
+        <name>SFP+</name>
+        <description>Enhanced small form-factor pluggable transceiver</description>
     </InterfaceConnector>
 </Set>

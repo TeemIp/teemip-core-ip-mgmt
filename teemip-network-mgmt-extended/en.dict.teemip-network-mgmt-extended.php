@@ -229,6 +229,36 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: VLAN
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:VLAN:baseinfo' => 'General Information',
+	'Class:VLAN/Attribute:vlan_tag' => 'Tag',
+	'Class:VLAN/Attribute:vlan_tag+' => 'Integer value only',
+	'Class:VLAN/Attribute:name' => 'Name',
+	'Class:VLAN/Attribute:name+' => '',
+	'Class:VLAN/Attribute:status' => 'Status',
+	'Class:VLAN/Attribute:status+' => '',
+	'Class:VLAN/Attribute:status/Value:used' => 'Used',
+	'Class:VLAN/Attribute:status/Value:used+' => '',
+	'Class:VLAN/Attribute:status/Value:unused' => 'Unused',
+	'Class:VLAN/Attribute:status/Value:unused+' => '',
+	'Class:VLAN/Attribute:status/Value:reserved' => 'Reserved',
+	'Class:VLAN/Attribute:status/Value:reserved+' => '',
+	'Class:VLAN/Attribute:type' => 'Type',
+	'Class:VLAN/Attribute:type+' => '',
+	'Class:VLAN/Attribute:type/Value:port_based' => 'Port based',
+	'Class:VLAN/Attribute:type/Value:port_based+' => '',
+	'Class:VLAN/Attribute:type/Value:mac_based' => 'MAC address based',
+	'Class:VLAN/Attribute:type/Value:mac_based+' => '',
+	'Class:VLAN/Attribute:type/Value:network_based' => 'Network based',
+	'Class:VLAN/Attribute:type/Value:network_based+' => '',
+	'Class:VLAN/Attribute:type/Value:protocol_based' => 'Protocol based',
+	'Class:VLAN/Attribute:type/Value:protocol_based+' => '',
+));
+
+//
 // Application Menu
 //
 

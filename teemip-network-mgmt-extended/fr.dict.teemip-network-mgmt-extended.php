@@ -229,6 +229,36 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: VLAN
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:VLAN:baseinfo' => 'Informations Générales',
+	'Class:VLAN/Attribute:vlan_tag' => 'Tag',
+	'Class:VLAN/Attribute:vlan_tag+' => 'Valeur entière uniquement',
+	'Class:VLAN/Attribute:name' => 'Nom',
+	'Class:VLAN/Attribute:name+' => '',
+	'Class:VLAN/Attribute:status' => 'Statut',
+	'Class:VLAN/Attribute:status+' => '',
+	'Class:VLAN/Attribute:status/Value:used' => 'Utilisé',
+	'Class:VLAN/Attribute:status/Value:used+' => '',
+	'Class:VLAN/Attribute:status/Value:unused' => 'Non utilisé',
+	'Class:VLAN/Attribute:status/Value:unused+' => '',
+	'Class:VLAN/Attribute:status/Value:reserved' => 'Réservé',
+	'Class:VLAN/Attribute:status/Value:reserved+' => '',
+	'Class:VLAN/Attribute:type' => 'Type',
+	'Class:VLAN/Attribute:type+' => '',
+	'Class:VLAN/Attribute:type/Value:port_based' => 'Par port',
+	'Class:VLAN/Attribute:type/Value:port_based+' => '',
+	'Class:VLAN/Attribute:type/Value:mac_based' => 'Par adresse MAC',
+	'Class:VLAN/Attribute:type/Value:mac_based+' => '',
+	'Class:VLAN/Attribute:type/Value:network_based' => 'Par sous-réseau',
+	'Class:VLAN/Attribute:type/Value:network_based+' => '',
+	'Class:VLAN/Attribute:type/Value:protocol_based' => 'Par protocole',
+	'Class:VLAN/Attribute:type/Value:protocol_based+' => '',
+));
+
+//
 // Application Menu
 //
 

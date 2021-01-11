@@ -1447,6 +1447,135 @@
         </list>
       </presentation>
     </class>
+    <class id="VLAN" _delta="must_exist">
+      <fields>
+        <field id="vlan_tag" xsi:type="AttributeInteger" _delta="redefine">
+          <sql>vlan_tag</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="name" xsi:type="AttributeString" _delta="define">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="type" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="port_based">port_based</value>
+            <value id="mac_based">mac_based</value>
+            <value id="network_based">network_based</value>
+            <value id="protocol_based">protocol_based</value>
+          </values>
+          <sql>type</sql>
+          <default_value>network_based</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="used">used</value>
+            <value id="unused">unused</value>
+            <value id="reserved">reserved</value>
+          </values>
+          <sql>status</sql>
+          <default_value>used</default_value>
+          <is_null_allowed>flase</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details _delta="redefine">
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:Class:VLAN:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="vlan_tag">
+                      <rank>10</rank>
+                    </item>
+                    <item id="name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="status">
+                      <rank>40</rank>
+                    </item>
+                    <item id="type">
+                      <rank>50</rank>
+                    </item>
+                    <item id="description">
+                      <rank>60</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="subnets_list">
+              <rank>20</rank>
+            </item>
+            <item id="physicalinterfaces_list">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="vlan_tag">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="vlan_tag">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+            <item id="status">
+              <rank>40</rank>
+            </item>
+            <item id="type">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
   </classes>
   <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
