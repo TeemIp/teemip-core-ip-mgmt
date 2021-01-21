@@ -734,10 +734,6 @@ EOF
 				$oSubnet->DBUpdate();
 			}
 		}
-					
-		// Return set of blocks to be displayed
-		$oSet = CMDBobjectSet::FromArray('IPv6Block', array($this));
-		return ($oSet);
 	}
 	
 	/**
@@ -1117,10 +1113,6 @@ EOF
 				}
 			}
 		}
-					
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray('IPv6Block', array($this));
-		return ($oSet);
 	}
 	
 	/**
