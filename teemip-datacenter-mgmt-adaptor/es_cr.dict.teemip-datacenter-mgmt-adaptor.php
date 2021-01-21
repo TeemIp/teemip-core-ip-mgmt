@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,8 +17,10 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 
 //
@@ -30,7 +32,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Rack/Attribute:macaddress+' => '',
 	'Class:Rack/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:Rack/Attribute:ipaddress_id+' => '',
-	'Class:Rack/Attribute:ipaddress_name' => 'Nombre',
+	'Class:Rack/Attribute:ipaddress_name' => 'Nombre de dirección IP',
 	'Class:Rack/Attribute:ipaddress_name+' => '',
 ));
 
@@ -43,7 +45,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Enclosure/Attribute:macaddress+' => '',
 	'Class:Enclosure/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:Enclosure/Attribute:ipaddress_id+' => '',
-	'Class:Enclosure/Attribute:ipaddress_name' => 'Nombre',
+	'Class:Enclosure/Attribute:ipaddress_name' => 'Nombre de dirección IP',
 	'Class:Enclosure/Attribute:ipaddress_name+' => '',
 ));
 
@@ -56,7 +58,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PowerConnection/Attribute:macaddress+' => '',
 	'Class:PowerConnection/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PowerConnection/Attribute:ipaddress_id+' => '',
-	'Class:PowerConnection/Attribute:ipaddress_name' => 'Nombre',
+	'Class:PowerConnection/Attribute:ipaddress_name' => 'Nombre de dirección IP',
 	'Class:PowerConnection/Attribute:ipaddress_name+' => '',
 ));
 
@@ -69,7 +71,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PowerSource/Attribute:macaddress+' => '',
 	'Class:PowerSource/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PowerSource/Attribute:ipaddress_id+' => '',
-	'Class:PowerSource/Attribute:ipaddress_name' => 'Nombre',
+	'Class:PowerSource/Attribute:ipaddress_name' => 'Nombre de dirección IP',
 	'Class:PowerSource/Attribute:ipaddress_name+' => '',
 ));
 
@@ -82,6 +84,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PDU/Attribute:macaddress+' => '',
 	'Class:PDU/Attribute:ipaddress_id' => 'Dirección IP',
 	'Class:PDU/Attribute:ipaddress_id+' => '',
-	'Class:PDU/Attribute:ipaddress_name' => 'Nombre',
+	'Class:PDU/Attribute:ipaddress_name' => 'Nombre de dirección IP',
 	'Class:PDU/Attribute:ipaddress_name+' => '',
 ));
