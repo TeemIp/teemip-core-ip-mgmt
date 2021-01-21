@@ -416,7 +416,7 @@
       <rank>10</rank>
       <content><![CDATA[
 /************************************************************
-* Plugin to handle iisplayBare methods on non TeemIp classes
+* Plugin to handle DisplayBare methods on non TeemIp classes
 */
 class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 {
