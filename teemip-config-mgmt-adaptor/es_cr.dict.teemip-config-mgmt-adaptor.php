@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,8 +17,10 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 
 //
@@ -26,8 +28,8 @@
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:ConnectableCI/Tab:ipaddresses_list' => 'Dirección IP',
-	'Class:ConnectableCI/Tab:ipaddresses_list+' => '',
+	'Class:ConnectableCI/Tab:ipaddresses_list' => 'Interfaces\' IPs',
+	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas en todas las interfaces físicas asignada al EC',
 ));
 
 //
