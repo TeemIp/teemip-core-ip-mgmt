@@ -227,6 +227,8 @@ class _IPSubnet extends IPObject
 	 */
 	public function OnInsert()
 	{
+		parent::OnInsert();
+
 		if (class_exists('IPDiscovery'))
 		{
 			if ($this->Get('ipdiscovery_ping_enabled') == 'no')

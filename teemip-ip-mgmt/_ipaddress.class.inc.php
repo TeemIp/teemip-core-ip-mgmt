@@ -176,14 +176,21 @@ class _IPAddress extends IPObject
 					}
 					$sOQL = ($j == 0) ? $sOQL." ($aIPvNAttributes[$j] = $iKey)" : $sOQL." OR ($aIPvNAttributes[$j] = $iKey)";
 				}
-				$oCISearch = DBObjectSearch::FromOQL($sOQL);
-				$oCISet = new CMDBObjectSet($oCISearch);
-				// Obsolete CIs must be visible from the IP
-				$oCISet->SetShowObsoleteData(true);
-				$iNbCIs = $oCISet->Count();
-				$aCIsToList[$sCI]['nb_to_list'] = $iNbCIs;
-				$aCIsToList[$sCI]['set'] = $oCISet;
-				$iNbAllCIs += $iNbCIs;
+				if (empty($aIPAttributes) && empty($aIPvNAttributes))
+				{
+					unset($aCIsToList[$sCI]);
+				}
+				else
+				{
+					$oCISearch = DBObjectSearch::FromOQL($sOQL);
+					$oCISet = new CMDBObjectSet($oCISearch);
+					// Obsolete CIs must be visible from the IP
+					$oCISet->SetShowObsoleteData(true);
+					$iNbCIs = $oCISet->Count();
+					$aCIsToList[$sCI]['nb_to_list'] = $iNbCIs;
+					$aCIsToList[$sCI]['set'] = $oCISet;
+					$iNbAllCIs += $iNbCIs;
+				}
 			}
 
 			$oIPInterfaceToIPAddressSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress AS l WHERE l.ipaddress_id = $iKey");
@@ -1020,33 +1027,6 @@ EOF
 	}
 
 	/**
-	 * Perform actions after new object inserted in DB
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 */
-	public function AfterInsert()
-	{
-		// Handle DNS records
-		if (MetaModel::IsValidClass('Zone'))
-		{
-			$sIpUpdateDNSRecords = IPConfig::GetFromGlobalIPConfig('ip_update_dns_records', $this->Get('org_id'));
-			if ($sIpUpdateDNSRecords == 'yes')
-			{
-				$sError = $this->DoCheckUpdateRRs();
-				if ($sError != '')
-				{
-					$this->CleanRRs();
-				}
-				else
-				{
-					$this->UpdateRRs();
-				}
-			}
-		}
-	}
-
-	/**
 	 * Perform actions when object is updated in DB
 	 *
 	 * @throws \ArchivedObjectException
@@ -1072,7 +1052,7 @@ EOF
 		}
 	}
 
-		/**
+	/**
 	 * Perform actions after object is updated in DB
 	 *
 	 * @throws \ArchivedObjectException
@@ -1092,44 +1072,6 @@ EOF
 			{
 				$this->RemoveFromCIs();
 				$this->RemoveFromInterfaces();
-			}
-		}
-
-		if (MetaModel::IsValidClass('Zone'))
-		{
-			$sIpUpdateDNSRecords = IPConfig::GetFromGlobalIPConfig('ip_update_dns_records', $this->Get('org_id'));
-			if ($sIpUpdateDNSRecords == 'yes')
-			{
-				$sError = $this->DoCheckUpdateRRs();
-				if ($sError != '')
-				{
-					$this->CleanRRs();
-				}
-				else
-				{
-					$this->UpdateRRs();
-				}
-			}
-		}
-	}
-
-	/**
-	 * Perform actions after object is removed from DB
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 */
-	public function AfterDelete()
-	{
-		parent::AfterDelete();
-
-		// Handle DNS records
-		if (MetaModel::IsValidClass('Zone'))
-		{
-			$sIpUpdateDNSRecords = IPConfig::GetFromGlobalIPConfig('ip_update_dns_records', $this->Get('org_id'));
-			if ($sIpUpdateDNSRecords == 'yes')
-			{
-				$this->CleanRRs();
 			}
 		}
 	}

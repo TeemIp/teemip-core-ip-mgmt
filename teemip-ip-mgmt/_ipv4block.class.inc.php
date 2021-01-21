@@ -427,7 +427,6 @@ class _IPv4Block extends IPBlock
 			{
 				$sAnIp = $aFreeSpace[$i]['firstip'];
 				$sLastIp = $aFreeSpace[$i]['lastip'];
-				$sMask = $aFreeSpace[$i]['mask'];
 				$oP->add("<li>".$sAnIp." - ".$sLastIp."\n"."<ul>");
 
 				// If user has rights to create block
@@ -637,10 +636,6 @@ EOF
 				$oSubnet->DBUpdate();
 			}
 		}
-
-		// Return set of blocks to be displayed
-		$oSet = CMDBobjectSet::FromArray('IPv4Block', array($this));
-		return ($oSet);
 	}
 
 	/**
@@ -1023,9 +1018,7 @@ EOF
 			}
 		}
 
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray('IPv4Block', array($this));
-		return ($oSet);
+		return $this;
 	}
 
 	/**

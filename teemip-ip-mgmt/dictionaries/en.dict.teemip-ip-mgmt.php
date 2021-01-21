@@ -230,6 +230,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet+' => '',
 	'Class:IPSubnet:baseinfo' => 'General Information',
 	'Class:IPSubnet:ipinfo' => 'IP Information',
+	'Class:IPSubnet:automation' => 'Automation',
 	'Class:IPSubnet/Attribute:name' => 'Name',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',

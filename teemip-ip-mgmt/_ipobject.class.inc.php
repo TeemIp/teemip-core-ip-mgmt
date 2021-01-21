@@ -324,7 +324,6 @@ EOF
 	 */
 	protected function OnInsert()
 	{
-		// Run standard checks first
 		parent::OnInsert();
 		
 		if ($this->Get('status') == 'allocated')

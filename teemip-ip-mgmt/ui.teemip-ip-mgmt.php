@@ -116,7 +116,7 @@ try
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-	
+
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 	
@@ -347,7 +347,7 @@ try
 					{
 						// Found issues, explain and give the user another chance
 						$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':'.$sErrorString);
-						$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+						$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 						$oP->add($sMessage);
 
 						$sNextOperation = $oObj->GetNextOperation($operation);
@@ -477,7 +477,7 @@ try
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoListIps:'.$sClass.':CannotBeListed', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
@@ -512,6 +512,10 @@ try
 		
 		case 'shrinkblock':		// Shrink a block
 		case 'shrinksubnet':	// Shrink a subnet
+		case 'splitblock':	    // Split a block
+		case 'splitsubnet':	    // Split a subnet
+		case 'expandblock':		// Expand a block
+		case 'expandsubnet':	// Expand a subnet
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
 			// Check if right parameters have been given
@@ -533,7 +537,7 @@ try
 			}
 			else
 			{
-				// The object can be read - Check now that user is allowed to modify it
+				// The object can be read - Check that user is allowed to modify it
 				$oSet = CMDBObjectSet::FromObject($oObj);
 				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
 				{
@@ -543,7 +547,7 @@ try
 				// Process request now
 				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			}
-		break; // End case shrink
+		break; // End case shrink, split and expand
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
@@ -563,7 +567,7 @@ try
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
 						
-			// Object does exist. It has already been checked in action 'split' but check anyway.
+			// Object does exist. It has already been checked in action 'shrink' but check anyway.
 			$oObj = MetaModel::GetObject($sClass, $id, true /* MustBeFound */);
 			
 			// Make sure we don't follow the same path twice in a row.
@@ -582,9 +586,9 @@ try
 				if ($sErrorString != '')
 				{
 					// Found issues, explain and give the user another chance
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':CannotBeShrunk', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':CannotBeShrunk', $sErrorString);
+					$sMessageContainer = "<div class=\"header_message message_error\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -593,21 +597,22 @@ try
 				{
 					// Set page titles
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
+
+					// Shrink object
+					$oObj->DoShrink($aPostedParam);
+
+					// Display result
 					if ($sClass == 'IPv4Subnet')
 					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])."</h1>\n");
+						$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
 					}
 					else
 					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
+						$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
-					$oP->add("</div>\n");
-					
-					// Shrink block and display result
-					$oSet = $oObj->DoShrink($aPostedParam);
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'shrink_result', array('display_limit' => false, 'menu' => false));
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oObj->DisplayDetails($oP);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -617,44 +622,7 @@ try
 		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
-		case 'splitblock':	// Split a block
-		case 'splitsubnet':	// Split a subnet
-			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			// Check if right parameters have been given
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
-			}
-			
-			// Check if the object exists
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			}
-			else
-			{
-				// The object can be read - Check now that user is allowed to modify it
-				$oSet = CMDBObjectSet::FromObject($oObj);
-				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
-				{
-					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
-				}
-				
-				// Process request now
-				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
-			}
-		break; // End case split
-		
-		///////////////////////////////////////////////////////////////////////////////////////////
-		
-		case 'dosplitblock':		// Apply split for a block 
+		case 'dosplitblock':	// Apply split for a block
 		case 'dosplitsubnet':	// Apply split for a subnet
 			$sClass = utils::ReadPostedParam('class', '', 'class');
 			$id = utils::ReadPostedParam('id', '');
@@ -690,7 +658,7 @@ try
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':CannotBeSplit', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
@@ -700,7 +668,23 @@ try
 				{
 					// Set page titles
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
+
+					// Split object
+					$oSet = $oObj->DoSplit($aPostedParam);
+
+					// Display result
+					if ($sClass == 'IPv4Subnet')
+					{
+						$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
+					}
+					else
+					{
+						$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					}
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+
+/*					$oP->add("<div class=\"page_header teemip_page_header\">\n");
 					if ($sClass == 'IPv4Subnet')
 					{
 						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])."</h1>\n");
@@ -709,10 +693,9 @@ try
 					{
 						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
 					}
-					$oP->add("</div>\n");
+					$oP->add("</div>\n");*/
 					
 					// Split block and display result
-					$oSet = $oObj->DoSplit($aPostedParam);
 					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'split_result', array('display_limit' => false, 'menu' => false));
 
@@ -722,43 +705,6 @@ try
 			}
 		break; // End case dosplit
 				
-		///////////////////////////////////////////////////////////////////////////////////////////
-		
-		case 'expandblock':		// Expand a block	 
-		case 'expandsubnet':	// Expand a subnet 
-			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			// Check if right parameters have been given
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
-			}
-			
-			// Check if the object exists
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			}
-			else
-			{
-				// The object can be read - Check now that user is allowed to modify it
-				$oSet = CMDBObjectSet::FromObject($oObj);
-				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO)
-				{
-					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
-				}
-				
-				// Process request now
-				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
-			}
-		break; // End case expand
-		
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'doexpandblock':	// Apply expand block command
@@ -797,7 +743,7 @@ try
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':CannotBeExpanded', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
@@ -807,21 +753,22 @@ try
 				{
 					// Set page titles
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
+
+					// Expand object
+					$oNewObj = $oObj->DoExpand($aPostedParam);
+
+					// Display result
 					if ($sClass == 'IPv4Subnet')
 					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])."</h1>\n");
+						$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
 					}
 					else
 					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
+						$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
-					$oP->add("</div>\n");
-					
-					// Expand block and display result
-					$oSet = $oObj->DoExpand($aPostedParam);
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'expand_result', array('display_limit' => false, 'menu' => false));
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oNewObj->DisplayDetails($oP);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -865,8 +812,6 @@ try
 					// Export all IPs once
 					$sClassLabel = MetaModel::GetName($sClass);
 
-					// No search bar (2.5 standard)
-					
 					// Display action menu
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
@@ -928,7 +873,7 @@ try
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':CannotBeListed', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 					
 					$sNextOperation = $oObj->GetNextOperation($operation);
@@ -1074,7 +1019,7 @@ HTML
 			{
 				// Found issues, explain and give the user another chance
 				$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':CannotRun', $sErrorString);
-				$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+				$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 				$oP->add($sMessage);
 				
 				$sNextOperation = $oObj->GetNextOperation($operation);
@@ -1176,7 +1121,7 @@ HTML
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
@@ -1333,7 +1278,7 @@ HTML
 				{
 					// Found issues, explain and give the user another chance
 					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_error\">".$sIssueDesc."</div>";
+					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
 					$oP->add($sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);

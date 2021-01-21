@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,8 +17,10 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
+ * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 
 //////////////////////////////////////////////////////////////////////
@@ -142,7 +144,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPBlock/Attribute:allocation_date+' => 'Date when Subnet Block has been allocated',
 	'Class:IPBlock/Attribute:parent_org_id' => 'Delegado de ',
 	'Class:IPBlock/Attribute:parent_org_id+' => 'Organization where the Subnet Block has been delegated from',
-	'Class:IPBlock/Attribute:parent_org_name' => 'Nombre de Organización DeleganteDele',
+	'Class:IPBlock/Attribute:parent_org_name' => 'Nombre de Organización Delegante',
 	'Class:IPBlock/Attribute:parent_org_name+' => 'Name of the organization where the Subnet Block has been delegated from',
 	'Class:IPBlock/Attribute:occupancy' => 'Espacio Usado',
 	'Class:IPBlock/Attribute:occupancy+' => '',
@@ -215,6 +217,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPSubnet+' => '',
 	'Class:IPSubnet:baseinfo' => 'Información General',
 	'Class:IPSubnet:ipinfo' => 'IP Información',
+	'Class:IPSubnet:automation' => 'Automatización',
 	'Class:IPSubnet/Attribute:name' => 'Nombre',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Tipo',
@@ -369,6 +372,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv4Subnet/Attribute:mask/Value:255.255.255.248' => '255.255.255.248 - /29',
 	'Class:IPv4Subnet/Attribute:mask/Value:255.255.255.252' => '255.255.255.252 - /30',
 	'Class:IPv4Subnet/Attribute:mask/Value:255.255.255.254' => '255.255.255.254 - /31',
+	'Class:IPv4Subnet/Attribute:mask/Value:255.255.255.255' => '255.255.255.255 - /32',
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.0.0' => '/16',
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.128.0' => '/17',
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.192.0' => '/18',
@@ -385,6 +389,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.255.248' => '/29',
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.255.252' => '/30',
 	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.255.254' => '/31',
+	'Class:IPv4Subnet/Attribute:mask/Value_cidr:255.255.255.255' => '/32',
 	'Class:IPv4Subnet/Attribute:gatewayip' => 'Gateway IP',
 	'Class:IPv4Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv4Subnet/Attribute:broadcastip' => 'Broadcast IP',
@@ -536,7 +541,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPAddress/Tab:requests' => 'Requerimientos IP',
 	'Class:IPAddress/Tab:requests+' => 'IP requests related to this IP',
 	'Class:IPAddress/Tab:changes' => 'Cambios IP',
-	'Class:IPAddress/Tab:changes+' => 'IP Changes related to this IP',
+	'Class:IPAddress/Tab:changes+' => 'Cambios IP relacionados con esta IP',
 ));
 
 //
@@ -832,13 +837,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IPSpace:Options' => 'Parámetros',
 	'Menu:IPSpace:Options+' => 'Parámetros',  
 	'Menu:NewIPObject' => 'Nuevo objeto IP',
-	'Menu:NewIPObject+' => 'Creation of a new IP object',
+	'Menu:NewIPObject+' => 'Nuevo objeto IP',
 	'Menu:SearchIPObject' => 'Búsqueda de objeto IP',
-	'Menu:SearchIPObject+' => 'Search for an IP object',
-	'Menu:IPv4ShortCut' => 'Acceso Rápido IPv4',
-	'Menu:IPv4ShortCut+' => 'IPv4 Shortcuts',
+	'Menu:SearchIPObject+' => 'Búsqueda de objeto IP',
+	'Menu:Ipv4ShortCut' => 'Acceso Rápido IPv4',
+	'Menu:Ipv4ShortCut+' => 'Acceso Rápido IPv4',  
 	'Menu:IPv4Block' => 'Bloques de Subred',
-	'Menu:IPv4Block+' => 'IPv4 Subnet Blocks',
+	'Menu:IPv4Block+' => 'Bloques de Subred',
 	'Menu:IPv4Subnet' => 'Subredes',
 	'Menu:IPv4Subnet+' => 'Subredes IPv4',
 	'Menu:IPv4Subnet:Allocated' => 'Subredes Asignadas',
@@ -904,9 +909,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> ha sido comprimido.',
 	
 	// Split action on subnet blocks
-	'UI:IPManagement:Action:Split:IPBlock:IPOutOfBlock' => 'Split IP is out of block!',
-	'UI:IPManagement:Action:Split:IPBlock:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
-	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Blocks are not CIDR aligned!',	
+	'UI:IPManagement:Action:Split:IPBlock:IPOutOfBlock' => 'División de IP está fuera del bloque!',
+	'UI:IPManagement:Action:Split:IPBlock:SmallerThanMinSize' => 'Tamaño de bloque no puede ser menor que %1$s!',
+	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Blques no están CIDR alineados!',	
 	'UI:IPManagement:Action:Split:IPBlock:BlockAccrossBorder' => 'A child subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Split:IPBlock:SubnetAccrossBorder' => 'A subnet attached to the block sits accros new borders!',
 	'UI:IPManagement:Action:Split:IPBlock:EmptyNewName' => 'Name of new Subnet Block is empty!',
@@ -1068,7 +1073,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Management of IPv4 Subnets
 //
 	// Display details of subnet
-	'UI:IPManagement:Action:Details:IPv4Subnet' => 'Details',
+	'UI:IPManagement:Action:Details:IPv4Subnet' => 'Detalles',
 	'UI:IPManagement:Action:Details:IPv4Subnet+' => '',
 
 	// Display list of subnets
@@ -1222,7 +1227,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Management of IPv4 ranges
 //
 	// Display details of IP Range
-	'UI:IPManagement:Action:Details:IPv4Range' => 'Details',
+	'UI:IPManagement:Action:Details:IPv4Range' => 'Detalles',
 	'UI:IPManagement:Action:Details:IPv4Range+' => '',
 
 	// List IPs action on IP Ranges 
@@ -1263,27 +1268,27 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Management of IP Addresses
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'Short name already exists within domain!',	
+	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'Nombre corto ya existe dentro del dominio!',	
 
-	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'IP already exists!',	
-	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'IP does not belong to IP range!',	
-	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'IP does not belong to subnet!',	
+	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'IP ya existe!',	
+	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'IP no pertenece al rango de IPs!',	
+	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'IP no pertenece a la subred!',	
 	'UI:IPManagement:Action:New:IPAddress:IPPings' => 'IP pings! ',	
-	'UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame' => 'IP cannot be NATed to itself! ',
+	'UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame' => 'IP no puede ser NATeada a si misma! ',
 
 	// Allocation to CI / Unallocation from CI
-	'UI:IPManagement:Action:AllocateIP:IPAddress' => 'Allocate address to CI',
-	'UI:IPManagement:Action:UnAllocateIP:IPAddress' => 'Un-allocate address from all CIs',
-	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Target class',
-	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'Functional CI',
+	'UI:IPManagement:Action:AllocateIP:IPAddress' => 'Asignar dirección a EC',
+	'UI:IPManagement:Action:UnAllocateIP:IPAddress' => 'Desasignar dirección de todos los ECs',
+	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Clase objetivos',
+	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'EC Funcional',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'IP attribute',
 	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'There are no instanciated CIs with IP Address attributes in this organization!',
-	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'Cannot allocate CI to IP: %1$s',
-	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
+	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'No se puede asignar EC a la IP: %1$s',
+	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'EC Functional no existe!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'CI\'s attribute is R/O!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of a synchronization!',
-	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Address cannot be un-allocated: %1$s',
-	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated!',
+	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Dirección no puede ser desasignada: %1$s',
+	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP no está asignada !',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'IP is attached to a CI\'s attribute that is R/O!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'IP is attached to a CI\'s attribute that is slave of a synchronization!',
 
@@ -1291,30 +1296,30 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Management of IPv4 Addresses
 //
 	// Allocation to CI / Unallocation from CI
-	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Allocate IP',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Allocate %1$s <span class="hilite">%2$s</span> to CI',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been allocated.',
-	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Un-allocate IP',
-	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been unallocated.',
+	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Asignar IP',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Asignar %1$s <span class="hilite">%2$s</span> al EC',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> ha sido asignada.',
+	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Desasignar IP',
+	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> ha sido desasignada.',
 
 //
 // Management of Domains
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:Domain:NameCollision' => 'Domain name already exists!',
+	'UI:IPManagement:Action:New:Domain:NameCollision' => '¡Nombre de Dominio ya existe!',
 		
 	// Display list of domains
-	'UI:IPManagement:Action:DisplayList:Domain' => 'Display List',
+	'UI:IPManagement:Action:DisplayList:Domain' => 'Lista de Despliegue',
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
-	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'DNS Domains',
-	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'DNS Domains',
+	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'Dominios DNS',
+	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'Dominios DNS',
 	
 	// Display tree of domains
-	'UI:IPManagement:Action:DisplayTree:Domain' => 'Display Tree',
+	'UI:IPManagement:Action:DisplayTree:Domain' => 'Árbol de Despliegue',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
-	'UI:IPManagement:Action:DisplayTree:Domain:PageTitle_Class' => 'DNS Domains',
-	'UI:IPManagement:Action:DisplayTree:Domain:Title_Class' => 'DNS Domains',
-	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organization %1$s',
+	'UI:IPManagement:Action:DisplayTree:Domain:PageTitle_Class' => 'Dominios DNS',
+	'UI:IPManagement:Action:DisplayTree:Domain:Title_Class' => 'Dominios DNS',
+	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organización %1$s',
 	
 ));
 	

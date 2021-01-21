@@ -231,6 +231,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPSubnet+' => '',
 	'Class:IPSubnet:baseinfo' => 'Allgemeine Informationen',
 	'Class:IPSubnet:ipinfo' => 'IP Informationen',
+	'Class:IPSubnet:automation' => 'Automatisierung',
 	'Class:IPSubnet/Attribute:name' => 'Name',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',

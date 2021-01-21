@@ -420,6 +420,7 @@
           <sql>write_reason</sql>
           <default_value>none</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="occupancy" xsi:type="AttributeIPPercentage">
           <sql>occupancy</sql>
@@ -875,6 +876,7 @@
           <sql>write_reason</sql>
           <default_value>none</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="ip_occupancy" xsi:type="AttributeIPPercentage">
           <sql>ip_occupancy</sql>
@@ -1792,6 +1794,7 @@
           <sql>write_reason</sql>
           <default_value>none</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <tracking_level>none</tracking_level>
         </field>
         <field id="occupancy" xsi:type="AttributeIPPercentage">
           <sql>occupancy</sql>
@@ -2594,12 +2597,10 @@
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>usage_id</target_attcode>
         </field>
-        <fields>
-          <field id="ipaddress_org_name" xsi:type="AttributeExternalField" _delta="define">
-            <extkey_attcode>ipaddress_id</extkey_attcode>
-            <target_attcode>org_name</target_attcode>
-          </field>
-        </fields>
+        <field id="ipaddress_org_name" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>ipaddress_id</extkey_attcode>
+          <target_attcode>org_name</target_attcode>
+        </field>
       </fields>
       <methods>
         <method id="AfterInsert" _delta="define">
@@ -3895,6 +3896,13 @@
       <group id="IPAddress" _delta="define">
         <classes>
           <class id="IPAddress"/>
+          <class id="lnkContactToIPObject"/>
+          <class id="lnkDocToIPObject"/>
+        </classes>
+      </group>
+      <group id="IPSubnet" _delta="define">
+        <classes>
+          <class id="IPSubnet"/>
           <class id="lnkContactToIPObject"/>
           <class id="lnkDocToIPObject"/>
         </classes>

@@ -215,6 +215,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPSubnet+' => '',
 	'Class:IPSubnet:baseinfo' => 'Informazioni Generali',
 	'Class:IPSubnet:ipinfo' => 'Informazioni IP',
+	'Class:IPSubnet:automation' => 'Automazione',
 	'Class:IPSubnet/Attribute:name' => 'Nome',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Tipo',

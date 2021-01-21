@@ -230,6 +230,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet+' => '',
 	'Class:IPSubnet:baseinfo' => 'Informations Générales',
 	'Class:IPSubnet:ipinfo' => 'Informations IP',
+	'Class:IPSubnet:automation' => 'Automatisation',
 	'Class:IPSubnet/Attribute:name' => 'Nom',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',

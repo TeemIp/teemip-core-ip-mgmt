@@ -1013,10 +1013,6 @@ EOF
 			$oIpRegistered->Set('subnet_id', 0);
 			$oIpRegistered->DBUpdate();	
 		}
-		
-		// Return set of subnets to be displayed
-		$oSet = CMDBobjectSet::FromArray('IPv4Subnet', array($this));
-		return ($oSet);
 	}
 	
 	/**
@@ -1487,18 +1483,17 @@ EOF
 			}
 		}
 		
-		// Display result as array
+		// Return 'new' subnet
 		if ($sIpSubnetToExpand != $sIpNewSubnet)
 		{
 			// Otherwise wrong subnet IP is displayed in array...
 			$oObj = MetaModel::GetObject('IPv4Subnet', $iNewSubnetKey, true /* MustBeFound */);
-			$oSet = CMDBobjectSet::FromArray('IPv4Subnet', array($oObj));
+			return $oObj;
 		}
 		else
 		{
-			$oSet = CMDBobjectSet::FromArray('IPv4Subnet', array($this));
+			return $this;
 		}
-		return ($oSet);
 	}
 	
 	/**

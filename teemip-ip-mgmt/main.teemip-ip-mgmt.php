@@ -418,10 +418,12 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 	 */
 	public function __construct()
 	{
-		$this->aDefaultSettings = array(static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
+		$this->aDefaultSettings = array(
+			static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
 			static::FUNCTION_SETTING_DEBUG => static::DEFAULT_FUNCTION_SETTING_DEBUG,
 			static::FUNCTION_SETTING_PERIODICITY => static::DEFAULT_FUNCTION_SETTING_PERIODICITY,
-			static::FUNCTION_SETTING_STATUS_LIST => static::DEFAULT_FUNCTION_SETTING_STATUS_LIST);
+			static::FUNCTION_SETTING_STATUS_LIST => static::DEFAULT_FUNCTION_SETTING_STATUS_LIST
+		);
 		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
 		$this->bDebug = (bool) $aFunctionSettings[static::FUNCTION_SETTING_DEBUG];
 	}
@@ -1536,9 +1538,11 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 					$operation = utils::ReadParam('operation', '');
 					switch ($operation)
 					{
-						case 'apply_new':
 						case 'apply_modify':
+						case 'apply_new':
 						case 'details':
+						case 'doexpandblock':
+						case 'doshrinkblock':
 							$aParams['operation'] = 'listspace';
 							$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
 							$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
@@ -1642,9 +1646,11 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 						$operation = utils::ReadParam('operation', '');
 						switch ($operation)
 						{
-							case 'apply_new':
 							case 'apply_modify':
+							case 'apply_new':
 							case 'details':
+							case 'doexpandsubnet':
+							case 'doshrinksubnet':
 								$aParams['operation'] = 'listips';
 								$sMenu = 'UI:IPManagement:Action:ListIps:'.$sClass;
 								$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
@@ -1672,10 +1678,10 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 								$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 							break;
 							
-							case 'dofindspace':
 							case 'docalculator':
-							case 'dolistips':
 							case 'docsvexportips':
+							case 'dofindspace':
+							case 'dolistips':
 								$aParams['operation'] = 'listips';
 								$sMenu = 'UI:IPManagement:Action:ListIps:'.$sClass;
 								$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
@@ -1749,9 +1755,9 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 							$sMenu = 'UI:IPManagement:Action:Details:'.$sClass;
 							$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=details&class=$sClass&id=$id&$sContext");
 							break;
-							
-						case 'dolistips':
+
 						case 'docsvexportips':
+						case 'dolistips':
 							$aResult[] = new SeparatorPopupMenuItem();
 							$aParams['operation'] = 'listips';
 							$sMenu = 'UI:IPManagement:Action:ListIps:'.$sClass;
@@ -1799,8 +1805,8 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 								$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 								break;
 
-							case 'reserved':
 							case 'released':
+							case 'reserved':
 							case 'unassigned':
 								$aResult[] = new SeparatorPopupMenuItem();
 								$aParams['operation'] = 'allocateip';
