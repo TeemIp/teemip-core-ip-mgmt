@@ -52,7 +52,7 @@ SetupWebPage::AddModule(
 		'data.sample' => array(
 			'data.sample.InterfaceConnector.xml',
 			'data.sample.InterfaceSpeed.xml',
-			'data.sample.Layer2Protocol.xml,'
+			'data.sample.Layer2Protocol.xml',
 		),
 		
 		// Documentation
