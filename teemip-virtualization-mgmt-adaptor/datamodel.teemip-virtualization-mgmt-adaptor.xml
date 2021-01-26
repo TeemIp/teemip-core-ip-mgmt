@@ -533,6 +533,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	*/
 	public function EnumUsedAttributes($oObject) // Not yet implemented
 	{
+		return array();
 	}
 
 	/**
@@ -542,6 +543,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	*/
 	public function GetIcon($oObject) // Not yet implemented
 	{
+		return '';
 	}
 
 	/**
@@ -551,6 +553,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	*/
 	public function GetHilightClass($oObject)
 	{
+		return HILIGHT_CLASS_NONE;
 	}
 
 	/**
@@ -560,6 +563,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	*/
 	public function EnumAllowedActions(DBObjectSet $oSet)
 	{
+		return array();
 	}
 
 }]]></content>

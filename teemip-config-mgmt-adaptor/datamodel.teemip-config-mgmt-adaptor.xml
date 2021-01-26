@@ -584,6 +584,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	 */
 	public function EnumUsedAttributes($oObject) // Not yet implemented
 	{
+		return array();
 	}
 
 	/**
@@ -593,6 +594,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	 */
 	public function GetIcon($oObject) // Not yet implemented
 	{
+		return '';
 	}
 
 	/**
@@ -602,6 +604,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	 */
 	public function GetHilightClass($oObject)
 	{
+		return HILIGHT_CLASS_NONE;
 	}
 
 	/**
@@ -611,6 +614,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet)
 	{
+		return array();
 	}
 
 	public function OnIsModified($oObject)
