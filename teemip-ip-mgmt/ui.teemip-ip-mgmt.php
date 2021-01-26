@@ -595,13 +595,11 @@ try
 				}
 				else
 				{
-					// Set page titles
-					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-
 					// Shrink object
 					$oObj->DoShrink($aPostedParam);
 
 					// Display result
+					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if ($sClass == 'IPv4Subnet')
 					{
 						$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
@@ -666,13 +664,11 @@ try
 				}
 				else
 				{
-					// Set page titles
-					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-
 					// Split object
 					$oSet = $oObj->DoSplit($aPostedParam);
 
 					// Display result
+					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if ($sClass == 'IPv4Subnet')
 					{
 						$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
@@ -683,19 +679,6 @@ try
 					}
 					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
 					$oP->add($sMessageContainer);
-
-/*					$oP->add("<div class=\"page_header teemip_page_header\">\n");
-					if ($sClass == 'IPv4Subnet')
-					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])."</h1>\n");
-					}
-					else
-					{
-						$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
-					}
-					$oP->add("</div>\n");*/
-					
-					// Split block and display result
 					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'split_result', array('display_limit' => false, 'menu' => false));
 
@@ -751,13 +734,11 @@ try
 				}
 				else
 				{
-					// Set page titles
-					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-
 					// Expand object
 					$oNewObj = $oObj->DoExpand($aPostedParam);
 
 					// Display result
+					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if ($sClass == 'IPv4Subnet')
 					{
 						$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
@@ -1129,16 +1110,15 @@ HTML
 				}
 				else
 				{
-					// Set page titles
+					// Delegate block
+					$oObj->DoDelegate($aPostedParam);
+
+					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
-					$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
-					$oP->add("</div>\n");
-					
-					// Delegate block and display result in details form
-					$oSet = $oObj->DoDelegate($aPostedParam);
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'delegate_result', array('display_limit' => false, 'menu' => false));
+					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oObj->DisplayDetails($oP);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -1190,17 +1170,16 @@ HTML
 				}
 				else
 				{
-					// Set page titles
+					// Undelegate block
+					$oObj->DoUndelegate(array());
+
+					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
-					$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
-					$oP->add("</div>\n");
-					
-					// Undelegate block and display result in details form
-					$oSet = $oObj->DoUndelegate(array());
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'undelegate_result', array('display_limit' => false, 'menu' => false));
+					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oObj->DisplayDetails($oP);
 				}
 			}
 		break; // End case undelegate
@@ -1286,16 +1265,15 @@ HTML
 				}
 				else
 				{
-					// Set page titles
-					$oP->set_title(Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
-					$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
-					$oP->add("</div>\n");
+					// Allocate IP
+					$oObj->DoAllocate($aPostedParam);
 
-					// Delegate block and display result in details form
-					$oSet = $oObj->DoAllocate($aPostedParam);
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'allocateip_result', array('display_limit' => false, 'menu' => false));
+					// Display result
+					$oP->set_title(Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+					$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oObj->DisplayDetails($oP);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -1334,8 +1312,6 @@ HTML
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
 
-				// A revoir ->
-
 				// Make sure object can be unallocated
 				$sErrorString = $oObj->DoCheckToUnallocate(array());
 				if ($sErrorString != '')
@@ -1349,25 +1325,21 @@ HTML
 				}
 				else
 				{
-					// Set page titles
+					// Unallocate IP
+					$oObj->DoUnallocate(array());
+
+					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->add("<div class=\"page_header teemip_page_header\">\n");
-					$oP->add("<h1>".$oObj->GetIcon()."&nbsp;".Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName())."</h1>\n");
-					$oP->add("</div>\n");
-
-					// Undelegate block and display result in details form
-					$oSet = $oObj->DoUnallocate(array());
-					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'unallocateip_result', array('display_limit' => false, 'menu' => false));
+					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
+					$oObj->DisplayDetails($oP);
 				}
 			}
 			break; // End case unallocateip
 
 		///////////////////////////////////////////////////////////////////////////////////////////
-
-		//case 'test':
-		//	IPv6Address::IPv6CompressionMigration();
 
 		case 'cancel':	// An action was cancelled
 		case 'displaylist':

@@ -616,7 +616,7 @@ EOF
 	}
 
 	/**
-	 * Allocated CI
+	 * Allocate IP to CI
 	 *
 	 * @param $aParam
 	 *
@@ -641,10 +641,6 @@ EOF
 		// Update IP status
 		$this->Set('status', 'allocated');
 		$this->DBUpdate();
-
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray(get_class($this), array($this));
-		return ($oSet);
 	}
 
 	/**
@@ -720,10 +716,6 @@ EOF
 		// Update IP status
 		$this->Set('status', 'unassigned');
 		$this->DBUpdate();
-
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray(get_class($this), array($this));
-		return ($oSet);
 	}
 
 	/**

@@ -213,6 +213,35 @@ class _IPBlock extends IPObject
 	}
 
 	/**
+	 * Delegate block
+	 *
+	 * @param $aParam
+	 */
+	public function DoDelegate($aParam)
+	{
+		$iOrgId = $this->Get('org_id');
+		$iChildOrgId = $aParam['child_org_id'];
+
+		$this->Set('parent_org_id', $iOrgId);
+		$this->Set('org_id', $iChildOrgId);
+		$this->DBUpdate();
+	}
+
+	/*
+	 * Undelegate block
+	 *
+	 * @param $aParam
+	 */
+	public function DoUndelegate($aParam)
+	{
+		$iParentOrgId = $this->Get('parent_org_id');
+
+		$this->Set('parent_org_id', 0);
+		$this->Set('org_id', $iParentOrgId);
+		$this->DBUpdate();
+	}
+
+	/**
 	 * Change default flag of attribute at creation
 	 *
 	 * @param $sAttCode

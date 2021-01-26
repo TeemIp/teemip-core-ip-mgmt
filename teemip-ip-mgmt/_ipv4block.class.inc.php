@@ -1094,32 +1094,6 @@ EOF
 	}
 
 	/**
-	 * Delegate block
-	 *
-	 * @param $aParam
-	 *
-	 * @return \CMDBObjectSet|\DBObjectSet
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \Exception
-	 */
-	public function DoDelegate($aParam)
-	{
-		$iOrgId = $this->Get('org_id');
-		$iChildOrgId = $aParam['child_org_id'];
-
-		$this->Set('parent_org_id', $iOrgId);
-		$this->Set('org_id', $iChildOrgId);
-		$this->DBUpdate();
-
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray('IPv4Block', array($this));
-		return ($oSet);
-	}
-
-	/**
 	 * Check if block can be undelegated
 	 *
 	 * @param $aParam
@@ -1157,31 +1131,6 @@ EOF
 
 		// Everything looks good
 		return '';
-	}
-
-	/**
-	 * Undelegate block
-	 *
-	 * @param $aParam
-	 *
-	 * @return \CMDBObjectSet|\DBObjectSet
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \Exception
-	 */
-	public function DoUndelegate($aParam)
-	{
-		$iParentOrgId = $this->Get('parent_org_id');
-
-		$this->Set('parent_org_id', 0);
-		$this->Set('org_id', $iParentOrgId);
-		$this->DBUpdate();
-
-		// Display result as array
-		$oSet = CMDBobjectSet::FromArray('IPv4Block', array($this));
-		return ($oSet);
 	}
 
 	/**
