@@ -481,22 +481,14 @@
 class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationObjectExtension
 {
 	/**
-	 * @param DBObject $oObject The object being displayed
-	 * @param WebPage $oPage The output context
-	 * @param boolean $bEditMode True if the edition form is being displayed
-	 *
-	 * @return void
+	 * @inheritdoc
 	 */
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
 	}
 
 	/**
-	 * @param DBObject $oObject The object being displayed
-	 * @param WebPage $oPage The output context
-	 * @param boolean $bEditMode True if the edition form is being displayed
-	 *
-	 * @return void
+	 * @inheritdoc
 	 */
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
 	{
@@ -559,28 +551,21 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @param DBObject $oObject The object being edited
-	 * @param string $sFormPrefix Prefix given to the HTML form inputs
-	 *
-	 * @return void
+	 * @inheritdoc
 	 */
 	public function OnFormSubmit($oObject, $sFormPrefix = '')
 	{
 	}
 
 	/**
-	 * @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
-	 *
-	 * @return void
+	 * @inheritdoc
 	 */
 	public function OnFormCancel($sTempId)
 	{
 	}
 
 	/**
-	 * @param DBObject $oObject The object being displayed
-	 *
-	 * @return string[] desc
+	 * @inheritdoc
 	 */
 	public function EnumUsedAttributes($oObject) // Not yet implemented
 	{
@@ -588,9 +573,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @param DBObject $oObject The object being displayed
-	 *
-	 * @return string Path of the icon, relative to the modules directory.
+	 * @inheritdoc
 	 */
 	public function GetIcon($oObject) // Not yet implemented
 	{
@@ -598,9 +581,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @param DBObject $oObject The object being displayed
-	 *
-	 * @return integer The value representing the mood of the object
+	 * @inheritdoc
 	 */
 	public function GetHilightClass($oObject)
 	{
@@ -608,29 +589,36 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
-	 *
-	 * @return string[string]
+	 * @inheritdoc
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet)
 	{
 		return array();
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function OnIsModified($oObject)
 	{
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function OnCheckToWrite($oObject)
 	{
 	}
 
+	/**
+	 * @inheritdoc
+	 */
 	public function OnCheckToDelete($oObject)
 	{
 	}
 
 	/**
-	 * @noinspection PhpUnhandledExceptionInspection
+	 * @inheritdoc
 	 */
 	public function OnDBUpdate($oObject, $oChange = null)
 	{
@@ -673,7 +661,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @noinspection PhpUnhandledExceptionInspection
+	 * @inheritdoc
 	 */
 	public function OnDBInsert($oObject, $oChange = null)
 	{
@@ -706,7 +694,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	}
 
 	/**
-	 * @noinspection PhpUnhandledExceptionInspection
+	 * @inheritdoc
 	 */
 	public function OnDBDelete($oObject, $oChange = null)
 	{
