@@ -44,6 +44,7 @@ SetupWebPage::AddModule(
 		// Components
 		//
 		'datamodel' => array(
+			'findspace.class.inc.php',
 			'model.teemip-ip-mgmt.php',
 			'main.teemip-ip-mgmt.php'
 		),

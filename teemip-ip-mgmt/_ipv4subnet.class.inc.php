@@ -2557,7 +2557,7 @@ EOF
 		}
 	}
 
-	function BitToMask($iPrefix)
+	public static function BitToMask($iPrefix)
 	{
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix)
@@ -2598,11 +2598,11 @@ EOF
 			default: return "";
 		}
 	}
-	
-	function MaskToBit($Mask)
+
+	public static function MaskToBit($Mask)
 	{
 		// Provides number of bits within a dotted string mask
-		return $this->SizeToBit($this->MaskToSize($Mask));
+		return IPv4Subnet::SizeToBit(IPv4Subnet::MaskToSize($Mask));
 	}
 	
 	public static function SizeToMask ($Size)

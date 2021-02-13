@@ -229,7 +229,7 @@ class _IPObject extends cmdbAbstractObject
 		$sJsonFieldsMap = json_encode($aFieldsMap);
 		$sState = $this->GetState();
 		$oP->add_script(
-			<<<EOF
+<<<EOF
 	// Create the object once at the beginning of the page...
 	var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
 	oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);

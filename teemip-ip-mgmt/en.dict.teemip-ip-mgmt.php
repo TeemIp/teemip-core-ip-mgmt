@@ -133,8 +133,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock:baseinfo' => 'General Information',
 	'Class:IPBlock:delegationinfo' => 'Delegation Information',
 	'Class:IPBlock:ipinfo' => 'IP Information',
-	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Delegated to organization : </font>%1$s',
-	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization : </font>%1$s',
+	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Delegated to organization: </font>%1$s',
+	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization: </font>%1$s',
 	'Class:IPBlock/Attribute:name' => 'Name',
 	'Class:IPBlock/Attribute:name+' => '',
 	'Class:IPBlock/Attribute:type' => 'Type',
@@ -175,14 +175,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock/Tab:globalparam' => 'Global Settings',
 	'Class:IPBlock/Tab:childblock' => 'Child Blocks',
 	'Class:IPBlock/Tab:childblock+' => 'Blocks attached to this block',
-	'Class:IPBlock/Tab:childblock-count' => 'Child Blocks : %1$s',
+	'Class:IPBlock/Tab:childblock-count' => 'Child Blocks: %1$s',
 	'Class:IPBlock/Tab:childblock-count-percent' => ' Space used by Child Blocks.',
 	'Class:IPBlock/Tab:childblock-count-percent-remain' => 'Space used by Child Blocks in remaining space: %1$.1f %%',
 	'Class:IPBlock/Tab:subnet' => 'Subnets',
 	'Class:IPBlock/Tab:subnet+' => 'Subnets attached to this block',
-	'Class:IPBlock/Tab:subnet-count' => 'Subnets : %1$s',
+	'Class:IPBlock/Tab:subnet-count' => 'Subnets: %1$s',
 	'Class:IPBlock/Tab:subnet-count-percent' => ' space used by Subnets',
-	'Class:IPBlock/Tab:subnet-count-percent-remain' => 'Space used by Subnets in remaining space : %1$.1f %%',
+	'Class:IPBlock/Tab:subnet-count-percent-remain' => 'Space used by Subnets in remaining space: %1$.1f %%',
 ));
 
 //
@@ -892,6 +892,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPv4Address+' => 'IPv4 Addresses',
 	'Menu:IPTools' => 'Tools',
 	'Menu:IPTools+' => 'Set of IP tools',
+	'Menu:FindSpace' => 'Find Space',
+	'Menu:FindSpace+' => 'tool to find and allocate IP space',
 	'Menu:SubnetCalculator' => 'Subnet Calculator',
 	'Menu:SubnetCalculator+' => 'Tool to calculate subnet parameters from an IP and a mask',
 	'Menu:Options' => 'Parameters',
@@ -932,8 +934,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Subnet Block is not strictly contained within selected parent!',	
 	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Name of Subnet Block already exists!',	
 	'UI:IPManagement:Action:New:IPBlock:Collision0' => 'Subnet Block already exists!',	
-	'UI:IPManagement:Action:New:IPBlock:Collision1' => 'Subnet Block collision : first IP belongs to an existing block!',	
-	'UI:IPManagement:Action:New:IPBlock:Collision2' => 'Subnet Block collision : last IP belongs to an existing block!',	
+	'UI:IPManagement:Action:New:IPBlock:Collision1' => 'Subnet Block collision: first IP belongs to an existing block!',
+	'UI:IPManagement:Action:New:IPBlock:Collision2' => 'Subnet Block collision: last IP belongs to an existing block!',
 	'UI:IPManagement:Action:Modify:IPBlock:ParentIdNull' => 'Child subnets of block %1$s cannot be attached to non existant parent block.',	
 	
 	// Shrink action on subnet blocks
@@ -966,6 +968,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPBlock:BlockAccrossBorder' => 'A brother subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder' => 'A subnet attached to parent block sits accross new borders',
 	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded.',
+
+	// Find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPBlock:RequestedSpaceBiggerThanBlockSize' => 'IP address to look space from belongs to subnet block %1$s and the requested space is larger than the size of that block!',
+	'UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound' => 'There is not enough free space within block %1$s to fullfill your request!',
+	'IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom' => 'from IP %1$s',
 
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChildOrg' => 'Block\'s organization doesn\'t have any children!',
@@ -1013,8 +1020,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s shrink',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Title_Class_Object' => 'Shrink %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Shrink:IPv4Block:NewFirstIP' => 'New First IP of Block :',
-	'UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP' => 'New Last IP of Block :',            
+	'UI:IPManagement:Action:Shrink:IPv4Block:NewFirstIP' => 'New First IP of Block:',
+	'UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP' => 'New Last IP of Block:',
 	'UI:IPManagement:Action:Shrink:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be shrunk!',
 	'UI:IPManagement:Action:Shrink:IPv4Block:CannotBeShrunk' => 'Block cannot be shrunk: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
@@ -1027,8 +1034,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s split',
 	'UI:IPManagement:Action:Split:IPv4Block:Title_Class_Object' => 'Split %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Split:IPv4Block:At' => 'First IP of new Subnet Block :',
-	'UI:IPManagement:Action:Split:IPv4Block:NameNewBlock' => 'Name of new Subnet Block :',
+	'UI:IPManagement:Action:Split:IPv4Block:At' => 'First IP of new Subnet Block:',
+	'UI:IPManagement:Action:Split:IPv4Block:NameNewBlock' => 'Name of new Subnet Block:',
 	'UI:IPManagement:Action:Split:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be split!',
 	'UI:IPManagement:Action:Split:IPv4Block:CannotBeSplit' => 'Block cannot be split: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
@@ -1041,8 +1048,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s expand',
 	'UI:IPManagement:Action:Expand:IPv4Block:Title_Class_Object' => 'Expand %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Expand:IPv4Block:NewFirstIP' => 'New First IP of Block :',
-	'UI:IPManagement:Action:Expand:IPv4Block:NewLastIP' => 'New Last IP of Block :',
+	'UI:IPManagement:Action:Expand:IPv4Block:NewFirstIP' => 'New First IP of Block:',
+	'UI:IPManagement:Action:Expand:IPv4Block:NewLastIP' => 'New Last IP of Block:',
 	'UI:IPManagement:Action:Expand:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be expanded!',
 	'UI:IPManagement:Action:Expand:IPv4Block:CannotBeExpanded' => 'Block cannot be expanded: %1$s',
 	'UI:IPManagement:Action:Expand:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
@@ -1053,18 +1060,19 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:ListSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Space',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Space within %1$s: <span class="hilite">%2$s</span>',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace' => 'Free [%1$s - %2$s] - %3$s IPs - %4$.2f %%',
-	
+	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent' => 'Free [%1$s - %2$s] - %3$s IPs',
+
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv4Block' => 'Find Space',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:Title_Class_Object' => 'Look for space within %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:FindSpace:IPv4Block:SizeOfSpace' => 'Size of space to look for :',
+	'UI:IPManagement:Action:FindSpace:IPv4Block:SizeOfSpace' => 'Size of space to look for:',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:MaxNumberOfOffers' => 'Maximum number of offers:',
 	
 	// Do find Space action on subnet blocks
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Find space',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Space within %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary' => '%1$s first /%2$s within block',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Found space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary' => '%1$s first /%2$s within ',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsBlock' => 'Create as a child block',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsSubnet' => 'Create as a subnet',
 
@@ -1094,9 +1102,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPSubnet:IpIncorrect' => 'Subnet IP is not consistant with Mask!',	
 	'UI:IPManagement:Action:New:IPSubnet:NotInBlock' => 'Subnet is not contained within selected block!',	
 	'UI:IPManagement:Action:New:IPSubnet:Collision0' => 'Subnet already exists!',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision1' => 'Subnet collision : subnet IP belongs to an existing subnet!',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Subnet collision : broadcast IP belongs to an existing subnet!',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Subnet collision : new subnet includes an existing one!',	
+	'UI:IPManagement:Action:New:IPSubnet:Collision1' => 'Subnet collision: subnet IP belongs to an existing subnet!',
+	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Subnet collision: broadcast IP belongs to an existing subnet!',
+	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Subnet collision: new subnet includes an existing one!',
 	'UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet' => 'Gateway IP is not within the subnet boundaries!',
 
 	// Subnet calculator
@@ -1133,8 +1141,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:Title_Class_Object' => 'Look for IP space within %1$s: <span class="hilite">%2$s</span>',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeTooSmall' => 'Subnet is too small to look for space. Please, cancel!',
-	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeOfRange' => 'Size of space to look for :',
-	'UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers' => 'Maximum number of offers :',
+	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeOfRange' => 'Size of space to look for:',
+	'UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers' => 'Maximum number of offers:',
 	
 	// Do find Space action on subnet
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Find space',
@@ -1173,7 +1181,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Shrink cannot be performed!',	
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Range: <b>%1$s [%2$s - %3$s]</b> will be dropped from subnet. Shrink cannot be performed!',	
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk by %3$s.',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:By' => 'Shrink by :',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:By' => 'Shrink by:',
 	
 	// Split action on subnets
 	'UI:IPManagement:Action:Split:IPv4Subnet' => 'Split',
@@ -1187,7 +1195,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmallBy' => 'Subnet is too small to be split by %1$s!',
 	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Split cannot be performed!',	
 	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been split in %3$s.',
-	'UI:IPManagement:Action:Split:IPv4Subnet:In' => 'Split in :',
+	'UI:IPManagement:Action:Split:IPv4Subnet:In' => 'Split in:',
 	
 	// Expand action on subnets
 	'UI:IPManagement:Action:Expand:IPv4Subnet' => 'Expand',
@@ -1201,7 +1209,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBigBy' => 'Subnet is too big to be expanded by %1$s!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:NotInIPBlock' => 'The block hosting the subnet is too small to contain the new expanded subnet!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded by %3$s',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:By' => 'Expand by :',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:By' => 'Expand by:',
 
 	// CSV Export action on subnets
 	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet' => 'CSV Export IPs',
@@ -1257,9 +1265,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPRange:Reverted' => 'First IP of Range is higher than last IP!',	
 	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'IP Range is not contained within selected subnet!',	
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Range already exists!',	
-	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Range collision : first IP belongs to an existing range!',	
-	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision : last IP belongs to an existing range!',	
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : new range includes an existing one!',
+	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Range collision: first IP belongs to an existing range!',
+	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision: last IP belongs to an existing range!',
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision: new range includes an existing one!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
 
 //
@@ -1359,5 +1367,20 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DisplayTree:Domain:PageTitle_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayTree:Domain:Title_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organization %1$s',
-	
+
+//
+// Generic actions
+//
+	// Find space action on subnets
+	'UI:IPManagement:Action:FindSpace' => 'Find and allocate IP space',
+	'UI:IPManagement:Action:FindSpace:Organization' => 'Organization',
+	'UI:IPManagement:Action:FindSpace:SpaceType' => 'Space type',
+	'UI:IPManagement:Action:FindSpace:IPv4Space' => 'IPv4 Space',
+	'UI:IPManagement:Action:FindSpace:IPv6Space' => 'IPv6 Space',
+	'UI:IPManagement:Action:FindIPv4Space' => 'Find and allocate IPv4 space',
+	'UI:IPManagement:Action:FindIPv6Space' => 'Find and allocate IPv6 space',
+	'UI:IPManagement:Action:FindSpace:FirstIP' => 'From IP address:',
+	'UI:IPManagement:Action:FindSpace:SpaceSize' => 'Size of space to look for:',
+	'UI:IPManagement:Action:FindSpace:MaxNumberOfOffers' => 'Maximum number of offers:',
+
 ));

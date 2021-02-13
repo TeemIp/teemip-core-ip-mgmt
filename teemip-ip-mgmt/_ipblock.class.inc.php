@@ -199,7 +199,7 @@ class _IPBlock extends IPObject
 		}
 		return ($aParams);
 	}
-	
+
 	/**
 	 * Check if Block is delegated
 	 */		 
@@ -232,7 +232,7 @@ class _IPBlock extends IPObject
 	 *
 	 * @param $aParam
 	 */
-	public function DoUndelegate($aParam)
+	public function DoUndelegate()
 	{
 		$iParentOrgId = $this->Get('parent_org_id');
 

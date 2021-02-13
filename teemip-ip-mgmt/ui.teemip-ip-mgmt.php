@@ -1,5 +1,5 @@
   <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -157,9 +157,9 @@ try
 
 			// Display search bar
 			$oSearch = new DBObjectSearch($sClass);
-			$aParams = array('open' => true, 'table_id' => '1');
+			$aParams = array('open' => true, 'table_id' => 'displaytree_search');
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
-			$oBlock->Display($oP, 1);
+			$oBlock->Display($oP, 0);
 
 			// Set titles
 			$sClassLabel = MetaModel::GetName($sClass);
@@ -183,7 +183,7 @@ try
 			$sObjectsCount = Dict::Format('UI:Pagination:HeaderNoSelection', $oSet->Count());
 			
 			// Get actions Menu
-			$iListId = $oP->GetUniqueId(); 
+			$iListId = 'displaytree_menu'; //$oP->GetUniqueId();
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
 			$sActionsMenu = $oMenuBlock->GetRenderContent($oP, array(), $iListId);
 			
@@ -260,7 +260,7 @@ try
 				$oSingletonFilter = new DBObjectSearch($sClass);
 				$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 				$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-				$oBlock->Display($oP, -1);
+				$oBlock->Display($oP, 'listspace');
 				
 				// Set titles
 				$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:ListSpace:'.$sClass.':');
@@ -279,28 +279,36 @@ try
 		
 		case 'findspace':	// Find space within a block or a subnet
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			// Check if right parameters have been given
-			if ( empty($sClass) || empty($id))
+			if (!empty($sClass))
 			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
-			}
-						
-			// Check if the object exists
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+				$id = utils::ReadParam('id','');
+				// Check if right parameters have been given
+				if (empty($id))
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				}
+				if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
+				}
+
+				// Check if the object exists
+				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				if (is_null($oObj))
+				{
+					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+				}
+				else
+				{
+					// The object can be read - Process request now
+					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
+				}
 			}
 			else
 			{
-				// The object can be read - Process request now
-				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
+				$aPostedParam = FindSpace::GetPostedParam($operation);
+				FindSpace::DisplayOperationForm($oP, $oAppContext, $aPostedParam);
 			}
 		break; // End case findspace
 		
@@ -308,72 +316,97 @@ try
 		
 		case 'dofindspace':	// Apply find space action
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
-			
-			// Check if right parameters have been given
-			if ( empty($sClass) || empty($id))
+			if (!empty($sClass))
 			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
-			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
-			}
-			
-			// Check if the object exists
-			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			if (is_null($oObj))
-			{
-				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
-			}
-			else
-			{
-				// Make sure we don't follow the same path twice in a row.
-				$sClassLabel = MetaModel::GetName($sClass);
-				if (!utils::IsTransactionValid($sTransactionId, false))
+				$id = utils::ReadParam('id','');
+				$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+				// Check if right parameters have been given
+				if (empty($id))
 				{
-					$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				}
+				if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
+				}
+
+				// Check if the object exists
+				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				if (is_null($oObj))
+				{
+					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 				}
 				else
 				{
-					$aPostedParam = $oObj->GetPostedParam($operation);
-					
-					// Make sure find action can be launched
-					$sErrorString = $oObj->DoCheckToDisplayAvailableSpace($aPostedParam);
-					if ($sErrorString != '')
+					// Make sure we don't follow the same path twice in a row.
+					$sClassLabel = MetaModel::GetName($sClass);
+					if (!utils::IsTransactionValid($sTransactionId, false))
 					{
-						// Found issues, explain and give the user another chance
-						$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':'.$sErrorString);
-						$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-						$oP->add($sMessage);
-
-						$sNextOperation = $oObj->GetNextOperation($operation);
-						$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
+						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+						$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
 					}
 					else
 					{
-						// No search bar (2.5 standard)
+						$aPostedParam = $oObj->GetPostedParam($operation);
 
-						// Display action menu
-						$oSingletonFilter = new DBObjectSearch($sClass);
-						$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
-						$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-						$oBlock->Display($oP, -1);
-						
-						// Set titles
-						$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
-						
-						// Dump space
-						$oP->add('<table style="width:100%"><tr><td colspan="2">');
-						$oP->add('<div style="vertical-align:top;" id="tree">');
-						$oObj->DoDisplayAvailableSpace($oP, 0, $aPostedParam);
-						$oP->add('</div></td></tr></table>');
-						$oP->add('</div>');		 // ??
-						$oP->add_ready_script("\$('#tree ul').treeview();\n");
-						$oP->add("<div id=\"dialog_content\"/>\n");
+						// Make sure find action can be launched
+						$sErrorString = $oObj->DoCheckToDisplayAvailableSpace($aPostedParam);
+						if ($sErrorString != '')
+						{
+							// Found issues, explain and give the user another chance
+							$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':'.$sErrorString);
+							$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
+							$oP->add($sMessage);
+
+							$sNextOperation = $oObj->GetNextOperation($operation);
+							$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
+						}
+						else
+						{
+							// Display action menu
+							$oSingletonFilter = new DBObjectSearch($sClass);
+							$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
+							$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
+							$oBlock->Display($oP, 'dofindspace');
+
+							// Set titles
+							$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
+
+							// Dump space
+							$oP->add('<table style="width:100%"><tr><td colspan="2">');
+							$oP->add('<div style="vertical-align:top;" id="tree">');
+							$oObj->DoDisplayAvailableSpace($oP, 0, $aPostedParam);
+							$oP->add('</div></td></tr></table>');
+							$oP->add('</div>');		 // ??
+							$oP->add_ready_script("\$('#tree ul').treeview();\n");
+							$oP->add("<div id=\"dialog_content\"/>\n");
+						}
+					}
+				}
+			}
+			else
+			{
+				$aPostedParam = FindSpace::GetPostedParam($operation);
+				if (empty($aPostedParam['spacetype']) || empty($aPostedParam['org_id']))
+				{
+					throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'spacetype', 'org_id'));
+				}
+				else
+				{
+					// Make sure find action can be launched
+					list ($sIssueDesc, $aPostedParam['block_id']) = FindSpace::DoCheckToDisplayAvailableSpace($aPostedParam);
+					if ($sIssueDesc != '')
+					{
+						// Found issues, explain and give the user another chance
+						$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
+						$oP->add($sMessage);
+
+						FindSpace::DisplayOperationForm($oP, $oAppContext, $aPostedParam);
+					}
+					else
+					{
+						FindSpace::DoDisplayAvailableSpace($oP, $aPostedParam);
 					}
 				}
 			}
@@ -421,7 +454,7 @@ try
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 					$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-					$oBlock->Display($oP, -1);
+					$oBlock->Display($oP, 'listips');
 					
 					// Set titles
 					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:ListIps:'.$sClass.':');
@@ -491,7 +524,7 @@ try
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 					$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-					$oBlock->Display($oP, -1);
+					$oBlock->Display($oP, 'dolistips');
 					
 					// Set titles
 					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoListIps:'.$sClass.':');
@@ -797,7 +830,7 @@ try
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 					$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-					$oBlock->Display($oP, -1);
+					$oBlock->Display($oP, 'csvexportips');
 					
 					// Set titles
 					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:CsvExportIps:'.$sClass.':');
@@ -868,7 +901,7 @@ try
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 					$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-					$oBlock->Display($oP, -1);
+					$oBlock->Display($oP, 'docsvexportips');
 					
 					// Set titles
 					$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':');
@@ -900,7 +933,7 @@ try
 
 				$id = utils::ReadParam('id', '');
 				// Id may be null. In that case a temporary object is created.
-				if ( empty($id))
+				if (empty($id))
 				{
 					$oObj = MetaModel::NewObject($sClass);
 					$id = $oObj->GetKey();
@@ -1016,7 +1049,7 @@ HTML
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');
 					$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-					$oBlock->Display($oP, -1);
+					$oBlock->Display($oP, 'docalculator');
 				}
 				
 				// Set titles
@@ -1171,7 +1204,7 @@ HTML
 				else
 				{
 					// Undelegate block
-					$oObj->DoUndelegate(array());
+					$oObj->DoUndelegate();
 
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
