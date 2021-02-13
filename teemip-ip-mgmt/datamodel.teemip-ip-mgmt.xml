@@ -3734,8 +3734,11 @@
   <menus>
     <menu id="IPManagement" xsi:type="MenuGroup" _delta="define">
       <rank>25</rank>
+      <style>
+        <decoration_classes>fas fa-globe</decoration_classes>
+      </style>
     </menu>
-    l<menu id="IPSpace" xsi:type="DashboardMenuNode" _delta="define">
+    <menu id="IPSpace" xsi:type="DashboardMenuNode" _delta="define">
       <rank>10</rank>
       <parent>IPManagement</parent>
       <definition>
@@ -3837,8 +3840,8 @@
       <auto_reload>fast</auto_reload>
     </menu>
     <menu id="IPConfig" xsi:type="OQLMenuNode" _delta="define">
-      <rank>15</rank>
-      <parent>ConfigurationTools</parent>
+      <rank>100</rank>
+      <parent>ConfigEditor</parent>
       <oql>SELECT IPConfig</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
@@ -3847,6 +3850,11 @@
       <rank>60</rank>
       <parent>IPManagement</parent>
       <template_file/>
+    </menu>
+    <menu id="FindSpace" xsi:type="WebPageMenuNode" _delta="define">>
+      <rank>5</rank>
+      <parent>IPTools</parent>
+      <url>$pages/exec.php?exec_module=teemip-ip-mgmt&amp;exec_page=ui.teemip-ip-mgmt.php&amp;c[menu]=FindSpace&amp;operation=findspace</url>
     </menu>
     <menu id="SubnetCalculator" xsi:type="WebPageMenuNode" _delta="define">>
       <rank>10</rank>
