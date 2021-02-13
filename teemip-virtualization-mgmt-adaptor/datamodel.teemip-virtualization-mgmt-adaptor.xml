@@ -421,23 +421,15 @@
 class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 {
 	/**
-	* @param DBObject $oObject The object being displayed
-	* @param WebPage $oPage The output context
-	* @param boolean $bEditMode True if the edition form is being displayed
-	*
-	* @return void
-	*/
+	 * @inheritdoc
+	 */
 	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
 	{
 	}
 
 	/**
-	* @param DBObject $oObject The object being displayed
-	* @param WebPage $oPage The output context
-	* @param boolean $bEditMode True if the edition form is being displayed
-	*
-	* @return void
-	*/
+	 * @inheritdoc
+	 */
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
 	{
 		if ($oObject instanceof VirtualMachine)
@@ -508,64 +500,51 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	}
 
 	/**
-	* @param DBObject $oObject The object being edited
-	* @param string $sFormPrefix Prefix given to the HTML form inputs
-	*
-	* @return void
-	*/
+	 * @inheritdoc
+	 */
 	public function OnFormSubmit($oObject, $sFormPrefix = '')
 	{
 	}
 
 	/**
-	* @param string $sTempId Unique temporary identifier made of session_id and transaction_id. It identifies the object in a unique way.
-	*
-	* @return void
-	*/
+	 * @inheritdoc
+	 */
 	public function OnFormCancel($sTempId)
 	{
 	}
 
 	/**
-	* @param DBObject $oObject The object being displayed
-	*
-	* @return string[] desc
-	*/
+	 * @inheritdoc
+	 */
 	public function EnumUsedAttributes($oObject) // Not yet implemented
 	{
 		return array();
 	}
 
 	/**
-	* @param DBObject $oObject The object being displayed
-	*
-	* @return string Path of the icon, relative to the modules directory.
-	*/
+	 * @inheritdoc
+	 */
 	public function GetIcon($oObject) // Not yet implemented
 	{
 		return '';
 	}
 
 	/**
-	* @param DBObject $oObject The object being displayed
-	*
-	* @return integer The value representing the mood of the object
-	*/
+	 * @inheritdoc
+	 */
 	public function GetHilightClass($oObject)
 	{
 		return HILIGHT_CLASS_NONE;
 	}
 
 	/**
-	* @param DBObjectSet $oSet A set of persistent objects (DBObject)
-	*
-	* @return string[string]
-	*/
+	 * @inheritdoc
+	 */
 	public function EnumAllowedActions(DBObjectSet $oSet)
 	{
+		// No action
 		return array();
 	}
-
 }]]></content>
     </snippet>
   </snippets>
