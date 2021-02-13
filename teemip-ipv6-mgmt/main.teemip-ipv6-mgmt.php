@@ -207,6 +207,17 @@ class AttributeIPv6Address extends AttributeString
 	}
 
 	/**
+	 * @param $sClassAlias
+	 *
+	 * @return string[]
+	 */
+	public function GetOrderBySQLExpressions($sClassAlias)
+	{
+		// Note: This is the responsibility of this function to place backticks around column aliases
+		return array('`'.$sClassAlias.$this->GetCode().'_text`');
+	}
+
+	/**
 	 * @param string $value
 	 * @param null $oHostObject
 	 * @param bool $bLocalize

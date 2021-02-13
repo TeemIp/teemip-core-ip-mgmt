@@ -72,13 +72,13 @@ class _IPv6Block extends IPBlock
 	}
 	
 	/**
-	 * Returns higher block prefix, CIDR aligned, contained in block
+	 * Returns smaller block prefix, CIDR aligned, contained in block
 	 *
 	 * @return int
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetBlockPrefix()
+	public function GetMinTheoriticalBlockPrefix()
 	{
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
@@ -189,14 +189,22 @@ class _IPv6Block extends IPBlock
 	public function GetFreeSpace($iPrefix, $iMaxOffer)
 	{
 		$iOrgId = $this->Get('org_id');
-		$iKey = $this->GetKey();
+		$iKey = ($this->GetKey() > 0) ? $this->GetKey() : 0;
 		$aFreeSpace = array();
 		
 		// Get list of registered blocks and subnets in subnet range
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
-		$iBlockPrefix = $this->GetBlockPrefix();
-		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iKey AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
+		if ($iKey == 0)
+		{
+			// Search at root space, outside any block - delegated or not
+			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = 0 UNION SELECT IPv6Block AS b WHERE b.parent_org_id = :org_id AND b.parent_id = 0";
+		}
+		else
+		{
+			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+		}
+		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
 		
 		$aList = array();
@@ -266,15 +274,13 @@ class _IPv6Block extends IPBlock
 			$aFreeList[0]['firstip'] = $oFirstIp->GetAsCannonical();
 			$aFreeList[0]['lastip'] = $oLastIp->GetAsCannonical();
 		}
-		
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
 
 		// Store possible choices in array
 		if ($iSizeFreeArray != 0)
 		{
 			$j = 0;
 			$n = 0;
+			$bEndSpaceReached = false;
 			$oMask = new ormIPv6('FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF');
 			for ($i = 0; $i < (IPV6_MAX_BIT - $iPrefix); $i++)
 			{
@@ -289,13 +295,17 @@ class _IPv6Block extends IPBlock
 				$oIp = $oAnIp->BitWiseAnd($oMask);
 				if (! $oIp->IsEqual($oAnIp))
 				{
-					$oAnIp = $oIp->Add($oNotMask); 
-					$oAnIp = $oAnIp->GetNextIp(); 
+					$oAnIp = $oIp->Add($oNotMask);
+					$oAnIp = $oAnIp->GetNextIp();
+					if ($oAnIp->GetAsCompressed() == '::')
+					{
+						$bEndSpaceReached = true;
+					}
 				}
 				$sLastFreeIp = $aFreeList[$j]['lastip'];
 				$oLastFreeIp = new ormIPv6($sLastFreeIp);
 				$oLastIp = $oAnIp->Add($oNotMask);
-				while ($oLastIp->IsSmallerOrEqual($oLastFreeIp) && ($n < $iMaxOffer))
+				while ((!$bEndSpaceReached) && $oLastIp->IsSmallerOrEqual($oLastFreeIp) && ($n < $iMaxOffer))
 				{
 					$aFreeSpace[$n] = array();
 					$aFreeSpace[$n]['firstip'] = $oAnIp;
@@ -306,11 +316,118 @@ class _IPv6Block extends IPBlock
 					$oLastIp = $oAnIp->Add($oNotMask);
 				}
 			}
-			while ((++$j < $iSizeFreeArray) && ($n < $iMaxOffer));
+			while ((!$bEndSpaceReached) && (++$j < $iSizeFreeArray) && ($n < $iMaxOffer));
 		}
 		
 		// Return result
 		return $aFreeSpace;
+	}
+
+	/**
+	 * List occupied space wihtin block
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function GetOccupiedSpace()
+	{
+		// Get list of registered blocks and subnets in subnet range
+		$iKey = ( $this->GetKey() > 0) ? $this->GetKey() : 0;
+		$iOrgId = $this->Get('org_id');
+
+		if ($iKey == 0)
+		{
+			// Search at root space, outside any block - delegated or not
+			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = 0 UNION SELECT IPv6Block AS b WHERE b.parent_org_id = :org_id AND b.parent_id = 0";
+		}
+		else
+		{
+			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+		}
+		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
+
+		$aList = array();
+		$i = 0;
+		while ($oChildBlock = $oChildBlockSet->Fetch())
+		{
+			$aList[$i] = array();
+			$aList[$i]['type'] = 'IPv6Block';
+			$aList[$i]['sfirstip'] = $oChildBlock->Get('firstip')->GetAsCannonical();
+			$aList[$i]['firstip'] = $oChildBlock->Get('firstip');
+			$aList[$i]['lastip'] = $oChildBlock->Get('lastip');
+			$aList[$i]['obj'] = $oChildBlock;
+			$i++;
+		}
+		while ($oSubnet = $oSubnetSet->Fetch())
+		{
+			$aList[$i] = array();
+			$aList[$i]['type'] = 'IPv6Subnet';
+			$aList[$i]['sfirstip'] = $oSubnet->Get('ip')->GetAsCannonical();
+			$aList[$i]['firstip'] = $oSubnet->Get('ip');
+			$aList[$i]['lastip'] = $oSubnet->Get('lastip');
+			$aList[$i]['obj'] = $oSubnet;
+			$i++;
+		}
+		// Sort $aList by 'firstip'
+		if (!empty($aList))
+		{
+			foreach ($aList as $key => $row)
+			{
+				$aFirstIp[$key]	= $row['firstip'];
+			}
+			array_multisort($aFirstIp, SORT_ASC, $aList);
+		}
+
+		return $aList;
+	}
+
+	/**
+	 * Look for smaller block containing the IP in given organization
+	 *
+	 * @param $iOrgId
+	 * @param $sIP
+	 *
+	 * @return int|null
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public static function GetSmallerBlockContainingIp($iOrgId, $sIp)
+	{
+		$oIp = new ormIPv6($sIp);
+		$oBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = :org_id"), array(), array('org_id' => $iOrgId));
+		$iMinBlockId = 0;
+		while ($oBlock = $oBlockSet->Fetch())
+		{
+			$oCurrentFirstIp = $oBlock->Get('firstip');
+			$oCurrentLastIp = $oBlock->Get('lastip');
+			if (($oCurrentFirstIp->IsSmallerStrict($oIp) && $oIp->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerStrict($oCurrentLastIp)))
+			{
+				if ($iMinBlockId == 0)
+				{
+					$iMinBlockId = $oBlock->GetKey();
+					$iMinBlockPrefix = $oBlock->GetMinTheoriticalBlockPrefix();
+				}
+				else
+				{
+					$iCurrentBlockPrefix = $oBlock->GetMinTheoriticalBlockPrefix();
+				    if ($iMinBlockPrefix < $iCurrentBlockPrefix)
+				    {
+					    $iMinBlockId = $oBlock->GetKey();
+					    $iMinBlockPrefix = $iCurrentBlockPrefix;
+				    }
+				}
+			}
+		}
+		return $iMinBlockId;
 	}
 
 	/**
@@ -484,6 +601,8 @@ class _IPv6Block extends IPBlock
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$sOrigin = $this->Get('origin');
+		$oIpToStartFrom = array_key_exists('ip', $aParameter) ? new ormIPv6($aParameter['ip']) : $this->Get('firstip');
+		$sIpToStartFrom = $oIpToStartFrom->GetAsCompressed();
 		$iPrefix = $aParameter['spacesize'];
 		$iMaxOffer = $aParameter['maxoffer'];
 		$sStatusSubnet = $aParameter['status_subnet'];
@@ -503,32 +622,112 @@ class _IPv6Block extends IPBlock
 			$sTargetOrigin = 'other';
 		}
 
-		// Get list of free space in subnet range
+		// Get list of free and occupied space in subnet range
 		$aFreeSpace = $this->GetFreeSpace($iPrefix, $iMaxOffer);
-		
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
-		
-		// Check user rights
-		$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv6Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-		$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv6Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-			
-		// Display Summary of parameters
-		$oP->add("<ul>\n");
-		$oP->add("<li>"."&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary', $iMaxOffer, $iPrefix)."<ul>\n");
-		
-		// Display possible choices as list
 		$iSizeFreeArray = sizeof ($aFreeSpace);
-		if ($iSizeFreeArray != 0)
+		if ($iSizeFreeArray == 0)
 		{
+			$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
+			$sMessage = "<div class=\"header_message message_info teemip_message_status\">".$sIssueDesc."</div>";
+			$oP->add($sMessage);
+
+			$this->DisplayAllSpace($oP);
+		}
+		else
+		{
+			$aOccupiedSpace = $this->GetOccupiedSpace();
+
+			// Check user rights
+			$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv6Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+			$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv6Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+			
+			// Display Summary of parameters
+			$sHtml = "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary', $iMaxOffer, $iPrefix)."</b>&nbsp;";
+			$sHtml .= ($iId > 0) ? $this->GetHyperlink() : '';
+			$sHtml .= "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]&nbsp;";
+			$sHtml .= (array_key_exists('ip', $aParameter)) ? Dict::Format('IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom', $sIpToStartFrom) : '';
+			$oP->add("<ul><li>".$sHtml."<ul>\n");
+		
+			// Display possible choices as list
 			$i = 0;
+			$j = 0;
 			$iVIdCounter = 1;
+			$oAnOccupiedIp = array_key_exists( 'ip', $aParameter) ? new ormIPv6($aParameter['ip']) : $this->Get('firstip');
+			$iSizeOccupiedArray = sizeof($aOccupiedSpace);
+			$sMask = IPv6Subnet::BitToMask($iPrefix);
+			$iSize = (new ormIPv6($sMask))->IP2dec();
 			do
 			{
-				$sAnIp = $aFreeSpace[$i]['firstip']->GetAsCannonical();
-				$sLastIp = $aFreeSpace[$i]['lastip']->GetAsCannonical();
-				$sMask = $aFreeSpace[$i]['mask']->GetAsCannonical();
-				$oP->add("<li>".$sAnIp." - ".$sLastIp."\n"."<ul>");
+				$oAFreeIp = $aFreeSpace[$i]['firstip'];
+				$oLastFreeIp = $aFreeSpace[$i]['lastip'];
+
+				// Before displaying offer, display already occupied space sitting before that offer
+				if ($iSizeOccupiedArray != 0)
+				{
+					while ($oAnOccupiedIp->IsSmallerStrict($oAFreeIp) && ($j < $iSizeOccupiedArray))
+					{
+						// Display un-occupied space if its size is smaller than the requested $iSize
+						$oNextOccupiedFirstIp = $aOccupiedSpace[$j]['firstip'];
+						if ($oAnOccupiedIp->IsSmallerStrict($oNextOccupiedFirstIp))
+						{
+							$oLastOccupiedIp = $oNextOccupiedFirstIp->GetPreviousIp();
+							// Display space only if within requested scope
+							if ($oIpToStartFrom->IsSmallerOrEqual($oAnOccupiedIp))
+							{
+								$iNbIps = $oAnOccupiedIp->GetSizeInterval($oLastOccupiedIp);
+								if ($iNbIps < $iSize)
+								{
+									$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnOccupiedIp->GetAsCompressed(), $oLastOccupiedIp->GetAsCompressed(), $iNbIps)."</li>\n");
+								}
+							}
+							$oAnOccupiedIp = $oNextOccupiedFirstIp;
+						}
+						elseif ($oAnOccupiedIp->IsEqual($oNextOccupiedFirstIp))
+						{
+							// Display space only if within requested scope
+							if ($oIpToStartFrom->IsSmallerOrEqual($oAnOccupiedIp))
+							{
+								// Display object attributes
+								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+								$oP->add("<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink());
+								if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet')
+								{
+									$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask')));
+								}
+								else
+								{
+									$oP->add("&nbsp;[".$aOccupiedSpace[$j]['firstip']->GetAsCompressed()." - ".$aOccupiedSpace[$j]['lastip']->GetAsCompressed()."]");
+
+									// Display delegation information if required
+									$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
+									if ($iParentOrgId == $iOrgId)
+									{
+										// Block is delegated to child org
+										$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild',$aOccupiedSpace[$j]['obj']->GetAsHTML('org_id')));
+									}
+									elseif ($iParentOrgId != 0)
+									{
+										// Block is delegated from parent org
+										$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent',$aOccupiedSpace[$j]['obj']->GetAsHTML('parent_org_id')));
+									}
+								}
+								$oP->add("</li>\n");
+							}
+							$oAnOccupiedIp = $aOccupiedSpace[$j]['lastip']->GetNextIp();
+							$j++;
+						}
+						elseif ($oAnOccupiedIp->IsBiggerStrict($oNextOccupiedFirstIp))
+						{
+							$j++;
+						}
+					}
+				}
+				$oAnOccupiedIp = $oLastFreeIp->GetNextIp();
+
+				// Display offer now
+				$sAFreeIp = $oAFreeIp->GetAsCompressed();
+				$sLastFreeIp = $oLastFreeIp->getAsCompressed();
+				$oP->add("<li>".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>");
 				
 				// If user has rights to create block
 				// Display block with icon to create it
@@ -545,12 +744,12 @@ class _IPv6Block extends IPBlock
 						if ($sOrigin == 'rir')
 						{
 							// Creation implies a delegation
-							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAFreeIp.'\', \'lastip\': \''.$sLastFreeIp.'\'}';
 						}
 						else
 						{
-							//$sPayLoad = {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAnIp', 'lastip': '$sLastIp'}
-							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAnIp.'\', \'lastip\': \''.$sLastIp.'\'}';
+							//$sPayLoad = {'org_id': '$sOrgId', 'parent_id': '$iId', 'firstip': '$sAFreeIp', 'lastip': '$sLastFreeIp'}
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAFreeIp.'\', \'lastip\': \''.$sLastFreeIp.'\'}';
 						}
 						$oP->add_ready_script(
 <<<EOF
@@ -573,7 +772,7 @@ EOF
 						$oP->add($sHTMLValue);
 						$oP->add_ready_script(
 <<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAnIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAnIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAFreeIp'});
 EOF
 						);
 					}
@@ -582,8 +781,8 @@ EOF
 				$oP->add("</ul></li>\n"); 
 			}
 			while (++$i < $iSizeFreeArray);
+			$oP->add("</ul></li></ul>\n");
 		}
-		$oP->add("</ul></li></ul>\n");
 	}
 	
 	/**
@@ -1397,7 +1596,7 @@ EOF
 				
 				// Size (in term of prefix) of space
 				// Compute max possible 'CIDR aligned' space to look for, 
-				$iBlockPrefix = $this->GetBlockPrefix();
+				$iBlockPrefix = $this->GetMinTheoriticalBlockPrefix();
 
 				// Display list of choices
 				$sAttCode = 'spacesize';
@@ -1557,95 +1756,55 @@ EOF
 	function DisplayAllSpace(WebPage $oP)
 	{
 		// Get list of registered blocks and subnets in subnet range
-		$iId = $this->GetKey();
-		$iOrgId = $this->Get('org_id');
+		$aOccupiedSpace = $this->GetOccupiedSpace();
+
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
 		$iBlockSize = $this->GetSize();
-		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iId AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iId AND s.org_id = $iOrgId"));
-		
-		$aList = array();
-		$i = 0;
-		while ($oChildBlock = $oChildBlockSet->Fetch())
-		{
-			$aList[$i] = array();
-			$aList[$i]['type'] = 'IPv6Block';
-			$aList[$i]['sfirstip'] = $oChildBlock->Get('firstip')->GetAsCannonical();
-			$aList[$i]['firstip'] = $oChildBlock->Get('firstip');
-			$aList[$i]['lastip'] = $oChildBlock->Get('lastip');
-			$aList[$i]['obj'] = $oChildBlock;
-			$i++;
-		}
-		while ($oSubnet = $oSubnetSet->Fetch())
-		{
-			$aList[$i] = array();
-			$aList[$i]['type'] = 'IPv6Subnet';
-			$aList[$i]['sfirstip'] = $oSubnet->Get('ip')->GetAsCannonical();
-			$aList[$i]['firstip'] = $oSubnet->Get('ip');
-			$aList[$i]['lastip'] = $oSubnet->Get('lastip');
-			$aList[$i]['obj'] = $oSubnet;
-			$i++;
-		}
 
-		// Sort $aList by 'sfirstip'
-		if (!empty($aList))
-		{
-			foreach ($aList as $key => $row)
-			{
-				$aFirstIp[$key]	= $row['sfirstip'];
-			}
-			array_multisort($aFirstIp, SORT_ASC, $aList);
-		}
-		// Preset display of name and subnet attributes
-		$sHtml = "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]";
-		
-		$oAppContext = new ApplicationContext();
-		$sParams = $oAppContext->GetForLink();
-		
 		// Display Block ref
 		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetHyperlink().$sHtml."<ul>\n");
+		$oP->add("<li>".$this->GetHyperlink()."&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]<ul>\n");
 		
 		// Display sub ranges as list
-		$iSizeArray = $i;
-		$i = 0;
+		$iSizeArray = sizeof($aOccupiedSpace);
+		$j = 0;
 		$oAnIp = $oFirstIp;
 		while ($oAnIp->IsSmallerOrEqual($oLastIp))
 		{
-			if ($i < $iSizeArray)
+			if ($j < $iSizeArray)
 			{
-				if ($oAnIp->IsSmallerStrict($aList[$i]['firstip']))
+				if ($oAnIp->IsSmallerStrict($aOccupiedSpace[$j]['firstip']))
 				{
 					// Display free space
-					$oALastIp = $aList[$i]['firstip']->GetPreviousIp();
+					$oALastIp = $aOccupiedSpace[$j]['firstip']->GetPreviousIp();
 					$iNbIps = $oAnIp->GetSizeInterval($oALastIp);
 					$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace',$oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100));
-					$oAnIp = $aList[$i]['firstip'];
+					$oAnIp = $aOccupiedSpace[$j]['firstip'];
 				}
-				else if ($oAnIp->IsEqual($aList[$i]['firstip']))
+				elseif ($oAnIp->IsEqual($aOccupiedSpace[$j]['firstip']))
 				{
 					// Display object attributes
-					$sIcon = $aList[$i]['obj']->GetIcon(true, true);
-					$oP->add("<li>".$sIcon.$aList[$i]['obj']->GetHyperlink());
-					if ($aList[$i]['type'] == 'IPv6Subnet')
+					$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+					$oP->add("<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink());
+					if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet')
 					{
-						$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aList[$i]['obj']->Get('mask')));
+						$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask')));
 					}
 					else
 					{
-						$oP->add("&nbsp;[".$aList[$i]['firstip']->GetAsCompressed()." - ".$aList[$i]['lastip']->GetAsCompressed()."]");
+						$oP->add("&nbsp;[".$aOccupiedSpace[$j]['firstip']->GetAsCompressed()." - ".$aOccupiedSpace[$j]['lastip']->GetAsCompressed()."]");
 
 						// Display delegation information if required
-						$iParentOrgId = $aList[$i]['obj']->Get('parent_org_id');
-						$iChildOrgId = $aList[$i]['obj']->Get('org_id');
+						$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
+						$iChildOrgId = $aOccupiedSpace[$j]['obj']->Get('org_id');
 						if ($iParentOrgId != 0)
 						{
-							$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aList[$i]['obj']->GetAsHTML('org_id')));			 
+							$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id')));
 						} 
 					}
-					$oAnIp = $aList[$i]['lastip']->GetNextIp();
-					$i++;
+					$oAnIp = $aOccupiedSpace[$j]['lastip']->GetNextIp();
+					$j++;
 				}
 			}
 			else
@@ -2072,7 +2231,7 @@ EOF
 		// If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
 		if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId))
 		{
-			$iPrefix = $this->GetBlockPrefix();
+			$iPrefix = $this->GetMinTheoriticalBlockPrefix();
 			if ($iPrefix >= IPV6_SUBNET_MAX_PREFIX)
 			{
 				$aValues = array(

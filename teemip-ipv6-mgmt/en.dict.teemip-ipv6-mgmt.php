@@ -392,9 +392,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	// List space action on subnet blocks 
 	'UI:IPManagement:Action:ListSpace:IPv6Block' => 'List Space',                                               
 	'UI:IPManagement:Action:ListSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Space',
-	'UI:IPManagement:Action:ListSpace:IPv6Block:Title_Class_Object' => 'Space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:ListSpace:IPv6Block:Title_Class_Object' => 'Found space within %1$s: <span class="hilite">%2$s</span>',
 	'UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace' => 'Free [%1$s - %2$s] - %3$.2e IPs - %4$.2f %%',
-	
+	'UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent' => 'Free [%1$s - %2$s] - %3$.2e IPs',
+
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv6Block' => 'Find Space',
 	'UI:IPManagement:Action:FindSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Find space',

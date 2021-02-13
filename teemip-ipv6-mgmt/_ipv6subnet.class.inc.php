@@ -1783,7 +1783,7 @@ EOF
 	 *
 	 * @return string
 	 */
-	public function BitToMask($iPrefix)
+	public static function BitToMask($iPrefix)
 	{
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix)
