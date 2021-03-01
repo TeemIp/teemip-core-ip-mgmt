@@ -105,7 +105,15 @@ class _IPAddress extends IPObject
 		}
 		else
 		{
-			$this->Reset('fqdn');
+			$sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $this->Get('org_id'));
+			if ($sComputeFqdnWithEmptyShortname == 'yes')
+			{
+				$this->Set('fqdn', $this->Get('domain_name'));
+			}
+			else
+			{
+				$this->Reset('fqdn');
+			}
 		}
 	}
 
