@@ -479,6 +479,14 @@
 		            </item>
                   </items>
                 </item>
+                <item id="fieldset:Class:IPSubnet:automation">
+                  <rank>20</rank>
+                  <items>
+                    <item id="reserve_subnet_ips">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
               </items>
             </item>
             <item id="col:col2">
@@ -654,6 +662,9 @@
             </item>
             <item id="document_list">
               <rank>20</rank>
+            </item>
+            <item id="functionalcis_list">
+              <rank>30</rank>
             </item>
             <item id="col:col1">
               <rank>30</rank>

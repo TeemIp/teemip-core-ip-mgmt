@@ -54,7 +54,19 @@ class _IPv6Subnet extends IPSubnet
 	{
 		return $this->GetAsHtml('ip');
 	}
-	
+
+	/**
+	 * Returns index to be used within tree computations
+	 *
+	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function GetIndexForTree()
+	{
+		return $this->Get('ip')->GetAsCannonical();
+	}
+
 	/**
 	 * Returns size of subnet
 	 *
@@ -474,15 +486,13 @@ class _IPv6Subnet extends IPSubnet
 			case 'csvexportips':
 			case 'calculator':
 				return ('');
-			break;
-				
+
 			case 'shrinksubnet':
 			case 'splitsubnet':
 			case 'expandsubnet':
 			default:
 				// Size of IPv6 subnets cannot change
 				return ('OperationNotAllowed');
-			break;
 		}
 		return ('');
 	}
@@ -843,7 +853,24 @@ EOF
 		}
 		return '';
 	}
-	
+
+	/**
+	 * * Display subnet in the node of a hierarchical tree
+	 * @param \WebPage $oP
+	 * @param $bWithIcon
+	 * @param $iTreeOrgId
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId)
+	{
+		$sHtml = $this->GetHyperlink();
+		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
+		$oP->add($sHtml);
+	}
+
 	/*
 	 * Display main attributes for associated operation
 	 *
@@ -862,7 +889,7 @@ EOF
 	 * @param $oP
 	 * @param $aDefault
 	 */
-	function DisplayGlobalAttributesForOperation($oP, $aDefault)
+	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault)
 	{
 	}
 	
@@ -1007,7 +1034,7 @@ EOF
 	 *
 	 * @throws \Exception
 	 */
-	function DisplayCalculatorOutput(WebPage $oP, $oAppContext, $aParam)
+	function DisplayCalculatorOutput(WebPage $oP, $aParam)
 	{
 	    $sIp = $aParam['ip'];
     	$iPrefix = $aParam['cidr'];
@@ -1031,15 +1058,7 @@ EOF
 		$sLastIp = $oLastIp->GetAsCompressed();
 
 		$iIpNumber = $oIp->GetSizeInterval($oLastIp);
-		if ($iIpNumber > 2)
-		{
-			$iUsableHosts = $iIpNumber - 2;
-		}
-		else
-		{
-			$iUsableHosts = 0;
-		}
-		
+
 		$oVeryFirstIp = new ormIPv6('::');
 		if ($oSubnetIp->IsEqual($oVeryFirstIp))
 		{
@@ -1211,24 +1230,7 @@ EOF
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if ($bEditMode)
-		{
-			if ($this->IsNew())
-			{
-				// Tab for Global Parameters at creation time only
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:globalparam'));
-				$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-				$oP->add('<table style="vertical-align:top"><tr>');
-				$oP->add('<td style="vertical-align:top">');
-				
-				$aParameter = array ('reserve_subnet_IPs');
-				$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter);
-				
-				$oP->add('</td>');
-				$oP->add('</tr></table>');
-			}
-		}
-		else
+		if (!$bEditMode)
 		{
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
@@ -1543,8 +1545,8 @@ EOF
 		// Check if subnet and broadcast IPs need to be created / updated or not
 		if ($sBitMask != '128')
 		{
-			$sReserveSubnetIPs = utils::ReadPostedParam('attr_reserve_subnet_IPs', '');
-			if (empty($sReserveSubnetIPs))
+			$sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
+			if ($sReserveSubnetIPs == 'default')
 			{
 				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
 			}
@@ -1635,57 +1637,59 @@ EOF
 		$sSubnetIp = $oSubnetIp->GetAsCompressed();
 		$sBitMask = $this->Get('mask');
 		$oGatewayIp = $this->Get('gatewayip');
-		$sGatewayIp = $oGatewayIp->GetAsCompressed();
 		$sLastIp = $this->Get('lastip')->GetAsCompressed();
-		$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
-		
-		if (($sReserveSubnetIPs == 'reserve_yes') && ($sBitMask != '128'))
+
+		if ($sBitMask != '128')
 		{
-			// Create or update subnet IP
-			$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
-			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id", array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId), null, false);
-			if (is_null($oIp))
+			$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
+			if ((($sReserveSubnetIPs == 'reserve_yes') && ($this->Get('reserve_subnet_ips') == 'default')) || ($this->Get('reserve_subnet_ips') == 'reserve_yes'))
 			{
-				$oIp = MetaModel::NewObject('IPv6Address');
-				$oIp->Set('subnet_id', $iId);
-				$oIp->Set('ip', $oSubnetIp);
-				$oIp->Set('org_id', $iOrgId);
-				$oIp->Set('status', 'reserved');
-				$oIp->Set('usage_id', $sUsageNetworkIpId);
-				$oIp->DBInsert();
-			}
-			else
-			{
-				if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId))
+				// Create or update subnet IP
+				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId,NETWORK_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id",array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId),false);
+				if (is_null($oIp))
 				{
+					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
+					$oIp->Set('ip', $oSubnetIp);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
-					$oIp->DBUpdate();
+					$oIp->DBInsert();
 				}
-			}
-			
-			// Create or update gateway IP
-			$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sSubnetIp, 'org_id' => $iOrgId), false);
-			if (is_null($oIp))
-			{
-				$oIp = MetaModel::NewObject('IPv6Address');
-				$oIp->Set('subnet_id', $iId);
-				$oIp->Set('ip', $oGatewayIp);
-				$oIp->Set('org_id', $iOrgId);
-				$oIp->Set('status', 'reserved');
-				$oIp->Set('usage_id', $sUsageGatewayIpId);
-				$oIp->DBInsert();
-			}
-			else
-			{
-				if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) 
+				else
 				{
+					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId))
+					{
+						$oIp->Set('subnet_id', $iId);
+						$oIp->Set('status', 'reserved');
+						$oIp->Set('usage_id', $sUsageNetworkIpId);
+						$oIp->DBUpdate();
+					}
+				}
+
+				// Create or update gateway IP
+				$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId,GATEWAY_IP_CODE);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id",array('gatewayip' => $sSubnetIp, 'org_id' => $iOrgId),false);
+				if (is_null($oIp))
+				{
+					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
+					$oIp->Set('ip', $oGatewayIp);
+					$oIp->Set('org_id', $iOrgId);
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageGatewayIpId);
-					$oIp->DBUpdate();
+					$oIp->DBInsert();
+				}
+				else
+				{
+					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId))
+					{
+						$oIp->Set('subnet_id', $iId);
+						$oIp->Set('status', 'reserved');
+						$oIp->Set('usage_id', $sUsageGatewayIpId);
+						$oIp->DBUpdate();
+					}
 				}
 			}
 		}

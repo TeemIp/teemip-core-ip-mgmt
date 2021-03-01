@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -156,11 +156,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlock/Attribute:origin' => 'Origine',
 	'Class:IPBlock/Attribute:origin+' => 'Origine du bloc: registre internet régional ou local ou une autre organisation',
 	'Class:IPBlock/Attribute:origin/Value:rir' => 'RIR',
-	'Class:IPBlock/Attribute:origin/Value:rir+' => 'Regional Internet registry',
+	'Class:IPBlock/Attribute:origin/Value:rir+' => 'Registre Internet Régional',
 	'Class:IPBlock/Attribute:origin/Value:lir' => 'LIR',
-	'Class:IPBlock/Attribute:origin/Value:lir+' => 'Local Internet registry',
-	'Class:IPBlock/Attribute:origin/Value:other' => 'Other',
-	'Class:IPBlock/Attribute:origin/Value:other+' => 'IT department...',
+	'Class:IPBlock/Attribute:origin/Value:lir+' => 'Registre Internet Local',
+	'Class:IPBlock/Attribute:origin/Value:other' => 'Autre',
+	'Class:IPBlock/Attribute:origin/Value:other+' => 'DSI...',
 	'Class:IPBlock/Attribute:registrar_id' => 'Registrar',
 	'Class:IPBlock/Attribute:registrar_id+' => 'Related regional or local internet registry',
 	'Class:IPBlock/Attribute:registrar_name' => 'Registrar name',
@@ -248,6 +248,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Aucune alarme n\'a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Une alarme de Seuil Bas a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Une alarme de Seuil Haut a été envoyée',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips' => 'Réserve les IPs de sous-réseau, de passerelle et de broadcast',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Défini la politique de réservation des IPs de Sous-réseau, de passerelle et de Broadcast à la création',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:default' => 'Aligné avec les paramètres globaux',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Force à non',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Force à oui',
 	'Class:IPSubnet/Attribute:subnets_list' => 'Sous-réseaux NATés',
 	'Class:IPSubnet/Attribute:subnets_list+' => 'Liste de tous les sous-réseaux NATés',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
@@ -435,8 +440,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'IPs enregistrées',
 	'Class:IPRange/Attribute:occupancy+' => '',
-	'Class:IPRange/Attribute:servers_list' => 'Servers DHCP',
-	'Class:IPRange/Attribute:servers_list+' => 'Liste de tous les serveurs DHCP en charge de cette plage',
+	'Class:IPRange/Attribute:functionalcis_list' => 'Serveurs DHCP',
+	'Class:IPRange/Attribute:functionalcis_list+' => 'Liste de tous les serveurs DHCP en charge de cette plage',
 ));
 
 //
@@ -454,32 +459,34 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: lnkIPRangeToServer
+// Class: lnkFunctionalCIToIPRange
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkIPRangeToServer' => 'Lien Plage d\'IPs / Serveur',
-	'Class:lnkIPRangeToServer+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'Plage d\'IPs',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'Nom de la plage d\'IPs',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Serveur',
-	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Nom du serveur',
-	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role' => 'Rôle',
-	'Class:lnkIPRangeToServer/Attribute:role+' => 'Rôle du serveur vis à vis de la plage',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primaire',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secondaire',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+	'Class:lnkFunctionalCIToIPRange' => 'Lien CI Fonctionnel / Plage d\'IPs',
+	'Class:lnkFunctionalCIToIPRange+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall' => 'Type de plage d\'IPs',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id' => 'Plage d\'IPs',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name' => 'Nom de la plage d\'IPs',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id' => 'CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name' => 'Nom du CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role' => 'Rôle',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role+' => 'Rôle du serveur vis à vis de la plage',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single' => 'Single',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary' => 'Primaire',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary' => 'Secondaire',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active' => 'Active',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -717,6 +724,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Oui',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'Calcule le FQDN quand le nom court est vide',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'Non',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes' => 'Oui',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Libère les IPs des CIs qui deviennent obsolètes',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'Non',
@@ -890,6 +903,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:IPv4Address+' => 'Adresses IPv4',
 	'Menu:IPTools' => 'Outils',
 	'Menu:IPTools+' => 'Boîte à outils IP',
+	'Menu:FindSpace' => 'Recherche d\'espace',
+	'Menu:FindSpace+' => 'Outil pour rechercher et allouer de l\'espace d\'adressage IP',
 	'Menu:SubnetCalculator' => 'Calculateur de Sous-réseaux',
 	'Menu:SubnetCalculator+' => 'Outil pour calculer les parametres d\'un sous réseau à partir d\'une IP et d\'un masque',
 	'Menu:Options' => 'Paramètres',
@@ -965,6 +980,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder' => 'Un sous-réseau attaché au bloc parent est à cheval les nouvelles limites !',
 	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> a été étendu.',
 
+	// Find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPBlock:RequestedSpaceBiggerThanBlockSize' => 'IP address to look space from belongs to subnet block %1$s and the requested space is larger than the size of that block!',
+	'UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound' => 'Il n\'y a pas assez d\'espace libre dans le bloc %1$s pour traiter votre demande !',
+	'IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom' => 'de l\'IP %1$s',
+
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChildOrg' => 'L\'organisation à laquelle le bloc appartient n\'a pas d\'enfant !',
 	'UI:IPManagement:Action:Delegate:IPBlock:NoOtherOrg' => 'Il n\'existe aucune autre organisation que celle à laquelle le bloc appartient !',
@@ -973,6 +993,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization' => 'Aucun changement n\'a été demandé !',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocks' => 'Le bloc a des blocs fils !',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets' => 'Le bloc a des subnets fils !',
+	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg' => 'Cet espace contient déjà des blocs délégués d\'une autre oarganisation !',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg' => 'Le bloc est en conflict avec un bloc de l\'organisation cible !',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Le bloc est en conflict avec un bloc de l\'organisation parente !',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Le bloc a des blocs fils dans l\'organisation parent !',
@@ -1051,7 +1072,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:ListSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Espace',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Espace dans %1$s: <span class="hilite">%2$s</span>',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace' => 'Libre [%1$s - %2$s] - %3$s IPs - %4$.2f %%',
-	
+	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent' => 'Libre [%1$s - %2$s] - %3$s IPs',
+
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv4Block' => 'Rechercher de l\'espace',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Recherche d\'espace',
@@ -1250,7 +1272,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 // Management of IP ranges
 //
-	// Creation Management	
+	// Creation and Update Management
 	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Le nom de la Plage existe déjà dans le Sous-réseau !',	
 	'UI:IPManagement:Action:New:IPRange:Reverted' => 'La première IP de la Plage est plus grande que la dernière !',	
 	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'La Plage d\'IPs n\'est pas contenue dans le Sous-réseau sélectionné !',	
@@ -1258,7 +1280,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Collision : la première IP appartient à une plage existante !',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collision : la dernière IP appartient à une plage existante !',	
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collision : la nouvelle plage inclut une plage existante !',
-	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs !',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs DHCP !',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un serveur DHCP ne peut être que de classe Serveur ou Machine Virtuelle !',
 
 //
 // Management of IPv4 ranges
@@ -1317,11 +1340,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:AllocateIP:IPAddress' => 'Alloue l\'adresse à un CI',
 	'UI:IPManagement:Action:UnAllocateIP:IPAddress' => 'Désalloue l\'adresse de tous les CIs',
 	'UI:IPManagement:Action:Allocate:IPAddress:Class' => 'Classe cible',
-	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'CI Fonctionel',
+	'UI:IPManagement:Action:Allocate:IPAddress:CI' => 'CI Fonctionnel',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAttribute' => 'Attribut IP',
 	'UI:IPManagement:Action:Allocate:IPAddress:NoCI' => 'Il n\'y a pas de CI instancié qui porte des attributs de type Adresse IP dans cette organisation !',
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'L\'adresse ne peut pas être allouée au CI: %1$s',
-	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI Fonctionel n\'existe pas !',
+	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI fonctionnel n\'existe pas !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'L\'attribut est en lecture seule !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut est synchronisé depuis une source externe !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'L\'adresse ne peut pas être désallouée: %1$s',
@@ -1357,5 +1380,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DisplayTree:Domain:PageTitle_Class' => 'Domaines DNS',
 	'UI:IPManagement:Action:DisplayTree:Domain:Title_Class' => 'Domaines DNS',
 	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organisation %1$s',
+
+//
+// Generic actions
+//
+	// Find space action on subnets
+	'UI:IPManagement:Action:FindSpace' => 'Rechercher et allouer de l\'espace IP',
+	'UI:IPManagement:Action:FindSpace:Organization' => 'Organisation',
+	'UI:IPManagement:Action:FindSpace:SpaceType' => 'Type d\'espace',
+	'UI:IPManagement:Action:FindSpace:IPv4Space' => 'Espace IPv4',
+	'UI:IPManagement:Action:FindSpace:IPv6Space' => 'Espace IPv6',
+	'UI:IPManagement:Action:FindIPv4Space' => 'Rechercher et allouer de l\'espace IPv4',
+	'UI:IPManagement:Action:FindIPv6Space' => 'Rechercher et allouer de l\'espace IPv6',
+	'UI:IPManagement:Action:FindSpace:FirstIP' => 'A partir de l\'adresse IP :',
+	'UI:IPManagement:Action:FindSpace:SpaceSize' => 'Taille de l\'espace à rechercher: ',
+	'UI:IPManagement:Action:FindSpace:MaxNumberOfOffers' => 'Mombre maximum d\'offres :',
 
 ));

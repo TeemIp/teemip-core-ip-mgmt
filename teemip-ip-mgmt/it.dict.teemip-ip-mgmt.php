@@ -437,34 +437,34 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 ));
 
 //
-// Class: lnkIPRangeToServer
+// Class: lnkFunctionalCIToIPRange
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Class:lnkIPRangeToServer' => 'Link IP Range / Server',
-	'Class:lnkIPRangeToServer+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'Tipo di IP range',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Range',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'Nome IP Range',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
-	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Nome Server',
-	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role' => 'Ruolo',
-	'Class:lnkIPRangeToServer/Attribute:role+' => 'Ruolo del server per l\'IP range',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primary',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secundary',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+	'Class:lnkFunctionalCIToIPRange' => 'Link CI Funzionale / IP Range ',
+	'Class:lnkFunctionalCIToIPRange+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall' => 'Tipo di IP range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id' => 'IP Range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name' => 'Nome IP Range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id' => 'CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role' => 'Ruolo',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role+' => 'Ruolo del server per l\'IP range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single' => 'Single',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary' => 'Primary',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary' => 'Secundary',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active' => 'Active',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -687,6 +687,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Si',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'Calcola FQDN quando il nome breve è vuoto',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'No',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes' => 'Si',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Rilasciare gli IP degli elementi della configurazione che diventano obsoleti',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'No',
@@ -937,6 +943,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization' => 'Nessun cambio è stato richiesto!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocks' => 'Il blocco ha blocchi figli!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets' => 'Block has children subnets!',
+	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg' => 'Ci sono già alcuni blocchi delegati da altre organizzazioni in quella gamma!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg' => 'Il blocco è in conflitto con un blocco dell\'organizzazione di destinazione!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Il blocco è in conflitto con un blocco dell\'organizzazione genitore!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Il Blocco ha blocchi figli nell\'organizzazione genitore!',
@@ -1221,7 +1228,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:New:IPRange:Collision0' => 'L\'intervallo IP esiste già!',
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Collisione di intervallo: il primo IP appartiene a un intervallo esistente!',	
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collisione di intervallo: l\'ultimo IP appartiene a un intervallo esistente !',
-	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collisione di intevallo: il nuovo intervallo ne include uno esistente!',	
+	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collisione di intevallo: il nuovo intervallo ne include uno esistente!',
+	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Solo gli intervalli DHCP possono essere collegati ai server DHCP!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un server DHCP può essere solo di classe Server o Macchina virtuale!',
 
 //
 // Management of IPv4 ranges

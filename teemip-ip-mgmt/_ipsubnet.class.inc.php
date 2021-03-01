@@ -290,6 +290,7 @@ class _IPSubnet extends IPObject
 			case 'ping_duration':
 			case 'iplookup_duration':
 			case 'scan_duration':
+			case 'reserve_subnet_ips':
 				return OPT_ATT_READONLY;
 
 			default:

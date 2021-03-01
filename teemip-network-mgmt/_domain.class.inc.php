@@ -24,11 +24,12 @@
 class _Domain extends DNSObject
 {
 	/**
-	 * Returns name to be displayed within trees
+	 * Returns index to be used within tree computations
 	 *
+	 * @return string
 	 * @throws \CoreException
 	 */
-	public function GetNameForTree()
+	public function GetIndexForTree()
 	{
 		return $this->GetName();
 	}
@@ -37,14 +38,14 @@ class _Domain extends DNSObject
 	 * Display domain as tree leaf
 	 *
 	 * @param \WebPage $oP
-	 * @param bool $bWithSubnet
-	 * @param $sTreeOrgId
+	 * @param bool $bWithIcon
+	 * @param $iTreeOrgId
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithSubnet, $sTreeOrgId)
+	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId)
 	{
 		$oP->add($this->GetHyperlink());
 
@@ -53,7 +54,7 @@ class _Domain extends DNSObject
 		$iParentOrgId = $this->Get('parent_org_id');
 		if ($iParentOrgId != 0)
 		{
-			if ($sTreeOrgId == $iOrgId)
+			if ($iTreeOrgId == $iOrgId)
 			{
 				// Domain is delegated from parent org
 				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:Domain:DelegatedFromParent',$this->GetAsHTML('parent_org_id')));

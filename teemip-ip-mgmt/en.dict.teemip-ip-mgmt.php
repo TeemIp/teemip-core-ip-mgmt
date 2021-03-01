@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -248,6 +248,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'No alarm has been sent yet',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Low water mark alarm has been sent',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'High water mark alarm has been sent',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips' => 'Reserve subnet, gateway and broadcast IPs',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Define the policy for the subnet, gateway and broadcast IPs reservation at creation',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:default' => 'Aligned with global IP settings',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Force to no',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Force to yes',
 	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Subnets',
 	'Class:IPSubnet/Attribute:subnets_list+' => 'List of NAT subnets',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
@@ -435,8 +440,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'Registered IPs',
 	'Class:IPRange/Attribute:occupancy+' => '',
-	'Class:IPRange/Attribute:servers_list' => 'DHCP Servers',
-	'Class:IPRange/Attribute:servers_list+' => 'List of all DHCP servers looking after that DHCP range',
+	'Class:IPRange/Attribute:functionalcis_list' => 'DHCP Servers',
+	'Class:IPRange/Attribute:functionalcis_list+' => 'List of all DHCP servers looking after that DHCP range',
 ));
 
 //
@@ -454,34 +459,34 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: lnkIPRangeToServer
+// Class: lnkFunctionalCIToIPRange
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:lnkIPRangeToServer' => 'Link IP Range / Server',
-	'Class:lnkIPRangeToServer+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'IP Range Type',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Range',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'IP Range name',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
-	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Server name',
-	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role' => 'Role',
-	'Class:lnkIPRangeToServer/Attribute:role+' => 'Role of the server for the range',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primary',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Secundary',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+	'Class:lnkFunctionalCIToIPRange' => 'Link Functional CI / IP Range',
+	'Class:lnkFunctionalCIToIPRange+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall' => 'IP Range Type',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id' => 'IP Range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name' => 'IP Range name',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id' => 'CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name' => 'CI name',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role' => 'Role',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role+' => 'Role of the server for the range',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single' => 'Single',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary' => 'Primary',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary' => 'Secundary',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active' => 'Active',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -719,6 +724,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Yes',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'Compute FQDN when short name is empty',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'No',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Release IPs from CIs that become obsolete',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'No',
@@ -893,7 +904,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPTools' => 'Tools',
 	'Menu:IPTools+' => 'Set of IP tools',
 	'Menu:FindSpace' => 'Find Space',
-	'Menu:FindSpace+' => 'tool to find and allocate IP space',
+	'Menu:FindSpace+' => 'Tool to find and allocate IP space',
 	'Menu:SubnetCalculator' => 'Subnet Calculator',
 	'Menu:SubnetCalculator+' => 'Tool to calculate subnet parameters from an IP and a mask',
 	'Menu:Options' => 'Parameters',
@@ -982,6 +993,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization' => 'No change has been required!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocks' => 'Block has children blocks!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets' => 'Block has children subnets!',
+	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg' => 'There are already some blocks delegated from other organizations in that range!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg' => 'Block conflicts with a block from the target organization!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Block conflicts with a block from the parent organization!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Block has children blocks in parent organization!',
@@ -1260,7 +1272,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 // Management of IP ranges
 //
-	// Creation Management	
+	// Creation and Update Management
 	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Name of Range already exists within subnet!',	
 	'UI:IPManagement:Action:New:IPRange:Reverted' => 'First IP of Range is higher than last IP!',	
 	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'IP Range is not contained within selected subnet!',	
@@ -1269,6 +1281,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision: last IP belongs to an existing range!',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision: new range includes an existing one!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'A DHCP server can only be of Server or Virtual Machine class!',
 
 //
 // Management of IPv4 ranges

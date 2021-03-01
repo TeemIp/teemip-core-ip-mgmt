@@ -52,7 +52,7 @@ class _IPv6Block extends IPBlock
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetNameForTree()
+	public function GetIndexForTree()
 	{
 		return $this->Get('firstip')->GetAsCannonical();
 	}
@@ -470,7 +470,7 @@ class _IPv6Block extends IPBlock
 		$oMask = $oMask128;
 
 		// Check with all possible masks that LastIp & Mask == FirstIP
-		for ($i = 1; $i <= IPV6_MAX_BIT; $i++)
+		for ($i = 0; $i <= IPV6_MAX_BIT; $i++)
 		{
 			$oAndIP = $oLastIp->BitwiseAnd($oMask);
 			if ($oFirstIp->IsEqual($oAndIP))
@@ -1312,6 +1312,8 @@ EOF
 				}
 			}
 		}
+
+		return $this;
 	}
 	
 	/**
@@ -1429,7 +1431,7 @@ EOF
 	 *
 	 * @param \WebPage $oP
 	 * @param bool $bWithSubnet
-	 * @param $sTreeOrgId
+	 * @param $iTreeOrgId
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1440,16 +1442,14 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DisplayAsLeaf(WebPage $oP, $bWithSubnet, $sTreeOrgId)
+	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $sTreeOrgId)
 	{
-		if	($bWithSubnet)
-		{                             
-			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;".$this->GetName();
-		}
-		else
+		$sHtml = '';
+		if ($bWithIcon)
 		{
-			$sHtml = $this->GetHyperlink();
+			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;";
 		}
+		$sHtml .= $this->GetHyperlink();
 		$oP->add($sHtml);
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');	 
@@ -1472,30 +1472,6 @@ EOF
 				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild',$this->GetAsHTML('org_id')));			 
 			}
 		} 
-		
-		// Expand subnet list if required
-		if ($bWithSubnet)
-		{
-			$iBlockId = $this->GetKey();
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iBlockId'"));
-			if ($oSubnetSet->Count() != 0)
-			{
-				$oP->add("<ul>\n");
-				$aSubnets = array();
-				while ($oSubnet = $oSubnetSet->Fetch())
-				{
-					$aSubnets[$oSubnet->Get('ip')->GetAsCannonical()] = $oSubnet;
-				}
-				ksort($aSubnets);
-				foreach ($aSubnets as $key => $oSubnet)
-				{
-					$oP->add("<li>".$oSubnet->GetHyperlink());
-					$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$oSubnet->Get('mask')));
-					$oP->add("</li>\n");
-				}
-				$oP->add("</ul>\n");
-			}
-		}
 	}
 	
 	/**
@@ -2009,8 +1985,9 @@ EOF
 		}
 
 		// Check name doesn't already exist
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.name = '$sName' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
-		if ($oSRangeSet->Count() != 0)
+		$sOQL = "SELECT IPv6Block AS b WHERE b.name = :name AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'id' => $iKey, 'org_id' => $iOrgId));
+		if ($oSRangeSet->CountExceeds(0))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
 		}
@@ -2076,10 +2053,12 @@ EOF
 			// Make sure range doesn't collide with another range attached to the same parent.
 			//		If no parent is specified (null), then check is done with all such blocks with null parent specified.
 			//		It is done on blocks belonging to the same parent otherwise
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
+			$sOQL = "SELECT IPv6Block AS b WHERE b.parent_id = :parent_id AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('parent_id' => $iParentId, 'id' => $iKey, 'org_id' => $iOrgId));
 			if ($iParentId == 0)
 			{
-				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $iOrgId AND b.id != '$iKey'"));
+				$sOQL = "SELECT IPv6Block AS b WHERE b.parent_org_id != 0 AND b.org_id = :org_id AND b.id != :id";
+				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 				$oSRangeSet->Append($oSRangeSet2);
 			}
 			while ($oSRange = $oSRangeSet->Fetch())
@@ -2108,13 +2087,22 @@ EOF
 				// If new subnet range is including existing ones, the included ranges will automatically be attached
 				//	 to the one newly created because of hierarchical structure of blocks (see AfterInsert).
 			}
-			
+
+			// Make sure block doesn't contain any block delegated from another organization
+			$sOQL = "SELECT IPv6Block AS b WHERE :firstip <= b.firstip AND b.lastip <= :lastip AND b.org_id = :org_id AND b.parent_org_id > 0";
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('firstip' => $sFirstIp, 'lastip' => $sLastIp, 'org_id' => $iOrgId));
+			if ($oSRangeSet->CountExceeds(0))
+			{
+				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg');
+				return;
+			}
+
 			// If block is delegated straight away
 			$iParentOrgId = $this->Get('parent_org_id');
 			if ($iParentOrgId != 0)
 			{
 				// Make sure block has no parent in current organization - must be at the top of the tree
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = $iOrgId"));
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 				while ($oSRange = $oSRangeSet->Fetch())
 				{
 					$oCurrentFirstIp = $oSRange->Get('firstip');
@@ -2130,7 +2118,8 @@ EOF
 				// 	This is not possible as delegated blocks may only be provided from parent organization and that blocks with children cannot be delegated
 				
 				// Make sure that there is no collision with brother blocks from parent organization
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = $iParentId AND b.org_id = $iParentOrgId"));
+				$sOQL = "SELECT IPv6Block AS b WHERE b.parent_id = :parent_id AND b.org_id = :parent_org_id";
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('parent_id' => $iParentId, 'parent_org_id' => $iParentOrgId));
 				while ($oSRange = $oSRangeSet->Fetch())
 				{
 					$oCurrentFirstIp = $oSRange->Get('firstip');

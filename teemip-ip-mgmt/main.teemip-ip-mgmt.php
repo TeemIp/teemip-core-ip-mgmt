@@ -136,12 +136,12 @@ class AttributeDomainName extends AttributeString
 		//   Right regex with atomic grouping: ^(? >\w[\w-]*(\.\w[\w-]*)*\.?)$ (no space between ? and >)
 		//   Working regex: ^(?=(\w[\w-]*(\.\w[\w-]*)*\.?))\1$
 
-		$sPattern = '^(?=(\w[\w-]*(\.\w[\w-]*)*\.?))\1$';
+		$sPattern = '^(\w[\w-]*(\.\w[\w-]*)*\.?)$';
 		$sAdditionalPattern = $this->GetOptional('validation_pattern', '');
-		if (($sAdditionalPattern != '') && !(@preg_match($sAdditionalPattern, null) === false))
+		if (($sAdditionalPattern != '') && !(@preg_match('/'.$sAdditionalPattern.'/', null) === false))
 		{
 			// $sAdditionalPattern exists and is valid. Include it in validation pattern
-			$sPattern = '^'.$sAdditionalPattern.'$|'.$sPattern;
+			$sPattern = $sAdditionalPattern.'|'.$sPattern;
 		}
 		return $sPattern;
 	}

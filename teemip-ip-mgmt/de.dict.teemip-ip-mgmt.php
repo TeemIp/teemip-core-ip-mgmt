@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @copyright   Copyright (C) 2016 ITOMIG GmbH (deutsche Übersetzung)
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -249,6 +249,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Es wurde noch kein Alarm gesendent',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Niedrig Alarm gesendet',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Hoch Alarm gesendet ',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips' => 'Reservieren von Subnet, Gateway und Broadcast IPs',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Definierte die Richtlinie zum Reservieren von Subnetz-, Gateway- und Broadcast-IPs bei der Erstellung ',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:default' => 'An globalen IP-Einstellungen ausgerichtet',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Kraft zu nein',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Kraft zu ja',
 	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Subnetze',
 	'Class:IPSubnet/Attribute:subnets_list+' => 'Liste der NAT Subnetze',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
@@ -436,8 +441,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPRange/Attribute:dhcp/Value:dhcp_yes+' => '',
 	'Class:IPRange/Attribute:occupancy' => 'Registrierte IPs',
 	'Class:IPRange/Attribute:occupancy+' => '',
-	'Class:IPRange/Attribute:servers_list' => 'DHCP Server',
-	'Class:IPRange/Attribute:servers_list+' => 'Liste aller DHCP Server, die diesen DHCP Bereich verwalten',
+	'Class:IPRange/Attribute:functionalcis_list' => 'DHCP Servers',
+	'Class:IPRange/Attribute:functionalcis_list+' => 'Liste aller DHCP Servers, die diesen DHCP Bereich verwalten',
 ));
 
 //
@@ -455,34 +460,34 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
-// Class: lnkIPRangeToServer
+// Class: lnkFunctionalCIToIPRange
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:lnkIPRangeToServer' => 'Verknüpfung IP Bereich / Server',
-	'Class:lnkIPRangeToServer+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall' => 'IP Bereich Type',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id_finalclass_recall+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id' => 'IP Bereich',
-	'Class:lnkIPRangeToServer/Attribute:iprange_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name' => 'IP Bereich Name',
-	'Class:lnkIPRangeToServer/Attribute:iprange_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_id' => 'Server',
-	'Class:lnkIPRangeToServer/Attribute:server_id+' => '',
-	'Class:lnkIPRangeToServer/Attribute:server_name' => 'Server Name',
-	'Class:lnkIPRangeToServer/Attribute:server_name+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role' => 'Rolle',
-	'Class:lnkIPRangeToServer/Attribute:role+' => 'Rolle des Servers für den Bereich',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single' => 'Single',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:single+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope' => 'Split scope',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:split_scope+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary' => 'Primär',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:primary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary' => 'Sekundär',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:secondary+' => '',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active' => 'Active',
-	'Class:lnkIPRangeToServer/Attribute:role/Value:active+' => '',
+	'Class:lnkFunctionalCIToIPRange' => 'Verknüpfung Funktionales CI / IP Bereich',
+	'Class:lnkFunctionalCIToIPRange+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall' => 'IP Bereich Type',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id_finalclass_recall+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id' => 'IP Bereich',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name' => 'IP Bereich Name',
+	'Class:lnkFunctionalCIToIPRange/Attribute:iprange_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id' => 'CI',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_id+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name' => 'CI Name',
+	'Class:lnkFunctionalCIToIPRange/Attribute:functionalci_name+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role' => 'Rolle',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role+' => 'Rolle des CI für den Bereich',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single' => 'Single',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:single+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope' => 'Split scope',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:split_scope+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary' => 'Primär',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:primary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary' => 'Sekundär',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:secondary+' => '',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active' => 'Active',
+	'Class:lnkFunctionalCIToIPRange/Attribute:role/Value:active+' => '',
 ));
 
 //
@@ -720,6 +725,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Ja',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'FQDN berechnen, wenn der Kurzname leer ist',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'Nein',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no+' => '',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes' => 'Ja',
+	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'IPs von CIs, die veraltet sind, werden freigegeben',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
 	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'Nein',
@@ -893,6 +904,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:IPv4Address+' => 'IPv4 Adressen',
 	'Menu:IPTools' => 'Werkzeuge',
 	'Menu:IPTools+' => '',
+	'Menu:FindSpace' => 'IP Raum finden',
+	'Menu:FindSpace+' => 'Werkzeug zum suchen und allokieren IP Raum',
 	'Menu:SubnetCalculator' => 'Subnetz Rechner',
 	'Menu:SubnetCalculator+' => '',
 	'Menu:Options' => 'Parameter',
@@ -968,6 +981,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder' => 'Ein Subnetz, das an den Parent Block angehängt ist, sitzt zwischen den neuen Grenzen!',
 	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> wurde vergrößert.',
 
+	// Find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPBlock:RequestedSpaceBiggerThanBlockSize' => 'Die IP Adresse, von der aus der IP Bereich durchsucht werden soll, gehört zum Subnetzblock %1$s, und der angeforderte IP Bereich ist größer als die Größe dieses Blocks!',
+	'UI:IPManagement:Actilon:DoFindSpace:IPBlock:NoSpaceFound' => 'Innerhalb von Block %1$s ist nicht genügend freier Speicherplatz vorhanden, um Ihre Anfrage zu erfüllen!',
+	'IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom' => 'von IP %1$s',
+
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChildOrg' => 'Die Organisation des Blocks hat keine Children!',
 	'UI:IPManagement:Action:Delegate:IPBlock:NoOtherOrg' => 'Keine andere Organisation!',
@@ -976,6 +994,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization' => 'Keine Änderung notwendig!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocks' => 'Der Block hat Children Blöcke!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets' => 'Der Block hat Children Subnetze!',
+	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg' => 'Es gibt bereits einige Blöcke, die von anderen Organisationen in diesem Block delegiert wurden!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg' => 'Block in Konflikt mit einem Block der Zielorganisation!',
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Block in Konflikt mit einem Block der Parent-Organisation!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Der Block hat Children in der Parent-Organisation!',
@@ -986,8 +1005,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Undelegate:IPBlock:IsNotDelegated' => 'Block steht zur Delegation zur Verfügung!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Block hat Subblöcke!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Block hat Subnetze!',
-	
-	
+
 //
 // Management of IPv4Blocks
 //
@@ -1055,7 +1073,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:ListSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - IP Raum',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'IP Raum in %1$s: <span class="hilite">%2$s</span>',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace' => 'Frei [%1$s - %2$s] - %3$s IPs - %4$.2f %%',
-	
+	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent' => 'Frei [%1$s - %2$s] - %3$s IPs',
+
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv4Block' => 'IP Raum finden',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - IP Raum finden',
@@ -1263,6 +1282,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision : die letzte IP gehört zu einem schon existierenden Bereich!',	
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision : der Bereich umfasst einen schon bestehenden!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Nur DHCP-Bereiche können mit DHCP-Servern verknüpft werden!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Ein DHCP-Server kann nur der Klasse Server oder Virtual Machine angehören!',
 
 //
 // Management of IPv4 ranges
@@ -1361,5 +1381,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:DisplayTree:Domain:PageTitle_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayTree:Domain:Title_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayTree:Domain:OrgName' => 'Organisation %1$s',
-	
+
+//
+// Generic actions
+//
+	// Find space action on subnets
+	'UI:IPManagement:Action:FindSpace' => 'Suchen und Zuweisen von IP Raum',
+	'UI:IPManagement:Action:FindSpace:Organization' => 'Organisation',
+	'UI:IPManagement:Action:FindSpace:SpaceType' => 'Raumtyp',
+	'UI:IPManagement:Action:FindSpace:IPv4Space' => 'IPv4 Raumtyp',
+	'UI:IPManagement:Action:FindSpace:IPv6Space' => 'IPv6 Raumtyp',
+	'UI:IPManagement:Action:FindIPv4Space' => 'Suchen und Zuweisen von IPv4 Raum',
+	'UI:IPManagement:Action:FindIPv6Space' => 'Suchen und Zuweisen von IPv4 Raum',
+	'UI:IPManagement:Action:FindSpace:FirstIP' => 'Von IP Adresse:',
+	'UI:IPManagement:Action:FindSpace:SpaceSize' => 'Größe des zu suchenden Raums:',
+	'UI:IPManagement:Action:FindSpace:MaxNumberOfOffers' => 'Maximale Anzahl von Angeboten:',
+
 ));

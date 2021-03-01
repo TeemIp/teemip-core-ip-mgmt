@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2020 TeemIp
+// Copyright (C) 2021 TeemIp
 //
 //   This file is part of TeemIp.
 //
@@ -17,7 +17,7 @@
 //   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
 
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -43,13 +43,13 @@ class _IPv4Block extends IPBlock
 	}
 
 	/**
-	 * Returns name to be displayed within trees
+	 * Returns index to be used within tree computations
 	 *
 	 * @return int
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetNameForTree()
+	public function GetIndexForTree()
 	{
 		return myip2long($this->Get('firstip'));
 	}
@@ -1358,11 +1358,11 @@ EOF
 	}
 
 	/**
-	 * Display block and child subnets as tree leaf
+	 * Display block in the node of a hierarchical tree
 	 *
 	 * @param \WebPage $oP
-	 * @param bool $bWithSubnet
-	 * @param $sTreeOrgId
+	 * @param bool $bWithIcon
+	 * @param $iTreeOrgId
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1373,16 +1373,14 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithSubnet, $sTreeOrgId)
+	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId)
 	{
-		if	($bWithSubnet)
+		$sHtml = '';
+		if ($bWithIcon)
 		{
-			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;".$this->GetName();
+			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;";
 		}
-		else
-		{
-			$sHtml = $this->GetHyperlink();
-		}
+		$sHtml .= $this->GetHyperlink();
 		$oP->add($sHtml);
 		$oP->add("&nbsp;&nbsp;&nbsp;[".$this->Get('firstip')." - ".$this->Get('lastip')."]");
 		$oP->add("&nbsp;&nbsp;&nbsp;".$this->GetAsHTML('type'));
@@ -1392,7 +1390,7 @@ EOF
 		$iParentOrgId = $this->Get('parent_org_id');
 		if ($iParentOrgId != 0)
 		{
-			if ($sTreeOrgId == $iOrgId)
+			if ($iTreeOrgId == $iOrgId)
 			{
 				// Block is delegated from parent org
 				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent',$this->GetAsHTML('parent_org_id')));
@@ -1401,24 +1399,6 @@ EOF
 			{
 				// Block is delegated to child org
 				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild',$this->GetAsHTML('org_id')));
-			}
-		}
-
-		// Expand subnet list if required
-		if ($bWithSubnet)
-		{
-			$iBlockId = $this->GetKey();
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId'"));
-			if ($oSubnetSet->Count() != 0)
-			{
-				$oP->add("<ul>\n");
-				while ($oSubnet = $oSubnetSet->Fetch())
-				{
-					$oP->add("<li>".$oSubnet->GetHyperlink());
-					$oP->add("&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$oSubnet->Get('mask')));
-					$oP->add("</li>\n");
-				}
-				$oP->add("</ul>\n");
 			}
 		}
 	}
@@ -1913,8 +1893,9 @@ EOF
 		$iLastIp = myip2long($this->Get('lastip'));
 
 		// Check name doesn't already exist
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.name = '$sName' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
-		while ($oSRange = $oSRangeSet->Fetch())
+		$sOQL = "SELECT IPv4Block AS b WHERE b.name = :name AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'id' => $iKey, 'org_id' => $iOrgId));
+		if ($oSRangeSet->CountExceeds(0))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
 			return;
@@ -1980,10 +1961,12 @@ EOF
 			// Make sure range doesn't collide with another range attached to the same parent.
 			//		If no parent is specified (null), then check is done with all such blocks with null parent specified.
 			//		It is done on blocks belonging to the same parent otherwise
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
+			$sOQL = "SELECT IPv4Block AS b WHERE b.parent_id = :parent_id AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('parent_id' => $iParentId, 'id' => $iKey, 'org_id' => $iOrgId));
 			if ($iParentId == 0)
 			{
-				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $iOrgId AND b.id != $iKey"));
+				$sOQL = "SELECT IPv4Block AS b WHERE b.parent_org_id != 0 AND b.org_id = :org_id AND b.id != :id";
+				$oSRangeSet2 = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 				$oSRangeSet->Append($oSRangeSet2);
 			}
 			while ($oSRange = $oSRangeSet->Fetch())
@@ -2013,13 +1996,23 @@ EOF
 				//	 to the one newly created because of hierarchical structure of blocks (see AfterInsert).
 			}
 
+			// Make sure block doesn't contain any block delegated from another organization
+			$sOQL = "SELECT IPv4Block AS b WHERE :firstip <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= :lastip AND b.org_id = :org_id AND b.parent_org_id > 0";
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('firstip' => $iFirstIp, 'lastip' => $iLastIp, 'org_id' => $iOrgId));
+			if ($oSRangeSet->CountExceeds(0))
+			{
+				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg');
+				return;
+			}
+
 			// If block is delegated straight away
 			$iParentOrgId = $this->Get('parent_org_id');
 			if ($iParentOrgId != 0)
 			{
 				// Make sure block has no parent in current organization - must be at the top of the tree
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE INET_ATON(b.firstip) <= '$iFirstIp' AND '$iLastIp' <= INET_ATON(b.lastip) AND b.org_id = $iOrgId"));
-				if ($oSRangeSet->Count() != 0)
+				$sOQL = "SELECT IPv4Block AS b WHERE INET_ATON(b.firstip) <= :firstip AND :lastip <= INET_ATON(b.lastip) AND b.org_id = :org_id";
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('firstip' => $iFirstIp, 'lastip' => $iLastIp, 'org_id' => $iOrgId));
+				if ($oSRangeSet->CountExceeds(0))
 				{
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
 					return;
@@ -2029,7 +2022,8 @@ EOF
 				// 	This is not possible are delegated blocks may only provide from parent organization and that blocks with children cannot be delegated
 
 				// Make sure that there is no collision with brother blocks from parent organization
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = $iParentId AND b.org_id = $iParentOrgId"));
+				$sOQL = "SELECT IPv4Block AS b WHERE b.parent_id = :parent_id AND b.org_id = :parent_org_id";
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('parent_id' => $iParentId, 'parent_org_id' => $iParentOrgId));
 				while ($oSRange = $oSRangeSet->Fetch())
 				{
 					$iCurrentFirstIp = myip2long($oSRange->Get('firstip'));
@@ -2042,14 +2036,16 @@ EOF
 				}
 
 				// Make sure that block doesn't have any child block nor child subnet in parent organization
-				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE $iFirstIp <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= $iLastIp AND b.org_id = $iParentOrgId"));
-				if ($oSRangeSet->Count() != 0)
+				$sOQL = "SELECT IPv4Block AS b WHERE :firstip <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= :lastip AND b.org_id = :parent_org_id";
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('firstip' => $iFirstIp, 'lastip' => $iLastIp, 'parent_org_id' => $iParentOrgId));
+				if ($oSRangeSet->CountExceeds(0))
 				{
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent');
 					return;
 				}
-				$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE $iFirstIp <= INET_ATON(s.ip) AND INET_ATON(s.broadcastip) <= $iLastIp AND s.org_id = $iParentOrgId"));
-				if ($oSubnetSet->Count() != 0)
+				$sOQL = "SELECT IPv4Subnet AS s WHERE :firstip <= INET_ATON(s.ip) AND INET_ATON(s.broadcastip) <= :lastip AND s.org_id = :parent_org_id";
+				$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('firstip' => $iFirstIp, 'lastip' => $iLastIp, 'parent_org_id' => $iParentOrgId));
+				if ($oSRangeSet->CountExceeds(0))
 				{
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent');
 					return;

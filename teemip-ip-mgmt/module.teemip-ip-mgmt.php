@@ -35,7 +35,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-tickets/2.7.0',
-			'teemip-network-mgmt/2.7.0'
+			'teemip-network-mgmt/2.7.1'
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -123,9 +123,6 @@ if (!class_exists('IPManagementInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			// For migration from 2.5.0 or 2.5.1
-			// Reset next_run_date attribute of ReleaseIPsFromObsoleteCIs background task to the 1st january so that process can be reactivate through the configuration file, if required.
-
 			if (($sPreviousVersion == '2.5.0') || ($sPreviousVersion == '2.5.1'))
 			{
 				SetupPage::log_info("Module teemip-ip-mgmt: reset next_run_date of ReleaseIPsFromObsoleteCIs backgorund task");
@@ -134,6 +131,15 @@ if (!class_exists('IPManagementInstaller'))
 				CMDBSource::Query($sUpdate);
 
 				SetupPage::log_info("Module teemip-zone-mgmt: reset done");
+			}
+			if ($sPreviousVersion == '2.7.0')
+			{
+				SetupPage::log_info("Module teemip-ip-mgmt: move IP Range DHCP servers from obsolete lnkServerToIPRange to new lnkFunctionalCIToIPRange");
+
+				$sCopy = "INSERT INTO lnkfunctionalcitoiprange (functionalci_id, iprange_id, role) SELECT server_id, iprange_id, role FROM lnkiprangetoserver";
+				CMDBSource::Query($sCopy);
+
+				SetupPage::log_info("Module teemip-ip-mgmt: migration done");
 			}
 		}
 	}

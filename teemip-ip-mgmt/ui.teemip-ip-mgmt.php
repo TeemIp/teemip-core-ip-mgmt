@@ -21,84 +21,97 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/********************************************************
- * Displays Subnet Block or Subnet tree for a given Org.
+/**
+ * Displays TeemIp's hierarchical objects in tree mode.
+ *
+ * @param \WebPage $oP
+ * @param $iOrgId
+ * @param $sClass
+ *
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @throws \OQLException
  */
-function DisplayTree(WebPage $oP, $sOrgId, $sClass)
+function DisplayTree(WebPage $oP, $iOrgId, $sClass)
 {
-	$bWithSubnet = false;
-	if ($sClass == 'IPv4Subnet')
+	switch($sClass)
 	{
-		$sContainerClass = 'IPv4Block';
-		$bWithSubnet = true;
-	}
-	elseif ($sClass == 'IPv6Subnet')
-	{
-		$sContainerClass = 'IPv6Block';
-		$bWithSubnet = true;
-	}
-	else
-	{
-		$sContainerClass = $sClass;
-	}
-	
-	$oContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sContainerClass AS b WHERE b.org_id = $sOrgId"));
-	if (in_array($sContainerClass, array('IPv4Block', 'IPv6Block', 'Domain')))
-	{
-		// Add delegated blocks, if any
-		$oDelegatedContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sContainerClass AS b WHERE b.parent_org_id = $sOrgId"));
-		$oContainerSet->Append($oDelegatedContainerSet);
-	}
-	$aTree = array();
-	$aNodes = array();
-	while($oContainer = $oContainerSet->Fetch())
-	{
-		$iParentId = $oContainer->Get('parent_id');
-		$iKey = $oContainer->GetKey();
-		if (!isset($aTree[$iParentId]))
-		{
-			$aTree[$iParentId] = array();
-		}
-		$aTree[$iParentId][$iKey] = $oContainer->GetNameForTree();
-		$aNodes[$iKey] = $oContainer;
-	}
-	
-	$aParents = array_keys($aTree);
-	$aRoots = array();
-	foreach($aParents as $id)
-	{
-		if (!array_key_exists($id, $aNodes))
-		{
-			$aRoots[] = $id;
-		}
-	}
-	foreach($aRoots as $iRootId)
-	{
-		DumpNodes($oP, $sOrgId, $iRootId, $aTree, $aNodes, '', $bWithSubnet);
+		case 'IPv4Block':
+		case 'IPv6Block':
+		case 'Domain':
+			DisplayNode($oP, $iOrgId, $sClass, 0, '');
+			break;
+
+		case 'IPv4Subnet':
+			DisplayNode($oP, $iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
+			break;
+
+		case 'IPv6Subnet':
+			DisplayNode($oP, $iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
+			break;
+
+		default:
+		  break;
 	}
 }
 
-/***************************************************
- * Displays nodes of a Subnet Block or Subnet tree.
+/**
+ * Display the node of a hierarchical tree
+ *
+ * @param \WebPage $oP
+ * @param $iOrgId
+ * @param $sContainerClass
+ * @param $iContainerId
+ * @param $sLeafClass
+ *
+ * @throws \CoreException
+ * @throws \CoreUnexpectedValue
+ * @throws \MySQLException
+ * @throws \OQLException
  */
-function DumpNodes($oP, $sOrgId, $iRootId, $aTree, $aNodes, $currValue, $bWithSubnet)
+function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass)
 {
-	if (array_key_exists($iRootId, $aTree))
+	// Get list of Containers (delegated or not) contained within current container defined by key $iContainerId
+	$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";
+	$sOQL .= " UNION ";
+	$sOQL .= "SELECT $sContainerClass AS cc WHERE cc.parent_org_id = :org_id AND cc.parent_id = :parent_id";
+	$oChildContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'parent_id' => $iContainerId));
+
+	$aNodes = array();
+	while($oChildContainer = $oChildContainerSet->Fetch())
 	{
-		$bMultiple = false;
-		
-		$aSortedRoots = $aTree[$iRootId];
-		asort($aSortedRoots);
-		$oP->add("<ul>\n");
-		foreach($aSortedRoots as $id => $sName)
-		{
-			$oP->add("<li>");
-			$aNodes[$id]->DisplayAsLeaf($oP, $bWithSubnet, $sOrgId);
-			DumpNodes($oP, $sOrgId, $id, $aTree, $aNodes, $currValue, $bWithSubnet);
-			$oP->add("</li>\n");
-		}
-		$oP->add("</ul>\n");
+		$iKey = $oChildContainer->GetIndexForTree();
+		$aNodes[$iKey] = $oChildContainer;
 	}
+
+	// Get list of leaves contained within current container, if any
+	if ($sLeafClass != '')
+	{
+		$oLeafSet =  new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sLeafClass AS lc WHERE lc.block_id = :block_id"), array(), array('block_id' => $iContainerId));
+		while($oLeaf = $oLeafSet->Fetch())
+		{
+			$iKey = $oLeaf->GetIndexForTree();
+			$aNodes[$iKey] = $oLeaf;
+		}
+	}
+
+	// Display Node
+	ksort($aNodes);
+	$bWithIcon = ($sLeafClass != '') ? true : false;
+	$oP->add("<ul>\n");
+	foreach($aNodes as $id => $oObject)
+	{
+		$oP->add("<li>");
+		$oObject->DisplayAsLeaf($oP, $bWithIcon, $iOrgId);
+		if (get_class($oObject) == $sContainerClass)
+		{
+			DisplayNode($oP, $iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
+		}
+		$oP->add("</li>\n");
+	}
+	$oP->add("</ul>\n");
+
 }
 
 /*****************************************************************
@@ -142,7 +155,7 @@ try
 	switch($operation)
 	{
 		///////////////////////////////////////////////////////////////////////////////////////////
-		
+
 		case 'displaytree':	// Display hierarchical tree for domain, blocks or subnets
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			// Check if right parameters have been given
@@ -150,7 +163,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
-			if (($sClass != 'Domain') && ($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+			if (!in_array($sClass, array('Domain', 'IPv4Block', 'IPv6Block', 'IPv4Subnet', 'IPv6Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -167,9 +180,9 @@ try
 			$oP->add("<p class=\"page-header\">\n");
 			$oP->add(MetaModel::GetClassIcon($sClass, true)." ".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':Title_Class', $sClassLabel));
 			$oP->add("</p>\n");
-			
+
 			$oP->add('<div class="display_block">');
-			
+
 			// Get number of records
 			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 			if ($iCurrentOrganization == '')
@@ -181,28 +194,28 @@ try
 				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
 			}
 			$sObjectsCount = Dict::Format('UI:Pagination:HeaderNoSelection', $oSet->Count());
-			
+
 			// Get actions Menu
 			$iListId = 'displaytree_menu'; //$oP->GetUniqueId();
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
 			$sActionsMenu = $oMenuBlock->GetRenderContent($oP, array(), $iListId);
-			
+
 			// Get toolkit menu
 			// Remove "Add To Dashboard" submenu
 			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
-			$aActions = array();	
+			$aActions = array();
 			utils::GetPopupMenuItems($oP, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
 			unset($aActions['UI:Menu:AddToDashboard']);
 			unset($aActions['UI:Menu:ShortcutList']);
 			$sHtml .= $oP->RenderPopupMenuItems($aActions);
 			$sToolkitMenu = $sHtml;
-			
+
 			// Display menu line
 			$sHtml = "<table style=\"width:100%;\">";
 			$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
 			$sHtml .= "</table>";
 			$oP->Add($sHtml);
-			
+
 			// Dump Tree(s)
 			$oP->add('<table style="width:100%"><tr><td colspan="2">');
 			$oP->add('<div style="vertical-align:top;" id="tree">');
@@ -211,7 +224,7 @@ try
 				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization"));
 				while($oOrg = $oSet->Fetch())
 				{
-					$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");				
+					$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
 					DisplayTree ($oP, $oOrg->GetKey(), $sClass);
 					$oP->add("<br>");
 				}
@@ -219,14 +232,14 @@ try
 			else
 			{
 				$oOrg = MetaModel::GetObject('Organization', $iCurrentOrganization, false /* MustBeFound */);
-				$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");								
+				$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
 				DisplayTree ($oP, $iCurrentOrganization, $sClass);
 			}
 			$oP->add('</td></tr></table>');
 			$oP->add('</div></div>');
 			$oP->add_ready_script("\$('#tree ul').treeview();\n");
-		break; // End case displaytree
-		
+			break; // End case displaytree
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'listspace':	// List occupied and unoccupied space within a block
@@ -237,7 +250,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block'))
+			if (!in_array($sClass, array('IPv4Block', 'IPv6Block')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -287,7 +300,7 @@ try
 				{
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 				}
-				if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet', 'IPv6Subnet')))
 				{
 					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 				}
@@ -325,7 +338,7 @@ try
 				{
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 				}
-				if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet', 'IPv6Subnet')))
 				{
 					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 				}
@@ -422,7 +435,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet') && ($sClass != 'IPv4Range') && ($sClass != 'IPv6Range'))
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet', 'IPv4Range', 'IPv6Range')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -485,7 +498,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet') && ($sClass != 'IPv4Range') && ($sClass != 'IPv6Range'))
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet', 'IPv4Range', 'IPv6Range')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -556,7 +569,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
+			if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -595,7 +608,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
+			if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -664,7 +677,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
+			if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -734,7 +747,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Block') && ($sClass != 'IPv6Block') && ($sClass != 'IPv4Subnet'))
+			if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -800,7 +813,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet') && ($sClass != 'IPv4Range') && ($sClass != 'IPv6Range'))
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet', 'IPv4Range', 'IPv6Range')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -862,7 +875,7 @@ try
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet') && ($sClass != 'IPv4Range') && ($sClass != 'IPv6Range'))
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet', 'IPv4Range', 'IPv6Range')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -926,7 +939,7 @@ try
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			if (!empty($sClass))
 			{
-				if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+				if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet')))
 				{
 					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 				}
@@ -1002,7 +1015,7 @@ HTML
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Subnet') && ($sClass != 'IPv6Subnet'))
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -1056,7 +1069,7 @@ HTML
 				$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':');
 	
 				// Display result
-				$oObj->DisplayCalculatorOutput($oP, $oAppContext, $aPostedParam);;
+				$oObj->DisplayCalculatorOutput($oP, $aPostedParam);;
 				$oP->add_ready_script("\$('#tree ul').treeview();\n");
 				$oP->add("<div id=\"dialog_content\"/>\n");
 			}
@@ -1227,7 +1240,7 @@ HTML
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
-			if (($sClass != 'IPv4Address') && ($sClass != 'IPv6Address'))
+			if (!in_array($sClass, array('IPv4Address', 'IPv6Address')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -1265,7 +1278,7 @@ HTML
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
 			}
-			if (($sClass != 'IPv4Address') && ($sClass != 'IPv6Address'))
+			if (!in_array($sClass, array('IPv4Address', 'IPv6Address')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
@@ -1324,7 +1337,7 @@ HTML
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
-			if (($sClass != 'IPv4Address') && ($sClass != 'IPv6Address'))
+			if (!in_array($sClass, array('IPv4Address', 'IPv6Address')))
 			{
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
