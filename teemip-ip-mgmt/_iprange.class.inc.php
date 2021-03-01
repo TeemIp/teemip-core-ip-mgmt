@@ -209,14 +209,14 @@ class _IPRange extends IPObject
 
 		if ($this->Get('dhcp') == 'dhcp_no')
 		{
-			$oServersSet = $this->Get('servers_list');
-			if ($oServersSet->Count() == 0)
+			$oCIsSet = $this->Get('functionalcis_list');
+			if ($oCIsSet->Count() == 0)
 			{
 				// Remove tab related to DHCP servers
 				//  Two following lines to be reactivated once FindTab is corrected
-				//      $sPattern = '/^'.Dict::S('Class:IPRange/Attribute:servers_list').'/';
+				//      $sPattern = '/^'.Dict::S('Class:IPRange/Attribute:functionalcis_list').'/';
 				//      $sTabName = $oPage->FindTab($sPattern);
-				$sTabName = 'Class:'.get_class($this).'/Attribute:servers_list';
+				$sTabName = 'Class:'.get_class($this).'/Attribute:functionalcis_list';
 				$oPage->RemoveTab($sTabName);
 			}
 		}
@@ -232,7 +232,7 @@ class _IPRange extends IPObject
 		// Make sure no server is set in servers_list if range is not a DHCP one
 		if ($this->Get('dhcp') == 'dhcp_no')
 		{
-			$oServersSet = $this->Get('servers_list');
+			$oServersSet = $this->Get('functionalcis_list');
 			if ($oServersSet->Count() > 0)
 			{
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers');
