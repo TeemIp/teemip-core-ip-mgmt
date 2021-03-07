@@ -1,0 +1,8 @@
+{
+  "license": "AGPLv3",
+  "autoload": {
+    "psr-4": {
+      "TeemIp\\TeemIp\\Extension\\NewsroomProvider\\": "src/"
+    }
+  }
+}
