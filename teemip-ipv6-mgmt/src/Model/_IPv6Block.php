@@ -1,25 +1,25 @@
 <?php
-// Copyright (C) 2020 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
- * @copyright   Copyright (C) 2020 TeemIp
+/*
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
+
+use ApplicationException;
+use AttributeIPv6Address;
+use cmdbAbstractObject;
+use CMDBObjectSet;
+use DBObjectSearch;
+use Dict;
+use DisplayBlock;
+use IPBlock;
+use IPConfig;
+use IPv6Subnet;
+use MetaModel;
+use UserRights;
+use utils;
+use WebPage;
 
 /**
  * Class _IPv6Block
@@ -39,7 +39,7 @@ class _IPv6Block extends IPBlock
 	{ 
 		if ($bXsIcon)
 		{
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/images/ipv6block-xs.png';
+			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/ipv6block-xs.png';
 			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
 		return parent::GetIcon($bImgTag);
@@ -737,7 +737,7 @@ class _IPv6Block extends IPBlock
 					{
 						$iVId = $iVIdCounter++;
 						$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
-						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/images/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsBlock')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
 						$oP->add($sHTMLValue);
@@ -766,7 +766,7 @@ EOF
 					{
 						$iVId = $iVIdCounter++;
 						$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
-						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/images/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsSubnet')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
 						$oP->add($sHTMLValue);
@@ -893,8 +893,6 @@ EOF
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
-		$oFirstIpCurrentBlock = $this->Get('firstip');
-		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oNewFirstIp = new ormIPv6($aParam['firstip']);
 		$oNewLastIp =  new ormIPv6($aParam['lastip']);
 		$iRequestorId = $aParam['requestor_id'];
@@ -954,7 +952,6 @@ EOF
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		$iParentId = $this->Get('parent_id');
 		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oSplitIp = new ormIPv6($aParam['ip']);
@@ -1040,8 +1037,6 @@ EOF
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		$iParentId = $this->Get('parent_id');
-		$oFirstIpCurrentBlock = $this->Get('firstip');
 		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oSplitIp = new ormIPv6($aParam['ip']);
 		$sNewName = $aParam['newname'];
@@ -1267,8 +1262,6 @@ EOF
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
-		$oFirstIpCurrentBlock = $this->Get('firstip');
-		$oLastIpCurrentBlock = $this->Get('lastip');
 		$oNewFirstIp = new ormIPv6($aParam['firstip']);
 		$oNewLastIp =  new ormIPv6($aParam['lastip']);
 		$iRequestorId = $aParam['requestor_id'];
@@ -1335,7 +1328,6 @@ EOF
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iBlockId = $this->GetKey();
-		$iParentId = $this->Get('parent_id');
 		$oFirstIpBlockToDel = $this->Get('firstip');
 		$oLastIpBlockToDel = $this->Get('lastip');
 		$iChildOrgId = $aParam['child_org_id'];
@@ -1575,7 +1567,6 @@ EOF
 				$iBlockPrefix = $this->GetMinTheoriticalBlockPrefix();
 
 				// Display list of choices
-				$sAttCode = 'spacesize';
 				$sInputId = $iFormId.'_'.'spacesize';
 				$sHTMLValue = "<select id=\"$sInputId\" name=\"spacesize\">\n";
 				$InputPrefix = IPV6_SUBNET_MIN_PREFIX;
@@ -1681,7 +1672,6 @@ EOF
 				}
 
 				// Display list of choices now
-				$sAttCode = 'child_org_id';
 				$sInputId = $iFormId.'_'.'child_org_id';
 				$sHTMLValue = "<select id=\"$sInputId\" name=\"child_org_id\">\n";
 				while ($oChildOrg = $oChildOrgSet->Fetch())
@@ -1773,7 +1763,6 @@ EOF
 
 						// Display delegation information if required
 						$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
-						$iChildOrgId = $aOccupiedSpace[$j]['obj']->Get('org_id');
 						if ($iParentOrgId != 0)
 						{
 							$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id')));
