@@ -459,7 +459,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/networkdevicecomponent.png</icon>
+        <icon>asset/img/networkdevicecomponent.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -654,7 +654,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/clusternetwork.png</icon>
+        <icon>asset/img/clusternetwork.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1121,7 +1121,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/aggregatelink.png</icon>
+        <icon>asset/img/aggregatelink.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1619,7 +1619,7 @@
               <dashlet id="teemip-1101" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:NetworkMgmtExtended:Typology</title>
-                <icon>teemip-network-mgmt-extended/images/typologynetwork.png</icon>
+                <icon>teemip-network-mgmt-extended/asset/img/typologynetwork.png</icon>
               </dashlet>
               <dashlet id="teemip-1102" xsi:type="DashletBadge">
                 <rank>1</rank>
