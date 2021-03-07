@@ -1,25 +1,22 @@
 <?php
-// Copyright (C) 2021 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
+/*
  * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace TeemIp\TeemIp\Extension\IPManagement\Controller;
+
+use cmdbAbstractObject;
+use CMDBObjectSet;
+use DBObjectSearch;
+use Dict;
+use IPv4Block;
+use IPv4Subnet;
+use IPv6Block;
+use MetaModel;
+use UserRights;
+use utils;
+use WebPage;
 
 class FindSpace extends cmdbAbstractObject
 {
@@ -35,6 +32,7 @@ class FindSpace extends cmdbAbstractObject
 		$aParam = array();
 		switch ($sOperation)
 		{
+			/** @noinspection PhpMissingBreakStatementInspection */
 			case 'dofindspace':
 				$aParam['block_id'] = utils::ReadPostedParam('block_id', '', 'raw_data');
 				$aParam['ip'] = utils::ReadPostedParam('attr_ip', '', 'raw_data');

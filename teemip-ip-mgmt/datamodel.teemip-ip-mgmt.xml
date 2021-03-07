@@ -4,8 +4,8 @@
     <class id="IPObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
-        <name>_IPObject</name>
-        <file>_ipobject.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPObject</name>
+        <file>src/Model/_IPObject.php</file>
       </php_parent>
       <properties>
         <comment><![CDATA[/**
@@ -25,7 +25,7 @@
           <attributes/>
         </naming>
         <display_template/>
-        <icon>images/ipobject.png</icon>
+        <icon>asset/img/ipobject.png</icon>
         <reconciliation>
           <attributes>
             <attribute id=""/>
@@ -359,8 +359,8 @@
     <class id="IPBlock" _delta="define">
       <parent>IPObject</parent>
       <php_parent>
-        <name>_IPBlock</name>
-        <file>_ipblock.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPBlock</name>
+        <file>src/Model/_IPBlock.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt</category>
@@ -609,8 +609,8 @@
     <class id="IPv4Block" _delta="define">
       <parent>IPBlock</parent>
       <php_parent>
-        <name>_IPv4Block</name>
-        <file>_ipv4block.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPv4Block</name>
+        <file>src/Model/_IPv4Block.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -626,7 +626,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/ipblock.png</icon>
+        <icon>asset/img/ipblock.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -832,8 +832,8 @@
     <class id="IPSubnet" _delta="define">
       <parent>IPObject</parent>
       <php_parent>
-        <name>_IPSubnet</name>
-        <file>_ipsubnet.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPSubnet</name>
+        <file>src/Model/_IPSubnet.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt</category>
@@ -1426,8 +1426,8 @@
     <class id="IPv4Subnet" _delta="define">
       <parent>IPSubnet</parent>
       <php_parent>
-        <name>_IPv4Subnet</name>
-        <file>_ipv4subnet.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPv4Subnet</name>
+        <file>src/Model/_IPv4Subnet.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -1443,7 +1443,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/ipsubnet.png</icon>
+        <icon>asset/img/ipsubnet.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ip"/>
@@ -1539,7 +1539,7 @@
                   <dashlet id="01" xsi:type="DashletHeaderDynamic">
                     <rank>0</rank>
                     <title>Class:IPSubnet/Attribute:summary/cell0</title>
-                    <icon>teemip-ip-mgmt/images/ipaddress.png</icon>
+                    <icon>teemip-ip-mgmt/asset/img/ipaddress.png</icon>
                     <subtitle>Class:IPSubnet/Attribute:summary/cell0+</subtitle>
                     <query>SELECT IPv4Address WHERE subnet_id = :this->id</query>
                     <group_by>status</group_by>
@@ -1746,8 +1746,8 @@
     <class id="IPRange" _delta="define">
       <parent>IPObject</parent>
       <php_parent>
-        <name>_IPRange</name>
-        <file>_iprange.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPRange</name>
+        <file>src/Model/_IPRange.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt</category>
@@ -2023,8 +2023,8 @@
     <class id="IPv4Range" _delta="define">
       <parent>IPRange</parent>
       <php_parent>
-        <name>_IPv4Range</name>
-        <file>_ipv4range.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPv4Range</name>
+        <file>src/Model/_IPv4Range.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -2040,7 +2040,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/iprange.png</icon>
+        <icon>asset/img/iprange.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="subnet_ip"/>
@@ -2224,8 +2224,8 @@
     <class id="IPAddress" _delta="define">
       <parent>IPObject</parent>
       <php_parent>
-        <name>_IPAddress</name>
-        <file>_ipaddress.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress</name>
+        <file>src/Model/_IPAddress.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt</category>
@@ -2239,7 +2239,7 @@
           <attributes/>
         </naming>
         <display_template/>
-        <icon>images/ipaddress.png</icon>
+        <icon>asset/img/ipaddress.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -2735,8 +2735,8 @@
     <class id="IPv4Address" _delta="define">
       <parent>IPAddress</parent>
       <php_parent>
-        <name>_IPv4Address</name>
-        <file>_ipv4address.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPv4Address</name>
+        <file>src/Model/_IPv4Address.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -2752,7 +2752,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/ipaddress.png</icon>
+        <icon>asset/img/ipaddress.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -2975,8 +2975,8 @@
     <class id="IPConfig" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
-        <name>_IPConfig</name>
-        <file>_ipconfig.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPConfig</name>
+        <file>src/Model/_IPConfig.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -2993,7 +2993,7 @@
           </attributes>
         </naming>
         <display_template/>
-        <icon>images/ipconfig.png</icon>
+        <icon>asset/img/ipconfig.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -3522,8 +3522,8 @@
     <class id="IPUsage" _delta="define">
       <parent>Typology</parent>
       <php_parent>
-        <name>_IPUsage</name>
-        <file>_ipusage.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPUsage</name>
+        <file>src/Model/_IPUsage.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable,ipmgmt</category>
@@ -3677,8 +3677,8 @@
     <class id="IPApplication" _created_in="teemip-ip-mgmt" _delta="define">
       <parent>FunctionalCI</parent>
       <php_parent>
-        <name>_IPApplication</name>
-        <file>_ipapplication.class.inc.php</file>
+        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPApplication</name>
+        <file>src/Model/_IPApplication.php</file>
       </php_parent>
       <properties>
         <category>bizmodel,searchable</category>
@@ -3804,7 +3804,7 @@
               <dashlet id="teemip-101" xsi:type="DashletHeaderStatic">
                 <rank>1</rank>
                 <title>Menu:IPSpace:IPv4Objects</title>
-                <icon>teemip-ip-mgmt/images/ipobject.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/ipobject.png</icon>
               </dashlet>
               <dashlet id="teemip-111" xsi:type="DashletBadge">
                 <rank>2</rank>
@@ -3830,7 +3830,7 @@
               <dashlet id="teemip-301" xsi:type="DashletHeaderStatic">
                 <rank>1</rank>
                 <title>Menu:IPSpace:Options</title>
-                <icon>teemip-ip-mgmt/images/ipconfig.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/ipconfig.png</icon>
               </dashlet>
               <dashlet id="teemip-311" xsi:type="DashletBadge">
                 <rank>2</rank>
@@ -3933,6 +3933,44 @@
 	  </definition>
     </menu>
   </menus>
+  <constants>
+    <constant id="MAX_NB_OF_IPS_TO_DISPLAY" xsi:type="integer" _delta="define">4096</constant>
+    <constant id="MAX_IPV4_VALUE" xsi:type="integer" _delta="define">4294967295</constant>
+    <constant id="IPV4_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">1</constant>
+    <constant id="IPV4_SUBNET_MAX_SIZE" xsi:type="integer" _delta="define">65536</constant>
+    <constant id="IPV4_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">16</constant>
+    <constant id="ALL_ORGS" xsi:type="integer" _delta="define">65536</constant>
+    <constant id="ACTION_NONE" xsi:type="integer" _delta="define">0</constant>
+    <constant id="ACTION_SHRINK" xsi:type="integer" _delta="define"> 1</constant>
+    <constant id="ACTION_SPLIT" xsi:type="integer" _delta="define">2</constant>
+    <constant id="ACTION_EXPAND" xsi:type="integer" _delta="define">3</constant>
+    <constant id="ACTION_PARENT_BLOCK_IS_DELETED" xsi:type="integer" _delta="define">4</constant>
+    <constant id="ACTION_BLOCK_IS_DELETED" xsi:type="integer" _delta="define">5</constant>
+    <constant id="GLOBAL_CONFIG_DEFAULT_NAME" xsi:type="string" _delta="define">IP Settings</constant>
+    <constant id="DEFAULT_BLOCK_LOW_WATER_MARK" xsi:type="integer" _delta="define">60</constant>
+    <constant id="DEFAULT_BLOCK_HIGH_WATER_MARK" xsi:type="integer" _delta="define">80</constant>
+    <constant id="DEFAULT_SUBNET_LOW_WATER_MARK" xsi:type="integer" _delta="define">60</constant>
+    <constant id="DEFAULT_SUBNET_HIGH_WATER_MARK" xsi:type="integer" _delta="define">80</constant>
+    <constant id="DEFAULT_IPRANGE_LOW_WATER_MARK" xsi:type="integer" _delta="define">60</constant>
+    <constant id="DEFAULT_IPRANGE_HIGH_WATER_MARK" xsi:type="integer" _delta="define">80</constant>
+    <constant id="DEFAULT_MAX_FREE_SPACE_OFFERS" xsi:type="integer" _delta="define">10</constant>
+    <constant id="DEFAULT_MAX_FREE_IP_OFFERS" xsi:type="integer" _delta="define">10</constant>
+    <constant id="DEFAULT_MAX_FREE_IP_OFFERS_WITH_PING" xsi:type="integer" _delta="define">5</constant>
+    <constant id="DEFAULT_SUBNET_CREATE_MAX_OFFER" xsi:type="integer" _delta="define">10</constant>
+    <constant id="RED" xsi:type="string" _delta="define">#cc3300</constant>
+    <constant id="YELLOW" xsi:type="string" _delta="define">#ffff00</constant>
+    <constant id="GREEN" xsi:type="string" _delta="define">#33ff00</constant>
+    <constant id="TIME_TO_WAIT_FOR_PING_LONG" xsi:type="integer" _delta="define">3</constant>
+    <constant id="TIME_TO_WAIT_FOR_PING_SHORT" xsi:type="integer" _delta="define">1</constant>
+    <constant id="NUMBER_OF_PINGS" xsi:type="integer" _delta="define">1</constant>
+    <constant id="FAIL_KEY_FOR_PING" xsi:type="string" _delta="define">100%</constant>
+    <constant id="NETWORK_IP_CODE" xsi:type="string" _delta="define">Network IP</constant>
+    <constant id="NETWORK_IP_DESC" xsi:type="string" _delta="define">Subnet IP</constant>
+    <constant id="GATEWAY_IP_CODE" xsi:type="string" _delta="define">Gateway</constant>
+    <constant id="GATEWAY_IP_DESC" xsi:type="string" _delta="define">Gateway IP</constant>
+    <constant id="BROADCAST_IP_CODE" xsi:type="string" _delta="define">Broadcast</constant>
+    <constant id="BROADCAST_IP_DESC" xsi:type="string" _delta="define">Broadcast IP</constant>
+  </constants>
   <user_rights>
     <groups>
        <group id="IPObject" _delta="define">

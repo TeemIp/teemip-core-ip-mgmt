@@ -1,25 +1,19 @@
 <?php
-// Copyright (C) 2020 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
- * @copyright   Copyright (C) 2020 TeemIp
+/*
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+namespace TeemIp\TeemIp\Extension\IPManagement\Model;
+
+use CMDBObjectSet;
+use ContextTag;
+use DBObjectSearch;
+use Dict;
+use IPAddress;
+use IPConfig;
+use MetaModel;
+use utils;
 
 class _IPv4Address extends IPAddress
 {
@@ -208,8 +202,7 @@ class _IPv4Address extends IPAddress
 	public function AfterInsert()
 	{
 		$sOrgId = $this->Get('org_id');
-		$sIp = $this->Get('ip');
-		
+
 		// Execute parent function first 
 		parent::AfterInsert();
 		
@@ -311,8 +304,7 @@ class _IPv4Address extends IPAddress
 		parent::AfterDelete();
 
 		$sOrgId = $this->Get('org_id');
-		$sIp = $this->Get('ip');
-		
+
 		// Look for subnet where IP belongs to (should be only one)
 		//  Generate event if Low Water Mark is crossed 
 		$iSubnetId = $this->Get('subnet_id');

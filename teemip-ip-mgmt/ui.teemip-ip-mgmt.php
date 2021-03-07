@@ -1,25 +1,10 @@
-  <?php
-// Copyright (C) 2021 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
+<?php
+/*
  * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /**
  * Displays TeemIp's hierarchical objects in tree mode.
@@ -114,22 +99,22 @@ function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLe
 
 }
 
-/*****************************************************************
+/*******************************************************************
  * 
- * Main user interface pages for IP Management module starts here
+ * Main user interface pages for IP Management extension starts here
  *
- * ***************************************************************/
+ * *****************************************************************/
+if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
+if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
+require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/displayblock.class.inc.php');
+require_once(APPROOT.'/application/itopwebpage.class.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
+require_once(APPROOT.'/application/wizardhelper.class.inc.php');
+
 try
 {
-	if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
-	if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
-	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/displayblock.class.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-	require_once(APPROOT.'/application/startup.inc.php');
-	require_once(APPROOT.'/application/wizardhelper.class.inc.php');
-
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 	
@@ -146,10 +131,10 @@ try
 	$oP->add_linked_script("../js/linkswidget.js");
 	$oP->add_linked_script("../js/extkeywidget.js");
 	
-	$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/teemip-ip-mgmt.js");
+	$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js");
 	
 	// Add teemip style sheeet
-	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/teemip-ip-mgmt.css');
+	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 	
 	$operation = utils::ReadParam('operation', '');
 	switch($operation)
@@ -1056,8 +1041,6 @@ HTML
 			{	
 				if ($id > 0)
 				{
-					// No search bar (2.5 standard)
-						
 					// Display action menu
 					$oSingletonFilter = new DBObjectSearch($sClass);
 					$oSingletonFilter->AddCondition('id', $oObj->GetKey(), '=');

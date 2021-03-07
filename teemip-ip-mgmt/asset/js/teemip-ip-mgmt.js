@@ -1,22 +1,5 @@
-// Copyright (C) 2020 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
- * @copyright   Copyright (C) 2020 TeemIp
+/*
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,7 +30,7 @@ function IpWidget(id, sTargetClass, iChangeId, oDefault)
 	this.DisplayCreationForm = function()
 	{
 		me.v_html = $('#v_'+me.id).html();
-		$('#v_'+me.id).html(me.v_html).append('<img src="'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/images/ipindicator-xs.gif" />');
+		$('#v_'+me.id).html(me.v_html).append('<img src="'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/asset/img/ipindicator-xs.gif" />');
 		var theMap = { operation: 'get_ip_creation_form',
 			vid: me.id,
 			class: me.sTargetClass,
