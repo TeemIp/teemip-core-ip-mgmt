@@ -1,90 +1,22 @@
 <?php
-// Copyright (C) 2020 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
-/**
- * @copyright   Copyright (C) 2020 TeemIp
+/*
+ * @copyright   Copyright (C) 2021 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/core/restservices.class.inc.php');
+namespace TeemIp\TeemIp\Extension\Webservices\Hook;
 
-class RestResultCountIps extends RestResult
-{
-	public $objects;
-
-	/**
-	 * Report the given object
-	 *
-	 * @param int An error code (RestResult::OK is no issue has been found)
-	 * @param string $sMessage Description of the error if any, an empty string otherwise
-	 * @param DBObject $oObject The object being reported
-	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
-	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
-	 * @return void
-	 */
-	public function AddObject($iCode, $sMessage, $oObject, $sSize, $aNbOfIPs = array())
-	{
-		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		$aFields = array('org_name', 'name', 'ip', 'mask');
-		foreach ($aFields as $sAttCode)
-		{
-			$oObjRes->AddField($oObject, $sAttCode, false);
-		}
-		$oObjRes->subnet_size = $sSize;
-		$oObjRes->nb_of_ips = $aNbOfIPs;
-
-		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
-		$this->objects[$sObjKey] = $oObjRes;
-	}
-}
-
-class RestResultWithTextFile extends RestResult
-{
-	public $objects;
-
-	/**
-	 * Report the given object
-	 *
-	 * @param int An error code (RestResult::OK is no issue has been found)
-	 * @param string $sMessage Description of the error if any, an empty string otherwise
-	 * @param DBObject $oObject The object being reported
-	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
-	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
-	 * @return void
-	 */
-	public function AddObject($iCode, $sMessage, $oObject, $sText)
-	{
-		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
-		$oObjRes->code = $iCode;
-		$oObjRes->message = $sMessage;
-
-		$oObjRes->text_file = $sText;
-
-		$sObjKey = get_class($oObject).'::'.$oObject->GetKey();
-		$this->objects[$sObjKey] = $oObjRes;
-	}
-}
-
+use CMDBSource;
+use IPConfig;
+use IPv4Subnet;
+use iRestServiceProvider;
+use MetaModel;
+use RestResult;
+use RestResultWithObjects;
+use RestUtils;
+use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultCountIps;
+use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultWithTextFile;
+use UserRights;
 
 /**
  * Implementation of TeemIp REST services
