@@ -18,7 +18,7 @@
             <attribute id="org_id"/>
           </attributes>
         </reconciliation>
-        <icon>images/binoculars.png</icon>
+        <icon>asset/img/binoculars.png</icon>
       </properties>
       <fields>
         <field id="last_discovery_date" xsi:type="AttributeDateTime">
@@ -826,7 +826,7 @@
 		        <dashlet id="teemip-disc-104" xsi:type="DashletHeaderStatic">
 		          <rank>0</rank>
 		          <title>Menu:IPDiscovery:IPv4Statistics</title>
-		          <icon>teemip-ip-mgmt/images/ipaddress.png</icon>
+		          <icon>teemip-ip-mgmt/asset/img/ipaddress.png</icon>
 		        </dashlet>
 		      </dashlets>
 		    </cell>
@@ -843,7 +843,7 @@
 		        <dashlet id="teemip-disc-302" xsi:type="DashletHeaderDynamic">
 		          <rank>1</rank>
 		          <title>Menu:IPDiscovery:IPv4Ping</title>
-		          <icon>teemip-ip-discovery/images/ipmini-ping-xs.png</icon>
+		          <icon>teemip-ip-discovery/asset/img/ipmini-ping-xs.png</icon>
 		          <subtitle>By status</subtitle>
 		          <query>SELECT IPv4Address WHERE responds_to_ping = 'yes'</query>
 		          <group_by>status</group_by>
@@ -852,7 +852,7 @@
 		        <dashlet id="teemip-disc-303" xsi:type="DashletHeaderDynamic">
 		          <rank>2</rank>
 		          <title>Menu:IPDiscovery:IPv4Scan</title>
-		          <icon>teemip-ip-discovery/images/ipmini-scan-xs.png</icon>
+		          <icon>teemip-ip-discovery/asset/img/ipmini-scan-xs.png</icon>
 		          <subtitle>By status</subtitle>
 		          <query>SELECT IPv4Address WHERE responds_to_scan = 'yes'</query>
 		          <group_by>status</group_by>
@@ -861,7 +861,7 @@
 		        <dashlet id="teemip-disc-304" xsi:type="DashletHeaderDynamic">
 		          <rank>3</rank>
 		          <title>Menu:IPDiscovery:IPv4Lookup</title>
-		          <icon>teemip-ip-discovery/images/ipmini-lookup-xs.png</icon>
+		          <icon>teemip-ip-discovery/asset/img/ipmini-lookup-xs.png</icon>
 		          <subtitle>By status</subtitle>
 		          <query>SELECT IPv4Address WHERE responds_to_iplookup = 'yes'</query>
 		          <group_by>status</group_by>
