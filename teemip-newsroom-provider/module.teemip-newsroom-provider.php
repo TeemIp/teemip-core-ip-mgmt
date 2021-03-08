@@ -7,7 +7,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-newsroom-provider/1.1.0',
+	'teemip-newsroom-provider/1.1.1',
 	array(
 		// Identification
 		//
@@ -17,7 +17,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-ip-mgmt/2.7.0',
+			'teemip-ip-mgmt/2.7.1',
 		),
 		'mandatory' => false,
 		'visible' => false,
