@@ -1609,7 +1609,7 @@
         <cells>
           <cell id="0" _delta="must_exist">
             <dashlets>
-              <dashlet id="7" xsi:type="DashletBadge" _delta="delete"/>
+              <dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/>
               <dashlet id="teemip-1003" xsi:type="DashletBadge" _delta="delete"/>
             </dashlets>
           </cell>
