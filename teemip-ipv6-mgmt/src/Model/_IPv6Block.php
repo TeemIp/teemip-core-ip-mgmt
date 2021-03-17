@@ -202,7 +202,7 @@ class _IPv6Block extends IPBlock
 		}
 		else
 		{
-			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+			$sOQL = "SELECT IPv6Block AS b WHERE b.parent_id = :id";
 		}
 		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
@@ -346,7 +346,7 @@ class _IPv6Block extends IPBlock
 		}
 		else
 		{
-			$sOQL = "SELECT IPv6Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+			$sOQL = "SELECT IPv6Block AS b WHERE b.parent_id = :id";
 		}
 		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
@@ -373,12 +373,12 @@ class _IPv6Block extends IPBlock
 			$aList[$i]['obj'] = $oSubnet;
 			$i++;
 		}
-		// Sort $aList by 'firstip'
+		// Sort $aList by 'sfirstip'
 		if (!empty($aList))
 		{
 			foreach ($aList as $key => $row)
 			{
-				$aFirstIp[$key]	= $row['firstip'];
+				$aFirstIp[$key]	= $row['sfirstip'];
 			}
 			array_multisort($aFirstIp, SORT_ASC, $aList);
 		}
@@ -726,7 +726,7 @@ class _IPv6Block extends IPBlock
 
 				// Display offer now
 				$sAFreeIp = $oAFreeIp->GetAsCompressed();
-				$sLastFreeIp = $oLastFreeIp->getAsCompressed();
+				$sLastFreeIp = $oLastFreeIp->GetAsCompressed();
 				$oP->add("<li>".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>");
 				
 				// If user has rights to create block

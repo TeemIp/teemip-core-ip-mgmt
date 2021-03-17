@@ -172,7 +172,7 @@ class _IPv4Block extends IPBlock
 		}
 		else
 		{
-			$sOQL = "SELECT IPv4Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+			$sOQL = "SELECT IPv4Block AS b WHERE b.parent_id = :id";
 		}
 		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
@@ -303,7 +303,7 @@ class _IPv4Block extends IPBlock
 		}
 		else
 		{
-			$sOQL = "SELECT IPv4Block AS b WHERE b.org_id = :org_id AND b.parent_id = :id";
+			$sOQL = "SELECT IPv4Block AS b WHERE b.parent_id = :id";
 		}
 		$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey, 'org_id' => $iOrgId));
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
