@@ -8,12 +8,7 @@
         <file>src/Model/_IPObject.php</file>
       </php_parent>
       <properties>
-        <comment><![CDATA[/**
- * Persistent classes for IP Mgmt 
- *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- */]]></comment>
+        <comment/>
         <category>bizmodel,ipmgmt</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
