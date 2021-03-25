@@ -1518,6 +1518,9 @@
             <item id="physicalinterfaces_list">
               <rank>30</rank>
             </item>
+            <item id="networkdevicevirtualinterfaces_list">
+              <rank>70</rank>
+            </item>
           </items>
         </details>
         <default_search>

@@ -33,9 +33,8 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-network-mgmt/2.7.0',
+			'teemip-network-mgmt/2.7.1',
 			'teemip-config-mgmt-adaptor/2.7.0',
-			'teemip-virtualization-mgmt-adaptor/2.7.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
