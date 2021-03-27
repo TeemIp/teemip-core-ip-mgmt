@@ -126,7 +126,6 @@ class _Domain extends DNSObject
 				$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:hosts'));
 				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 			}
-
 			// Then, display form to select list of hosts if domain is not in edition
 			if (!$bEditMode)
 			{
