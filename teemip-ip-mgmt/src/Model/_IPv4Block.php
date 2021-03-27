@@ -1784,25 +1784,6 @@ EOF
 			$aExtraParams = array();
 			$aExtraParams['menu'] = false;
 
-			// Tab for child blocks
-			$oChildBlockSearch = DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = $iBlockId AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)");
-			$oChildBlockSet = new CMDBObjectSet($oChildBlockSearch);
-			$iChildBlocks = $oChildBlockSet->Count();
-			if ($iChildBlocks > 0)
-			{
-				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:childblock').' ('.$iChildBlocks.')');
-				$oP->p(MetaModel::GetClassIcon('IPv4Block').'&nbsp;'.Dict::Format('Class:IPBlock/Tab:childblock+'));
-				$oP->p($this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent'));
-				$oBlock = new DisplayBlock($oChildBlockSearch, 'list');
-				$oBlock->Display($oP, 'child_blocks', $aExtraParams);
-			}
-			else
-			{
-				$oP->SetCurrentTab(Dict::S('Class:IPBlock/Tab:childblock'));
-				$oP->p(MetaModel::GetClassIcon('IPv4Block').'&nbsp;'.Dict::S('Class:IPBlock/Tab:childblock+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
-			}
-
 			// Tab for subnets
 			$oSubnetSearch = DBObjectSearch::FromOQL("SELECT IPv4Subnet AS subnet WHERE subnet.block_id = $iBlockId AND subnet.org_id = $iOrgId");
 			$oSubnetSet = new CMDBObjectSet($oSubnetSearch);

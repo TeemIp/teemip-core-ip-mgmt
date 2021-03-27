@@ -6,10 +6,16 @@
 
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
+use ApplicationContext;
 use CMDBObjectSet;
 use DBObjectSearch;
+use Dict;
+use DisplayBlock;
 use IPConfig;
 use IPObject;
+use MetaModel;
+use utils;
+use WebPage;
 
 class _IPBlock extends IPObject
 {
@@ -229,6 +235,107 @@ class _IPBlock extends IPObject
 		$this->Set('parent_org_id', 0);
 		$this->Set('org_id', $iParentOrgId);
 		$this->DBUpdate();
+	}
+
+	/**
+	 * Displays the tabs listing the child blocks and the subnets belonging to a block
+	 *
+	 * @param \WebPage $oP
+	 * @param bool $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	{
+		// Execute parent function first
+		parent::DisplayBareRelations($oP, $bEditMode);
+
+		if (!$bEditMode)
+		{
+			$sClass = get_class($this);
+			$iBlockId = $this->GetKey();
+			$iOrgId = $this->Get('org_id');
+
+			$aExtraParams = array();
+			$aExtraParams['menu'] = false;
+
+			// Tab for child blocks
+			$iChildrenFilter = intval(utils::ReadParam('children_filter', '0'));
+			switch ($iChildrenFilter)
+			{
+				case 1:
+					// All children and grand children
+					$sOQL = "SELECT $sClass AS b JOIN $sClass AS root ON b.parent_id BELOW STRICT root.id WHERE root.id = :block_id AND (b.org_id = :org_id OR b.parent_org_id = :org_id)";
+					$sTitle = Dict::Format('Class:IPBlock/Tab:childblock/List1');
+					break;
+
+				case 0:
+				default:
+					// Direct children only
+					$iChildrenFilter = 0;
+					$sOQL = "SELECT $sClass AS b WHERE b.parent_id = :block_id AND (b.org_id = :org_id OR b.parent_org_id = :org_id)";
+					$sTitle = Dict::Format('Class:IPBlock/Tab:childblock/List0');
+					break;
+			}
+			$oChildBlockSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('block_id' => $iBlockId, 'org_id' => $iOrgId));
+			// Open tab first
+			if ($oChildBlockSet->CountExceeds(0))
+			{
+				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:childblock').' ('.$oChildBlockSet->Count().')');
+				$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
+				$oP->p($this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent'));
+
+				// Then, display form to select list of hosts if domain is not in edition
+				$oP->add('<div style="padding: 15px; background: #ddd;">');
+				$oP->add("<form>");
+				$oP->add("<table border=0>");
+
+				$oP->add("<tr>");
+				if ($iChildrenFilter != 0)
+				{
+					$oP->add("<td>");
+					$oP->add("<label><input type=\"radio\" checked name=\"children_filter\" value=\"0\">".Dict::S('Class:IPBlock/Tab:childblock/SelectList0').'</label>');
+					$oP->add("</td>");
+				}
+				else
+				{
+					$oP->add("<td>");
+					$oP->add("<label><input type=\"radio\" checked name=\"children_filter\" value=\"1\">".Dict::S('Class:IPBlock/Tab:childblock/SelectList1').'</label>');
+					$oP->add("</td>");
+				}
+				$oP->add("</tr>\n");
+
+				$oP->add("</table><br>\n");
+
+				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
+				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$iBlockId\">\n");
+				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">\n");
+				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+				$oAppContext = new ApplicationContext();
+				$oP->add($oAppContext->GetForForm());
+				$oP->add("<input type=\"submit\" value=\"".Dict::S('Class:IPBlock/Tab:childblock/SelectList')."\">\n");
+
+				$oP->add("</form>\n");
+				$oP->add('</div>');
+
+				// Display list of hosts if not empty
+				$oBlock = new DisplayBlock($oChildBlockSet->GetFilter(), 'list', false);
+				$oBlock->Display($oP, 'child_blocks', array('menu' => false));
+			}
+			else
+			{
+				$oP->SetCurrentTab(Dict::S('Class:IPBlock/Tab:childblock'));
+				$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+			}
+		}
 	}
 
 	/**
