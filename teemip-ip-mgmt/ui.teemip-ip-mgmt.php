@@ -57,11 +57,16 @@ function DisplayTree(WebPage $oP, $iOrgId, $sClass)
  */
 function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass)
 {
-	// Get list of Containers (delegated or not) contained within current container defined by key $iContainerId
+	// Get list of Containers contained within current container defined by key $iContainerId
+	//    . Blocks that belong to organization
 	$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";
+	//    . Add blocks that are delegated to
 	$sOQL .= " UNION ";
 	$sOQL .= "SELECT $sContainerClass AS cc WHERE cc.parent_org_id = :org_id AND cc.parent_id = :parent_id";
-	$oChildContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'parent_id' => $iContainerId));
+	//    . Add blocks that are delegated from - this should only work for level 0 where container_id is null
+	$sOQL .= " UNION ";
+	$sOQL .= "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_org_id != 0 AND :container_id = 0";
+	$oChildContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'parent_id' => $iContainerId, 'container_id' => $iContainerId));
 
 	$aNodes = array();
 	while($oChildContainer = $oChildContainerSet->Fetch())
