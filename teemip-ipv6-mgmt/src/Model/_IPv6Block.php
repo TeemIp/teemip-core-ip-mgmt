@@ -1728,6 +1728,10 @@ EOF
 		$oLastIp = $this->Get('lastip');
 		$iBlockSize = $this->GetSize();
 
+		// Open table
+		$oP->add('<table style="width:100%"><tr><td colspan="2">');
+		$oP->add('<div style="vertical-align:top;" id="tree">');
+
 		// Display Block ref
 		$oP->add("<ul>\n");
 		$oP->add("<li>".$this->GetHyperlink()."&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]<ul>\n");
@@ -1781,6 +1785,11 @@ EOF
 			$oP->add("</li>\n");
 		}
 		$oP->add("</ul></li></ul>\n");
+
+		// Close table
+		$oP->add('</div>');
+		$oP->add('</td></tr></table>');
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
 	}
 
 	/**
