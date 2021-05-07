@@ -9,6 +9,7 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 use IPConfig;
 use IPObject;
 use utils;
+use WebPage;
 
 class _IPSubnet extends IPObject
 {
@@ -274,8 +275,11 @@ class _IPSubnet extends IPObject
 		{
 			case 'last_discovery_date':
 			case 'ping_duration':
+			case 'ping_discovered':
 			case 'iplookup_duration':
+			case 'iplookup_discovered':
 			case 'scan_duration':
+			case 'scan_discovered':
 			case 'reserve_subnet_ips':
 				return OPT_ATT_READONLY;
 
@@ -308,6 +312,31 @@ class _IPSubnet extends IPObject
 				break;
 		}
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $aParam
+	 */
+	public function DisplayIPsAsCSV(WebPage $oP, $aParam) {
+		$sHtml = $this->GetIPsAsCSV($aParam);
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$oP->add(<<<HTML
+				<div id="3" class="display_block">
+				<textarea>{$sHtml}</textarea>
+				</div>
+HTML
+			);
+			// Adjust the size of the block
+			$oP->add_ready_script(" $('#3>textarea').height($('#3').parent().height() - 220).width( $('#3').parent().width() - 30);");
+		} else {
+			$oP->add(<<<HTML
+				<div id="3" class="ibo-is-code">
+				{$sHtml}
+				</div>
+HTML
+			);
+		}
 	}
 
 }
