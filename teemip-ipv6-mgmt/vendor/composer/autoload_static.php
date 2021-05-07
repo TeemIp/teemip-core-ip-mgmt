@@ -22,7 +22,6 @@ class ComposerStaticInit273a8928ed899897554d18600b9fe3e2
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\AttributeIPv6Address' => __DIR__ . '/../..' . '/src/Model/AttributeIPv6Address.php',
         'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Address' => __DIR__ . '/../..' . '/src/Model/_IPv6Address.php',
         'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Block' => __DIR__ . '/../..' . '/src/Model/_IPv6Block.php',
         'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Range' => __DIR__ . '/../..' . '/src/Model/_IPv6Range.php',
