@@ -230,9 +230,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:ip_occupancy' => 'Registered IPs',
 	'Class:IPSubnet/Attribute:ip_occupancy+' => '',
 	'Class:IPSubnet/Attribute:range_occupancy' => 'Registered Ranges',
-	'Class:IPSubnet/Attribute:range_occupancy+' => '',                         
+	'Class:IPSubnet/Attribute:range_occupancy+' => '',
 	'Class:IPSubnet/Attribute:alarm_water_mark' => 'Status of water mark alarm',
-	'Class:IPSubnet/Attribute:alarm_water_mark+' => '',                              
+	'Class:IPSubnet/Attribute:alarm_water_mark+' => '',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'No alarm has been sent yet',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Low water mark alarm has been sent',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'High water mark alarm has been sent',
@@ -699,7 +699,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:mac_address_format/Value:dots' => '0123.4567.89ab',
 	'Class:IPConfig/Attribute:mac_address_format/Value:dots+' => '',
 	'Class:IPConfig/Attribute:mac_address_format/Value:any' => 'Any',
-	'Class:IPConfig/Attribute:mac_address_format/Value:any+' => '',                                 
+	'Class:IPConfig/Attribute:mac_address_format/Value:any+' => '',
 	'Class:IPConfig/Attribute:ping_before_assign' => 'Ping IP before assigning it ?',
 	'Class:IPConfig/Attribute:ping_before_assign+' => '',
 	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_no' => 'No',
@@ -872,7 +872,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPSpace:IPv4Objects' => 'IPv4 Objects',
 	'Menu:IPSpace:IPv4Objects+' => 'IPv4 Objects',
 	'Menu:IPSpace:Options' => 'Parameters',
-	'Menu:IPSpace:Options+' => 'Parameters',  
+	'Menu:IPSpace:Options+' => 'Parameters',
 	'Menu:NewIPObject' => 'New IP object',
 	'Menu:NewIPObject+' => 'Creation of a new IP object',
 	'Menu:SearchIPObject' => 'Search for IP object',
@@ -896,7 +896,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:SubnetCalculator' => 'Subnet Calculator',
 	'Menu:SubnetCalculator+' => 'Tool to calculate subnet parameters from an IP and a mask',
 	'Menu:Options' => 'Parameters',
-	'Menu:Options+' => 'Parameters',  
+	'Menu:Options+' => 'Parameters',
 	'Menu:IPConfig' => 'Global IP Settings',
 	'Menu:IPConfig+' => 'Global parameters for the IP related objects',
 	'Menu:IPRangeUsage' => 'IP Range Types',
@@ -907,21 +907,21 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Domain+' => 'Domain Names',
 	'Menu:IPTemplate' => 'Templates IP',
 	'Menu:IPTemplate+' => 'Templates IP',
-	
+
 	'UI:IPMgmtWelcomeOverview:Title' => 'My Dashboard',
-	
+
 	// Menu separator in Action menus
-	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',	
+	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',
 	'UI:IPManagement:Action:Error::WrongActionForClass' => 'This action cannot be applied on that class of object!',
 //
 // Management of IP global settings
 //
-	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Only one Global IP Settings object can exist within an organization.',	
+	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Only one Global IP Settings object can exist within an organization.',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall' => 'Minimum size of IPv4 Subnet Blocks cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall' => 'Minimum size of IPv6 Subnet Blocks cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Water Marks are percentage, please, use numbers between 0 and 100!',
-	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Low Water Mark must be smaller than High one!',	
-	'UI:IPManagement:Action:Modify:GlobalConfig' => 'These Global IP Settings may be over written for that action.',	
+	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Low Water Mark must be smaller than High one!',
+	'UI:IPManagement:Action:Modify:GlobalConfig' => 'These Global IP Settings may be over written for that action.',
 
 //
 // Management of IPBlocks
@@ -929,36 +929,36 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'First IP of Subnet Block is higher than last IP!',
 	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s for organization %2$s!',
-	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Block is not CIDR aligned!',	
-	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Subnet Block is not strictly contained within selected parent!',	
-	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Name of Subnet Block already exists!',	
-	'UI:IPManagement:Action:New:IPBlock:Collision0' => 'Subnet Block already exists!',	
+	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Block is not CIDR aligned!',
+	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Subnet Block is not strictly contained within selected parent!',
+	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Name of Subnet Block already exists!',
+	'UI:IPManagement:Action:New:IPBlock:Collision0' => 'Subnet Block already exists!',
 	'UI:IPManagement:Action:New:IPBlock:Collision1' => 'Subnet Block collision: first IP belongs to an existing block!',
 	'UI:IPManagement:Action:New:IPBlock:Collision2' => 'Subnet Block collision: last IP belongs to an existing block!',
-	'UI:IPManagement:Action:Modify:IPBlock:ParentIdNull' => 'Child subnets of block %1$s cannot be attached to non existant parent block.',	
-	
+	'UI:IPManagement:Action:Modify:IPBlock:ParentIdNull' => 'Child subnets of block %1$s cannot be attached to non existant parent block.',
+
 	// Shrink action on subnet blocks
-	'UI:IPManagement:Action:Shrink:IPBlock:Reverted' =>  'New first IP of Subnet Block is higher than new last IP!',
+	'UI:IPManagement:Action:Shrink:IPBlock:Reverted' => 'New first IP of Subnet Block is higher than new last IP!',
 	'UI:IPManagement:Action:Shrink:IPBlock:IPOutOfBlock' => 'New IPs are not all within block!',
 	'UI:IPManagement:Action:Shrink:IPBlock:NoChange' => 'No change has been required.',
 	'UI:IPManagement:Action:Shrink:IPBlock:NotCIDRAligned' => 'Block is not CIDR aligned!',
 	'UI:IPManagement:Action:Shrink:IPBlock:BlockAccrossBorder' => 'A child subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Shrink:IPBlock:SubnetAccrossBorder' => 'A subnet attached to the block sits accros new borders!',
-	'UI:IPManagement:Action:Shrink:IPBlock:SubnetBecomesOrhpean' => 'Child subnets won\'t have parent block after shrink!',	
+	'UI:IPManagement:Action:Shrink:IPBlock:SubnetBecomesOrhpean' => 'Child subnets won\'t have parent block after shrink!',
 	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk.',
-	
+
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPBlock:IPOutOfBlock' => 'Split IP is out of block!',
 	'UI:IPManagement:Action:Split:IPBlock:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
-	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Blocks are not CIDR aligned!',	
+	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Blocks are not CIDR aligned!',
 	'UI:IPManagement:Action:Split:IPBlock:BlockAccrossBorder' => 'A child subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Split:IPBlock:SubnetAccrossBorder' => 'A subnet attached to the block sits accros new borders!',
 	'UI:IPManagement:Action:Split:IPBlock:EmptyNewName' => 'Name of new Subnet Block is empty!',
 	'UI:IPManagement:Action:Split:IPBlock:NameExist' => 'Name of new Subnet Block already exists!',
 	'UI:IPManagement:Action:Split:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been split.',
-	
+
 	// Expand action on subnet blocks
-	'UI:IPManagement:Action:Expand:IPBlock:Reverted' =>  'New first IP of Subnet Block is higher than new last IP!',
+	'UI:IPManagement:Action:Expand:IPBlock:Reverted' => 'New first IP of Subnet Block is higher than new last IP!',
 	'UI:IPManagement:Action:Expand:IPBlock:IPOutOfBlock' => 'New IPs are not all outside of block!',
 	'UI:IPManagement:Action:Expand:IPBlock:NoChange' => 'No change has been required.',
 	'UI:IPManagement:Action:Expand:IPBlock:NotCIDRAligned' => 'Block is not CIDR aligned!',
@@ -986,68 +986,68 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Block conflicts with a block from the parent organization!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Block has children blocks in parent organization!',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent' => 'Block has children subnets in parent organization!',
-	
+
 	// Undelegate action on subnet blocks
 	'UI:IPManagement:Action:Undelegate:IPBlock:CannotBeUndelegated' => 'Block cannot be undelegated: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPBlock:IsNotDelegated' => 'Block is not delegated!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Block has children blocks!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Block has children subnets!',
-	
+
 //
 // Management of IPv4Blocks
 //
 	// Display details of subnet blocks
 	'UI:IPManagement:Action:Details:IPv4Block' => 'Details',
 	'UI:IPManagement:Action:Details:IPv4Block+' => '',
-	
+
 	// Display list of subnet blocks
 	'UI:IPManagement:Action:DisplayList:IPv4Block' => 'Display List',
 	'UI:IPManagement:Action:DisplayList:IPv4Block+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv4Block:PageTitle_Class' => 'IPv4 Subnet Blocks',
 	'UI:IPManagement:Action:DisplayList:IPv4Block:Title_Class' => 'IPv4 Subnet Blocks',
-	
+
 	// Display tree of subnet blocks
 	'UI:IPManagement:Action:DisplayTree:IPv4Block' => 'Display Tree',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block+' => '',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:PageTitle_Class' => 'IPv4 Subnet Blocks',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:Title_Class' => 'IPv4 Subnet Blocks',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:OrgName' => 'Organization %1$s',
-	
+
 	// Shrink action on subnet blocks
 	'UI:IPManagement:Action:Shrink:IPv4Block' => 'Shrink',
 	'UI:IPManagement:Action:Shrink:IPv4Block+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Summary' => 'Summary',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s shrink',
-	'UI:IPManagement:Action:Shrink:IPv4Block:Title_Class_Object' => 'Shrink %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Shrink:IPv4Block:Title_Class_Object' => 'Shrink %1$s: %2$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:NewFirstIP' => 'New First IP of Block:',
 	'UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP' => 'New Last IP of Block:',
 	'UI:IPManagement:Action:Shrink:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be shrunk!',
 	'UI:IPManagement:Action:Shrink:IPv4Block:CannotBeShrunk' => 'Block cannot be shrunk: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk.',
-	
+
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPv4Block' => 'Split',
 	'UI:IPManagement:Action:Split:IPv4Block+' => '',
 	'UI:IPManagement:Action:Split:IPv4Block:Summary' => 'Summary',
 	'UI:IPManagement:Action:Split:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s split',
-	'UI:IPManagement:Action:Split:IPv4Block:Title_Class_Object' => 'Split %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Split:IPv4Block:Title_Class_Object' => 'Split %1$s: %2$s',
 	'UI:IPManagement:Action:Split:IPv4Block:At' => 'First IP of new Subnet Block:',
 	'UI:IPManagement:Action:Split:IPv4Block:NameNewBlock' => 'Name of new Subnet Block:',
 	'UI:IPManagement:Action:Split:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be split!',
 	'UI:IPManagement:Action:Split:IPv4Block:CannotBeSplit' => 'Block cannot be split: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Split:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been split.',
-	
+
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPv4Block' => 'Expand',
 	'UI:IPManagement:Action:Expand:IPv4Block+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Block:Summary' => 'Summary',
 	'UI:IPManagement:Action:Expand:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Block:PageTitle_Object_Class' => '%1$s - %2$s expand',
-	'UI:IPManagement:Action:Expand:IPv4Block:Title_Class_Object' => 'Expand %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Expand:IPv4Block:Title_Class_Object' => 'Expand %1$s: %2$s',
 	'UI:IPManagement:Action:Expand:IPv4Block:NewFirstIP' => 'New First IP of Block:',
 	'UI:IPManagement:Action:Expand:IPv4Block:NewLastIP' => 'New Last IP of Block:',
 	'UI:IPManagement:Action:Expand:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be expanded!',
@@ -1056,22 +1056,22 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded.',
 
 	// List space action on subnet blocks 
-	'UI:IPManagement:Action:ListSpace:IPv4Block' => 'List Space',                                               
+	'UI:IPManagement:Action:ListSpace:IPv4Block' => 'List Space',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Space',
-	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Space within %1$s: %2$s',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace' => 'Free [%1$s - %2$s] - %3$s IPs - %4$.2f %%',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent' => 'Free [%1$s - %2$s] - %3$s IPs',
 
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv4Block' => 'Find Space',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Find space',
-	'UI:IPManagement:Action:FindSpace:IPv4Block:Title_Class_Object' => 'Look for space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv4Block:Title_Class_Object' => 'Look for space within %1$s: %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:SizeOfSpace' => 'Size of space to look for:',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:MaxNumberOfOffers' => 'Maximum number of offers:',
-	
+
 	// Do find Space action on subnet blocks
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Find space',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Found space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Found space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary' => '%1$s first /%2$s within ',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsBlock' => 'Create as a child block',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsSubnet' => 'Create as a subnet',
@@ -1079,7 +1079,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPv4Block' => 'Delegate',
 	'UI:IPManagement:Action:Delegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Delegate',
-	'UI:IPManagement:Action:Delegate:IPv4Block:Title_Class_Object' => 'Delegate %1$s <span class="hilite">%2$s</span> to organization',
+	'UI:IPManagement:Action:Delegate:IPv4Block:Title_Class_Object' => 'Delegate %1$s %2$s to organization',
 	'UI:IPManagement:Action:Delegate:IPv4Block:ChildBlock' => 'Organization to delegate the Block to:',
 	'UI:IPManagement:Action:Delegate:IPv4Block:NoChildOrg' => 'Block\'s organization doesn\'t have any children and therefore, block cannot be delegated!',
 	'UI:IPManagement:Action:Delegate:IPv4Block:NoOtherOrg' => 'There is no other organization than block\'s organization!',
@@ -1092,16 +1092,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Un-delegate',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Un-delegate',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been un-delegated.',
-	
+
 //
 // Management of Subnets
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:IPSubnet:IpCannotChange' => 'Subnet IP cannot be modified! ',	
-	'UI:IPManagement:Action:New:IPSubnet:MaskCannotChange' => 'Subnet Mask cannot be modified!',	
-	'UI:IPManagement:Action:New:IPSubnet:IpIncorrect' => 'Subnet IP is not consistant with Mask!',	
-	'UI:IPManagement:Action:New:IPSubnet:NotInBlock' => 'Subnet is not contained within selected block!',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision0' => 'Subnet already exists!',	
+	'UI:IPManagement:Action:New:IPSubnet:IpCannotChange' => 'Subnet IP cannot be modified! ',
+	'UI:IPManagement:Action:New:IPSubnet:MaskCannotChange' => 'Subnet Mask cannot be modified!',
+	'UI:IPManagement:Action:New:IPSubnet:IpIncorrect' => 'Subnet IP is not consistant with Mask!',
+	'UI:IPManagement:Action:New:IPSubnet:NotInBlock' => 'Subnet is not contained within selected block!',
+	'UI:IPManagement:Action:New:IPSubnet:Collision0' => 'Subnet already exists!',
 	'UI:IPManagement:Action:New:IPSubnet:Collision1' => 'Subnet collision: subnet IP belongs to an existing subnet!',
 	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Subnet collision: broadcast IP belongs to an existing subnet!',
 	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Subnet collision: new subnet includes an existing one!',
@@ -1128,42 +1128,42 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet:PageTitle_Class' => 'IPv4 Subnets',
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet:Title_Class' => 'IPv4 Subnets',
-	
+
 	// Display tree of subnets
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet' => 'Display Tree',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:PageTitle_Class' => 'IPv4 Subnets',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:Title_Class' => 'IPv4 Subnets',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:OrgName' => 'Organization %1$s',
-	
+
 	// Find space action on subnets 
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet' => 'Find space',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Find space',
-	'UI:IPManagement:Action:FindSpace:IPv4Subnet:Title_Class_Object' => 'Look for IP space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv4Subnet:Title_Class_Object' => 'Look for IP space within %1$s: %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeTooSmall' => 'Subnet is too small to look for space. Please, cancel!',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeOfRange' => 'Size of space to look for:',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers' => 'Maximum number of offers:',
-	
+
 	// Do find Space action on subnet
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Find space',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Title_Class_Object' => 'Space within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Title_Class_Object' => 'Space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Summary' => '%1$s first free %2$s IPs ranges within subnet',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeTooBig' => 'Requested space doesn\'t fit within subnet. Please, try a lower value.',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:CreateAsRange' => 'Create as an IP range',
 
 	// List IPs action on subnets 
-	'UI:IPManagement:Action:ListIps:IPv4Subnet' => 'List & Pick IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv4Subnet' => 'List & Pick IPs',
 	'UI:IPManagement:Action:ListIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:Title_Class_Object' => 'List of IPs within %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:Subtitle_ListRange' => 'Subnet is too big to list all IPs in a raw. Please, select a range to display:',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:FirstIP' => 'First IP of the list',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:LastIP' => 'Last IP of the list',                                               
-	
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:Title_Class_Object' => 'List of IPs within %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:Subtitle_ListRange' => 'Subnet is too big to list all IPs in a raw. Please, select a range to display:',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:FirstIP' => 'First IP of the list',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:LastIP' => 'Last IP of the list',
+
 	// Do list IPs action on subnet
-	'UI:IPManagement:Action:DoListIps:IPv4Subnet' => 'List & Pick IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet' => 'List & Pick IPs',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv4Subnet:Title_Class_Object' => 'Partial list of IPs within %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:CannotBeListed' => 'IPs cannot be listed: %1$s',
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet:Title_Class_Object' => 'Partial list of IPs within %1$s: %2$s',
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet:CannotBeListed' => 'IPs cannot be listed: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:FirstIPOutOfSubnet' => 'First IP is out of subnet!',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:LastIPOutOfSubnet' => 'Last IP is out of subnet!',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:FirstIpBiggerThanLastIp' => 'First IP of range is higher than last IP!',
@@ -1174,37 +1174,37 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Summary' => 'Summary',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s shrink',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:Title_Class_Object' => 'Shrink %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:CannotBeShrunk' =>  'Subnet cannot be shrunk: %1$s',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:Title_Class_Object' => 'Shrink %1$s: %2$s',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:CannotBeShrunk' => 'Subnet cannot be shrunk: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:SizeTooSmall' => 'Subnet is too small to be shrunk!',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:SizeTooSmallBy' => 'Subnet is too small to be shrunk by %1$s!',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Shrink cannot be performed!',	
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Range: <b>%1$s [%2$s - %3$s]</b> will be dropped from subnet. Shrink cannot be performed!',	
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Shrink cannot be performed!',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Range: <b>%1$s [%2$s - %3$s]</b> will be dropped from subnet. Shrink cannot be performed!',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk by %3$s.',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:By' => 'Shrink by:',
-	
+
 	// Split action on subnets
 	'UI:IPManagement:Action:Split:IPv4Subnet' => 'Split',
 	'UI:IPManagement:Action:Split:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:Split:IPv4Subnet:Summary' => 'Summary',
 	'UI:IPManagement:Action:Split:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s split',
-	'UI:IPManagement:Action:Split:IPv4Subnet:Title_Class_Object' => 'Split %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Split:IPv4Subnet:CannotBeSplit' =>  'Subnet cannot be split: %1$s',
+	'UI:IPManagement:Action:Split:IPv4Subnet:Title_Class_Object' => 'Split %1$s: %2$s',
+	'UI:IPManagement:Action:Split:IPv4Subnet:CannotBeSplit' => 'Subnet cannot be split: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmall' => 'Subnet is too small to be split!',
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmallBy' => 'Subnet is too small to be split by %1$s!',
-	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Split cannot be performed!',	
+	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Split cannot be performed!',
 	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been split in %3$s.',
 	'UI:IPManagement:Action:Split:IPv4Subnet:In' => 'Split in:',
-	
+
 	// Expand action on subnets
 	'UI:IPManagement:Action:Expand:IPv4Subnet' => 'Expand',
 	'UI:IPManagement:Action:Expand:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:Summary' => 'Summary',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s expand',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:Title_Class_Object' => 'Expand %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:CannotBeExpanded' =>  'Subnet cannot be expanded: %1$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:Title_Class_Object' => 'Expand %1$s: %2$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:CannotBeExpanded' => 'Subnet cannot be expanded: %1$s',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBig' => 'Subnet is too big to be expanded!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBigBy' => 'Subnet is too big to be expanded by %1$s!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:NotInIPBlock' => 'The block hosting the subnet is too small to contain the new expanded subnet!',
@@ -1214,16 +1214,16 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CSV Export action on subnets
 	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet' => 'CSV Export IPs',
 	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s CSV export IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Title_Class_Object' => 'CSV Export IPs of %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Subtitle_ListRange' => 'Subnet is too big to export all IPs in a raw. Please, select a range to display:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:FirstIP' => 'First IP of the list',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:LastIP' => 'Last IP of the list',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Title_Class_Object' => 'CSV Export IPs of %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Subtitle_ListRange' => 'Subnet is too big to export all IPs in a raw. Please, select a range to display:',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:FirstIP' => 'First IP of the list',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:LastIP' => 'Last IP of the list',
+
 	// Do CSV export IPs action on subnet
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet' => 'CSV Export IPs',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet' => 'CSV Export IPs',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s CSV export IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:Title_Class_Object' => 'Partial CSV Export IPs within %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:CannotBeListed' => 'IPs cannot be listed: %1$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:Title_Class_Object' => 'Partial CSV Export IPs within %1$s: %2$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:CannotBeListed' => 'IPs cannot be listed: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:FirstIPOutOfSubnet' => 'First IP is out of subnet!',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:LastIPOutOfSubnet' => 'Last IP is out of subnet!',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:FirstIpBiggerThanLastIp' => 'First IP of range is higher than last IP!',
@@ -1261,10 +1261,10 @@ Dict::Add('EN US', 'English', 'English', array(
 // Management of IP ranges
 //
 	// Creation and Update Management
-	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Name of Range already exists within subnet!',	
-	'UI:IPManagement:Action:New:IPRange:Reverted' => 'First IP of Range is higher than last IP!',	
-	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'IP Range is not contained within selected subnet!',	
-	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Range already exists!',	
+	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Name of Range already exists within subnet!',
+	'UI:IPManagement:Action:New:IPRange:Reverted' => 'First IP of Range is higher than last IP!',
+	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'IP Range is not contained within selected subnet!',
+	'UI:IPManagement:Action:New:IPRange:Collision0' => 'IP Range already exists!',
 	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Range collision: first IP belongs to an existing range!',
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision: last IP belongs to an existing range!',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision: new range includes an existing one!',
@@ -1279,17 +1279,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Details:IPv4Range+' => '',
 
 	// List IPs action on IP Ranges 
-	'UI:IPManagement:Action:ListIps:IPv4Range' => 'List & Pick IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv4Range' => 'List & Pick IPs',
 	'UI:IPManagement:Action:ListIps:IPv4Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv4Range:Title_Class_Object' => 'List of IPs within %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv4Range:Subtitle_ListRange' => 'Range is too big to list all IPs in a raw. Please, select a sub range to display:',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Range:FirstIP' => 'First IP of the list',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Range:LastIP' => 'Last IP of the list',                                               
-		
+	'UI:IPManagement:Action:ListIps:IPv4Range:Title_Class_Object' => 'List of IPs within %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv4Range:Subtitle_ListRange' => 'Range is too big to list all IPs in a raw. Please, select a sub range to display:',
+	'UI:IPManagement:Action:ListIps:IPv4Range:FirstIP' => 'First IP of the list',
+	'UI:IPManagement:Action:ListIps:IPv4Range:LastIP' => 'Last IP of the list',
+
 	// Do list IPs action on IP Ranges 
-	'UI:IPManagement:Action:DoListIps:IPv4Range' => 'List & Pick IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv4Range' => 'List & Pick IPs',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv4Range:Title_Class_Object' => 'Partial list of IPs within %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoListIps:IPv4Range:Title_Class_Object' => 'Partial list of IPs within %1$s: %2$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:CannotBeListed' => 'Range cannot be listed: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:FirstIPOutOfRange' => 'First IP is out of range!',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:LastIPOutOfRange' => 'Last IP is out of range!',
@@ -1298,15 +1298,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	// CSV Export action on IP Ranges
 	'UI:IPManagement:Action:CsvExportIps:IPv4Range' => 'CSV Export of IPs',
 	'UI:IPManagement:Action:CsvExportIps:IPv4Range:PageTitle_Object_Class' => '%1$s - %2$s CSV export of IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Title_Class_Object' => 'CSV Export IPs of %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Subtitle_ListRange' => 'Range is too big to export all IPs in a raw. Please, select a sub range to export:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:FirstIP' => 'First IP of the list',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:LastIP' => 'Last IP of the list',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Title_Class_Object' => 'CSV Export IPs of %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Subtitle_ListRange' => 'Range is too big to export all IPs in a raw. Please, select a sub range to export:',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:FirstIP' => 'First IP of the list',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:LastIP' => 'Last IP of the list',
+
 	// Do CSV Export IPs action on IP Ranges
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range' => 'CSV Export IPs',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range' => 'CSV Export IPs',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:PageTitle_Object_Class' => '%1$s - %2$s CSV export of IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:Title_Class_Object' => 'Partial CSV Export IPs of %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:Title_Class_Object' => 'Partial CSV Export IPs of %1$s: %2$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:CannotBeListed' => 'Range cannot be exported: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:FirstIPOutOfRange' => 'First IP is out of range!',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:LastIPOutOfRange' => 'Last IP is out of range!',
@@ -1316,12 +1316,12 @@ Dict::Add('EN US', 'English', 'English', array(
 // Management of IP Addresses
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'Short name already exists within domain!',	
+	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'Short name already exists within domain!',
 
-	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'IP already exists!',	
-	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'IP does not belong to IP range!',	
-	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'IP does not belong to subnet!',	
-	'UI:IPManagement:Action:New:IPAddress:IPPings' => 'IP pings! ',	
+	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'IP already exists!',
+	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'IP does not belong to IP range!',
+	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'IP does not belong to subnet!',
+	'UI:IPManagement:Action:New:IPAddress:IPPings' => 'IP pings! ',
 	'UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame' => 'IP cannot be NATed to itself! ',
 
 	// Allocation to CI / Unallocation from CI
@@ -1345,7 +1345,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 	// Allocation to CI / Unallocation from CI
 	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Allocate IP',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Allocate %1$s <span class="hilite">%2$s</span> to CI',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Allocate %1$s %2$s to CI',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been allocated.',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Un-allocate IP',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been unallocated.',
@@ -1355,13 +1355,13 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:Domain:NameCollision' => 'Domain name already exists!',
-		
+
 	// Display list of domains
 	'UI:IPManagement:Action:DisplayList:Domain' => 'Display List',
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'DNS Domains',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Display Tree',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
