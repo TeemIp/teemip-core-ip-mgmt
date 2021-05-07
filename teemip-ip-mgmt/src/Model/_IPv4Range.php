@@ -114,7 +114,10 @@ class _IPv4Range extends IPRange
 		$iFirstIp = TeemIpUtils::myip2long($sFirstIp);
 		$iLastIp = TeemIpUtils::myip2long($sLastIp);
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip)  AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')  AND i.org_id = $sOrgId"));
-						
+
+		// Set CRLF format according to version
+		$sCrLf = (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) ? "\n" : "<br>";
+
 		// List exported parameters
 		$sHtml = '"Registered","Id"';
 		$aParam = array('org_name', 'ip', 'status', 'fqdn', 'usage_name', 'comment', 'requestor_name', 'release_date');
@@ -126,7 +129,7 @@ class _IPv4Range extends IPRange
 		{
 			$sHtml .= ',"'.MetaModel::GetLabel('IPv4Address', $sAttCode).'"';
 		}
-		$sHtml .= "\n";
+		$sHtml .= $sCrLf;
 						
 		// List all IPs of range now in IP order 
 		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', false);
@@ -167,7 +170,7 @@ class _IPv4Range extends IPRange
 					$sHtml .= ',"'.$oIpRegistered->Get('fqdn_from_iplookup').'"';
 				}
 			}
-			$sHtml .= "\n";
+			$sHtml .= $sCrLf;
 			$iAnIp++;
 		}
 		return ($sHtml);
