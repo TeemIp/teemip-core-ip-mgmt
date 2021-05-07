@@ -12,15 +12,13 @@ use IPObject;
 use utils;
 use WebPage;
 
-class _IPRange extends IPObject
-{
+class _IPRange extends IPObject {
 	/**
 	 * Returns size of range
 	 *
 	 * @return int
 	 */
-	public function GetSize()
-	{
+	public function GetSize() {
 		return 1;
 	}
 
@@ -31,10 +29,8 @@ class _IPRange extends IPObject
 	 *
 	 * @return string
 	 */
-	function DoCheckOperation($sOperation)
-	{
-		switch ($sOperation)
-		{
+	function DoCheckOperation($sOperation) {
+		switch ($sOperation) {
 			case 'listips':
 			case 'csvexportips':
 				return ('');
@@ -51,10 +47,8 @@ class _IPRange extends IPObject
 	 *
 	 * @return string
 	 */
-	function GetNextOperation($sOperation)
-	{
-		switch ($sOperation)
-		{
+	function GetNextOperation($sOperation) {
+		switch ($sOperation) {
 			case 'listips':
 				return 'dolistips';
 			case 'dolistips':
@@ -79,10 +73,8 @@ class _IPRange extends IPObject
 	 *
 	 * @return int
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'occupancy')))
-		{
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'occupancy'))) {
 			return OPT_ATT_READONLY;
 		}
 
@@ -96,11 +88,9 @@ class _IPRange extends IPObject
 	 *
 	 * @return array
 	 */
-	function GetPostedParam($sOperation)
-	{
+	function GetPostedParam($sOperation) {
 		$aParam = array();
-		switch ($sOperation)
-		{
+		switch ($sOperation) {
 			case 'dolistips':
 				$aParam['first_ip'] = filter_var(utils::ReadPostedParam('attr_firstip', '', 'raw_data'), FILTER_VALIDATE_IP);
 				$aParam['last_ip'] = filter_var(utils::ReadPostedParam('attr_lastip', '', 'raw_data'), FILTER_VALIDATE_IP);
@@ -130,43 +120,30 @@ class _IPRange extends IPObject
 	 *
 	 * @return array
 	 */
-	public function GetAttributeParams($sAttCode)
-	{
+	public function GetAttributeParams($sAttCode) {
 		$aParams = array();
-		if ($sAttCode == 'occupancy')
-		{
-			$Occupancy = $this->GetOccupancy('');
+		if ($sAttCode == 'occupancy') {
+			$Occupancy = $this->GetOccupancy();
 			$sOrgId = $this->Get('org_id');
-			if ($sOrgId != null)
-			{
+			if ($sOrgId != null) {
 				$sLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $sOrgId);
 				$sHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $sOrgId);
-				if ($Occupancy >= $sHighWaterMark)
-				{
+				if ($Occupancy >= $sHighWaterMark) {
 					$sColor = RED;
-				}
-				else
-				{
-					if ($Occupancy >= $sLowWaterMark)
-					{
+				} else {
+					if ($Occupancy >= $sLowWaterMark) {
 						$sColor = YELLOW;
-					}
-					else
-					{
+					} else {
 						$sColor = GREEN;
 					}
 				}
 				$aParams ['value'] = round($Occupancy, 0);
 				$aParams ['color'] = $sColor;
-			}
-			else
-			{
+			} else {
 				$aParams ['value'] = 0;
 				$aParams ['color'] = GREEN;
 			}
-		}
-		else
-		{
+		} else {
 			$aParams ['value'] = 0;
 			$aParams ['color'] = GREEN;
 		}
@@ -181,8 +158,7 @@ class _IPRange extends IPObject
 	 *
 	 * @return string
 	 */
-	public function GetFreeIP($iCreationOffset)
-	{
+	public function GetFreeIP($iCreationOffset) {
 		return '';
 	}
 
@@ -193,16 +169,13 @@ class _IPRange extends IPObject
 	 * @param bool $bEditMode
 	 *
 	 */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
-	{
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if ($this->Get('dhcp') == 'dhcp_no')
-		{
+		if ($this->Get('dhcp') == 'dhcp_no') {
 			$oCIsSet = $this->Get('functionalcis_list');
-			if ($oCIsSet->Count() == 0)
-			{
+			if ($oCIsSet->Count() == 0) {
 				// Remove tab related to DHCP servers
 				//  Two following lines to be reactivated once FindTab is corrected
 				//      $sPattern = '/^'.Dict::S('Class:IPRange/Attribute:functionalcis_list').'/';
@@ -216,19 +189,36 @@ class _IPRange extends IPObject
 	/**
 	 * Check coherency of model before saving object
 	 */
-	public function DoCheckToWrite()
-	{
+	public function DoCheckToWrite() {
 		parent::DoCheckToWrite();
 
 		// Make sure no server is set in servers_list if range is not a DHCP one
-		if ($this->Get('dhcp') == 'dhcp_no')
-		{
+		if ($this->Get('dhcp') == 'dhcp_no') {
 			$oServersSet = $this->Get('functionalcis_list');
-			if ($oServersSet->Count() > 0)
-			{
+			if ($oServersSet->Count() > 0) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers');
 			}
 
+		}
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $aParam
+	 */
+	public function DisplayIPsAsCSV(WebPage $oP, $aParam) {
+		$sHtml = $this->GetIPsAsCSV($aParam);
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) {
+			$oP->add("<div id=\"3\" class=\"display_block\">\n");
+			$oP->add("<textarea>\n");
+			$oP->add($sHtml);
+			$oP->add("</textarea>\n");
+			$oP->add("</div>\n");
+
+			// Adjust the size of the block
+			$oP->add_ready_script(" $('#3>textarea').height($('#3').parent().height() - 220).width( $('#3').parent().width() - 30);");
+		} else {
+			$oP->add($sHtml);
 		}
 	}
 
