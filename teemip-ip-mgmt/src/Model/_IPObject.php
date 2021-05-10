@@ -24,9 +24,7 @@ use WebPage;
 
 class _IPObject extends cmdbAbstractObject {
 	/**
-	 * Provides
-	 * attributes'
-	 * parameters
+	 * Provides attributes' parameters
 	 *
 	 * @param $sAttCode
 	 */
@@ -34,12 +32,7 @@ class _IPObject extends cmdbAbstractObject {
 	}
 
 	/**
-	 * Returns
-	 * default
-	 * value
-	 * of
-	 * an
-	 * attribute
+	 * Returns default value of an attribute
 	 *
 	 * @param $sAttribute
 	 *
@@ -59,11 +52,7 @@ class _IPObject extends cmdbAbstractObject {
 	}
 
 	/**
-	 * Displays
-	 * choices
-	 * related
-	 * to
-	 * operation.
+	 * Displays choices related to operation.
 	 *
 	 * @param \WebPage $oP
 	 * @param $oAppContext
@@ -188,12 +177,7 @@ EOF
 	}
 
 	/**
-	 * Create
-	 * common
-	 * string
-	 * for
-	 * UI
-	 * displays
+	 * Create common string for UI displays
 	 *
 	 * @param $sOperation
 	 *
@@ -273,7 +257,7 @@ EOF
 		return '';
 	}
 
-	/*
+	/**
 	 * Set page titles.
 	 *
 	 * @param \WebPage $oP
@@ -284,7 +268,6 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-
 	public function SetPageTitles(WebPage $oP, $sUIPath, $bIcon = true) {
 		$sClassLabel = MetaModel::GetName(get_class($this));
 		$oP->set_title(Dict::Format($sUIPath.'PageTitle_Object_Class', $this->GetName(), $sClassLabel));
@@ -298,6 +281,11 @@ EOF
 		$oP->add("</div>\n");
 	}
 
+	/**
+	 * @param $sPrefix
+	 *
+	 * @return string
+	 */
 	protected function GetNewFormId($sPrefix) {
 		self::$iGlobalFormId++;
 		$this->m_iFormId = $sPrefix.self::$iGlobalFormId;
@@ -332,6 +320,7 @@ EOF
 	}
 
 	/**
+	 * @param \WebPage $oP
 	 * @param $oClassForm
 	 * @param $sOperation
 	 * @param $aDefault
@@ -341,8 +330,15 @@ EOF
 
 	/**
 	 * @param \WebPage $oP
+	 * @param string $sTitle
 	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function DisplayBareTab(WebPage $oP, $sTitle = '') {
 		$sClass = get_class($this);
@@ -351,7 +347,7 @@ EOF
 			$oSingletonFilter = new DBObjectSearch($sClass);
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oBlock->Display($oP, 'listspace');
+			$oBlock->Display($oP, 'baretab');
 
 			// Set titles
 			$this->SetPageTitles($oP, $sTitle.$sClass.':');
@@ -480,13 +476,7 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * global
-	 * parameters
-	 * associated
-	 * to
-	 * the
-	 * object
+	 * Display global parameters associated to the object
 	 *
 	 * @param \WebPage $oP
 	 * @param $aParameter
@@ -524,14 +514,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * actions
-	 * when
-	 * new
-	 * object
-	 * inserted
-	 * in
-	 * DB
+	 * Perform actions when new object inserted in DB
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -546,14 +529,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * actions
-	 * when
-	 * new
-	 * object
-	 * updated
-	 * in
-	 * DB
+	 * Perform actions when new object updated in DB
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
