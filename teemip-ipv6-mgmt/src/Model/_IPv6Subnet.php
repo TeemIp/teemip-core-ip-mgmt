@@ -8,6 +8,10 @@ namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
 
 use cmdbAbstractObject;
 use CMDBObjectSet;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -23,16 +27,9 @@ use WebPage;
  * Class
  * _IPv6Subnet
  */
-class _IPv6Subnet extends IPSubnet
-{
+class _IPv6Subnet extends IPSubnet {
 	/**
-	 * Return
-	 * standard
-	 * icon
-	 * or
-	 * extra
-	 * small
-	 * one
+	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
 	 * @param bool $bXsIcon
@@ -40,10 +37,8 @@ class _IPv6Subnet extends IPSubnet
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false)
-	{
-		if ($bXsIcon)
-		{
+	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/ipv6subnet-xs.png';
 
 			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
@@ -55,42 +50,33 @@ class _IPv6Subnet extends IPSubnet
 	/**
 	 * @return mixed
 	 *
-	 * @return mixed
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
-	function GetName()
-	{
+	public function GetName() {
 		return $this->GetAsHtml('ip');
 	}
 
 	/**
-	 * Returns
-	 * index
-	 * to
-	 * be
-	 * used
-	 * within
-	 * tree
-	 * computations
+	 * Returns index to be used within tree computations
 	 *
 	 * @return int
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetIndexForTree()
-	{
+	public function GetIndexForTree() {
 		return $this->Get('ip')->GetAsCannonical();
 	}
 
 	/**
-	 * Returns
-	 * size
-	 * of
-	 * subnet
+	 * Returns size of subnet
 	 *
 	 * @return mixed
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	public function GetSize()
-	{
+	public function GetSize() {
 		$oSubnetIp = $this->Get('ip');
 		$oLastIp = $this->Get('lastip');
 		$iSize = $oSubnetIp->GetSizeInterval($oLastIp);
@@ -99,18 +85,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Compute
-	 * %
-	 * of
-	 * IP
-	 * addresses
-	 * and
-	 * /
-	 * or
-	 * IP
-	 * ranges
-	 * in
-	 * subnet
+	 * Compute % of IP addresses and / or IP ranges in subnet
 	 *
 	 * @param $sObject
 	 *
@@ -120,27 +95,24 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetOccupancy($sObject)
-	{
+	public function GetOccupancy($sObject) {
 		$iOrgId = $this->Get('org_id');
 
-		switch ($sObject)
-		{
+		switch ($sObject) {
 			case 'IPRange':
 			case 'IPv6Range':
 				// Look for all child IP ranges
-			$iSubnet = $this->GetKey();
-			$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :subnet_id AND r.org_id = :org_id"), array(), array(
-				'subnet_id' => $iSubnet,
-				'org_id' => $iOrgId
-			));
-			$iSizeRanges = 0;
-			while ($oIpRange = $oIpRangeSet->Fetch())
-			{
-				$iSizeRanges += $oIpRange->GetSize();
-			}
+				$iSubnet = $this->GetKey();
+				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :subnet_id AND r.org_id = :org_id"), array(), array(
+					'subnet_id' => $iSubnet,
+					'org_id' => $iOrgId,
+				));
+				$iSizeRanges = 0;
+				while ($oIpRange = $oIpRangeSet->Fetch()) {
+					$iSizeRanges += $oIpRange->GetSize();
+				}
 
-			return ($iSizeRanges / $this->GetSize()) * 100;
+				return ($iSizeRanges / $this->GetSize()) * 100;
 
 			case 'IPAddress':
 			case 'IPv6Address':
@@ -153,14 +125,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Automatically
-	 * get
-	 * a
-	 * free
-	 * IP
-	 * in
-	 * the
-	 * subnet
+	 * Automatically get a free IP in the subnet
 	 *
 	 * @param $iCreationOffset
 	 *
@@ -170,13 +135,11 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeIP($iCreationOffset)
-	{
+	public function GetFreeIP($iCreationOffset) {
 		$oFirstIp = $this->Get('ip');
 		$oFirstIp = $oFirstIp->GetNextIp(); // Skip subnet IP
 		$oLastIp = $this->Get('lastip');
-		if ($iCreationOffset > $oFirstIp->GetSizeInterval($oLastIp))
-		{
+		if ($iCreationOffset > $oFirstIp->GetSizeInterval($oLastIp)) {
 			return '';
 		}
 
@@ -188,27 +151,21 @@ class _IPv6Subnet extends IPSubnet
 		// Get list of ranges in Subnet
 		$oIPRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iKey));
 
-		for($i = 0; $i < $iCreationOffset; $i++)
-		{
+		for ($i = 0; $i < $iCreationOffset; $i++) {
 			$oFirstIp = $oFirstIp->GetNextIp();
 		}
 		$oAnIp = $oFirstIp;
-		while ($oAnIp->IsSmallerStrict($oLastIp))
-		{
-			if (!in_array($oAnIp, $aIPRegistered))
-			{
+		while ($oAnIp->IsSmallerStrict($oLastIp)) {
+			if (!in_array($oAnIp, $aIPRegistered)) {
 				$oIPRangeSet->Rewind();
 				$bIsInRange = false;
-				while ($oIPRange = $oIPRangeSet->Fetch())
-				{
-					if ($oIPRange->DoCheckIpInRange($oAnIp))
-					{
+				while ($oIPRange = $oIPRangeSet->Fetch()) {
+					if ($oIPRange->DoCheckIpInRange($oAnIp)) {
 						$bIsInRange = true;
 						break;
 					}
 				}
-				if (!$bIsInRange)
-				{
+				if (!$bIsInRange) {
 					return $oAnIp->ToString();
 				}
 			}
@@ -219,15 +176,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Count
-	 * number
-	 * of
-	 * IPs
-	 * in
-	 * subnet,
-	 * in
-	 * given
-	 * status
+	 * Count number of IPs in the subnet with a given status
 	 *
 	 * @param $sStatus
 	 *
@@ -238,22 +187,20 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function IPCount($sStatus)
-	{
-		switch ($sStatus)
-		{
+	public function IPCount($sStatus) {
+		switch ($sStatus) {
 			case 'allocated':
 			case 'released':
 			case 'reserved':
 			case 'unassigned':
-			$iKey = $this->GetKey();
-			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS ip WHERE ip.status = :status AND ip.subnet_id = :key"), array(), array(
-				'status' => $sStatus,
-				'key' => $iKey
-			));
-			$iNbIps = $oIpSet->Count();
+				$iKey = $this->GetKey();
+				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS ip WHERE ip.status = :status AND ip.subnet_id = :key"), array(), array(
+					'status' => $sStatus,
+					'key' => $iKey,
+				));
+				$iNbIps = $oIpSet->Count();
 
-			return $iNbIps;
+				return $iNbIps;
 
 			default:
 				return 0;
@@ -261,14 +208,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Find
-	 * space
-	 * within
-	 * the
-	 * subnet
-	 * to
-	 * create
-	 * range
+	 * Find space within the subnet to create range
 	 *
 	 * @param $iRangeSize
 	 * @param $iMaxOffer
@@ -280,8 +220,7 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeSpace($iRangeSize, $iMaxOffer)
-	{
+	public function GetFreeSpace($iRangeSize, $iMaxOffer) {
 		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$aFreeSpace = array();
@@ -290,17 +229,14 @@ class _IPv6Subnet extends IPSubnet
 		$sFirstIp = $this->Get('ip')->GetAsCannonical();
 		$sLastIp = $this->Get('lastip')->GetAsCannonical();
 		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize)
-		{
+		if ($iRangeSize >= $iSubnetSize) {
 			// Required range size is to big, exit
 			return $aFreeSpace;
-		}
-		else
-		{
+		} else {
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
 				'firstip' => $sFirstIp,
 				'lastip' => $sLastIp,
-				'org_id' => $iOrgId
+				'org_id' => $iOrgId,
 			));
 			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
 			$aRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('ip', false);
@@ -311,48 +247,37 @@ class _IPv6Subnet extends IPSubnet
 			$oLastIp = $this->Get('lastip');
 			$oAnIp = $oAnIp->GetNextIp();
 			$n = 0;
-			do
-			{
+			do {
 				// Find next free IP
-				while (in_array($oAnIp, $aRegisteredIPs))
-				{
+				while (in_array($oAnIp, $aRegisteredIPs)) {
 					$oAnIp = $oAnIp->GetNextIp();
 				}
-				if ($oAnIp->IsSmallerStrict($oLastIp))
-				{
+				if ($oAnIp->IsSmallerStrict($oLastIp)) {
 					// If free IP belongs to an IP range, skip range
 					$oIpRangeSet->Rewind();
 					$bContinue = true;
-					while ($bContinue && ($oIpRange = $oIpRangeSet->Fetch()))
-					{
+					while ($bContinue && ($oIpRange = $oIpRangeSet->Fetch())) {
 						$oIpRangeFirstIp = $oIpRange->Get('firstip');
 						$oIpRangeLastIp = $oIpRange->Get('lastip');
-						if ($oIpRangeFirstIp->IsSmallerOrEqual($oAnIp) && $oAnIp->IsSmallerOrEqual($oIpRangeLastIp))
-						{
+						if ($oIpRangeFirstIp->IsSmallerOrEqual($oAnIp) && $oAnIp->IsSmallerOrEqual($oIpRangeLastIp)) {
 							$oAnIp = $oIpRangeLastIp->GetNextIp();
 							$bContinue = false;
 						}
 					}
-					if ($oAnIp->IsSmallerStrict($oLastIp))
-					{
+					if ($oAnIp->IsSmallerStrict($oLastIp)) {
 						// Make sure we don't have any IP or range until last IP
 						$oRangeFirstIp = $oAnIp;
 						$i = 0;
 						$bContinue = true;
-						while ($bContinue && (!in_array($oAnIp, $aRegisteredIPs)) && $oAnIp->IsSmallerStrict($oLastIp) && ($i < $iRangeSize))
-						{
-							if (in_array($oAnIp, $aRangeIPs))
-							{
+						while ($bContinue && (!in_array($oAnIp, $aRegisteredIPs)) && $oAnIp->IsSmallerStrict($oLastIp) && ($i < $iRangeSize)) {
+							if (in_array($oAnIp, $aRangeIPs)) {
 								$bContinue = false;
-							}
-							else
-							{
+							} else {
 								$oAnIp = $oAnIp->GetNextIp();
 								$i++;
 							}
 						}
-						if ($i == $iRangeSize)
-						{
+						if ($i == $iRangeSize) {
 							$aFreeSpace[$n] = array();
 							$oRangeLastIp = $oAnIp->GetPreviousIp();
 							$aFreeSpace[$n]['firstip'] = $oRangeFirstIp;
@@ -369,14 +294,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * List
-	 * IP
-	 * addresses
-	 * in
-	 * subnet
-	 * in
-	 * CSV
-	 * format
+	 * List IP addresses in the subnet in CSV format
 	 *
 	 * @param $aParam
 	 *
@@ -389,27 +307,20 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function GetIPsAsCSV($aParam)
-	{
+	public function GetIPsAsCSV($aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
-		if ($sFirstIp == '')
-		{
+		if ($sFirstIp == '') {
 			$oFirstIp = $oSubnetIp;
-		}
-		else
-		{
+		} else {
 			$oFirstIp = new ormIPv6($sFirstIp);
 		}
 		$sLastIp = $aParam['last_ip'];
 		$oBroadcastIp = $this->Get('lastip');
-		if ($sLastIp == '')
-		{
+		if ($sLastIp == '') {
 			$oLastIp = $oBroadcastIp;
-		}
-		else
-		{
+		} else {
 			$oLastIp = new ormIPv6($sLastIp);
 		}
 
@@ -422,7 +333,7 @@ class _IPv6Subnet extends IPSubnet
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :ip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
 			'ip' => $sIp,
 			'lastip' => $sLastIp,
-			'org_id' => $iOrgId
+			'org_id' => $iOrgId,
 		)));
 		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', false);
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iId));
@@ -438,28 +349,22 @@ class _IPv6Subnet extends IPSubnet
 			'usage_name',
 			'comment',
 			'requestor_name',
-			'release_date'
+			'release_date',
 		);
-		foreach($aParam as $sAttCode)
-		{
+		foreach ($aParam as $sAttCode) {
 			$sHtml .= ','.MetaModel::GetLabel('IPv6Address', $sAttCode);
 		}
 		$sHtml .= ",IP Range\n";
 
 		// List all IPs of subnet now in IP order 
 		$oAnIp = $oIp->GetNextIp();
-		while ($oAnIp->IsSmallerOrEqual($oLastIp))
-		{
-			if (!in_array($oAnIp, $aIpRegistered))
-			{
+		while ($oAnIp->IsSmallerOrEqual($oLastIp)) {
+			if (!in_array($oAnIp, $aIpRegistered)) {
 				$sHtml .= "no,,,".$oAnIp->GetAsCompressed().",free,,,,,,,,";
-			}
-			else
-			{
+			} else {
 				$oIpRegisteredSet->Rewind();
 				$oIpRegistered = $oIpRegisteredSet->Fetch();
-				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip')))
-				{
+				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip'))) {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
 				$sHtml .= "yes,".$oIpRegistered->GetKey().",";
@@ -473,33 +378,23 @@ class _IPv6Subnet extends IPSubnet
 				$sHtml .= $oIpRegistered->Get('release_date').",";
 			}
 			// Check if IP belongs to a range or not
-			if ($iCountRange != 0)
-			{
+			if ($iCountRange != 0) {
 				$oIpRangeSet->Rewind();
 				$oIpRange = $oIpRangeSet->Fetch();
 				$iFoundRange = false;
-				while (($oIpRange != null) && ($iFoundRange == false))
-				{
-					if ($oIpRange->Get('firstip')->IsSmallerOrEqual($oAnIp) && $oAnIp->IsSmallerOrEqual($oIpRange->Get('lastip')))
-					{
+				while (($oIpRange != null) && ($iFoundRange == false)) {
+					if ($oIpRange->Get('firstip')->IsSmallerOrEqual($oAnIp) && $oAnIp->IsSmallerOrEqual($oIpRange->Get('lastip'))) {
 						$iFoundRange = true;
-					}
-					else
-					{
+					} else {
 						$oIpRange = $oIpRangeSet->Fetch();
 					}
 				}
-				if ($iFoundRange)
-				{
+				if ($iFoundRange) {
 					$sHtml .= $oIpRange->Get('range')."\n";
-				}
-				else
-				{
+				} else {
 					$sHtml .= "\n";
 				}
-			}
-			else
-			{
+			} else {
 				$sHtml .= "\n";
 			}
 			$oAnIp = $oAnIp->GetNextIp();
@@ -509,23 +404,18 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IP
-	 * is
-	 * in
-	 * subnet
+	 * Check if IP is in subnet
 	 *
 	 * @param $oIp
 	 *
 	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckIpInSubnet($oIp)
-	{
+	public function DoCheckIpInSubnet($oIp) {
 		$oSubnetIp = $this->Get('ip');
 		$oLastIp = $this->Get('lastip');
-		if ($oSubnetIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerOrEqual($oLastIp))
-		{
+		if ($oSubnetIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerOrEqual($oLastIp)) {
 			return true;
 		}
 
@@ -533,17 +423,13 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Check
-	 * if
-	 * subnet
-	 * is
-	 * CIDR
-	 * aligned
+	 * Check if subnet is CIDR aligned
 	 *
 	 * @return bool
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckCIDRAligned()
-	{
+	public function DoCheckCIDRAligned() {
 		// Note that IPv6 subnets are /64 only
 
 		$oIp = $this->Get('ip');
@@ -552,8 +438,7 @@ class _IPv6Subnet extends IPSubnet
 		$oMask = new ormIPv6($sMask);
 
 		$oAndIP = $oIp->BitwiseAnd($oMask);
-		if ($oIp->IsEqual($oAndIP))
-		{
+		if ($oIp->IsEqual($oAndIP)) {
 			return true;
 		}
 
@@ -561,26 +446,18 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Check
-	 * if
-	 * operation
-	 * is
-	 * feasible
-	 * on
-	 * current
-	 * object
+	 * Check if operation is feasible on current object
 	 *
 	 * @param $sOperation
 	 *
 	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckOperation($sOperation)
-	{
-		switch ($sOperation)
-		{
+	public function DoCheckOperation($sOperation) {
+		switch ($sOperation) {
 			case 'findspace':
-				if ($this->Get('mask') > 124)
-				{
+				if ($this->Get('mask') > 124) {
 					return ('SizeTooSmall');
 				}
 				break;
@@ -602,25 +479,20 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Check
-	 * if
-	 * space
-	 * can
-	 * be
-	 * searched
+	 * Check if space can be searched
 	 *
 	 * @param $aParam
 	 *
 	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckToDisplayAvailableSpace($aParam)
-	{
+	public function DoCheckToDisplayAvailableSpace($aParam) {
 		$iRangeSize = $aParam['rangesize'];
 
 		// Get list of registered IPs & ranges in subnet
 		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize)
-		{
+		if ($iRangeSize >= $iSubnetSize) {
 			// Required range size is to big, exit
 			return ('RangeTooBig');
 		}
@@ -629,9 +501,7 @@ class _IPv6Subnet extends IPSubnet
 	}
 
 	/**
-	 * Displays
-	 * available
-	 * space
+	 * Displays available space
 	 *
 	 * @param \WebPage $oP
 	 * @param $iChangeId
@@ -643,8 +513,7 @@ class _IPv6Subnet extends IPSubnet
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam)
-	{
+	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iRangeSize = $aParam['rangesize'];
@@ -652,14 +521,11 @@ class _IPv6Subnet extends IPSubnet
 
 		// Get list of registered IPs & ranges in subnet
 		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize)
-		{
+		if ($iRangeSize >= $iSubnetSize) {
 			// Required range size is to big, exit
 			// This should have been checked before
 			$oP->add(Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:RangeTooBig')."<br><br>");
-		}
-		else
-		{
+		} else {
 			// Get list of free space in subnet
 			$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
 
@@ -672,12 +538,10 @@ class _IPv6Subnet extends IPSubnet
 
 			// Display possible choices as list
 			$iSizeFreeArray = sizeof($aFreeSpace);
-			if ($iSizeFreeArray != 0)
-			{
+			if ($iSizeFreeArray != 0) {
 				$i = 0;
 				$iVIdCounter = 1;
-				do
-				{
+				do {
 					$oRangeFirstIp = $aFreeSpace[$i]['firstip'];
 					$sRangeFirstIp = $oRangeFirstIp->GetAsCannonical();
 					$oRangeLastIp = $aFreeSpace[$i]['lastip'];
@@ -686,8 +550,7 @@ class _IPv6Subnet extends IPSubnet
 
 					// If user has rights to create range
 					// Display range with icon to create it
-					if ($UserHasRightsToCreate)
-					{
+					if ($UserHasRightsToCreate) {
 						$iVId = $iVIdCounter++;
 						$sHTMLValue = "<ul><li><div><span id=\"v_{$iVId}\">";
 						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
@@ -700,9 +563,7 @@ class _IPv6Subnet extends IPSubnet
 EOF
 						);
 						$oP->add("</ul></li>\n");
-					}
-					else
-					{
+					} else {
 						$oP->add("</li>\n");
 					}
 				} while (++$i < $iSizeFreeArray);
@@ -712,47 +573,35 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IPs
-	 * can
-	 * be
-	 * listed
+	 * Check if IPs can be listed
 	 *
 	 * @param $aParam
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	function DoCheckToListIps($aParam)
-	{
+	public function DoCheckToListIps($aParam) {
 		$oIp = $this->Get('ip');
 		$oBroadcastIp = $this->Get('lastip');
 
 		$sFirstIp = $aParam['first_ip'];
-		if ($sFirstIp != '')
-		{
+		if ($sFirstIp != '') {
 			$oFirstIp = new ormIPv6($sFirstIp);
-			if ($oFirstIp->IsSmallerStrict($oIp) || $oBroadcastIp->IsSmallerOrEqual($oFirstIp))
-			{
+			if ($oFirstIp->IsSmallerStrict($oIp) || $oBroadcastIp->IsSmallerOrEqual($oFirstIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoListIps:IPv6Subnet:FirstIPOutOfSubnet'));
 			}
 		}
 
 		$sLastIp = $aParam['last_ip'];
-		if ($sLastIp != '')
-		{
+		if ($sLastIp != '') {
 			$oLastIp = new ormIPv6($sLastIp);
-			if ($oLastIp->IsSmallerOrEqual($oIp) || $oBroadcastIp->IsSmallerStrict($oLastIp))
-			{
+			if ($oLastIp->IsSmallerOrEqual($oIp) || $oBroadcastIp->IsSmallerStrict($oLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoListIps:IPv6Subnet:LastIPOutOfSubnet'));
 			}
 		}
 
-		if (($sFirstIp != '') && ($sLastIp != ''))
-		{
-			if ($oFirstIp->IsBiggerStrict($oLastIp))
-			{
+		if (($sFirstIp != '') && ($sLastIp != '')) {
+			if ($oFirstIp->IsBiggerStrict($oLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoListIps:IPv6Subnet:FirstIpBiggerThanLastIp'));
 			}
 		}
@@ -761,12 +610,7 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * list
-	 * IP
-	 * addresses
-	 * within
-	 * GUI
+	 * Display list IP addresses within GUI
 	 *
 	 * @param \WebPage $oP
 	 * @param $iChangeId
@@ -779,28 +623,21 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoListIps(WebPage $oP, $iChangeId, $aParam)
-	{
+	public function DoListIps(WebPage $oP, $iChangeId, $aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
-		if ($sFirstIp == '')
-		{
+		if ($sFirstIp == '') {
 			$oFirstIp = $oSubnetIp;
-		}
-		else
-		{
+		} else {
 			$oFirstIp = new ormIPv6($sFirstIp);
 		}
 		$bPrintDummyFirstLine = $oFirstIp->IsEqual($oSubnetIp) ? false : true;
 		$sLastIp = $aParam['last_ip'];
 		$oBroadcastIp = $this->Get('lastip');
-		if ($sLastIp == '')
-		{
+		if ($sLastIp == '') {
 			$oLastIp = $oBroadcastIp;
-		}
-		else
-		{
+		} else {
 			$oLastIp = new ormIPv6($sLastIp);
 		}
 		$bPrintDummyLastLine = $oLastIp->IsEqual($oBroadcastIp) ? false : true;
@@ -814,7 +651,7 @@ EOF
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :ip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
 			'ip' => $sIp,
 			'lastip' => $sLastIp,
-			'org_id' => $iOrgId
+			'org_id' => $iOrgId,
 		)));
 		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', false);
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iId));
@@ -841,21 +678,17 @@ EOF
 		$oP->add("<li>".$this->GetIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
 
 		// ... and dummy line if display doesn't start at first IP
-		if ($bPrintDummyFirstLine)
-		{
+		if ($bPrintDummyFirstLine) {
 			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
 		}
 
 		// Display other IPs as list
-		while ($oAnIp->IsSmallerOrEqual($oLastIp))
-		{
-			if (in_array($oAnIp, $aIpRange))
-			{
+		while ($oAnIp->IsSmallerOrEqual($oLastIp)) {
+			if (in_array($oAnIp, $aIpRange)) {
 				// Found a range within list of IPs
 				$oIpRangeSet->Rewind();
 				$oIpRange = $oIpRangeSet->Fetch();
-				while (!$oAnIp->IsEqual($oIpRange->Get('firstip')))
-				{
+				while (!$oAnIp->IsEqual($oIpRange->Get('firstip'))) {
 					$oIpRange = $oIpRangeSet->Fetch();
 				}
 
@@ -865,23 +698,18 @@ EOF
 				$oP->add("&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>\n");
 				$oIpRangeLastIp = $oIpRange->Get('lastip');
 			}
-			if (in_array($oAnIp, $aIpRegistered))
-			{
+			if (in_array($oAnIp, $aIpRegistered)) {
 				// Found registered IP
 				$oIpRegisteredSet->Rewind();
 				$oIpRegistered = $oIpRegisteredSet->Fetch();
-				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip')))
-				{
+				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip'))) {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
 				$oP->add("<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn'));
-			}
-			else
-			{
+			} else {
 				// If user has rights to create IPs
 				// Display unregistered IP with icon to create it
-				if ($UserHasRightsToCreate)
-				{
+				if ($UserHasRightsToCreate) {
 					$iVId = $iVIdCounter++;
 					$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
 					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
@@ -893,71 +721,53 @@ EOF
 					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
-				}
-				else
-				{
+				} else {
 					$oP->add("<li>".$oAnIp->GetAsCompressed());
 				}
 			}
-			if ($oAnIp->IsEqual($oIpRangeLastIp))
-			{
+			if ($oAnIp->IsEqual($oIpRangeLastIp)) {
 				$oP->add("</ul></li>\n");
 			}
 			$oAnIp = $oAnIp->GetNextIp();
 		}
 
 		// Add dummy line if display doesn't finish at broadcast IP
-		if ($bPrintDummyLastLine)
-		{
+		if ($bPrintDummyLastLine) {
 			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
 		}
 		$oP->add("</ul></li></ul>\n");
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IPs
-	 * can
-	 * be
-	 * exported
-	 * in
-	 * CSV
+	 * Check if IPs can be exported in CSV
 	 *
 	 * @param $aParam
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	function DoCheckToCsvExportIps($aParam)
-	{
+	public function DoCheckToCsvExportIps($aParam) {
 		$oIp = $this->Get('ip');
 		$oBroadcastIp = $this->Get('lastip');
 
 		$sFirstIp = $aParam['first_ip'];
-		if ($sFirstIp != '')
-		{
+		if ($sFirstIp != '') {
 			$oFirstIp = new ormIPv6($sFirstIp);
-			if ($oFirstIp->IsSmallerStrict($oIp) || $oBroadcastIp->IsSmallerOrEqual($oFirstIp))
-			{
+			if ($oFirstIp->IsSmallerStrict($oIp) || $oBroadcastIp->IsSmallerOrEqual($oFirstIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:FirstIPOutOfSubnet'));
 			}
 		}
 
 		$sLastIp = $aParam['last_ip'];
-		if ($sLastIp != '')
-		{
+		if ($sLastIp != '') {
 			$oLastIp = new ormIPv6($sLastIp);
-			if ($oLastIp->IsSmallerOrEqual($oIp) || $oBroadcastIp->IsSmallerStrict($oLastIp))
-			{
+			if ($oLastIp->IsSmallerOrEqual($oIp) || $oBroadcastIp->IsSmallerStrict($oLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:LastIPOutOfSubnet'));
 			}
 		}
 
-		if (($sFirstIp != '') && ($sLastIp != ''))
-		{
-			if ($oFirstIp->IsBiggerStrict($oLastIp))
-			{
+		if (($sFirstIp != '') && ($sLastIp != '')) {
+			if ($oFirstIp->IsBiggerStrict($oLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:FirstIpBiggerThanLastIp'));
 			}
 		}
@@ -966,28 +776,20 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * calculator
-	 * inputs
-	 * are
-	 * meaningfull
+	 * Check if calculator inputs are meaningfull
 	 *
 	 * @param $aParam
 	 *
 	 * @return string
 	 */
-	function DoCheckCalculatorInputs($aParam)
-	{
+	public function DoCheckCalculatorInputs($aParam) {
 		$iCidr = $aParam['cidr'];
 
-		if ($iCidr == '')
-		{
+		if ($iCidr == '') {
 			return (Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:EnterPrefix'));
 		}
 
-		if (($iCidr <= 0) || ($iCidr > 128))
-		{
+		if (($iCidr <= 0) || ($iCidr > 128)) {
 			return (Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:WrongPrefix'));
 		}
 
@@ -995,16 +797,7 @@ EOF
 	}
 
 	/**
-	 * *
-	 * Display
-	 * subnet
-	 * in
-	 * the
-	 * node
-	 * of
-	 * a
-	 * hierarchical
-	 * tree
+	 * Display subnet in the node of a hierarchical tree
 	 *
 	 * @param \WebPage $oP
 	 * @param $bWithIcon
@@ -1014,47 +807,35 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId)
-	{
+	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId) {
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 		$oP->add($sHtml);
 	}
 
-	/*
+	/**
 	 * Display main attributes for associated operation
 	 *
 	 * @param \WebPage $oP
+	 * @param $sOperation
 	 * @param $iFormId
 	 * @param $sPrefix
 	 * @param $aDefault
 	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
-	{
+	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 	}
 
 	/**
-	 * Display
-	 * global
-	 * attributes
-	 * for
-	 * associated
-	 * operation
+	 * Display global attributes for associated operation
 	 *
 	 * @param $oP
 	 * @param $aDefault
 	 */
-	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault)
-	{
+	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 	}
 
 	/**
-	 * Display
-	 * action
-	 * fields
-	 * for
-	 * associated
-	 * operation
+	 * Display action fields for associated operation
 	 *
 	 * @param \WebPage $oP
 	 * @param $sOperation
@@ -1065,13 +846,11 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
-	{
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
-		switch ($sOperation)
-		{
+		switch ($sOperation) {
 			case 'findspace':
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:SizeOfRange');
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers');
@@ -1081,7 +860,7 @@ EOF
 				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"rangesize\" maxlength=\"4\" size=\"4\">\n";
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 				// Max number of offers
@@ -1090,7 +869,7 @@ EOF
 				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" value=\"$jDefault\" name=\"maxoffer\" maxlength=\"2\" size=\"2\">\n";
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 				$oP->Details($aDetails);
@@ -1103,16 +882,13 @@ EOF
 
 			case 'listips':
 			case 'csvexportips':
-				if ($sOperation == 'listips')
-				{
+				if ($sOperation == 'listips') {
 					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:FirstIP');
 					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:LastIP');
 
 					// Sub title
 					$oP->add("<b>".Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:Subtitle_ListRange')."</b>\n");
-				}
-				else
-				{
+				} else {
 					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv6Subnet:FirstIP');
 					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv6Subnet:LastIP');
 
@@ -1132,7 +908,7 @@ EOF
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 				// New last IP
@@ -1143,7 +919,7 @@ EOF
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 				$oP->Details($aDetails);
@@ -1166,7 +942,7 @@ EOF
 				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Subnet', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 				// CIDR
@@ -1174,7 +950,7 @@ EOF
 				$sHTMLValue = "<input type=\"number\" id=\"$sInputId\" name=\"cidr\">\n";
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue
+					'value' => $sHTMLValue,
 				);
 
 
@@ -1183,12 +959,9 @@ EOF
 
 				// Cancell button
 				$iObjId = $this->GetKey();
-				if ($iObjId > 0)
-				{
+				if ($iObjId > 0) {
 					$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('IPv6Subnet', $iObjId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				}
-				else
-				{
+				} else {
 					$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"window.history.back()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
 				}
 				break;
@@ -1203,12 +976,76 @@ EOF
 		$oP->add("</table>");
 	}
 
+	protected function DisplayActionFieldsForOperationv3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+		$oColumn = new Column();
+		$oClassForm->AddSubBlock($oColumn);
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oClassForm->AddSubBlock($oToolbar);
+
+		switch ($sOperation) {
+			case 'findspace':
+				break;
+
+			case 'listips':
+			case 'csvexportips':
+				$sTextOperation = ($sOperation == 'listips') ? 'ListIps' : 'CsvExportIps';
+				$sSubTitle = Dict::S('UI:IPManagement:Action:'.$sTextOperation.':IPv6Subnet:Subtitle_ListRange');
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:'.$sTextOperation.':IPv6Subnet:FirstIP');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:'.$sTextOperation.':IPv6Subnet:LastIP');
+
+				// Preset subnet bits of IP
+				$oSubnetIp = $this->Get('ip');
+				$sSubnetIp = $oSubnetIp->GetAsCompressed();
+
+				// Subtitle
+				$oColumn->AddHtml($sSubTitle.'<br><br>');
+
+				// First IP
+				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : $sSubnetIp;
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'firstip', $sLabelOfAction1, $sDefault, OPT_ATT_MANDATORY);
+				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// Last IP
+				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : $sSubnetIp;
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'lastip', $sLabelOfAction2, $sDefault, OPT_ATT_MANDATORY);
+				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// Cancel button
+				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				break;
+
+			case 'calculator':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Calculator:IPv6Subnet:IP');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Calculator:IPv6Subnet:Prefix');
+
+				// IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Subnet', 'ip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
+				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// CIDR
+				$sInputId = $this->m_iFormId.'_cidr';
+				$sHTML = "<input type=\"number\" id=\"$sInputId\" name=\"cidr\">\n";
+				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'cidr', $sLabelOfAction2, $sHTML);
+				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// Cancel button
+				if ($this->GetKey() > 0) {
+					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				} else {
+					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.history.back();"));
+				}
+				break;
+
+			default:
+				break;
+		};
+
+		// Apply button
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+	}
+
 	/**
-	 * Displays
-	 * result
-	 * of
-	 * IPv6
-	 * calculator
+	 * Get result of IPv6 calculator
 	 *
 	 * @param \WebPage $oP
 	 * @param $oAppContext
@@ -1216,8 +1053,7 @@ EOF
 	 *
 	 * @throws \Exception
 	 */
-	function DisplayCalculatorOutput(WebPage $oP, $aParam)
-	{
+	public function GetCalculatorOutput(WebPage $oP, $aParam) {
 		$sIp = $aParam['ip'];
 		$iPrefix = $aParam['cidr'];
 
@@ -1226,8 +1062,7 @@ EOF
 		$sIpCan = $oIp->GetAsCannonical();
 
 		$oMask = new ormIPv6('FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF');
-		for($i = 1; $i <= (IPV6_MAX_BIT - $iPrefix); $i++)
-		{
+		for ($i = 1; $i <= (IPV6_MAX_BIT - $iPrefix); $i++) {
 			$oMask = $oMask->LeftShift();
 		}
 		$sMask = $oMask->GetAsCompressed();
@@ -1242,77 +1077,68 @@ EOF
 		$iIpNumber = $oIp->GetSizeInterval($oLastIp);
 
 		$oVeryFirstIp = new ormIPv6('::');
-		if ($oSubnetIp->IsEqual($oVeryFirstIp))
-		{
+		if ($oSubnetIp->IsEqual($oVeryFirstIp)) {
 			$sPreviousSubnetIp = Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:PreviousSubnet:NA');
-		}
-		else
-		{
+		} else {
 			$oPreviousSubnetIp = $oSubnetIp->GetPreviousIp();
 			$oPreviousSubnetIp = $oPreviousSubnetIp->BitwiseAnd($oMask);
 			$sPreviousSubnetIp = $oPreviousSubnetIp->GetAsCompressed();
 		}
 
 		$oVeryLastIp = new ormIPv6('FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF');
-		if ($oLastIp->IsEqual($oVeryLastIp))
-		{
+		if ($oLastIp->IsEqual($oVeryLastIp)) {
 			$sNextSubnetIp = Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:NextSubnet:NA');
-		}
-		else
-		{
+		} else {
 			$oNextSubnetIp = $oLastIp->GetNextIp();
 			$sNextSubnetIp = $oNextSubnetIp->GetAsCompressed();
 		}
 
-		$oP->add('<table style="vertical-align:top;"><tr><td>');
-		$oP->add('<div id="tree">');
+		$sHtml = '';
+		$sHtml .= '<table style="vertical-align:top;"><tr><td>';
+		$sHtml .= '<div id="tree">';
 		// IP address - Compressed format
-		$oP->add('&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:CompressedIP').":</td><td>$sIpComp</td></tr>");
+		$sHtml .= '&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:CompressedIP').":</td><td>$sIpComp</td></tr>";
 
 		// IP address - Canonical format
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:CanonicalIP').":</td><td>$sIpCan</td></tr>");
-		$oP->add('<tr><td height=10></td></tr>');
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:CanonicalIP').":</td><td>$sIpCan</td></tr>";
+		$sHtml .= '<tr><td height=10></td></tr>';
 
 		// Network IP
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:NetworkIP').":</td><td><b>$sSubnetIp</b></td></tr>");
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:NetworkIP').":</td><td><b>$sSubnetIp</b></td></tr>";
 
 		// Prefix
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:Prefix').":</td><td>$iPrefix</td></tr>");
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:Prefix').":</td><td>$iPrefix</td></tr>";
 
 		// Prefix mask
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:PrefixMask').":</td><td>$sMask</td></tr>");
-		$oP->add('<tr><td height=10></td></tr>');
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:PrefixMask').":</td><td>$sMask</td></tr>";
+		$sHtml .= '<tr><td height=10></td></tr>';
 
 		// Last IP
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:LastIP').":</td><td><b>$sLastIp</b></td></tr>");
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:LastIP').":</td><td><b>$sLastIp</b></td></tr>";
 
 		// Number of IPs
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:IPNumber').":</td><td>$iIpNumber</td></tr>");
-		$oP->add('<tr><td height=10></td></tr>');
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:IPNumber').":</td><td>$iIpNumber</td></tr>";
+		$sHtml .= '<tr><td height=10></td></tr>';
 
 		// Previous network
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:PreviousSubnet').":</td><td>$sPreviousSubnetIp</td></tr>");
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:PreviousSubnet').":</td><td>$sPreviousSubnetIp</td></tr>";
 
 		// Next network
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:NextSubnet').":</td><td>$sNextSubnetIp</td></tr>");
-		$oP->add('<tr><td height=10></td></tr>');
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td>'.Dict::Format('UI:IPManagement:Action:DoCalculator:IPv6Subnet:NextSubnet').":</td><td>$sNextSubnetIp</td></tr>";
+		$sHtml .= '<tr><td height=10></td></tr>';
 
 		// As an option, create subnet or block with calculated parameters (previous, current or next one)
 		$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv6Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 		$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv6Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-		if (!$UserHasRightsToCreateBlocks && !$UserHasRightsToCreateSubnets)
-		{
-			return;
+		if (!$UserHasRightsToCreateBlocks && !$UserHasRightsToCreateSubnets) {
+			return $sHtml;
 		}
 
-		$oP->add('<tr><td>&nbsp;&nbsp;</td><td colspan="2">'.Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectCreation').':</td></tr>');
-		if ($this->GetKey() > 0)
-		{
+		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td colspan="2">'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation').':</td></tr>';
+		if ($this->GetKey() > 0) {
 			$iOrgId = $this->Get('org_id');
 			$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $iOrgId);
-		}
-		else
-		{
+		} else {
 			$iBlockMinSize = IPV6_BLOCK_MIN_PREFIX;
 		}
 		$bOfferBlock = ($iPrefix <= $iBlockMinSize) ? true : false;
@@ -1322,85 +1148,68 @@ EOF
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$aSubnetIps = array();
-		if (!$oSubnetIp->IsEqual($oVeryFirstIp))
-		{
+		if (!$oSubnetIp->IsEqual($oVeryFirstIp)) {
 			$aSubnetIps[$sPreviousSubnetIp] = $oPreviousSubnetIp->BitwiseOr($oNotMask)->GetAsCompressed();
 		}
 		$aSubnetIps[$sSubnetIp] = $sLastIp;
-		if (!$oLastIp->IsEqual($oVeryLastIp))
-		{
+		if (!$oLastIp->IsEqual($oVeryLastIp)) {
 			$aSubnetIps[$sNextSubnetIp] = $oNextSubnetIp->BitwiseOr($oNotMask)->GetAsCompressed();
 		}
-		foreach($aSubnetIps as $sFirstSubnetIp => $sLastSubnetIp)
-		{
-			if ($sFirstSubnetIp == $sSubnetIp)
-			{
-				$oP->add('<tr><td></td><td>&nbsp;&nbsp;</td><td><b>'.$sFirstSubnetIp.' /'.$iPrefix.'</b></td>');
-			}
-			else
-			{
-				$oP->add('<tr><td></td><td>&nbsp;&nbsp;</td><td>'.$sFirstSubnetIp.' /'.$iPrefix.'</td>');
+		foreach ($aSubnetIps as $sFirstSubnetIp => $sLastSubnetIp) {
+			if ($sFirstSubnetIp == $sSubnetIp) {
+				$sHtml .= '<tr><td></td><td>&nbsp;&nbsp;</td><td><b>'.$sFirstSubnetIp.' /'.$iPrefix.'</b></td>';
+			} else {
+				$sHtml .= '<tr><td></td><td>&nbsp;&nbsp;</td><td>'.$sFirstSubnetIp.' /'.$iPrefix.'</td>';
 			}
 
 			$sHTMLValue = '';
-			if ($UserHasRightsToCreateBlocks)
-			{
-				if ($bOfferBlock)
-				{
+			if ($UserHasRightsToCreateBlocks) {
+				if ($bOfferBlock) {
 					$iVId = $iVIdCounter++;
 					$sHTMLValue .= "<td><div><span id=\"v_{$iVId}\">";
 					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 					$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock')."&nbsp;&nbsp;";
 					$sHTMLValue .= "</span></div></td></tr>";
-					$oP->add($sHTMLValue);
+					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
 						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstSubnetIp", 'lastip': '$sLastSubnetIp'});
 EOF
 					);
-				}
-				else
-				{
+				} else {
 					$sHTMLValue .= '<td>'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig').'</td></tr>';
-					$oP->add($sHTMLValue);
+					$sHtml .= $sHTMLValue;
 				}
 				$sHTMLValue = "<tr><td></td><td></td><td></td>";
 			}
-			if ($UserHasRightsToCreateSubnets)
-			{
-				if ($bOfferSubnet)
-				{
+			if ($UserHasRightsToCreateSubnets) {
+				if ($bOfferSubnet) {
 					$iVId = $iVIdCounter++;
 					$sHTMLValue .= "<td><div><span id=\"v_{$iVId}\">";
 					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 					$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoCalculator:IPSubnet:CreateSubnet')."&nbsp;&nbsp;";
 					$sHTMLValue .= "</span></div></td>";
-					$oP->add($sHTMLValue);
+					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
 						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstSubnetIp", 'mask': '$iPrefix'});
 EOF
 					);
-				}
-				else
-				{
+				} else {
 					$sHTMLValue .= "<td>".Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateSubnet:MaskIsToSmall')."</td></tr>";
-					$oP->add($sHTMLValue);
+					$sHtml .= $sHTMLValue;
 				}
 			}
 
 		}
-		$oP->add('</div></td></tr></table>');
-		$oP->add('</div>');         // ??
+		$sHtml .= '</div></td></tr></table>';
+		$sHtml .= '</div>';         // ??
+
+		return $sHtml;
 	}
 
 	/**
-	 * Displays
-	 * the
-	 * tabs
-	 * related
-	 * to
-	 * IPv6Subnets
+	 * Displays the tabs related to IPv6Subnets
 	 *
 	 * @param \WebPage $oP
 	 * @param bool $bEditMode
@@ -1412,13 +1221,11 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-	{
+	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if (!$bEditMode)
-		{
+		if (!$bEditMode) {
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
 			$sIp = $this->Get('ip')->GetAsCannonical();
@@ -1431,21 +1238,18 @@ EOF
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :ip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
 				'ip' => $sIp,
 				'lastip' => $sLastIp,
-				'org_id' => $iOrgId
+				'org_id' => $iOrgId,
 			));
 			$oIpRegisteredSet = new CMDBObjectSet($oIpRegisteredSearch);
 			$iRegistered = $oIpRegisteredSet->Count();
-			if ($iRegistered > 0)
-			{
+			if ($iRegistered > 0) {
 				$aStatusRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('status', false);
 				$iReserved = 0;
 				$iAllocated = 0;
 				$iReleased = 0;
 				$i = 0;
-				while ($i < $iRegistered)
-				{
-					switch ($aStatusRegisteredIPs[$i++])
-					{
+				while ($i < $iRegistered) {
+					switch ($aStatusRegisteredIPs[$i++]) {
 						case 'reserved':
 							$iReserved++;
 							break;
@@ -1466,9 +1270,7 @@ EOF
 				$oP->p(Dict::Format('Class:IPv6Subnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated));
 				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
 				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
-			}
-			else
-			{
+			} else {
 				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:ipregistered'));
 				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:ipregistered+'));
 				$oP->p(Dict::S('UI:NoObjectToDisplay'));
@@ -1478,11 +1280,9 @@ EOF
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key", array('key' => $iKey));
 			$oIpRangeSet = new CMDBObjectSet($oIpRangeSearch);
 			$iIpRange = $oIpRangeSet->Count();
-			if ($iIpRange > 0)
-			{
+			if ($iIpRange > 0) {
 				$iCountRange = 0;
-				while ($oIpRange = $oIpRangeSet->Fetch())
-				{
+				while ($oIpRange = $oIpRangeSet->Fetch()) {
 					$iCountRange += $oIpRange->GetSize();
 				}
 				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:iprange').' ('.$iIpRange.')');
@@ -1490,22 +1290,18 @@ EOF
 				$oP->p($this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent'));
 				$oBlock = new DisplayBlock($oIpRangeSearch, 'list');
 				$oBlock->Display($oP, 'ip_ranges', $aExtraParams);
-			}
-			else
-			{
+			} else {
 				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:iprange'));
 				$oP->p(MetaModel::GetClassIcon('IPv6Range').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:iprange+'));
 				$oP->p(Dict::S('UI:NoObjectToDisplay'));
 			}
 
 			// Tab for related subnet requests, if any, in non edit mode
-			if (MetaModel::IsValidClass('IPRequestSubnet'))
-			{
+			if (MetaModel::IsValidClass('IPRequestSubnet')) {
 				$oSubnetRequestSearch = DBObjectSearch::FromOQL("SELECT IPRequestSubnet AS r WHERE r.subnet_id = $iKey");
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
 				$sCount = $oSubnetRequestSet->Count();
-				if ($sCount > 0)
-				{
+				if ($sCount > 0) {
 					$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:requests').' ('.$sCount.')');
 					$oP->p(MetaModel::GetClassIcon('IPRequestSubnet').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:requests+'));
 					$oBlock = new DisplayBlock($oSubnetRequestSearch, 'list');
@@ -1516,11 +1312,7 @@ EOF
 	}
 
 	/**
-	 * Compute
-	 * attributes
-	 * before
-	 * writing
-	 * object
+	 * Compute attributes before writing object
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1528,8 +1320,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function ComputeValues()
-	{
+	public function ComputeValues() {
 		$oIp = $this->Get('ip');
 		$iOrgId = $this->Get('org_id');
 
@@ -1542,13 +1333,10 @@ EOF
 		$this->Set('lastip', $oLastIp);
 
 		// Set Gateway IP
-		if ($iOrgId > 0)
-		{
-			if ($sBitMask != '128')
-			{
+		if ($iOrgId > 0) {
+			if ($sBitMask != '128') {
 				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
-				switch ($sGatewayIPFormat)
-				{
+				switch ($sGatewayIPFormat) {
 					case 'subnetip_plus_1':
 						$oFirstIpFromMask = new ormIPv6('::1');
 						$oGatewayIp = $oIp->BitwiseOr($oFirstIpFromMask);
@@ -1563,14 +1351,10 @@ EOF
 						$oGatewayIp = $this->Get('gatewayip');
 						break;
 				}
-			}
-			else
-			{
+			} else {
 				$oGatewayIp = $oIp;
 			}
-		}
-		else
-		{
+		} else {
 			$oFirstIpFromMask = new ormIPv6('::1');
 			$oGatewayIp = $oIp->BitwiseOr($oFirstIpFromMask);
 		}
@@ -1579,43 +1363,31 @@ EOF
 
 		// Set parent block if not set
 		// Note: this may give incorrect result if only one block exists under the organization since, in such case, framework preset block_id to that unique block as block_id cannot be null
-		if (($oIp != null) && ($oMask != null))
-		{
+		if (($oIp != null) && ($oMask != null)) {
 			// Look for all blocks containing the new subnet
 			// Pick the smallest one
 			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 			$iMinSize = 0;
 			$iBlockId = 0;
-			while ($oSRange = $oSRangeSet->Fetch())
-			{
+			while ($oSRange = $oSRangeSet->Fetch()) {
 				$oCurrentFirstIp = $oSRange->Get('firstip');
 				$oCurrentLastIp = $oSRange->Get('lastip');
-				if ($oCurrentFirstIp->IsSmallerOrEqual($oIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp))
-				{
+				if ($oCurrentFirstIp->IsSmallerOrEqual($oIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp)) {
 					$iSRangeSize = $oSRange->GetSize();
-					if (($iMinSize == 0) || ($iSRangeSize < $iMinSize))
-					{
+					if (($iMinSize == 0) || ($iSRangeSize < $iMinSize)) {
 						$iMinSize = $iSRangeSize;
 						$iBlockId = $oSRange->GetKey();
 					}
 				}
 			}
-			if ($iBlockId != 0)
-			{
+			if ($iBlockId != 0) {
 				$this->Set('block_id', $iBlockId);
 			}
 		}
 	}
 
 	/**
-	 * Check
-	 * validity
-	 * of
-	 * new
-	 * subnet
-	 * attributes
-	 * before
-	 * creation
+	 * Check validity of new subnet attributes before creation
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1623,18 +1395,14 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToWrite()
-	{
+	function DoCheckToWrite() {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
 		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iKey = -1;
-		}
-		else
-		{
+		} else {
 			$iKey = $this->GetKey();
 		}
 		$oIp = $this->Get('ip');
@@ -1644,16 +1412,13 @@ EOF
 
 		// Forbid change of subnet IP and subnet mask
 		$oSubnet = MetaModel::GetObject('IPv6Subnet', $iKey, false /* MustBeFound */);
-		if (!is_null($oSubnet))
-		{
-			if ($oIp != $oSubnet->Get('ip'))
-			{
+		if (!is_null($oSubnet)) {
+			if ($oIp != $oSubnet->Get('ip')) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpCannotChange');
 
 				return;
 			}
-			if ($sBitMask != $oSubnet->Get('mask'))
-			{
+			if ($sBitMask != $oSubnet->Get('mask')) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:MaskCannotChange');
 
 				return;
@@ -1661,8 +1426,7 @@ EOF
 		}
 
 		// Check consistency between subnet IP and mask. IP must be aligned with block defined by mask.
-		if (!$this->DoCheckCIDRAligned())
-		{
+		if (!$this->DoCheckCIDRAligned()) {
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpIncorrect');
 
 			return;
@@ -1672,8 +1436,7 @@ EOF
 		$oBlock = MetaModel::GetObject('IPv6Block', $iBlockId, true /* MustBeFound */);
 		$oBlockFirstIp = $oBlock->Get('firstip');
 		$oBlockLastIp = $oBlock->Get('lastip');
-		if ($oIp->IsSmallerStrict($oBlockFirstIp) || $oBlockLastIp->IsSmallerStrict($oLastIp))
-		{
+		if ($oIp->IsSmallerStrict($oBlockFirstIp) || $oBlockLastIp->IsSmallerStrict($oLastIp)) {
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:NotInBlock');
 
 			return;
@@ -1683,37 +1446,32 @@ EOF
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = :block_id AND s.org_id = :org_id AND s.id != :key"), array(), array(
 			'block_id' => $iBlockId,
 			'org_id' => $iOrgId,
-			'key' => $iKey
+			'key' => $iKey,
 		));
-		while ($oSubnet = $oSubnetSet->Fetch())
-		{
+		while ($oSubnet = $oSubnetSet->Fetch()) {
 			$oCurrentIp = $oSubnet->Get('ip');
 			$oCurrentLastIp = $oSubnet->Get('lastip');
 
 			// Does the subnet already exist?
-			if ($oCurrentIp->IsEqual($oIp) && $oCurrentLastIp->IsEqual($oLastIp))
-			{
+			if ($oCurrentIp->IsEqual($oIp) && $oCurrentLastIp->IsEqual($oLastIp)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision0');
 
 				return;
 			}
 			// Is the subnet IP part of an existing subnet?
-			if ($oCurrentIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerOrEqual($oCurrentLastIp))
-			{
+			if ($oCurrentIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerOrEqual($oCurrentLastIp)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision1');
 
 				return;
 			}
 			// Is the last IP part of an existing subnet?
-			if ($oCurrentIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp))
-			{
+			if ($oCurrentIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision2');
 
 				return;
 			}
 			// Is new subnet including an existing one?
-			if ($oIp->IsSmallerStrict($oCurrentIp) && $oCurrentLastIp->IsSmallerStrict($oLastIp))
-			{
+			if ($oIp->IsSmallerStrict($oCurrentIp) && $oCurrentLastIp->IsSmallerStrict($oLastIp)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision3');
 
 				return;
@@ -1722,11 +1480,9 @@ EOF
 
 		// If allocation of Gateway Ip is free, make sure it is contained in subnet
 		$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
-		if ($sGatewayIPFormat == 'free_setup')
-		{
+		if ($sGatewayIPFormat == 'free_setup') {
 			$oGatewayIp = $this->Get('gatewayip');
-			if (!$this->DoCheckIpInSubnet($oGatewayIp))
-			{
+			if (!$this->DoCheckIpInSubnet($oGatewayIp)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet');
 
 				return;
@@ -1735,13 +1491,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * specific
-	 * tasks
-	 * related
-	 * to
-	 * subnet
-	 * creation:
+	 * Perform specific tasks related to subnet creation:
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -1750,8 +1500,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function AfterInsert()
-	{
+	protected function AfterInsert() {
 		parent::AfterInsert();
 
 		$iOrgId = $this->Get('org_id');
@@ -1764,23 +1513,19 @@ EOF
 		$sLastIp = $this->Get('lastip')->GetAsCannonical();
 
 		// Check if subnet and broadcast IPs need to be created / updated or not
-		if ($sBitMask != '128')
-		{
+		if ($sBitMask != '128') {
 			$sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
-			if ($sReserveSubnetIPs == 'default')
-			{
+			if ($sReserveSubnetIPs == 'default') {
 				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
 			}
-			if ($sReserveSubnetIPs == 'reserve_yes')
-			{
+			if ($sReserveSubnetIPs == 'reserve_yes') {
 				// Create or update subnet IP
 				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
 				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :subnetip AND i.org_id = :org_id", array(
 					'subnetip' => $sSubnetIp,
-					'org_id' => $iOrgId
+					'org_id' => $iOrgId,
 				), false);
-				if (is_null($oIp))
-				{
+				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oSubnetIp);
@@ -1788,11 +1533,8 @@ EOF
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
-				}
-				else
-				{
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId))
-					{
+				} else {
+					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageNetworkIpId);
@@ -1800,16 +1542,14 @@ EOF
 					}
 				}
 
-				if ($sBitMask != '127')
-				{
+				if ($sBitMask != '127') {
 					// Create or update gateway IP
 					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
 					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :gatewayip AND i.org_id = :org_id", array(
 						'gatewayip' => $sGatewayIp,
-						'org_id' => $iOrgId
+						'org_id' => $iOrgId,
 					), false);
-					if (is_null($oIp))
-					{
+					if (is_null($oIp)) {
 						$oIp = MetaModel::NewObject('IPv6Address');
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('ip', $oGatewayIp);
@@ -1817,11 +1557,8 @@ EOF
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageGatewayIpId);
 						$oIp->DBInsert();
-					}
-					else
-					{
-						if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId))
-						{
+					} else {
+						if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
 							$oIp->Set('subnet_id', $iId);
 							$oIp->Set('status', 'reserved');
 							$oIp->Set('usage_id', $sUsageGatewayIpId);
@@ -1836,12 +1573,10 @@ EOF
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :ip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
 			'ip' => $sSubnetIp,
 			'lastip' => $sLastIp,
-			'org_id' => $iOrgId
+			'org_id' => $iOrgId,
 		)));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
-		{
-			if ($oIpRegistered->Get('subnet_id') != $iId)
-			{
+		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
+			if ($oIpRegistered->Get('subnet_id') != $iId) {
 				$oIpRegistered->Set('subnet_id', $iId);
 				$oIpRegistered->DBUpdate();
 			}
@@ -1849,13 +1584,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * specific
-	 * tasks
-	 * related
-	 * to
-	 * subnet
-	 * update:
+	 * Perform specific tasks related to subnet update:
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -1864,8 +1593,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function AfterUpdate()
-	{
+	protected function AfterUpdate() {
 		parent::AfterUpdate();
 
 		$iOrgId = $this->Get('org_id');
@@ -1876,19 +1604,16 @@ EOF
 		$oGatewayIp = $this->Get('gatewayip');
 		$sLastIp = $this->Get('lastip')->GetAsCompressed();
 
-		if ($sBitMask != '128')
-		{
+		if ($sBitMask != '128') {
 			$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
-			if ((($sReserveSubnetIPs == 'reserve_yes') && ($this->Get('reserve_subnet_ips') == 'default')) || ($this->Get('reserve_subnet_ips') == 'reserve_yes'))
-			{
+			if ((($sReserveSubnetIPs == 'reserve_yes') && ($this->Get('reserve_subnet_ips') == 'default')) || ($this->Get('reserve_subnet_ips') == 'reserve_yes')) {
 				// Create or update subnet IP
 				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
 				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id", array(
 					'subnetip' => $sSubnetIp,
-					'org_id' => $iOrgId
+					'org_id' => $iOrgId,
 				), false);
-				if (is_null($oIp))
-				{
+				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oSubnetIp);
@@ -1896,11 +1621,8 @@ EOF
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
-				}
-				else
-				{
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId))
-					{
+				} else {
+					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageNetworkIpId);
@@ -1912,10 +1634,9 @@ EOF
 				$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
 				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id", array(
 					'gatewayip' => $sSubnetIp,
-					'org_id' => $iOrgId
+					'org_id' => $iOrgId,
 				), false);
-				if (is_null($oIp))
-				{
+				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oGatewayIp);
@@ -1923,11 +1644,8 @@ EOF
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageGatewayIpId);
 					$oIp->DBInsert();
-				}
-				else
-				{
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId))
-					{
+				} else {
+					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageGatewayIpId);
@@ -1941,27 +1659,22 @@ EOF
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :ip <= i.ip AND i.ip <= :lastip AND i.org_id = :org_id", array(
 			'ip' => $sSubnetIp,
 			'lastip' => $sLastIp,
-			'org_id' => $iOrgId
+			'org_id' => $iOrgId,
 		)));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch())
-		{
-			if ($oIpRegistered->Get('subnet_id') != $iId)
-			{
+		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
+			if ($oIpRegistered->Get('subnet_id') != $iId) {
 				$oIpRegistered->Set('subnet_id', $iId);
 				$oIpRegistered->DBUpdate();
 			}
 		}
 
 		// Release all subnet's IPs when subnet is released
-		if (($this->Get('status') == 'released') && ($this->GetOriginal('status') != 'released'))
-		{
+		if (($this->Get('status') == 'released') && ($this->GetOriginal('status') != 'released')) {
 			$sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release', $iOrgId);
-			if ($sIpRelease == 'yes')
-			{
+			if ($sIpRelease == 'yes') {
 				$sOQL = "SELECT IPv6Address WHERE subnet_id = :id AND status != 'released'";
 				$oIpAddressesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iId));
-				while ($oIpAddress = $oIpAddressesSet->Fetch())
-				{
+				while ($oIpAddress = $oIpAddressesSet->Fetch()) {
 					$oIpAddress->Set('status', 'released');
 					$oIpAddress->DBUpdate();
 				}
@@ -1970,18 +1683,13 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * validity
-	 * of
-	 * deletion
-	 * request
+	 * Check validity of deletion request
 	 *
 	 * @param $oDeletionPlan
 	 *
 	 * @throws \OQLException
 	 */
-	protected function DoCheckToDelete(&$oDeletionPlan)
-	{
+	protected function DoCheckToDelete(&$oDeletionPlan) {
 		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip')->GetAsCompressed();
 		$sBitMask = $this->Get('mask');
@@ -1990,58 +1698,44 @@ EOF
 		parent::DoCheckToDelete($oDeletionPlan);
 
 		// Add subnet and gateway IP to deletion plan if they exist
-		if ($sBitMask != '128')
-		{
+		if ($sBitMask != '128') {
 			$oIpAddress = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :ip AND i.org_id = :org_id", array(
 				'ip' => $sIp,
-				'org_id' => $iOrgId
+				'org_id' => $iOrgId,
 			), false);
-			if (!is_null($oIpAddress))
-			{
+			if (!is_null($oIpAddress)) {
 				$oDeletionPlan->AddToDelete($oIpAddress, DEL_AUTO);
 			}
 
 			$oIpAddress = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :lastip AND i.org_id = :org_id", array(
 				'lastip' => $sLastIp,
-				'org_id' => $iOrgId
+				'org_id' => $iOrgId,
 			), false);
-			if (!is_null($oIpAddress))
-			{
+			if (!is_null($oIpAddress)) {
 				$oDeletionPlan->AddToDelete($oIpAddress, DEL_AUTO);
 			}
 		}
 	}
 
 	/**
-	 * Change
-	 * flag
-	 * of
-	 * attributes
-	 * that
-	 * shouldn't
-	 * be
-	 * modified
-	 * beside
-	 * creation.
+	 * Change flag of attributes that shouldn't be modified beside creation.
 	 *
 	 * @param $sAttCode
 	 * @param array $aReasons
 	 * @param string $sTargetState
 	 *
 	 * @return int
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'block_id') || ($sAttCode == 'ip') || ($sAttCode == 'mask') || ($sAttCode == 'lastip') || ($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy')))
-		{
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'block_id') || ($sAttCode == 'ip') || ($sAttCode == 'mask') || ($sAttCode == 'lastip') || ($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy'))) {
 			return OPT_ATT_READONLY;
 		}
-		if ((!$this->IsNew()) && ($sAttCode == 'gatewayip'))
-		{
+		if ((!$this->IsNew()) && ($sAttCode == 'gatewayip')) {
 			$iOrgId = $this->Get('org_id');
 			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
-			if ($sGatewayIPFormat != 'free_setup')
-			{
+			if ($sGatewayIPFormat != 'free_setup') {
 				return OPT_ATT_READONLY;
 			}
 		}
@@ -2054,11 +1748,9 @@ EOF
 	 *
 	 * @return string
 	 */
-	public static function BitToMask($iPrefix)
-	{
+	public static function BitToMask($iPrefix) {
 		// Provides size of subnet according to dotted string mask
-		switch ($iPrefix)
-		{
+		switch ($iPrefix) {
 			case '64':
 				return "FFFF:FFFF:FFFF:FFFF::";
 			case '65':
