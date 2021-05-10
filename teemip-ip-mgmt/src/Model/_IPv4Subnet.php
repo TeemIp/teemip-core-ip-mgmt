@@ -27,13 +27,7 @@ use WebPage;
 
 class _IPv4Subnet extends IPSubnet {
 	/**
-	 * Return
-	 * standard
-	 * icon
-	 * or
-	 * extra
-	 * small
-	 * one
+	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
 	 * @param false $bXsIcon
@@ -53,14 +47,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Returns
-	 * index
-	 * to
-	 * be
-	 * used
-	 * within
-	 * tree
-	 * computations
+	 * Returns index to be used within tree computations
 	 *
 	 * @return int
 	 * @throws \ArchivedObjectException
@@ -71,10 +58,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Returns
-	 * size
-	 * of
-	 * subnet
+	 * Returns size of subnet
 	 *
 	 * @return int
 	 * @throws \ArchivedObjectException
@@ -87,18 +71,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Compute
-	 * %
-	 * of
-	 * IP
-	 * addresses
-	 * and
-	 * /
-	 * or
-	 * IP
-	 * ranges
-	 * in
-	 * subnet
+	 * Compute % of IP addresses and / or IP ranges in subnet
 	 *
 	 * @param $sObject
 	 *
@@ -163,14 +136,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Automatically
-	 * get
-	 * a
-	 * free
-	 * IP
-	 * in
-	 * the
-	 * subnet
+	 * Automatically get a free IP in the subnet
 	 */
 	public function GetFreeIP($iCreationOffset) {
 		$sFirstIp = $this->Get('ip');
@@ -213,15 +179,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Count
-	 * number
-	 * of
-	 * IPs
-	 * in
-	 * subnet,
-	 * in
-	 * given
-	 * status
+	 * Count number of IPs in subnet, in given status
 	 */
 	public function IPCount($sStatus) {
 		switch ($sStatus) {
@@ -245,14 +203,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Find
-	 * space
-	 * within
-	 * the
-	 * subnet
-	 * to
-	 * create
-	 * range
+	 * Find space within the subnet to create range
 	 */
 	public function GetFreeSpace($iRangeSize, $iMaxOffer) {
 		$iOrgId = $this->Get('org_id');
@@ -325,14 +276,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * List
-	 * IP
-	 * addresses
-	 * in
-	 * subnet
-	 * in
-	 * CSV
-	 * format
+	 * List IP addresses in subnet in CSV format
 	 */
 	public function GetIPsAsCSV($aParam) {
 		// Define first and last IPs to display
@@ -444,12 +388,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IP
-	 * is
-	 * in
-	 * subnet
+	 * Check if IP is in subnet
 	 */
 	function DoCheckIpInSubnet($sIp) {
 		$iIp = TeemIpUtils::myip2long($sIp);
@@ -463,15 +402,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Checks
-	 * if
-	 * the
-	 * subnet
-	 * is
-	 * aligned
-	 * to
-	 * CIDR
-	 * borders
+	 * Checks if the subnet is aligned to CIDR borders
 	 */
 	function DoCheckCIDRAligned() {
 		$iIp = TeemIpUtils::myip2long($this->Get('ip'));
@@ -487,14 +418,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Check
-	 * if
-	 * operation
-	 * is
-	 * feasible
-	 * on
-	 * current
-	 * object
+	 * Check if operation is feasible on current object
 	 */
 	function DoCheckOperation($sOperation) {
 		$sMask = $this->Get('mask');
@@ -534,19 +458,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Define
-	 * scale
-	 * /
-	 * limit
-	 * of
-	 * operation
-	 * that
-	 * can
-	 * be
-	 * applied
-	 * to
-	 * a
-	 * subnet
+	 * Define scale / limit of operation that can be applied to a subnet
 	 */
 	function GetScaleOfOperation($sOperation) {
 		$sMask = $this->Get('mask');
@@ -594,12 +506,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Check
-	 * if
-	 * space
-	 * can
-	 * be
-	 * searched
+	 * Check if space can be searched
 	 */
 	function DoCheckToDisplayAvailableSpace($aParam) {
 		$iRangeSize = $aParam['rangesize'];
@@ -614,9 +521,7 @@ class _IPv4Subnet extends IPSubnet {
 	}
 
 	/**
-	 * Displays
-	 * available
-	 * space
+	 * Displays available space
 	 */
 	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
 		$iId = $this->GetKey();
@@ -679,12 +584,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IPs
-	 * can
-	 * be
-	 * listed
+	 * Check if IPs can be listed
 	 */
 	function DoCheckToListIps($aParam) {
 		$sIp = $this->Get('ip');
@@ -718,13 +618,7 @@ EOF
 	}
 
 	/**
-	 * Displays
-	 * list
-	 * of
-	 * IP
-	 * addresses
-	 * within
-	 * GUI
+	 * Displays list of IP addresses within GUI
 	 */
 	function DoListIps(WebPage $oP, $iChangeId, $aParam) {
 		// Add related style sheeet
@@ -859,14 +753,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * IPs
-	 * can
-	 * be
-	 * exported
-	 * in
-	 * CSV
+	 * Check if IPs can be exported in CSV
 	 */
 	function DoCheckToCsvExportIps($aParam) {
 		$sIp = $this->Get('ip');
@@ -900,12 +787,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * calculator
-	 * inputs
-	 * are
-	 * meaningfull
+	 * Check if calculator inputs are meaningfull
 	 */
 	function DoCheckCalculatorInputs($aParam) {
 		$sMask = $aParam['mask'];
@@ -927,12 +809,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * subnet
-	 * can
-	 * be
-	 * shrunk
+	 * Check if subnet can be shrunk
 	 */
 	function DoCheckToShrink($aParam) {
 		// Set working variables
@@ -1021,9 +898,7 @@ EOF
 	}
 
 	/**
-	 * Shrink
-	 * the
-	 * subnet
+	 * Shrink the subnet
 	 */
 	function DoShrink($aParam) {
 		// Set working variables
@@ -1086,12 +961,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * subnet
-	 * can
-	 * be
-	 * split
+	 * Check if subnet can be split
 	 */
 	function DoCheckToSplit($aParam) {
 		// Set working variables
@@ -1180,9 +1050,7 @@ EOF
 	}
 
 	/**
-	 * Split
-	 * the
-	 * subnet
+	 * Split the subnet
 	 */
 	function DoSplit($aParam) {
 		// Set working variables
@@ -1311,12 +1179,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * if
-	 * subnet
-	 * can
-	 * be
-	 * expanded
+	 * Check if subnet can be expanded
 	 */
 	function DoCheckToExpand($aParam) {
 		// Set working variables
@@ -1394,9 +1257,7 @@ EOF
 	}
 
 	/**
-	 * Expand
-	 * the
-	 * subnet
+	 * Expand the subnet
 	 */
 	function DoExpand($aParam) {
 		// Set working variables
@@ -1533,15 +1394,7 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * subnet
-	 * in
-	 * the
-	 * node
-	 * of
-	 * a
-	 * hierarchical
-	 * tree
+	 * Display subnet in the node of a hierarchical tree
 	 *
 	 * @param \WebPage $oP
 	 * @param $bWithIcon
@@ -1558,12 +1411,9 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * attributes
-	 * associated
-	 * operation
+	 * Display attributes associated operation
 	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
+	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).'Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
@@ -1614,19 +1464,13 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * attributes
-	 * associated
-	 * operation
+	 * Display attributes associated operation
 	 */
-	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
+	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 	}
 
 	/**
-	 * Display
-	 * attributes
-	 * associated
-	 * operation
+	 * Display attributes associated operation
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
@@ -1807,17 +1651,24 @@ EOF
 	}
 
 	/**
-	 * Display
-	 * attributes
-	 * and
-	 * action
-	 * buttons
-	 * associated
-	 * operation
+	 * Display attributes and action buttons associated operation
 	 *
+	 * @param \WebPage $oP
 	 * @param $oClassForm
 	 * @param $sOperation
 	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oColumn = new Column();
@@ -1892,19 +1743,16 @@ EOF
 	}
 
 	/**
-	 * Displays
-	 * result
-	 * of
-	 * IPv4
-	 * calculator
+	 * Get result of IPv4calculator
 	 *
 	 * @param \WebPage $oP
-	 * @param $oAppContext
 	 * @param $aParam
 	 *
-	 * @throws \Exception
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DisplayCalculatorOutput(WebPage $oP, $aParam) {
+	public function GetCalculatorOutput(WebPage $oP, $aParam) {
 		$sIp = $aParam['ip'];
 		$sMask = $aParam['mask'];
 		if ($sMask != '') {
@@ -1986,7 +1834,7 @@ EOF
 		$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv4Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 		$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv4Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 		if (!$UserHasRightsToCreateBlocks && !$UserHasRightsToCreateSubnets) {
-			return;
+			return $sHtml;
 		}
 
 		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td colspan="2">'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation').'</td></tr>';
@@ -2067,12 +1915,7 @@ EOF
 	}
 
 	/**
-	 * Displays
-	 * the
-	 * tabs
-	 * related
-	 * to
-	 * IPv4Subnets
+	 * Displays the tabs related to IPv4Subnets
 	 */
 	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
@@ -2161,8 +2004,8 @@ EOF
 		}
 	}
 
-	/*
-	 * Compute attributes before writing object 
+	/**
+	 * Compute attributes before writing object
 	 */
 	public function ComputeValues() {
 		$sIp = $this->Get('ip');
@@ -2222,14 +2065,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * validity
-	 * of
-	 * new
-	 * subnet
-	 * attributes
-	 * before
-	 * creation
+	 * Check validity of new subnet attributes before creation
 	 */
 	function DoCheckToWrite() {
 		// Run standard iTop checks first
@@ -2340,13 +2176,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * specific
-	 * tasks
-	 * related
-	 * to
-	 * subnet
-	 * creation:
+	 * Perform specific tasks related to subnet creation:
 	 */
 	protected function AfterInsert() {
 		parent::AfterInsert();
@@ -2441,13 +2271,7 @@ EOF
 	}
 
 	/**
-	 * Perform
-	 * specific
-	 * tasks
-	 * related
-	 * to
-	 * subnet
-	 * update:
+	 * Perform specific tasks related to subnet update:
 	 */
 	protected function AfterUpdate() {
 		parent::AfterUpdate();
@@ -2551,11 +2375,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * validity
-	 * of
-	 * deletion
-	 * request
+	 * Check validity of deletion request
 	 */
 	protected function DoCheckToDelete(&$oDeletionPlan) {
 		$iOrgId = $this->Get('org_id');
@@ -2581,16 +2401,7 @@ EOF
 	}
 
 	/**
-	 * Change
-	 * flag
-	 * of
-	 * attributes
-	 * that
-	 * shouldn't
-	 * be
-	 * modified
-	 * beside
-	 * creation.
+	 * Change flag of attributes that shouldn't be modified beside creation.
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'block_id') || ($sAttCode == 'ip') || ($sAttCode == 'mask') || ($sAttCode == 'broadcastip') || ($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy'))) {
@@ -2608,14 +2419,14 @@ EOF
 	}
 
 	/**
-	 * Functions
-	 * to
-	 * handle
-	 * masks
-	 * and
-	 * sizes
+	 * Functions to handle masks and sizes
 	 */
 
+	/**
+	 * @param $Mask
+	 *
+	 * @return int
+	 */
 	public static function MaskToSize($Mask) {
 		// Provides size of subnet according to dotted string mask
 		switch ($Mask) {
@@ -2690,6 +2501,11 @@ EOF
 		}
 	}
 
+	/**
+	 * @param $iPrefix
+	 *
+	 * @return string
+	 */
 	public static function BitToMask($iPrefix) {
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix) {
@@ -2764,11 +2580,21 @@ EOF
 		}
 	}
 
+	/**
+	 * @param $Mask
+	 *
+	 * @return int
+	 */
 	public static function MaskToBit($Mask) {
 		// Provides number of bits within a dotted string mask
 		return IPv4Subnet::SizeToBit(IPv4Subnet::MaskToSize($Mask));
 	}
 
+	/**
+	 * @param $Size
+	 *
+	 * @return string
+	 */
 	public static function SizeToMask($Size) {
 		// Convert size of subnet into mask
 		/*		if (($Size & ($Size - 1)) == 0)
@@ -2852,6 +2678,11 @@ EOF
 		}
 	}
 
+	/**
+	 * @param $Size
+	 *
+	 * @return int
+	 */
 	public static function SizeToBit($Size) {
 		// Provides number of bits for a given subnet size
 		switch ($Size) {
