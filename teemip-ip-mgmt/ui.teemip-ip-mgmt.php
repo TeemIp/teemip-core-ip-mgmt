@@ -251,7 +251,6 @@ try {
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			} else {
 				// Dump space
-				$oObj->DisplayBareTab($oP, 'UI:IPManagement:Action:ListSpace:');
 				$oObj->DisplayAllSpace($oP);
 			}
 			break; // End case listspace
@@ -882,10 +881,9 @@ HTML
 			} else {
 				// Display result
 				if ($id > 0) {
-					$oObj->DisplayBareTab($oP, 'UI:IPManagement:Action:DoCalculator:');
-					$oP->add($oObj->DisplayCalculatorOutput($oP, $aPostedParam));
+					$oObj->DisplayCalculatorOutput($oP, $aPostedParam);
 				} else {
-					$sHtml = $oObj->DisplayCalculatorOutput($oP, $aPostedParam);
+					$sHtml = $oObj->GetCalculatorOutput($oP, $aPostedParam);
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':');
 						$oP->add($sHtml);
@@ -900,7 +898,6 @@ HTML
 							->AddHtml($sHtml);
 					}
 				}
-
 			}
 			break; // End case docalculator
 
