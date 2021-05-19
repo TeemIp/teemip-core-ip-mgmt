@@ -307,7 +307,7 @@ class _IPv6Subnet extends IPSubnet {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function GetIPsAsCSV($aParam) {
+	protected function GetIPsAsCSV($aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
@@ -339,6 +339,9 @@ class _IPv6Subnet extends IPSubnet {
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iId));
 		$iCountRange = $oIpRangeSet->Count();
 
+		// Set CRLF format according to version
+		$sCrLf = (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) ? "\n" : "<br>";
+
 		// List exported parameters
 		$sHtml = "Registered,Id";
 		$aParam = array(
@@ -354,7 +357,7 @@ class _IPv6Subnet extends IPSubnet {
 		foreach ($aParam as $sAttCode) {
 			$sHtml .= ','.MetaModel::GetLabel('IPv6Address', $sAttCode);
 		}
-		$sHtml .= ",IP Range\n";
+		$sHtml .= ",IP Range".$sCrLf;
 
 		// List all IPs of subnet now in IP order 
 		$oAnIp = $oIp->GetNextIp();
@@ -390,13 +393,10 @@ class _IPv6Subnet extends IPSubnet {
 					}
 				}
 				if ($iFoundRange) {
-					$sHtml .= $oIpRange->Get('range')."\n";
-				} else {
-					$sHtml .= "\n";
+					$sHtml .= $oIpRange->Get('range');
 				}
-			} else {
-				$sHtml .= "\n";
 			}
+			$sHtml .= $sCrLf;
 			$oAnIp = $oAnIp->GetNextIp();
 		}
 
@@ -835,16 +835,7 @@ EOF
 	}
 
 	/**
-	 * Display action fields for associated operation
-	 *
-	 * @param \WebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
+	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
@@ -976,7 +967,10 @@ EOF
 		$oP->add("</table>");
 	}
 
-	protected function DisplayActionFieldsForOperationv3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	/**
+	 * @inheritdoc
+	 */
+	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oColumn = new Column();
 		$oClassForm->AddSubBlock($oColumn);
 		$oToolbar = ToolbarUIBlockFactory::MakeForAction();

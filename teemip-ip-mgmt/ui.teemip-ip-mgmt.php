@@ -15,6 +15,41 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /**
+ * @param \WebPage $oP
+ * @param $operation
+ * @param $sTransactionId
+ * @param $id
+ * @param $sObjectName
+ * @param $sClass
+ * @param $sClassLabel
+ *
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ */
+function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel) {
+	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel));
+		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+	} else {
+		$sUser = UserRights::GetUser();
+		IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
+		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
+		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+		$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
+		$sSeverity = 'error';
+
+		IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
+			'$operation' => $operation,
+			'$id' => $id,
+			'$sTransactionId' => $sTransactionId,
+			'$sUser' => UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+		));
+	}
+}
+
+/**
  * Displays TeemIp's hierarchical objects in tree mode.
  *
  * @param \WebPage $oP
@@ -693,7 +728,6 @@ try {
 					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 				} else {
 					// Export all IPs once
-					$oObj->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 					$oObj->DisplayIPsAsCSV($oP, array('first_ip' => '', 'last_ip' => ''));
 				}
 			}
@@ -704,7 +738,6 @@ try {
 		case 'docsvexportips':    // Apply csv export ips action
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 
 			// Check if right parameters have been given
 			if (empty($sClass) || empty($id)) {
@@ -724,13 +757,13 @@ try {
 			$sErrorString = $oObj->DoCheckToCsvExportIps($aPostedParam);
 			if ($sErrorString != '') {
 				// Found issues, explain and give the user another chance
-				$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':CannotBeListed', $sErrorString);
+				$sMessage = Dict::Format('UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':CannotBeListed', $sErrorString);
 				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
 				} else {
 					$oPanel = PanelUIBlockFactory::MakeForWarning('')
-						->AddHtml($sIssueDesc);
+						->AddHtml($sMessage);
 					$oP->AddUiBlock($oPanel);
 				}
 
@@ -738,7 +771,6 @@ try {
 				$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 			} else {
 				// Export all IPs once
-				$oObj->DisplayBareTab($oP, 'UI:IPManagement:Action:DoCsvExportIps:');
 				$oObj->DisplayIPsAsCSV($oP, $aPostedParam);
 			}
 			break; // End case docsvexportips
@@ -836,7 +868,6 @@ HTML
 		case 'docalculator':    // Calculates subnet parameters
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
-			$sTransactionId = utils::ReadPostedParam('transaction_id', '');
 
 			// Check if right parameters have been given
 			if (empty($sClass) || empty($id)) {
@@ -866,13 +897,13 @@ HTML
 			$sErrorString = $oObj->DoCheckCalculatorInputs($aPostedParam);
 			if ($sErrorString != '') {
 				// Found issues, explain and give the user another chance
-				$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':CannotRun', $sErrorString);
+				$sMessage = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':CannotRun', $sErrorString);
 				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+					$oP->add($sMessageContainer);
 				} else {
 					$oPanel = PanelUIBlockFactory::MakeForWarning('')
-						->AddHtml($sIssueDesc);
+						->AddHtml($sMessage);
 					$oP->AddUiBlock($oPanel);
 				}
 
@@ -951,9 +982,9 @@ HTML
 
 			// Make sure we don't follow the same path twice in a row.
 			$sClassLabel = MetaModel::GetName($sClass);
+			$sObjectName = $oObj->GetName();
 			if (!utils::IsTransactionValid($sTransactionId, false)) {
-				$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-				$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+				LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
 			} else {
 				$aPostedParam = $oObj->GetPostedParam($operation);
 
@@ -961,9 +992,15 @@ HTML
 				$sErrorString = $oObj->DoCheckToDelegate($aPostedParam);
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+						$oP->add($sMessageContainer);
+					} else {
+						$oPanel = PanelUIBlockFactory::MakeForWarning('')
+							->AddHtml($sMessage);
+						$oP->AddUiBlock($oPanel);
+					}
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -974,8 +1011,14 @@ HTML
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+						$oP->add($sMessageContainer);
+					} else {
+						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
+							->AddHtml($sMessage);
+						$oP->AddUiBlock($oPanel);
+					}
 					$oObj->DisplayDetails($oP);
 
 					// Close transaction
@@ -1012,11 +1055,17 @@ HTML
 				// Make sure object can be undelegated
 				$sErrorString = $oObj->DoCheckToUndelegate(array());
 				if ($sErrorString != '') {
-					// Found issues: explain and display block again					
-					// No search bar (2.5 standard)
+					// Found issues, explain and give the user another chance
+					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':CannotBeUndelegated', $sErrorString);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+						$oP->add($sMessageContainer);
+					} else {
+						$oPanel = PanelUIBlockFactory::MakeForWarning('')
+							->AddHtml($sMessage);
+						$oP->AddUiBlock($oPanel);
+					}
 
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':CannotBeUndelegated', $sErrorString);
-					cmdbAbstractObject::SetSessionMessage($sClass, $id, 'undelegate', $sIssueDesc, 'error', 0, true /* must not exist */);
 					$oObj->DisplayDetails($oP);
 				} else {
 					// Undelegate block
@@ -1026,8 +1075,14 @@ HTML
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
+						$oP->add($sMessageContainer);
+					} else {
+						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
+							->AddHtml($sMessage);
+						$oP->AddUiBlock($oPanel);
+					}
 					$oObj->DisplayDetails($oP);
 				}
 			}

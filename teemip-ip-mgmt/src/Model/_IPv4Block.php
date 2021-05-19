@@ -9,6 +9,10 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -1501,6 +1505,90 @@ EOF
 		$oP->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
 
 		$oP->add("</table>");
+	}
+
+	/**
+	 * Display attributes and action buttons associated operation
+	 *
+	 * @param \WebPage $oP
+	 * @param $oClassForm
+	 * @param $sOperation
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+		$oColumn = new Column();
+		$oClassForm->AddSubBlock($oColumn);
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oClassForm->AddSubBlock($oToolbar);
+
+		switch ($sOperation) {
+			case 'findspace':
+				break;
+
+			case 'shrinkblock':
+				break;
+
+			case 'splitblock':
+				break;
+
+			case 'expandblock':
+				break;
+
+			case 'delegate':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:IPv4Block:ChildBlock');
+
+				// Look for the organizations where the block can be delegated to
+				$iOrgId = $this->Get('org_id');
+				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_to_children_only', $iOrgId);
+				if ($sDelegateToChildrenOnly == 'dtc_yes') {
+					// Block can only be delegated to children (grand children...) organizations
+					// Get block's children (list should not be empty at this stage)
+					// Block is not already delegated (checked previously) so it can be delegated to child organization
+					$sOQL = "SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = :org_id AND child.id != :org_id";
+				} else {
+					// Block can be delegated to any organization
+					$sOQL = "SELECT Organization AS o WHERE o.id != :org_id";
+				}
+				$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
+
+				// Display list of choices now
+				$sInputId = $this->m_iFormId.'child_org_id';
+				$sHTML = "<select id=\"$sInputId\" name=\"child_org_id\">\n";
+				while ($oChildOrg = $oChildOrgSet->Fetch()) {
+					$iChildOrgKey = $oChildOrg->GetKey();
+					$sChildOrgName = $oChildOrg->GetName();
+					if ($iChildOrgKey == $iOrgId) {
+						$sHTML .= "<option selected='' value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
+					} else {
+						$sHTML .= "<option value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
+					}
+				}
+				$sHTML .= "</select>";
+				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'child_org_id', $sLabelOfAction1, $sHTML);
+				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// Cancel button
+				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				break;
+
+			default:
+				break;
+		};
+
+		// Apply button
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**

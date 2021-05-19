@@ -311,19 +311,31 @@ EOF
 	}
 
 	/**
-	 * @param $oP
+	 * Display attributes associated to operation
+	 *
+	 * @param \WebPage $oP
 	 * @param $sOperation
-	 * @param $m_iFormId
+	 * @param $iFormId
 	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $m_iFormId, $aDefault) {
 	}
 
 	/**
+	 * Display attributes associated to operation
+	 *
 	 * @param \WebPage $oP
-	 * @param $oClassForm
 	 * @param $sOperation
+	 * @param $iFormId
 	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
 	}

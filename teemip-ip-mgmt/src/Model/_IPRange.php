@@ -72,6 +72,7 @@ class _IPRange extends IPObject {
 	 * @param string $sTargetState
 	 *
 	 * @return int
+	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'occupancy'))) {
@@ -87,6 +88,7 @@ class _IPRange extends IPObject {
 	 * @param $sOperation
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	function GetPostedParam($sOperation) {
 		$aParam = array();
@@ -119,6 +121,8 @@ class _IPRange extends IPObject {
 	 * @param $sAttCode
 	 *
 	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetAttributeParams($sAttCode) {
 		$aParams = array();
@@ -168,6 +172,14 @@ class _IPRange extends IPObject {
 	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first
@@ -207,6 +219,7 @@ class _IPRange extends IPObject {
 	 * @param $aParam
 	 */
 	public function DisplayIPsAsCSV(WebPage $oP, $aParam) {
+		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 		$sHtml = $this->GetIPsAsCSV($aParam);
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) {
 			$oP->add("<div id=\"3\" class=\"display_block\">\n");
@@ -220,6 +233,17 @@ class _IPRange extends IPObject {
 		} else {
 			$oP->add($sHtml);
 		}
+	}
+
+	/**
+	 *  Get list of IPs for CSV display
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 */
+	protected function GetIPsAsCSV($aParam) {
+		return '';
 	}
 
 }

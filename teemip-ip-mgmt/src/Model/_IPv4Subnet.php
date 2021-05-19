@@ -278,7 +278,7 @@ class _IPv4Subnet extends IPSubnet {
 	/**
 	 * List IP addresses in subnet in CSV format
 	 */
-	public function GetIPsAsCSV($aParam) {
+	protected function GetIPsAsCSV($aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$sSubnetIp = $this->Get('ip');
@@ -1464,13 +1464,13 @@ EOF
 	}
 
 	/**
-	 * Display attributes associated operation
+	 * Display attributes associated to operation
 	 */
 	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 	}
 
 	/**
-	 * Display attributes associated operation
+	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
@@ -1651,24 +1651,7 @@ EOF
 	}
 
 	/**
-	 * Display attributes and action buttons associated operation
-	 *
-	 * @param \WebPage $oP
-	 * @param $oClassForm
-	 * @param $sOperation
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
+	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oColumn = new Column();
