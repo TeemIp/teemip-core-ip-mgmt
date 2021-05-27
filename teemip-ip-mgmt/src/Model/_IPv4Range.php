@@ -30,7 +30,7 @@ class _IPv4Range extends IPRange {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/iprange-xs.png';
 
-			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}
 
 		return parent::GetIcon($bImgTag);
@@ -300,7 +300,7 @@ class _IPv4Range extends IPRange {
 					}
 					$sHTML .= "</span><span class=\"ip_lookup_img\">";
 					if ($oIpRegistered->Get('responds_to_iplookup') == 'yes') {
-						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-discovery/asset/img/ipmini-lookup-xs.png\" style=\"vertical-align:middle\"/></span>";
+						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-discovery/asset/img/ipmini-lookup-xs.png\" alt=\"\" style=\"vertical-align:middle\"/></span>";
 						$sHTML .= "<span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup')."</span>";
 					}
 					$sHTML .= "</span>";

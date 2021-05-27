@@ -807,7 +807,7 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId) {
+	public function DisplayAsLeaf(WebPage $oP) {
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 		$oP->add($sHtml);

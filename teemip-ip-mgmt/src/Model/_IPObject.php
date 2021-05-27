@@ -423,8 +423,7 @@ EOF
 			'this' => $this,
 			'formPrefix' => $sPrefix,
 		);
-		$sHTMLValue = "".self::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags,
-				$aArgs, true, $sInputType).'';
+		$sHTMLValue = "".self::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs, true, $sInputType).'';
 
 		// Attribute description
 		$sDescription = $oAttDef->GetDescription();

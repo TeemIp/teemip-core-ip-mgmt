@@ -347,6 +347,40 @@ class _IPBlock extends IPObject {
 	}
 
 	/**
+	 * Displays available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
+		$sHtml = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
+		$oP->add($sHtml);
+	}
+
+	/**
+	 * Get available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @return string
+	 */
+	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+		return '';
+	}
+
+	/**
 	 * Change default flag of attribute at creation
 	 *
 	 * @param $sAttCode

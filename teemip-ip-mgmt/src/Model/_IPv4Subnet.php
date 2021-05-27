@@ -40,7 +40,7 @@ class _IPv4Subnet extends IPSubnet {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipsubnet-xs.png';
 
-			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\"/>");
+			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}
 
 		return parent::GetIcon($bImgTag);
@@ -713,7 +713,7 @@ EOF
 					}
 					$sHTML .= "</span><span class=\"ip_lookup_img\">";
 					if ($oIpRegistered->Get('responds_to_iplookup') == 'yes') {
-						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-lookup-xs.png\" style=\"vertical-align:middle\"/></span>";
+						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-lookup-xs.png\" alt=\"\" style=\"vertical-align:middle\"/></span>";
 						$sHTML .= "<span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup')."</span>";
 					}
 					$sHTML .= "</span>";
@@ -1397,14 +1397,12 @@ EOF
 	 * Display subnet in the node of a hierarchical tree
 	 *
 	 * @param \WebPage $oP
-	 * @param $bWithIcon
-	 * @param $sTreeOrgId
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $sTreeOrgId) {
+	public function DisplayAsLeaf(WebPage $oP) {
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 		$oP->add($sHtml);
@@ -1452,7 +1450,6 @@ EOF
 			'formPrefix' => $sPrefix,
 		);
 		$sHTML = "<span id=\"field_{$sInputId}\">".$this->GetFormElementForField($oP, 'IPObject', 'requestor_id', $oAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>';
-		$aFieldsMap['requestor_id'] = $sInputId;
 		$aDetails[] = array(
 			'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
 			'value' => $sHTML,

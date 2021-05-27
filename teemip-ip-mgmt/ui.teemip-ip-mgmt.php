@@ -12,6 +12,9 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
+use TeemIp\TeemIp\Extension\IPManagement\Controller\DisplayTree;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /**
@@ -35,8 +38,8 @@ function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $s
 		IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
 		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
 		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-		$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
-		$sSeverity = 'error';
+		//$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
+		//$sSeverity = 'error';
 
 		IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
 			'$operation' => $operation,
@@ -61,20 +64,20 @@ function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $s
  * @throws \MySQLException
  * @throws \OQLException
  */
-function DisplayTree(WebPage $oP, $iOrgId, $sClass) {
+function DisplayTreeOld(WebPage $oP, $iOrgId, $sClass) {
 	switch ($sClass) {
 		case 'IPv4Block':
 		case 'IPv6Block':
 		case 'Domain':
-			DisplayNode($oP, $iOrgId, $sClass, 0, '');
+			DisplayNodeOld($oP, $iOrgId, $sClass, 0, '');
 			break;
 
 		case 'IPv4Subnet':
-			DisplayNode($oP, $iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
+			DisplayNodeOld($oP, $iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
 			break;
 
 		case 'IPv6Subnet':
-			DisplayNode($oP, $iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
+			DisplayNodeOld($oP, $iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
 			break;
 
 		default:
@@ -96,7 +99,7 @@ function DisplayTree(WebPage $oP, $iOrgId, $sClass) {
  * @throws \MySQLException
  * @throws \OQLException
  */
-function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
+function DisplayNodeOld(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
 	// Get list of Containers contained within current container defined by key $iContainerId
 	//    . Blocks that belong to organization
 	$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";
@@ -135,7 +138,7 @@ function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLe
 		$oP->add("<li>");
 		$oObject->DisplayAsLeaf($oP, $bWithIcon, $iOrgId);
 		if (get_class($oObject) == $sContainerClass) {
-			DisplayNode($oP, $iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
+			DisplayNodeOld($oP, $iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
 		}
 		$oP->add("</li>\n");
 	}
@@ -201,6 +204,10 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
 
+			DisplayTree::Display($oP, $oAppContext, $sClass);
+
+			return;
+
 			// Display search bar
 			$oSearch = new DBObjectSearch($sClass);
 			$aParams = array('open' => true, 'table_id' => 'displaytree_search');
@@ -232,7 +239,7 @@ try {
 
 			// Get toolkit menu
 			// Remove "Add To Dashboard" submenu
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png"><ul>';
+			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png" alt=\"\"><ul>';
 			$aActions = array();
 			utils::GetPopupMenuItems($oP, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
 			unset($aActions['UI:Menu:AddToDashboard']);
@@ -253,13 +260,13 @@ try {
 				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization"));
 				while ($oOrg = $oSet->Fetch()) {
 					$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-					DisplayTree($oP, $oOrg->GetKey(), $sClass);
+					DisplayTreeOld($oP, $oOrg->GetKey(), $sClass);
 					$oP->add("<br>");
 				}
 			} else {
 				$oOrg = MetaModel::GetObject('Organization', $iCurrentOrganization, false /* MustBeFound */);
 				$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-				DisplayTree($oP, $iCurrentOrganization, $sClass);
+				DisplayTreeOld($oP, $iCurrentOrganization, $sClass);
 			}
 			$oP->add('</td></tr></table>');
 			$oP->add('</div></div>');
@@ -295,24 +302,24 @@ try {
 		case 'findspace':    // Find space within a block or a subnet
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			if (!empty($sClass)) {
-				$id = utils::ReadParam('id', '');
-				// Check if right parameters have been given
-				if (empty($id)) {
-					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
-				}
 				if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet', 'IPv6Subnet'))) {
 					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 				}
 
-				// Check if the object exists
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-				if (is_null($oObj)) {
-					$oP->set_title(Dict::S('UI:ErrorPageTitle'));
-					$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+				$id = utils::ReadParam('id', '');
+				// Id may be null. In that case a temporary object is created.
+				if (empty($id)) {
+					$oObj = MetaModel::NewObject($sClass);
 				} else {
-					// The object can be read - Process request now
-					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
+					// Check if the object exists
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+					if (is_null($oObj)) {
+						$oObj = MetaModel::NewObject($sClass);
+					}
 				}
+
+				// Display find space form
+				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 			} else {
 				$aPostedParam = FindSpace::GetPostedParam($operation);
 				FindSpace::DisplayOperationForm($oP, $oAppContext, $aPostedParam);
@@ -326,9 +333,10 @@ try {
 			if (!empty($sClass)) {
 				$id = utils::ReadParam('id', '');
 				$sTransactionId = utils::ReadPostedParam('transaction_id', '');
+				$iSpaceSize = utils::ReadPostedParam('spacesize', '', 'raw_data');
 				// Check if right parameters have been given
-				if (empty($id)) {
-					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				if (empty($id) || empty($iSpaceSize)) {
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id', 'spacesize'));
 				}
 				if (!in_array($sClass, array('IPv4Block', 'IPv6Block', 'IPv4Subnet', 'IPv6Subnet'))) {
 					throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
@@ -342,9 +350,9 @@ try {
 				} else {
 					// Make sure we don't follow the same path twice in a row.
 					$sClassLabel = MetaModel::GetName($sClass);
+					$sObjectName = $oObj->GetName();
 					if (!utils::IsTransactionValid($sTransactionId, false)) {
-						$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-						$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+						LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
 					} else {
 						$aPostedParam = $oObj->GetPostedParam($operation);
 
@@ -360,22 +368,14 @@ try {
 							$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 						} else {
 							// Dump space
-							$oObj->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
-
-							$oP->add('<table style="width:100%"><tr><td colspan="2">');
-							$oP->add('<div style="vertical-align:top;" id="tree">');
 							$oObj->DoDisplayAvailableSpace($oP, 0, $aPostedParam);
-							$oP->add('</div></td></tr></table>');
-							$oP->add('</div>');         // ??
-							$oP->add_ready_script("\$('#tree ul').treeview();\n");
-							$oP->add("<div id=\"dialog_content\"/>\n");
 						}
 					}
 				}
 			} else {
 				$aPostedParam = FindSpace::GetPostedParam($operation);
-				if (empty($aPostedParam['spacetype']) || empty($aPostedParam['org_id'])) {
-					throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'spacetype', 'org_id'));
+				if (empty($aPostedParam['spacetype']) || empty($aPostedParam['org_id']) || empty($aPostedParam['spacesize'])) {
+					throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'spacetype', 'org_id', 'spacesize'));
 				} else {
 					// Make sure find action can be launched
 					list ($sIssueDesc, $aPostedParam['block_id']) = FindSpace::DoCheckToDisplayAvailableSpace($aPostedParam);
@@ -788,13 +788,11 @@ try {
 				// Id may be null. In that case a temporary object is created.
 				if (empty($id)) {
 					$oObj = MetaModel::NewObject($sClass);
-					$id = $oObj->GetKey();
 				} else {
 					// Check if the object exists
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 					if (is_null($oObj)) {
 						$oObj = MetaModel::NewObject($sClass);
-						$id = $oObj->GetKey();
 					}
 				}
 
@@ -846,12 +844,22 @@ HTML
 					$oClassForm = FormUIBlockFactory::MakeStandard();
 					$oPanel->AddMainBlock($oClassForm);
 
-					$oClassForm->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType')))
+					$oMultiColumn = new MultiColumn();
+					$oClassForm->AddSubBlock($oMultiColumn)
 						->AddHtml($oAppContext->GetForForm())
 						->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'calculator'));
 
+					// First column = labels
+					$oColumn1 = new Column();
+					$oMultiColumn->AddColumn($oColumn1);
+					// Second column = selects
+					$oColumn2 = new Column();
+					$oMultiColumn->AddColumn($oColumn2);
+
+					$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType')));
+					$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
 					$oSelect = SelectUIBlockFactory::MakeForSelect('class');
-					$oClassForm->AddSubBlock($oSelect);
+					$oColumn2->AddSubBlock($oSelect);
 					foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
 						$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, false));
 					}
@@ -1010,11 +1018,12 @@ HTML
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
 						$oP->add($sMessageContainer);
 					} else {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
 							->AddHtml($sMessage);
 						$oP->AddUiBlock($oPanel);
@@ -1074,11 +1083,12 @@ HTML
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
 						$oP->add($sMessageContainer);
 					} else {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
 							->AddHtml($sMessage);
 						$oP->AddUiBlock($oPanel);

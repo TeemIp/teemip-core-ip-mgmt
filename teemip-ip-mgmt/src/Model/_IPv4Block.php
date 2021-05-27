@@ -10,9 +10,13 @@ use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -475,7 +479,7 @@ class _IPv4Block extends IPBlock {
 	 * @throws \OQLException
 	 * @throws \Exception
 	 */
-	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+	public function totoDoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$sOrigin = $this->Get('origin');
@@ -630,6 +634,192 @@ EOF
 
 			$oP->add("</ul></li></ul>\n");
 		}
+	}
+
+	/**
+	 * Get available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+		$iId = $this->GetKey();
+		$iOrgId = $this->Get('org_id');
+		$sOrigin = $this->Get('origin');
+		$sIpToStartFrom = array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip');
+		$iIpToStartFrom = TeemIpUtils::myip2long($sIpToStartFrom);
+		$iSize = $aParameter['spacesize'];
+		$bitMask = IPv4Subnet::SizeToMask($iSize);
+		$iMaxOffer = $aParameter['maxoffer'];
+		$sStatusSubnet = $aParameter['status_subnet'];
+		$sType = $aParameter['type'];
+		$iLocationId = $aParameter['location_id'];
+		$iRequestorId = $aParameter['requestor_id'];
+		$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $iOrgId);
+		$bOfferBlock = ($iSize >= $iBlockMinSize) ? true : false;
+		if ($sOrigin == 'rir') {
+			$bOfferSubnet = false;
+			$sTargetOrigin = 'lir';
+		} else {
+			$bOfferSubnet = ($iSize <= IPV4_SUBNET_MAX_SIZE) ? true : false;
+			$sTargetOrigin = 'other';
+		}
+
+		// Get list of free and occupied space in subnet range
+		$aFreeSpace = $this->GetFreeSpace($iSize, $iMaxOffer, $iIpToStartFrom);
+		$iSizeFreeArray = sizeof($aFreeSpace);
+		if ($iSizeFreeArray == 0) {
+			$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
+			$sMessage = "<div class=\"header_message message_info teemip_message_status\">".$sIssueDesc."</div>";
+			$oP->add($sMessage);
+
+			$Html = $this->GetAllSpace($oP);
+		} else {
+			$aOccupiedSpace = $this->GetOccupiedSpace();
+
+			// Check user rights
+			$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv4Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+			$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv4Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+
+
+			$sHtml = '';
+			// Open table
+			$sHtml .= '<table style="width:100%"><tr><td colspan="2">';
+			$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
+			// Display Summary of parameters
+			$sHtml .= "<ul><li>";
+			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary', $iMaxOffer, IPv4Subnet::SizeToBit($iSize))."</b>&nbsp;";
+			$sHtml .= ($iId > 0) ? $this->GetHyperlink() : '';
+			$sHtml .= "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]&nbsp;";
+			$sHtml .= (array_key_exists('ip', $aParameter)) ? Dict::Format('IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom', $sIpToStartFrom) : '';
+			$sHtml .= "<ul>\n";
+
+			// Display possible choices as list
+			$i = 0;
+			$j = 0;
+			$iVIdCounter = 1;
+			$iAnOccupiedIp = TeemIpUtils::myip2long(array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip'));
+			$iIpToStartFrom = TeemIpUtils::myip2long($sIpToStartFrom);
+			$iSizeOccupiedArray = sizeof($aOccupiedSpace);
+			do {
+				$sAFreeIp = $aFreeSpace[$i]['firstip'];
+				$iAFreeIp = TeemIpUtils::myip2long($sAFreeIp);
+				$sLastFreeIp = $aFreeSpace[$i]['lastip'];
+				$iLastFreeIp = TeemIpUtils::myip2long($sLastFreeIp);
+
+				// Before displaying offer, display already occupied space sitting before that offer
+				if ($iSizeOccupiedArray != 0) {
+					while (($iAnOccupiedIp < $iAFreeIp) && ($j < $iSizeOccupiedArray)) {
+						// Display un-occupied space if its size is smaller than the requested $iSize
+						if ($iAnOccupiedIp < $aOccupiedSpace[$j]['firstip']) {
+							$iLastOccupiedIp = $aOccupiedSpace[$j]['firstip'] - 1;
+							// Display space only if within requested scope
+							if ($iIpToStartFrom <= $iAnOccupiedIp) {
+								$iNbIps = $iLastOccupiedIp - $iAnOccupiedIp + 1;
+								if ($iNbIps < $iSize) {
+									$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
+									$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent', TeemIpUtils::mylong2ip($iAnOccupiedIp), TeemIpUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps)."</li>\n";
+								}
+							}
+							$iAnOccupiedIp = $aOccupiedSpace[$j]['firstip'];
+						} elseif ($iAnOccupiedIp == $aOccupiedSpace[$j]['firstip']) {
+							// Display space only if within requested scope
+							if ($iIpToStartFrom <= $iAnOccupiedIp) {
+								// Display object attributes
+								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+								$sHtml .= "<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink();
+								if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
+									$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
+								} else {
+									$sHtml .= "&nbsp;[".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['firstip'])." - ".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['lastip'])."]";
+
+									// Display delegation information if required
+									$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
+									if ($iParentOrgId == $iOrgId) {
+										// Block is delegated to child org
+										$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id'));
+									} elseif ($iParentOrgId != 0) {
+										// Block is delegated from parent org
+										$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $aOccupiedSpace[$j]['obj']->GetAsHTML('parent_org_id'));
+									}
+								}
+								$sHtml .= "</li>\n";
+							}
+							$iAnOccupiedIp = $aOccupiedSpace[$j]['lastip'] + 1;
+							$j++;
+						} elseif ($iAnOccupiedIp > $aOccupiedSpace[$j]['firstip']) {
+							$j++;
+						}
+					}
+				}
+				$iAnOccupiedIp = $iLastFreeIp + 1;
+
+				// Display offer now
+				$sHtml .= "<li>".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>";
+
+				// If user has rights to create block, display block with icon to create it
+				if ($bOfferBlock) {
+					if ($UserHasRightsToCreateBlocks) {
+						$iVId = $iVIdCounter++;
+						$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
+						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsBlock')."&nbsp;&nbsp;";
+						$sHTMLValue .= "</span></div></li>\n";
+						$sHtml .= $sHTMLValue;
+						if ($sOrigin == 'rir') {
+							// Creation implies a delegation
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAFreeIp.'\', \'lastip\': \''.$sLastFreeIp.'\'}';
+						} else {
+							//$sPayLoad = {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': '$sAFreeIp', 'lastip': '$sLastFreeIp'}
+							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAFreeIp.'\', \'lastip\': \''.$sLastFreeIp.'\'}';
+						}
+						$oP->add_ready_script(
+							<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', $iChangeId, $sPayLoad);
+EOF
+						);
+					}
+				}
+
+				// If user has rights to create subnet, display subnet with icon to create it
+				if ($bOfferSubnet) {
+					if ($UserHasRightsToCreateSubnets) {
+						$iVId = $iVIdCounter++;
+						$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
+						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsSubnet')."&nbsp;&nbsp;";
+						$sHTMLValue .= "</span></div></li>\n";
+						$sHtml .= $sHTMLValue;
+						$oP->add_ready_script(
+							<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
+EOF
+						);
+					}
+				}
+
+				$sHtml .= "</ul></li>\n";
+			} while (++$i < $iSizeFreeArray);
+
+			$sHtml .= "</ul></li></ul>\n";
+
+			// Close table
+			$sHtml .= '</div>';
+			$sHtml .= '</td></tr></table>';
+			$oP->add_ready_script("\$('#tree ul').treeview();\n");
+			$sHtml .= "<div id=\"dialog_content\"/>\n";
+		}
+
+		return $sHtml;
 	}
 
 	/**
@@ -1298,7 +1488,6 @@ EOF
 		$iFlags = $this->GetAttributeFlags('requestor_id');
 		$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
 		$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetFormElementForField($oP, 'IPObject', 'requestor_id', $oAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>';
-		$aFieldsMap['requestor_id'] = $sInputId;
 		$aDetails[] = array(
 			'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
 			'value' => $sHTMLValue,
@@ -1528,16 +1717,57 @@ EOF
 	 * @throws \Twig\Error\SyntaxError
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
-		$oColumn = new Column();
-		$oClassForm->AddSubBlock($oColumn);
+		$oMultiColumn = new MultiColumn();
+		$oClassForm->AddSubBlock($oMultiColumn);
 		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
 		$oClassForm->AddSubBlock($oToolbar);
 
+		// First column = labels
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
+		// Second column = data
+		$oColumn2 = new Column();
+		$oMultiColumn->AddColumn($oColumn2);
 		switch ($sOperation) {
 			case 'findspace':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv4Block:SizeOfSpace');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv4Block:MaxNumberOfOffers');
+
+				// Size of space
+				// Compute max possible 'CIDR aligned' space to look for,
+				$iPrefix = $this->GetMinTheoriticalBlockPrefix();
+				if ($iPrefix < 16) {
+					$iDefaultMask = 16;
+				} else {
+					if ($iPrefix < 24) {
+						$iDefaultMask = 24;
+					} else {
+						$iDefaultMask = 31;
+					}
+				}
+				$InputSize = IPv4Subnet::MaskToSize(IPv4Subnet::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
+				// Display list of choices now
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('spacesize');
+				$oColumn2->AddSubBlock($oSelect);
+				while ($iPrefix <= 32) {
+					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPv4Subnet::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+					$InputSize /= 2;
+					$iPrefix++;
+				}
+				$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
+
+				// Max number of offers
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction2));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
+				$oColumn2->AddSubBlock($oInput);
 				break;
 
-			case 'shrinkblock':
+			case
+			'shrinkblock':
 				break;
 
 			case 'splitblock':
@@ -1564,28 +1794,24 @@ EOF
 				$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
 
 				// Display list of choices now
-				$sInputId = $this->m_iFormId.'child_org_id';
-				$sHTML = "<select id=\"$sInputId\" name=\"child_org_id\">\n";
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('child_org_id');
+				$oColumn2->AddSubBlock($oSelect);
 				while ($oChildOrg = $oChildOrgSet->Fetch()) {
 					$iChildOrgKey = $oChildOrg->GetKey();
 					$sChildOrgName = $oChildOrg->GetName();
-					if ($iChildOrgKey == $iOrgId) {
-						$sHTML .= "<option selected='' value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
-					} else {
-						$sHTML .= "<option value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
-					}
+					$bSelected = ($iChildOrgKey == $iOrgId) ? true : false;
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iChildOrgKey, $sChildOrgName, $bSelected));
 				}
-				$sHTML .= "</select>";
-				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'child_org_id', $sLabelOfAction1, $sHTML);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
 				break;
 
 			default:
 				break;
 		};
+
+		// Cancel button
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Block', '{$this->GetKey()}', '', '{null}');"));
 
 		// Apply button
 		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
@@ -1604,7 +1830,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function GetAllSpace(WebPage $oP) {
+	protected
+	function GetAllSpace(WebPage $oP) {
 
 		// Get list of registered blocks and subnets in subnet range
 		$aOccupiedSpace = $this->GetOccupiedSpace();
@@ -1648,7 +1875,6 @@ EOF
 
 							// Display delegation information if required
 							$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
-							$iChildOrgId = $aOccupiedSpace[$j]['obj']->Get('org_id');
 							if ($iParentOrgId != 0) {
 								$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id'));
 							}
@@ -1690,7 +1916,8 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	public
+	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -1738,7 +1965,8 @@ EOF
 	 *
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public function ComputeValues() {
+	public
+	function ComputeValues() {
 		if ($this->IsNew()) {
 			// At creation, compute parent_id only in the case where no delegation is done.
 			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
@@ -1777,7 +2005,8 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckToWrite() {
+	public
+	function DoCheckToWrite() {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -1982,7 +2211,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function AfterInsert() {
+	public
+	function AfterInsert() {
 		parent::AfterInsert();
 
 		$iOrgId = $this->Get('org_id');
@@ -2050,7 +2280,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function AfterUpdate() {
+	public
+	function AfterUpdate() {
 		if ($this->Get('write_reason') != 'split') {
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
@@ -2089,7 +2320,8 @@ EOF
 	 * @return int
 	 * @throws \CoreException
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public
+	function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		$aReadOnlyAttributes = array('firstip', 'lastip');
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
 			return OPT_ATT_READONLY;

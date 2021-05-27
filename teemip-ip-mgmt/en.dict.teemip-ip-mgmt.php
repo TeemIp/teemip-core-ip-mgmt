@@ -1070,6 +1070,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:FindSpace:IPv4Block:MaxNumberOfOffers' => 'Maximum number of offers:',
 
 	// Do find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block' => 'Found Space',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Found space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary' => '%1$s first /%2$s within ',
@@ -1085,13 +1086,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Delegate:IPv4Block:NoOtherOrg' => 'There is no other organization than block\'s organization!',
 	'UI:IPManagement:Action:Delegate:IPv4Block:IsDelegated' => 'The block is already delegated!',
 	'UI:IPManagement:Action:Delegate:IPv4Block:CannotBeDelegated' => 'Block cannot be delegated: %1$s',
-	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been delegated.',
+	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s %2$s has been delegated.',
 
 	// Undelegate action on subnet blocks
 	'UI:IPManagement:Action:Undelegate:IPv4Block:CannotBeUndelegated' => 'Block cannot be undelegated: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Un-delegate',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Un-delegate',
-	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been un-delegated.',
+	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s %2$s has been un-delegated.',
 
 //
 // Management of Subnets
