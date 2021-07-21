@@ -11,140 +11,12 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\DisplayTree;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
-
-/**
- * @param \WebPage $oP
- * @param $operation
- * @param $sTransactionId
- * @param $id
- * @param $sObjectName
- * @param $sClass
- * @param $sClassLabel
- *
- * @throws \CoreException
- * @throws \DictExceptionMissingString
- */
-function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel) {
-	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel));
-		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-	} else {
-		$sUser = UserRights::GetUser();
-		IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
-		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-		//$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
-		//$sSeverity = 'error';
-
-		IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
-			'$operation' => $operation,
-			'$id' => $id,
-			'$sTransactionId' => $sTransactionId,
-			'$sUser' => UserRights::GetUser(),
-			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-		));
-	}
-}
-
-/**
- * Displays TeemIp's hierarchical objects in tree mode.
- *
- * @param \WebPage $oP
- * @param $iOrgId
- * @param $sClass
- *
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \MySQLException
- * @throws \OQLException
- */
-function DisplayTreeOld(WebPage $oP, $iOrgId, $sClass) {
-	switch ($sClass) {
-		case 'IPv4Block':
-		case 'IPv6Block':
-		case 'Domain':
-			DisplayNodeOld($oP, $iOrgId, $sClass, 0, '');
-			break;
-
-		case 'IPv4Subnet':
-			DisplayNodeOld($oP, $iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
-			break;
-
-		case 'IPv6Subnet':
-			DisplayNodeOld($oP, $iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
-			break;
-
-		default:
-			break;
-	}
-}
-
-/**
- * Display the node of a hierarchical tree
- *
- * @param \WebPage $oP
- * @param $iOrgId
- * @param $sContainerClass
- * @param $iContainerId
- * @param $sLeafClass
- *
- * @throws \CoreException
- * @throws \CoreUnexpectedValue
- * @throws \MySQLException
- * @throws \OQLException
- */
-function DisplayNodeOld(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
-	// Get list of Containers contained within current container defined by key $iContainerId
-	//    . Blocks that belong to organization
-	$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";
-	//    . Add blocks that are delegated to
-	$sOQL .= " UNION ";
-	$sOQL .= "SELECT $sContainerClass AS cc WHERE cc.parent_org_id = :org_id AND cc.parent_id = :parent_id";
-	//    . Add blocks that are delegated from - this should only work for level 0 where container_id is null
-	$sOQL .= " UNION ";
-	$sOQL .= "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_org_id != 0 AND :container_id = 0";
-	$oChildContainerSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array(
-		'org_id' => $iOrgId,
-		'parent_id' => $iContainerId,
-		'container_id' => $iContainerId,
-	));
-
-	$aNodes = array();
-	while ($oChildContainer = $oChildContainerSet->Fetch()) {
-		$iKey = $oChildContainer->GetIndexForTree();
-		$aNodes[$iKey] = $oChildContainer;
-	}
-
-	// Get list of leaves contained within current container, if any
-	if ($sLeafClass != '') {
-		$oLeafSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sLeafClass AS lc WHERE lc.block_id = :block_id"), array(), array('block_id' => $iContainerId));
-		while ($oLeaf = $oLeafSet->Fetch()) {
-			$iKey = $oLeaf->GetIndexForTree();
-			$aNodes[$iKey] = $oLeaf;
-		}
-	}
-
-	// Display Node
-	ksort($aNodes);
-	$bWithIcon = ($sLeafClass != '') ? true : false;
-	$oP->add("<ul>\n");
-	foreach ($aNodes as $id => $oObject) {
-		$oP->add("<li>");
-		$oObject->DisplayAsLeaf($oP, $bWithIcon, $iOrgId);
-		if (get_class($oObject) == $sContainerClass) {
-			DisplayNodeOld($oP, $iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
-		}
-		$oP->add("</li>\n");
-	}
-	$oP->add("</ul>\n");
-
-}
 
 /*******************************************************************
  *
@@ -168,14 +40,15 @@ require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try {
+	$operation = utils::ReadParam('operation', '');
+	$bPrintable = (utils::ReadParam('printable', 0) == '1');
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 
-	// Start construction of page
-
-	$oP = new iTopWebPage('');
-	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
+	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
+	$oP->SetMessage($sLoginMessage);
 
 	// All the following actions use advanced forms that require more javascript to be loaded
 	$oP->add_linked_script("../js/json.js");
@@ -190,11 +63,10 @@ try {
 	// Add teemip style sheeet
 	$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
-	$operation = utils::ReadParam('operation', '');
 	switch ($operation) {
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		case 'displaytree':    // Display hierarchical tree for domain, blocks or subnets
+		case 'displaytree':     // Display hierarchical tree for domains, blocks or subnets
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			// Check if right parameters have been given
 			if (empty($sClass)) {
@@ -205,73 +77,47 @@ try {
 			}
 
 			DisplayTree::Display($oP, $oAppContext, $sClass);
-
-			return;
-
-			// Display search bar
-			$oSearch = new DBObjectSearch($sClass);
-			$aParams = array('open' => true, 'table_id' => 'displaytree_search');
-			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
-			$oBlock->Display($oP, 0);
-
-			// Set titles
-			$sClassLabel = MetaModel::GetName($sClass);
-			$oP->set_title(Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':PageTitle_Class'));
-			$oP->add("<p class=\"page-header\">\n");
-			$oP->add(MetaModel::GetClassIcon($sClass, true)." ".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':Title_Class', $sClassLabel));
-			$oP->add("</p>\n");
-
-			$oP->add('<div class="display_block">');
-
-			// Get number of records
-			$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
-			if ($iCurrentOrganization == '') {
-				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
-			} else {
-				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
-			}
-			$sObjectsCount = Dict::Format('UI:Pagination:HeaderNoSelection', $oSet->Count());
-
-			// Get actions Menu
-			$iListId = 'displaytree_menu'; //$oP->GetUniqueId();
-			$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
-			$sActionsMenu = $oMenuBlock->GetRenderContent($oP, array(), $iListId);
-
-			// Get toolkit menu
-			// Remove "Add To Dashboard" submenu
-			$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png" alt=\"\"><ul>';
-			$aActions = array();
-			utils::GetPopupMenuItems($oP, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
-			unset($aActions['UI:Menu:AddToDashboard']);
-			unset($aActions['UI:Menu:ShortcutList']);
-			$sHtml .= $oP->RenderPopupMenuItems($aActions);
-			$sToolkitMenu = $sHtml;
-
-			// Display menu line
-			$sHtml = "<table style=\"width:100%;\">";
-			$sHtml .= "<tr><td class=\"pagination_container\">$sObjectsCount</td><td class=\"menucontainer\">$sToolkitMenu $sActionsMenu</td></tr>";
-			$sHtml .= "</table>";
-			$oP->Add($sHtml);
-
-			// Dump Tree(s)
-			$oP->add('<table style="width:100%"><tr><td colspan="2">');
-			$oP->add('<div style="vertical-align:top;" id="tree">');
-			if ($iCurrentOrganization == '') {
-				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization"));
-				while ($oOrg = $oSet->Fetch()) {
-					$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-					DisplayTreeOld($oP, $oOrg->GetKey(), $sClass);
-					$oP->add("<br>");
-				}
-			} else {
-				$oOrg = MetaModel::GetObject('Organization', $iCurrentOrganization, false /* MustBeFound */);
-				$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-				DisplayTreeOld($oP, $iCurrentOrganization, $sClass);
-			}
-			$oP->add('</td></tr></table>');
-			$oP->add('</div></div>');
-			$oP->add_ready_script("\$('#tree ul').treeview();\n");
 			break; // End case displaytree
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		case 'displaylist':     // Display standard list of domains, blocks or subnets
+			$sClass = utils::ReadParam('class', '', false, 'class');
+			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
+			if (empty($sClass) || empty($sFilter)) {
+				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'filter'));
+			}
+			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
+			$oFilter->UpdateContextFromUser();
+			$sTableId = 'display_list';
+
+			$sHeaderTitle = Dict::Format('UI:IPManagement:Action:DisplayList:'.$sClass.':PageTitle_Class');
+			$sTitle = Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':Title_Class', MetaModel::GetName($sClass));
+			$oP->set_title($sHeaderTitle);
+
+			$oBlockSearch = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true, 'table_id' => $sTableId, 'baseClass' => $sClass));
+			$oBlock = new DisplayBlock($oFilter, 'list', false);
+
+			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+				$oBlockSearch->Display($oP, 'search_1');
+				$oP->add("<p class=\"page-header\">\n");
+				$oP->add(MetaModel::GetClassIcon($sClass, true)." ".$sTitle);
+				$oP->add("</p>\n");
+				$oBlock->Display($oP, $sTableId);
+			} else {
+				$oUIBlockSearch = $oBlockSearch->GetDisplay($oP, 'search_1', array());
+
+				$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
+				$oUIBlockSearch->AddSubBlock($oTitle);
+
+				$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
+				$oUIBlock->AddCSSClasses(['display_block', 'sf_results_area']);
+				$oUIBlock->AddDataAttribute('target', 'search_results');
+				$oUIBlockSearch->AddSubBlock($oUIBlock);
+
+				$oP->AddUiBlock($oUIBlockSearch);
+			}
+			break; // End case displaylist
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
@@ -352,7 +198,7 @@ try {
 					$sClassLabel = MetaModel::GetName($sClass);
 					$sObjectName = $oObj->GetName();
 					if (!utils::IsTransactionValid($sTransactionId, false)) {
-						LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
+						TeemIpUI::LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
 					} else {
 						$aPostedParam = $oObj->GetPostedParam($operation);
 
@@ -494,11 +340,11 @@ try {
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 
-		case 'shrinkblock':        // Shrink a block
+		case 'shrinkblock':     // Shrink a block
 		case 'shrinksubnet':    // Shrink a subnet
-		case 'splitblock':        // Split a block
-		case 'splitsubnet':        // Split a subnet
-		case 'expandblock':        // Expand a block
+		case 'splitblock':      // Split a block
+		case 'splitsubnet':     // Split a subnet
+		case 'expandblock':     // Expand a block
 		case 'expandsubnet':    // Expand a subnet
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
@@ -559,8 +405,7 @@ try {
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':CannotBeShrunk', $sErrorString);
-					$sMessageContainer = "<div class=\"header_message message_error\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -570,13 +415,16 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if ($sClass == 'IPv4Subnet') {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
 					$oObj->DisplayDetails($oP);
 
 					// Close transaction
@@ -616,9 +464,8 @@ try {
 				$sErrorString = $oObj->DoCheckToSplit($aPostedParam);
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':CannotBeSplit', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':CannotBeSplit', $sErrorString);
+					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -628,13 +475,16 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if ($sClass == 'IPv4Subnet') {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
 					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'split_result', array('display_limit' => false, 'menu' => false));
 
@@ -675,9 +525,8 @@ try {
 				$sErrorString = $oObj->DoCheckToExpand($aPostedParam);
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':CannotBeExpanded', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':CannotBeExpanded', $sErrorString);
+					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -687,13 +536,16 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if ($sClass == 'IPv4Subnet') {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id']);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+						$sMessage = ($sClass == 'IPv4Subnet')
+							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
 					$oNewObj->DisplayDetails($oP);
 
 					// Close transaction
@@ -992,7 +844,7 @@ HTML
 			$sClassLabel = MetaModel::GetName($sClass);
 			$sObjectName = $oObj->GetName();
 			if (!utils::IsTransactionValid($sTransactionId, false)) {
-				LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
+				TeemIpUI::LogInvalidTransaction($oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel);
 			} else {
 				$aPostedParam = $oObj->GetPostedParam($operation);
 
@@ -1001,14 +853,7 @@ HTML
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
-						$oP->add($sMessageContainer);
-					} else {
-						$oPanel = PanelUIBlockFactory::MakeForWarning('')
-							->AddHtml($sMessage);
-						$oP->AddUiBlock($oPanel);
-					}
+					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -1020,14 +865,10 @@ HTML
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-						$oP->add($sMessageContainer);
 					} else {
 						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
-							->AddHtml($sMessage);
-						$oP->AddUiBlock($oPanel);
 					}
+					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
 					$oObj->DisplayDetails($oP);
 
 					// Close transaction
@@ -1062,18 +903,11 @@ HTML
 				}
 
 				// Make sure object can be undelegated
-				$sErrorString = $oObj->DoCheckToUndelegate(array());
+				$sErrorString = $oObj->DoCheckToUndelegate();
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':CannotBeUndelegated', $sErrorString);
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
-						$oP->add($sMessageContainer);
-					} else {
-						$oPanel = PanelUIBlockFactory::MakeForWarning('')
-							->AddHtml($sMessage);
-						$oP->AddUiBlock($oPanel);
-					}
+					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
 
 					$oObj->DisplayDetails($oP);
 				} else {
@@ -1085,14 +919,10 @@ HTML
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-						$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-						$oP->add($sMessageContainer);
 					} else {
 						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-						$oPanel = PanelUIBlockFactory::MakeForSuccess('')
-							->AddHtml($sMessage);
-						$oP->AddUiBlock($oPanel);
 					}
+					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
 					$oObj->DisplayDetails($oP);
 				}
 			}
@@ -1233,7 +1063,6 @@ HTML
 		///////////////////////////////////////////////////////////////////////////////////////////
 
 		case 'cancel':    // An action was cancelled
-		case 'displaylist':
 		default: // Menu node rendering (templates)
 			ApplicationMenu::LoadAdditionalMenus();
 			$oMenuNode = ApplicationMenu::GetMenuNode(ApplicationMenu::GetMenuIndexById(ApplicationMenu::GetActiveNodeId()));
@@ -1303,5 +1132,74 @@ HTML
 		}
 
 		IssueLog::Error($e->getMessage());
+	}
+}
+
+class TeemIpUI {
+	/**
+	 * @param \WebPage $oP
+	 * @param $operation
+	 * @param $sTransactionId
+	 * @param $id
+	 * @param $sObjectName
+	 * @param $sClass
+	 * @param $sClassLabel
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 */
+	public static function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel));
+			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+		} else {
+			$sUser = UserRights::GetUser();
+			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
+			$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
+			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+			//$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
+			//$sSeverity = 'error';
+
+			IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
+				'$operation' => $operation,
+				'$id' => $id,
+				'$sTransactionId' => $sTransactionId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+			));
+		}
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sMessage
+	 */
+	public static function DisplaySuccessMessage(WebPage $oP, $sMessage) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+			$oP->add($sMessageContainer);
+		} else {
+			$oPanel = PanelUIBlockFactory::MakeForSuccess('')
+				->AddHtml($sMessage);
+			$oP->AddUiBlock($oPanel);
+		}
+
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sMessage
+	 */
+	public static function DisplayErrorMessage(WebPage $oP, $sMessage) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+			$oP->add($sMessageContainer);
+		} else {
+			$oPanel = PanelUIBlockFactory::MakeForWarning('')
+				->AddHtml($sMessage);
+			$oP->AddUiBlock($oPanel);
+		}
+
 	}
 }
