@@ -784,7 +784,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoShrink($aParam) {
+	public function DoShrink($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -1152,8 +1152,6 @@ EOF
 				}
 			}
 		}
-
-		return $this;
 	}
 
 	/**
@@ -1221,8 +1219,6 @@ EOF
 	/**
 	 * Check if block can be undelegated
 	 *
-	 * @param $aParam
-	 *
 	 * @return string
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
@@ -1230,7 +1226,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToUndelegate($aParam) {
+	function DoCheckToUndelegate() {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 
@@ -1256,30 +1252,24 @@ EOF
 	/**
 	 * Display block and child subnets as tree leaf
 	 *
-	 * @param \WebPage $oP
-	 * @param bool $bWithSubnet
-	 * @param $iTreeOrgId
+	 * @param $bWithIcon
+	 * @param $sTreeOrgId
 	 *
+	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $sTreeOrgId) {
+	public function GetAsLeaf($bWithIcon, $sTreeOrgId) {
 		$sHtml = '';
 		if ($bWithIcon) {
 			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;";
 		}
 		$sHtml .= $this->GetHyperlink();
-		$oP->add($sHtml);
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
-		$oP->add("&nbsp;&nbsp;&nbsp;[".$oFirstIp->ToString()." - ".$oLastIp->ToString()."]");
-		$oP->add("&nbsp;&nbsp;&nbsp;".$this->Get('type'));
+		$sHtml .= "&nbsp;&nbsp;&nbsp;[".$oFirstIp->ToString()." - ".$oLastIp->ToString()."]";
+		$sHtml .= "&nbsp;&nbsp;&nbsp;".$this->Get('type');
 
 		// Display delegation information if required
 		$iOrgId = $this->Get('org_id');
@@ -1287,12 +1277,14 @@ EOF
 		if ($iParentOrgId != 0) {
 			if ($sTreeOrgId == $iOrgId) {
 				// Block is delegated from parent org
-				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $this->GetAsHTML('parent_org_id')));
+				$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $this->GetAsHTML('parent_org_id'));
 			} else {
 				// Block is delegated to child org
-				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $this->GetAsHTML('org_id')));
+				$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $this->GetAsHTML('org_id'));
 			}
 		}
+
+		return $sHtml;
 	}
 
 	/**
@@ -1307,7 +1299,7 @@ EOF
 	 * @throws \CoreException
 	 */
 	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).'Summary');
+		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
 		$oP->add('<table style="vertical-align:top"><tr>');
@@ -1342,7 +1334,6 @@ EOF
 		$iFlags = $this->GetAttributeFlags('requestor_id');
 		$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
 		$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetFormElementForField($oP, 'IPObject', 'requestor_id', $oAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>';
-		$aFieldsMap['requestor_id'] = $sInputId;
 		$aDetails[] = array(
 			'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
 			'value' => $sHTMLValue,
