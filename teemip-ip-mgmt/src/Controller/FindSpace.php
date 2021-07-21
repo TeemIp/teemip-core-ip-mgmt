@@ -29,7 +29,7 @@ use UserRights;
 use utils;
 use WebPage;
 
-class FindSpace extends cmdbAbstractObject {
+class FindSpace {
 	/**
 	 * Get parameters related to find space operations
 	 *
