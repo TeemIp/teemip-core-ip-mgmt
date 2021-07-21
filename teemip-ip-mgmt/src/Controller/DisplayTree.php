@@ -7,6 +7,8 @@
 namespace TeemIp\TeemIp\Extension\IPManagement\Controller;
 
 use CMDBObjectSet;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -111,34 +113,66 @@ class DisplayTree {
 		$sHtml .= "</table>";
 		$oP->Add($sHtml);
 
-		// Dump Tree(s)
-		$oP->add('<table style="width:100%"><tr><td colspan="2">');
-		$oP->add('<div style="vertical-align:top;" id="tree">');
-		if ($iCurrentOrganization == '') {
-			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization"));
-			while ($oOrg = $oSet->Fetch()) {
-				$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-				DisplayTree::DeployTree($oP, $oOrg->GetKey(), $sClass);
-				$oP->add("<br>");
-			}
-		} else {
-			$oOrg = MetaModel::GetObject('Organization', $iCurrentOrganization, false /* MustBeFound */);
-			$oP->add("<h2>".Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name'))."</h2>\n");
-			DisplayTree::DeployTree($oP, $iCurrentOrganization, $sClass);
-		}
-		$oP->add('</td></tr></table>');
-		$oP->add('</div></div>');
-		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add(self::GetTree($sClass, $iCurrentOrganization));
+		$oP->add_ready_script("\$('#tree ul').treeview();");
 	}
 
 	static private function DisplayV3(WebPage $oP, $oAppContext, $sClass) {
+		// Get number of records
+		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
+		if ($iCurrentOrganization == '') {
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
+		} else {
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
+		}
+		$iSetCount = $oSet->Count();
 
+		// Display block
+		$sHeaderTitle = Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':PageTitle_Class');
+		$sTitle = Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':Title_Class', MetaModel::GetName($sClass));
+		$oP->set_title($sHeaderTitle);
+
+		$sListId = 'displaytree_menu';
+		$aExtraParams['selection_mode'] = false;
+		$oMenuBlock = new MenuBlock($oSet->GetFilter(), 'list');
+		$oBlockMenu = $oMenuBlock->GetRenderContent($oP, $aExtraParams, $sListId);
+
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+		//$oPanel->SetIcon($sClassIconUrl);
+		$oPanel->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iSetCount));
+		$oPanel->AddToolbarBlock($oBlockMenu);
+		$oP->AddUiBlock($oPanel);
+
+		$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))
+			->AddHtml(self::GetTree($sClass, $iCurrentOrganization));
+
+		$oP->add_ready_script("\$('#tree ul').treeview();");
+	}
+
+	static private function GetTree($sClass, $iOrganization) {
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+		if ($iOrganization == '') {
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization"));
+			while ($oOrg = $oSet->Fetch()) {
+				$sHtml .= '<h2>'.Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name')).'</h2>';
+				$sHtml .= DisplayTree::DeployTree($oOrg->GetKey(), $sClass);
+				$sHtml .= '<br>';
+			}
+		} else {
+			$oOrg = MetaModel::GetObject('Organization', $iOrganization, false /* MustBeFound */);
+			$sHtml .= '<h2>'.Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':OrgName', $oOrg->Get('name')).'</h2>';
+			$sHtml .= DisplayTree::DeployTree($iOrganization, $sClass);
+		}
+		$sHtml .= '</td></tr></table>';
+		$sHtml .= '</div></div>';
+
+		return $sHtml;
 	}
 
 	/**
 	 * Deploy tree
 	 *
-	 * @param \WebPage $oP
 	 * @param $iOrgId
 	 * @param $sClass
 	 *
@@ -147,31 +181,29 @@ class DisplayTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	static private function DeployTree(WebPage $oP, $iOrgId, $sClass) {
+	static private function DeployTree($iOrgId, $sClass) {
 		switch ($sClass) {
 			case 'IPv4Block':
 			case 'IPv6Block':
 			case 'Domain':
-				DisplayTree::DisplayNode($oP, $iOrgId, $sClass, 0, '');
-				break;
+				return DisplayTree::GetNode($iOrgId, $sClass, 0, '');
 
 			case 'IPv4Subnet':
-				DisplayTree::DisplayNode($oP, $iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
-				break;
+				return DisplayTree::GetNode($iOrgId, 'IPv4Block', 0, 'IPv4Subnet');
 
 			case 'IPv6Subnet':
-				DisplayTree::DisplayNode($oP, $iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
-				break;
+				return DisplayTree::GetNode($iOrgId, 'IPv6Block', 0, 'IPv6Subnet');
 
 			default:
 				break;
 		}
+
+		return '';
 	}
 
 	/**
 	 * Display the node of a hierarchical tree
 	 *
-	 * @param \WebPage $oP
 	 * @param $iOrgId
 	 * @param $sContainerClass
 	 * @param $iContainerId
@@ -182,7 +214,7 @@ class DisplayTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	static private function DisplayNode(WebPage $oP, $iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
+	static private function GetNode($iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
 		// Get list of Containers contained within current container defined by key $iContainerId
 		//    . Blocks that belong to organization
 		$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";
@@ -216,17 +248,18 @@ class DisplayTree {
 		// Display Node
 		ksort($aNodes);
 		$bWithIcon = ($sLeafClass != '') ? true : false;
-		$oP->add("<ul>\n");
-		foreach ($aNodes as $id => $oObject) {
-			$oP->add("<li>");
-			$oObject->DisplayAsLeaf($oP, $bWithIcon, $iOrgId);
+		$sHtml = '<ul>';
+		foreach ($aNodes as $oObject) {
+			$sHtml .= '<li>';
+			$sHtml .= $oObject->GetAsLeaf($bWithIcon, $iOrgId);
 			if (get_class($oObject) == $sContainerClass) {
-				DisplayTree::DisplayNode($oP, $iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
+				$sHtml .= DisplayTree::GetNode($iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
 			}
-			$oP->add("</li>\n");
+			$sHtml .= '</li>';
 		}
-		$oP->add("</ul>\n");
+		$sHtml .= '</ul>';
 
+		return $sHtml;
 	}
 
 
