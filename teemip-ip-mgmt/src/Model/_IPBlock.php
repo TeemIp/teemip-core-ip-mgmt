@@ -10,10 +10,8 @@ use ApplicationContext;
 use CMDBObjectSet;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use IPConfig;
 use IPObject;
-use MetaModel;
 use utils;
 use WebPage;
 
@@ -246,9 +244,6 @@ class _IPBlock extends IPObject {
 			$iBlockId = $this->GetKey();
 			$iOrgId = $this->Get('org_id');
 
-			$aExtraParams = array();
-			$aExtraParams['menu'] = false;
-
 			// Tab for child blocks
 			$iChildrenFilter = intval(utils::ReadParam('children_filter', '0'));
 			switch ($iChildrenFilter) {
@@ -266,54 +261,46 @@ class _IPBlock extends IPObject {
 					$sTitle = Dict::Format('Class:IPBlock/Tab:childblock/List0');
 					break;
 			}
-			$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array(
-				'block_id' => $iBlockId,
-				'org_id' => $iOrgId,
-			));
-			// Open tab first
+			$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('block_id' => $iBlockId, 'org_id' => $iOrgId));
+
 			if ($oChildBlockSet->CountExceeds(0)) {
-				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:childblock').' ('.$oChildBlockSet->Count().')');
-				$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
-				$oP->p($this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent'));
+				$sHtml = $this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent');
 
 				// Then, display form to select list of hosts if domain is not in edition
-				$oP->add('<div style="padding: 15px; background: #ddd;">');
-				$oP->add("<form>");
-				$oP->add("<table border=0>");
+				$sHtml .= '<p><div style="padding: 15px; background: #ddd;">';
+				$sHtml .= '<form>';
+				$sHtml .= '<table>';
 
-				$oP->add("<tr>");
+				$sHtml .= '<tr>';
 				if ($iChildrenFilter != 0) {
-					$oP->add("<td>");
-					$oP->add("<label><input type=\"radio\" checked name=\"children_filter\" value=\"0\">".Dict::S('Class:IPBlock/Tab:childblock/SelectList0').'</label>');
-					$oP->add("</td>");
+					$sHtml .= '<td>';
+					$sHtml .= "<label><input type=\"radio\" checked name=\"children_filter\" value=\"0\">&nbsp;".Dict::S('Class:IPBlock/Tab:childblock/SelectList0').'</label>';
+					$sHtml .= '</td>';
 				} else {
-					$oP->add("<td>");
-					$oP->add("<label><input type=\"radio\" checked name=\"children_filter\" value=\"1\">".Dict::S('Class:IPBlock/Tab:childblock/SelectList1').'</label>');
-					$oP->add("</td>");
+					$sHtml .= '<td>';
+					$sHtml .= "<label><input type=\"radio\" checked name=\"children_filter\" value=\"1\">&nbsp;".Dict::S('Class:IPBlock/Tab:childblock/SelectList1').'</label>';
+					$sHtml .= '</td>';
 				}
-				$oP->add("</tr>\n");
+				$sHtml .= '</tr>';
 
-				$oP->add("</table><br>\n");
+				$sHtml .= '</table><br>';
 
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$iBlockId\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+				$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n";
+				$sHtml .= "<input type=\"hidden\" name=\"id\" value=\"$iBlockId\">\n";
+				$sHtml .= '<input type="hidden" name="operation" value="details">';
+				$sHtml .= '<input type="hidden" name="transaction_id" value=\""'.utils::GetNewTransactionId().'"\">';
 				$oAppContext = new ApplicationContext();
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("<input type=\"submit\" value=\"".Dict::S('Class:IPBlock/Tab:childblock/SelectList')."\">\n");
+				$sHtml .= $oAppContext->GetForForm();
+				$sHtml .= "<input type=\"submit\" value=\"".Dict::S('Class:IPBlock/Tab:childblock/SelectList')."\">\n";
 
-				$oP->add("</form>\n");
-				$oP->add('</div>');
-
-				// Display list of hosts if not empty
-				$oBlock = new DisplayBlock($oChildBlockSet->GetFilter(), 'list', false);
-				$oBlock->Display($oP, 'child_blocks', array('menu' => false));
+				$sHtml .= '</form>';
+				$sHtml .= '</div></p>';
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPBlock/Tab:childblock'));
-				$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+
+			$sName = Dict::Format('Class:IPBlock/Tab:childblock');
+			$this->DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet);
 		}
 	}
 
