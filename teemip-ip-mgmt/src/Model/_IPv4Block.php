@@ -1119,8 +1119,6 @@ EOF
 				}
 			}
 		}
-
-		return $this;
 	}
 
 	/**
