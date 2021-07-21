@@ -62,13 +62,11 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 									if ($oObj->IsDelegated()) {
 										$aParams['operation'] = 'undelegate';
 										$sMenu = 'UI:IPManagement:Action:Undelegate:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									} else {
 										$aParams['operation'] = 'delegate';
 										$sMenu = 'UI:IPManagement:Action:Delegate:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									}
 
 									$aResult[] = new SeparatorPopupMenuItem();
@@ -76,40 +74,31 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 										$aResult[] = new SeparatorPopupMenuItem();
 										$aParams['operation'] = 'shrinkblock';
 										$sMenu = 'UI:IPManagement:Action:Shrink:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php',
-												$aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 
 										$aParams['operation'] = 'splitblock';
 										$sMenu = 'UI:IPManagement:Action:Split:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php',
-												$aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									}
 									$aParams['operation'] = 'expandblock';
 									$sMenu = 'UI:IPManagement:Action:Expand:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									$aResult[] = new SeparatorPopupMenuItem();
 
 									$aParams['operation'] = 'listspace';
 									$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 
 									if ($iBlockSize > 1) {
 										$aParams['operation'] = 'findspace';
 										$sMenu = 'UI:IPManagement:Action:FindSpace:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php',
-												$aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									}
 								} else {
 									$aResult[] = new SeparatorPopupMenuItem();
 									$aParams['operation'] = 'listspace';
 									$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 								}
 								break;
 
@@ -121,47 +110,39 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 									if ($oObj->IsDelegated()) {
 										$aParams['operation'] = 'undelegate';
 										$sMenu = 'UI:IPManagement:Action:Undelegate:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									} else {
 										$aParams['operation'] = 'delegate';
 										$sMenu = 'UI:IPManagement:Action:Delegate:'.$sClass;
-										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-											utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+										$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									}
 
 									$aResult[] = new SeparatorPopupMenuItem();
 									$aParams['operation'] = 'shrinkblock';
 									$sMenu = 'UI:IPManagement:Action:Shrink:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 
 									$aParams['operation'] = 'splitblock';
 									$sMenu = 'UI:IPManagement:Action:Split:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 
 									$aParams['operation'] = 'expandblock';
 									$sMenu = 'UI:IPManagement:Action:Expand:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 									$aResult[] = new SeparatorPopupMenuItem();
 
 									$aParams['operation'] = 'listspace';
 									$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 
 									$aParams['operation'] = 'findspace';
 									$sMenu = 'UI:IPManagement:Action:FindSpace:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 								} else {
 									$aResult[] = new SeparatorPopupMenuItem();
 									$aParams['operation'] = 'listspace';
 									$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
-									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu),
-										utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
+									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 								}
 								break;
 						}
@@ -490,9 +471,11 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 						case 'apply_modify':
 						case 'apply_new':
 						case 'details':
+						case 'delegate':
 						case 'doexpandblock':
 						case 'doshrinkblock':
 						case 'release_lock_and_details':
+						case 'undelegate':
 							$aParams['operation'] = 'listspace';
 							$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
 							$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
