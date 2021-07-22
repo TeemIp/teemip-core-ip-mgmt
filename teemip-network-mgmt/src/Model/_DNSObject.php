@@ -40,10 +40,10 @@ class _DNSObject extends cmdbAbstractObject
 		switch ($sOperation)
 		{
 			case 'delegate':
-				return ('UI:IPManagement:Action:Delegate:'.$sClass.':');
+				return ('UI:IPManagement:Action:Delegate:'.$sClass);
 
 			case 'allocateip':
-				return ('UI:IPManagement:Action:Allocate:'.$sClass.':');
+				return ('UI:IPManagement:Action:Allocate:'.$sClass);
 				
 			default:
 				return (':');
@@ -61,17 +61,15 @@ class _DNSObject extends cmdbAbstractObject
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function SetPageTitles(WebPage $oP, $sUIPath, $bIcon = true)
-	{
+	public function SetPageTitles(WebPage $oP, $sUIPath, $bIcon = true) {
 		$sClassLabel = MetaModel::GetName(get_class($this));
-		$oP->set_title(Dict::Format($sUIPath.'PageTitle_Object_Class', $this->GetName(), $sClassLabel));
+		$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel));
 		$oP->add("<div class=\"page_header teemip_page_header\">\n");
 		$sIcon = '';
-		if ($bIcon)
-		{
+		if ($bIcon) {
 			$sIcon = $this->GetIcon()."&nbsp;";
 		}
-		$oP->add("<h1>".$sIcon.Dict::Format($sUIPath.'Title_Class_Object', $sClassLabel, $this->GetName())."</h1>\n");
+		$oP->add("<h1>".$sIcon.Dict::Format($sUIPath.':Title_Class_Object', $sClassLabel, $this->GetName())."</h1>\n");
 		$oP->add("</div>\n");
 	}
 
@@ -94,14 +92,14 @@ class _DNSObject extends cmdbAbstractObject
 
 		// Make sure action can be performed
 		$CheckOperation = $this->DoCheckOperation($sOperation);
-		if ($CheckOperation != '')
-		{
+		if ($CheckOperation != '') {
 			// Found issues: explain and display block again
 			// No search bar (2.5 standard)
 
-			$sIssueDesc = Dict::Format($sUIPath.$CheckOperation);
+			$sIssueDesc = Dict::Format($sUIPath.':'.$CheckOperation);
 			cmdbAbstractObject::SetSessionMessage($sClass, $id, $sOperation, $sIssueDesc, 'error', 0, true /* must not exist */);
 			$this->DisplayDetails($oP);
+
 			return;
 		}
 
