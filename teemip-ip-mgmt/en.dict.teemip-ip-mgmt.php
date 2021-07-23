@@ -10,17 +10,6 @@
 //
 
 //
-// TeemIp specific attributes
-//
-
-Dict::Add('EN US', 'English', 'English', array(
-	'Core:AttributeIPPercentage' => 'IP percentage',
-	'Core:AttributeIPPercentage+' => 'Graphical display for percentage of usage',
-	'Core:AttributeMacAddress' => 'MAC address',
-	'Core:AttributeMacAddress+' => 'MAC adress string',
-));
-
-//
 // Class: IPObject
 //
 
@@ -120,8 +109,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization: </font>%1$s',
 	'Class:IPBlock/Attribute:name' => 'Name',
 	'Class:IPBlock/Attribute:name+' => '',
-	'Class:IPBlock/Attribute:type' => 'Type',
-	'Class:IPBlock/Attribute:type+' => 'Type of Subnet Block',
+	'Class:IPBlock/Attribute:ipblocktype_id' => 'Type',
+	'Class:IPBlock/Attribute:ipblocktype_id+' => 'Type of Subnet Block',
+	'Class:IPBlock/Attribute:ipblocktype_name' => 'Type name',
+	'Class:IPBlock/Attribute:ipblocktype_name+' => '',
 	'Class:IPBlock/Attribute:allocation_date' => 'Allocation date',
 	'Class:IPBlock/Attribute:allocation_date+' => 'Date when Subnet Block has been allocated',
 	'Class:IPBlock/Attribute:parent_org_id' => 'Delegated from',
@@ -801,6 +792,21 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: IPBlockType
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:IPBlockType' => 'IP Block Type',
+	'Class:IPBlockType+' => 'Type of block',
+	'Class:IPBlockType/Attribute:name' => 'Name',
+	'Class:IPBlockType/Attribute:name+' => '',
+	'Class:IPBlockType/Attribute:description' => 'Description',
+	'Class:IPBlockType/Attribute:description+' => '',
+	'Class:IPBlockType/Attribute:blocks_list' => 'Blocks',
+	'Class:IPBlockType/Attribute:blocks_list+' => 'Subnet blocks of that type',
+));
+
+//
 // Class: IPTriggerOnWaterMark
 //
 
@@ -899,10 +905,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Options+' => 'Parameters',
 	'Menu:IPConfig' => 'Global IP Settings',
 	'Menu:IPConfig+' => 'Global parameters for the IP related objects',
-	'Menu:IPRangeUsage' => 'IP Range Types',
-	'Menu:IPRangeUsage+' => 'IP Range Usage Types',
-	'Menu:IPUsage' => 'IP Types',
-	'Menu:IPUsage+' => 'IP Usage Types',
+	'Menu:IPRangeUsage' => 'IP Range Usage',
+	'Menu:IPRangeUsage+' => '',
+	'Menu:IPUsage' => 'IP Usage',
+	'Menu:IPUsage+' => '',
+	'Menu:IPBlockType' => 'IP Block Type',
+	'Menu:IPBlockType+' => '',
 	'Menu:Domain' => 'Domains',
 	'Menu:Domain+' => 'Domain Names',
 	'Menu:IPTemplate' => 'Templates IP',
@@ -945,7 +953,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPBlock:BlockAccrossBorder' => 'A child subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Shrink:IPBlock:SubnetAccrossBorder' => 'A subnet attached to the block sits accros new borders!',
 	'UI:IPManagement:Action:Shrink:IPBlock:SubnetBecomesOrhpean' => 'Child subnets won\'t have parent block after shrink!',
-	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk.',
+	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s %2$s has been shrunk.',
 
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPBlock:IPOutOfBlock' => 'Split IP is out of block!',
@@ -955,7 +963,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPBlock:SubnetAccrossBorder' => 'A subnet attached to the block sits accros new borders!',
 	'UI:IPManagement:Action:Split:IPBlock:EmptyNewName' => 'Name of new Subnet Block is empty!',
 	'UI:IPManagement:Action:Split:IPBlock:NameExist' => 'Name of new Subnet Block already exists!',
-	'UI:IPManagement:Action:Split:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been split.',
+	'UI:IPManagement:Action:Split:IPBlock:Done' => '%1$s %2$s has been split.',
 
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPBlock:Reverted' => 'New first IP of Subnet Block is higher than new last IP!',
@@ -966,7 +974,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPBlock:DelegatedBlockAccrossBorder' => 'The block cannot take over a delegated block!',
 	'UI:IPManagement:Action:Expand:IPBlock:BlockAccrossBorder' => 'A brother subnet block sits accros new borders!',
 	'UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder' => 'A subnet attached to parent block sits accross new borders',
-	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded.',
+	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s %2$s has been expanded.',
 
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:DoFindSpace:IPBlock:RequestedSpaceBiggerThanBlockSize' => 'IP address to look space from belongs to subnet block %1$s and the requested space is larger than the size of that block!',
@@ -1025,7 +1033,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be shrunk!',
 	'UI:IPManagement:Action:Shrink:IPv4Block:CannotBeShrunk' => 'Block cannot be shrunk: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
-	'UI:IPManagement:Action:Shrink:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk.',
+	'UI:IPManagement:Action:Shrink:IPv4Block:Done' => '%1$s %2$s has been shrunk.',
 
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPv4Block' => 'Split',
@@ -1039,7 +1047,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be split!',
 	'UI:IPManagement:Action:Split:IPv4Block:CannotBeSplit' => 'Block cannot be split: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
-	'UI:IPManagement:Action:Split:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been split.',
+	'UI:IPManagement:Action:Split:IPv4Block:Done' => '%1$s %2$s has been split.',
 
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPv4Block' => 'Expand',
@@ -1053,7 +1061,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Block:IsDelegated' => 'This block is delegated and therefore cannot be expanded!',
 	'UI:IPManagement:Action:Expand:IPv4Block:CannotBeExpanded' => 'Block cannot be expanded: %1$s',
 	'UI:IPManagement:Action:Expand:IPv4Block:SmallerThanMinSize' => 'Block size cannot be smaller than %1$s!',
-	'UI:IPManagement:Action:Expand:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded.',
+	'UI:IPManagement:Action:Expand:IPv4Block:Done' => '%1$s %2$s has been expanded.',
 
 	// List space action on subnet blocks 
 	'UI:IPManagement:Action:ListSpace:IPv4Block' => 'List Space',
