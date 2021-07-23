@@ -14,54 +14,50 @@ use DisplayBlock;
 use DNSObject;
 use IPConfig;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
 use utils;
 use WebPage;
 
-class _Domain extends DNSObject
-{
+class _Domain extends DNSObject implements iTree {
 	/**
 	 * Returns index to be used within tree computations
 	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
-	public function GetIndexForTree()
-	{
+	public function GetIndexForTree() {
 		return $this->GetName();
 	}
 
 	/**
 	 * Display domain as tree leaf
 	 *
-	 * @param \WebPage $oP
 	 * @param bool $bWithIcon
 	 * @param $iTreeOrgId
 	 *
+	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP, $bWithIcon, $iTreeOrgId)
-	{
-		$oP->add($this->GetHyperlink());
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
+		$sHtml = '';
+		$sHtml .= $this->GetHyperlink();
 
 		// Display delegation information if required
 		$iOrgId = $this->Get('org_id');
 		$iParentOrgId = $this->Get('parent_org_id');
-		if ($iParentOrgId != 0)
-		{
-			if ($iTreeOrgId == $iOrgId)
-			{
+		if ($iParentOrgId != 0) {
+			if ($iTreeOrgId == $iOrgId) {
 				// Domain is delegated from parent org
-				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:Domain:DelegatedFromParent',$this->GetAsHTML('parent_org_id')));
-			}
-			else
-			{
+				$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:Domain:DelegatedFromParent', $this->GetAsHTML('parent_org_id'));
+			} else {
 				// Domain is delegated to child org
-				$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:Domain:DelegatedToChild',$this->GetAsHTML('org_id')));
+				$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:Domain:DelegatedToChild', $this->GetAsHTML('org_id'));
 			}
 		}
 
+		return $sHtml;
 	}
 
 	/**
@@ -79,21 +75,18 @@ class _Domain extends DNSObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
-	{
+	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
-		
+
 		$sOrgId = $this->Get('org_id');
-		if (!$this->IsNew())
-		{
+		if (!$this->IsNew()) {
 			$sDomainName = $this->GetName();
 			$iDomainKey = $this->GetKey();
-			
+
 			// Tab for hosts in the domain
 			$iHostsFilter = intval(utils::ReadParam('host_filter', '0'));
-			switch ($iHostsFilter)
-			{
+			switch ($iHostsFilter) {
 				case 1:
 					// All hosts strictly under domain
 					$sOQL = "SELECT IPAddress AS i WHERE i.domain_name = :domain_name AND i.org_id = :org_id";
@@ -114,43 +107,40 @@ class _Domain extends DNSObject
 					$sTitle = Dict::Format('Class:Domain/Tab:hosts/List0');
 					break;
 			}
-			$oHostsSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain_name' => $sDomainName, 'domain_family' => '%'.$sDomainName, 'org_id' => $sOrgId));
+			$oHostsSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array(
+				'domain_name' => $sDomainName,
+				'domain_family' => '%'.$sDomainName,
+				'org_id' => $sOrgId,
+			));
 			// Open tab first
-			if ($oHostsSet->CountExceeds(0))
-			{
+			if ($oHostsSet->CountExceeds(0)) {
 				$oP->SetCurrentTab(Dict::Format('Class:Domain/Tab:hosts').' ('.$oHostsSet->Count().')');
 				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.$sTitle);
-			}
-			else
-			{
+			} else {
 				$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:hosts'));
 				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 			}
 			// Then, display form to select list of hosts if domain is not in edition
-			if (!$bEditMode)
-			{
+			if (!$bEditMode) {
 				$oP->add('<div style="padding: 15px; background: #ddd;">');
 				$oP->add("<form>");
 				$oP->add("<table border=0>");
 
 				$oP->add("<tr>");
 				$sChecked = ($iHostsFilter == 0) ? 'checked' : '';
-				if (!$sChecked)
-				{
+				if (!$sChecked) {
 					$oP->add("<td>");
 					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"0\">".Dict::S('Class:Domain/Tab:hosts/SelectList0').'</label>');
 					$oP->add("</td>");
 				}
 				$sChecked = ($iHostsFilter == 1) ? 'checked' : '';
-				if (!$sChecked)
-				{
+				if (!$sChecked) {
 					$oP->add("<td>");
 					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"1\">".Dict::S('Class:Domain/Tab:hosts/SelectList1').'</label>');
 					$oP->add("</td>");
 				}
 				$sChecked = ($iHostsFilter == 2) ? 'checked' : '';
-				if (!$sChecked)
-				{
+				if (!$sChecked) {
 					$oP->add("<td>");
 					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"2\">".Dict::S('Class:Domain/Tab:hosts/SelectList2').'</label>');
 					$oP->add("</td>\n");
@@ -172,100 +162,87 @@ class _Domain extends DNSObject
 			}
 
 			// Display list of hosts if not empty
-			if ($oHostsSet->CountExceeds(0))
-			{
+			if ($oHostsSet->CountExceeds(0)) {
 				$oBlock = new DisplayBlock($oHostsSet->GetFilter(), 'list', false);
 				$oBlock->Display($oP, 'child_hosts', array('menu' => false));
 			}
 
 			// Tab for child domains
 			$sOQL = "SELECT Domain AS dc JOIN Domain AS dp ON dc.parent_id BELOW dp.id WHERE dp.id = :domain_id AND dc.id != :domain_id";
-			$oDomainsSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain_id' => $iDomainKey));
-			if ($oDomainsSet->CountExceeds(0))
-			{
+			$oDomainsSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain_id' => $iDomainKey));
+			if ($oDomainsSet->CountExceeds(0)) {
 				$oP->SetCurrentTab(Dict::Format('Class:Domain/Tab:child_domain').' ('.$oDomainsSet->Count().')');
 				$oP->p(MetaModel::GetClassIcon('Domain').'&nbsp;'.Dict::Format('Class:Domain/Tab:child_domain+'));
 				$oBlock = new DisplayBlock($oDomainsSet->GetFilter(), 'list', false);
 				$oBlock->Display($oP, 'child_domains', array('menu' => false));
-			}
-			else
-			{
+			} else {
 				$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:child_domain'));
 				$oP->p(MetaModel::GetClassIcon('Domain').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 			}
 
 			// Tab for related zones
-			if (class_exists('Zone'))
-			{
+			if (class_exists('Zone')) {
 				$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
-				$oZonesSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $this->GetName()));
+				$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $this->GetName()));
 				$iZones = $oZonesSet->Count();
-				if ($iZones > 0)
-				{
+				if ($iZones > 0) {
 					$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:zones_list').' ('.$iZones.')');
 					$oP->p(MetaModel::GetClassIcon('Zone').'&nbsp;'.Dict::S('Class:Domain/Tab:zones_list+'));
 					$oBlock = new DisplayBlock($oZonesSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'associated_zones', array('menu' => false));
-				}
-				else
-				{
+				} else {
 					$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:zones_list'));
 					$oP->p(MetaModel::GetClassIcon('Zone').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
 				}
 			}
 		}
 	}
-	
+
 	/**
 	 * Compute attributes before writing object
 	 *
 	 * @throws \CoreException
 	 */
-	public function ComputeValues()
-	{
+	public function ComputeValues() {
 		parent::ComputeValues();
 
 		$this->Set('name', static::ComputeFqdn($this->Get('name'), $this->Get('parent_name')));
 	}
-	
+
 	/**
 	 * Check validity of new IP attributes before creation
 	 *
 	 * @throws \CoreException
 	 */
-	public function DoCheckToWrite()
-	{
+	public function DoCheckToWrite() {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
-		
+
 		$sOrgId = $this->Get('org_id');
 		$sOriginalOrgId = $this->GetOriginal('org_id');
 		$iKey = $this->GetKey();
 		$sDomain = $this->Get('name');
 
 		// If organization is changing, make sure domain has no host, no child domain and no associated zone.
-		if ($sOrgId != $sOriginalOrgId)
-		{
+		if ($sOrgId != $sOriginalOrgId) {
 			$sOQL = "SELECT Domain AS d WHERE d.parent_id = :key";
 			$oChildDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('key' => $iKey));
-			if ($oChildDomainSet->CountExceeds(0))
-			{
+			if ($oChildDomainSet->CountExceeds(0)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasChildren');
+
 				return;
 			}
 			$sOQL = "SELECT IPAddress AS i WHERE i.domain_name LIKE :domain AND i.org_id = :org_id";
 			$oHostSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain' => '%'.$sDomain, 'org_id' => $sOrgId));
-			if ($oHostSet->CountExceeds(0))
-			{
+			if ($oHostSet->CountExceeds(0)) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasHosts');
+
 				return;
 			}
-			if (MetaModel::IsValidClass('Zone'))
-			{
+			if (MetaModel::IsValidClass('Zone')) {
 				$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
 				$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $sDomain));
-				if ($oZonesSet->CountExceeds(0))
-				{
+				if ($oZonesSet->CountExceeds(0)) {
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasZones');
 
 					return;
@@ -275,31 +252,27 @@ class _Domain extends DNSObject
 
 		// Make sure domain doesn't already exit
 		$oDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Domain AS d WHERE d.name = '$sDomain' AND d.org_id = $sOrgId"));
-		while ($oDomain = $oDomainSet->Fetch())
-		{
+		while ($oDomain = $oDomainSet->Fetch()) {
 			// Check if it's a creation or a modification
-			if ($iKey != $oDomain->GetKey())
-			{
+			if ($iKey != $oDomain->GetKey()) {
 				// It's a creation
 				//  If class View exist
 				//	 If domain is not created in the same view, accept it.
 				//   Deny it otherwise
 				$bDenyCreation = true;
-				if  (MetaModel::IsValidClass('View'))
-				{
-					if ($this->Get('view_id') != $oDomain->Get('view_id'))
-					{
+				if (MetaModel::IsValidClass('View')) {
+					if ($this->Get('view_id') != $oDomain->Get('view_id')) {
 						$bDenyCreation = false;
-					}                                     
+					}
 				}
-				if ($bDenyCreation)
-				{
+				if ($bDenyCreation) {
 					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:Domain:NameCollision');
+
 					return;
 				}
 			}
 		}
-		
+
 	}
 
 	/**
@@ -315,8 +288,7 @@ class _Domain extends DNSObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToDelegate($aParam)
-	{
+	function DoCheckToDelegate($aParam) {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iDomainId = $this->GetKey();
@@ -324,33 +296,28 @@ class _Domain extends DNSObject
 		$sDomain = $this->Get('name');
 
 		//  Make sure that new child organization is different from the current one
-		if ($iChildOrgId == $iOrgId)
-		{
+		if ($iChildOrgId == $iOrgId) {
 			return (Dict::Format('UI:IPManagement:Action:Delegate:Domain:NoChangeOfOrganization'));
 		}
 
 		// Make sure domain has no host
 		$sOQL = "SELECT IPAddress AS i WHERE i.domain_name LIKE :domain AND i.org_id = :org_id";
 		$oHostSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain' => '%'.$sDomain, 'org_id' => $iOrgId));
-		if ($oHostSet->CountExceeds(0))
-		{
+		if ($oHostSet->CountExceeds(0)) {
 			return (Dict::Format('UI:IPManagement:Action:Delegate:Domain:HasHosts'));
 		}
 
 		// Make sure domain has no sub domains
 		$oSubDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Domain AS d WHERE d.parent_id = $iDomainId"));
-		if ($oSubDomainSet->CountExceeds(0))
-		{
+		if ($oSubDomainSet->CountExceeds(0)) {
 			return (Dict::Format('UI:IPManagement:Action:Delegate:Domain:HasSubDomains'));
 		}
 
 		// Make sure no zone exists for that domain
-		if (MetaModel::IsValidClass('Zone'))
-		{
+		if (MetaModel::IsValidClass('Zone')) {
 			$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
 			$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $sDomain));
-			if ($oZonesSet->CountExceeds(0))
-			{
+			if ($oZonesSet->CountExceeds(0)) {
 				return (Dict::Format('UI:IPManagement:Action:Delegate:Domain:HasZones'));
 			}
 		}
@@ -364,12 +331,11 @@ class _Domain extends DNSObject
 	 *
 	 * @throws \CoreException
 	 */
-	public function IsDelegated()
-	{
-		if ($this->Get('parent_org_id') != 0)
-		{
+	public function IsDelegated() {
+		if ($this->Get('parent_org_id') != 0) {
 			return true;
 		}
+
 		return false;
 	}
 
@@ -385,8 +351,7 @@ class _Domain extends DNSObject
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoDelegate($aParam)
-	{
+	public function DoDelegate($aParam) {
 		$iOrgId = $this->Get('org_id');
 		$iChildOrgId = $aParam['child_org_id'];
 
@@ -396,13 +361,12 @@ class _Domain extends DNSObject
 
 		// Display result as array
 		$oSet = CMDBobjectSet::FromArray('Domain', array($this));
+
 		return ($oSet);
 	}
 
 	/**
 	 * Check if domain can be undelegated
-	 *
-	 * @param $aParam
 	 *
 	 * @return string
 	 * @throws \ArchivedObjectException
@@ -412,41 +376,35 @@ class _Domain extends DNSObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckToUndelegate($aParam)
-	{
+	public function DoCheckToUndelegate() {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iDomainId = $this->GetKey();
 		$sDomain = $this->Get('name');
 
 		// Make sure domain is already delegated
-		if ($this->Get('parent_org_id') == 0)
-		{
+		if ($this->Get('parent_org_id') == 0) {
 			return (Dict::Format('UI:IPManagement:Action:Undelegate:Domain:IsNotDelegated'));
 		}
 
 		// Make sure domain has no host
 		$sOQL = "SELECT IPAddress AS i WHERE i.domain_name LIKE :domain AND i.org_id = :org_id";
 		$oHostSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain' => '%'.$sDomain, 'org_id' => $iOrgId));
-		if ($oHostSet->CountExceeds(0))
-		{
+		if ($oHostSet->CountExceeds(0)) {
 			return (Dict::Format('UI:IPManagement:Action:Undelegate:Domain:HasHosts'));
 		}
 
 		// Make sure domain has no sub domains
 		$oSubDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Domain AS d WHERE d.parent_id = $iDomainId"));
-		if ($oSubDomainSet->CountExceeds(0))
-		{
+		if ($oSubDomainSet->CountExceeds(0)) {
 			return (Dict::Format('UI:IPManagement:Action:Undelegate:Domain:HasSubDomains'));
 		}
 
 		// Make sure no zone exists for that domain
-		if (MetaModel::IsValidClass('Zone'))
-		{
+		if (MetaModel::IsValidClass('Zone')) {
 			$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
 			$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $sDomain));
-			if ($oZonesSet->CountExceeds(0))
-			{
+			if ($oZonesSet->CountExceeds(0)) {
 				return (Dict::Format('UI:IPManagement:Action:Undelegate:Domain:HasZones'));
 			}
 		}
@@ -458,8 +416,6 @@ class _Domain extends DNSObject
 	/**
 	 * Undelegate domain
 	 *
-	 * @param $aParam
-	 *
 	 * @return \CMDBObjectSet|\DBObjectSet
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
@@ -467,8 +423,7 @@ class _Domain extends DNSObject
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoUndelegate($aParam)
-	{
+	public function DoUndelegate() {
 		$iParentOrgId = $this->Get('parent_org_id');
 
 		$this->Set('parent_org_id', 0);
@@ -477,6 +432,7 @@ class _Domain extends DNSObject
 
 		// Display result as array
 		$oSet = CMDBobjectSet::FromArray('Domain', array($this));
+
 		return ($oSet);
 	}
 
@@ -489,13 +445,12 @@ class _Domain extends DNSObject
 	 * @return bool|int
 	 * @throws \CoreException
 	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-	{
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
 		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
-		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes))
-		{
+		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes)) {
 			return OPT_ATT_HIDDEN || OPT_ATT_READONLY;
 		}
+
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
 
@@ -507,13 +462,12 @@ class _Domain extends DNSObject
 	 * @return int
 	 * @throws \CoreException
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		$aReadOnlyAttributes = array('parent_org_id', 'parent_id');
-		if (in_array($sAttCode, $aReadOnlyAttributes))
-		{
+		if (in_array($sAttCode, $aReadOnlyAttributes)) {
 			return OPT_ATT_READONLY;
 		}
+
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 
@@ -530,37 +484,27 @@ class _Domain extends DNSObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckOperation($sOperation)
-	{
-		switch($sOperation)
-		{
+	public function DoCheckOperation($sOperation) {
+		switch ($sOperation) {
 			case 'delegate':
 				// If domain is delegated, deny re-delegation
 				// If delegation can be done to children orgs only,
 				// 		Check if block's org has children
 				// If not
 				// 		Check if another organisation exists
-				if ($this->Get('parent_org_id') != 0)
-				{
+				if ($this->Get('parent_org_id') != 0) {
 					return ('IsDelegated');
-				}
-				else
-				{
+				} else {
 					$iOrgId = $this->Get('org_id');
 					$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_domain_to_children_only', $iOrgId);
-					if ($sDelegateToChildrenOnly == 'dtc_yes')
-					{
+					if ($sDelegateToChildrenOnly == 'dtc_yes') {
 						$oOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = $iOrgId AND child.id != $iOrgId"));
-						if (!$oOrgSet->CountExceeds(0))
-						{
+						if (!$oOrgSet->CountExceeds(0)) {
 							return ('NoChildOrg');
 						}
-					}
-					else
-					{
+					} else {
 						$oOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.id != $iOrgId"));
-						if (!$oOrgSet->CountExceeds(0))
-						{
+						if (!$oOrgSet->CountExceeds(0)) {
 							return ('NoOtherOrg');
 						}
 					}
@@ -573,6 +517,7 @@ class _Domain extends DNSObject
 			default:
 				return ('OperationNotAllowed');
 		}
+
 		return '';
 	}
 
@@ -590,28 +535,23 @@ class _Domain extends DNSObject
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault)
-	{
+	public function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
 		$aDetails = array();
-		switch ($sOperation)
-		{
+		switch ($sOperation) {
 			case 'delegate':
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:Domain:ChildDomain');
 
 				$iOrgId = $this->Get('org_id');
 				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_domain_to_children_only', $iOrgId);
-				if ($sDelegateToChildrenOnly == 'dtc_yes')
-				{
+				if ($sDelegateToChildrenOnly == 'dtc_yes') {
 					// Domain can only be delegated to children (or grand children) organization
 					// Get block's children (list should not be empty at this stage)
 					// Block is not already delegated (checked previously) so it can be delegated to child organization
 					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = $iOrgId AND child.id != $iOrgId"));
-				}
-				else
-				{
+				} else {
 					// Block can be delegated to any organization
 					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.id != $iOrgId"));
 				}
@@ -620,16 +560,12 @@ class _Domain extends DNSObject
 				$sAttCode = 'child_org_id';
 				$sInputId = $iFormId.'_'.$sAttCode;
 				$sHTMLValue = "<select id=\"$sInputId\" name=\"child_org_id\">\n";
-				while ($oChildOrg = $oChildOrgSet->Fetch())
-				{
+				while ($oChildOrg = $oChildOrgSet->Fetch()) {
 					$iChildOrgKey = $oChildOrg->GetKey();
 					$sChildOrgName = $oChildOrg->GetName();
-					if ($iChildOrgKey == $iOrgId)
-					{
+					if ($iChildOrgKey == $iOrgId) {
 						$sHTMLValue .= "<option selected='' value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
-					}
-					else
-					{
+					} else {
 						$sHTMLValue .= "<option value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
 					}
 				}
@@ -661,14 +597,15 @@ class _Domain extends DNSObject
 	 *
 	 * @return string
 	 */
-	public function GetNextOperation($sOperation)
-	{
-		switch ($sOperation)
-		{
-			case 'delegate': return 'dodelegate';
-			case 'dodelegate': return 'delegate';
+	public function GetNextOperation($sOperation) {
+		switch ($sOperation) {
+			case 'delegate':
+				return 'dodelegate';
+			case 'dodelegate':
+				return 'delegate';
 
-			default: return '';
+			default:
+				return '';
 		}
 	}
 
@@ -679,11 +616,9 @@ class _Domain extends DNSObject
 	 *
 	 * @return array
 	 */
-	public function GetPostedParam($sOperation)
-	{
+	public function GetPostedParam($sOperation) {
 		$aParam = array();
-		switch ($sOperation)
-		{
+		switch ($sOperation) {
 			case 'dodelegate':
 				$aParam['child_org_id'] = utils::ReadPostedParam('child_org_id', '', 'raw_data');
 				break;
@@ -691,6 +626,7 @@ class _Domain extends DNSObject
 			default:
 				break;
 		}
+
 		return $aParam;
 	}
 
