@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
-use TeemIp\TeemIp\Extension\IPManagement\Controller\DisplayTree;
+use TeemIp\TeemIp\Extension\Framework\Controller\DisplayTree;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /*******************************************************************
@@ -532,7 +532,7 @@ try {
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
 				} else {
 					// Expand object
-					$oNewObj = $oObj->DoExpand($aPostedParam);
+					$oObj->DoExpand($aPostedParam);
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
@@ -546,7 +546,7 @@ try {
 							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					TeemIpUI::DisplaySuccessMessage($oP, $sMessage);
-					$oNewObj->DisplayDetails($oP);
+					$oObj->DisplayDetails($oP);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
