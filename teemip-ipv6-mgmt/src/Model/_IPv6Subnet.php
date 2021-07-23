@@ -19,6 +19,7 @@ use IPConfig;
 use IPSubnet;
 use IPUsage;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
 use UserRights;
 use utils;
 use WebPage;
@@ -27,7 +28,7 @@ use WebPage;
  * Class
  * _IPv6Subnet
  */
-class _IPv6Subnet extends IPSubnet {
+class _IPv6Subnet extends IPSubnet implements iTree {
 	/**
 	 * Return standard icon or extra small one
 	 *
@@ -799,18 +800,16 @@ EOF
 	/**
 	 * Display subnet in the node of a hierarchical tree
 	 *
-	 * @param \WebPage $oP
-	 * @param $bWithIcon
-	 * @param $iTreeOrgId
-	 *
+	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
-		$oP->add($sHtml);
+
+		return $sHtml;
 	}
 
 	/**
