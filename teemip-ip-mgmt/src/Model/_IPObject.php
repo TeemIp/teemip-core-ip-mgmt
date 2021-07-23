@@ -7,15 +7,20 @@
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSearch;
 use Dict;
+use DisplayBlock;
 use IPConfig;
 use MenuBlock;
 use MetaModel;
@@ -27,8 +32,11 @@ class _IPObject extends cmdbAbstractObject {
 	 * Provides attributes' parameters
 	 *
 	 * @param $sAttCode
+	 *
+	 * @return array
 	 */
 	public function GetAttributeParams($sAttCode) {
+		return (array());
 	}
 
 	/**
@@ -72,7 +80,7 @@ class _IPObject extends cmdbAbstractObject {
 		$CheckOperation = $this->DoCheckOperation($sOperation);
 		if ($CheckOperation != '') {
 			// Found issues: explain and display block again
-			$sIssueDesc = Dict::Format($sUIPath.$CheckOperation);
+			$sIssueDesc = Dict::Format($sUIPath.':'.$CheckOperation);
 			cmdbAbstractObject::SetSessionMessage($sClass, $id, $sOperation, $sIssueDesc, 'error', 0, true /* must not exist */);
 			$this->DisplayDetails($oP);
 
@@ -97,14 +105,7 @@ class _IPObject extends cmdbAbstractObject {
 			$oP->add("<form action=\"$sFormAction\" id=\"form_{$m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$m_iFormId}');\">\n");
 			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
-			if (in_array($sOperation, array(
-				'shrinkblock',
-				'shrinksubnet',
-				'splitblock',
-				'splitsubnet',
-				'expandblock',
-				'expandsubnet',
-			))) {
+			if (in_array($sOperation, array('shrinkblock', 'shrinksubnet', 'splitblock', 'splitsubnet', 'expandblock', 'expandsubnet'))) {
 				// Display main tab
 				$oP->AddTabContainer(OBJECT_PROPERTIES_TAB);
 				$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
@@ -136,16 +137,16 @@ class _IPObject extends cmdbAbstractObject {
 			$sState = $this->GetState();
 			$oP->add_script(
 				<<<EOF
-		// Create the object once at the beginning of the page...
-		var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
-		oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
-		oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
+				// Create the object once at the beginning of the page...
+				var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
+				oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
+				oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
 EOF
 			);
-		} else {
+		} elseif (version_compare(ITOP_DESIGN_LATEST_VERSION, '4.0', '>')) {
 			// Prepare form
 			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-			$sTitle = Dict::Format($sUIPath.'Title_Class_Object', $sClassLabel, $this->GetName());
+			$sTitle = Dict::Format($sUIPath.':Title_Class_Object', $sClassLabel, $this->GetName());
 
 			$oP->set_title($sTitle);
 			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
@@ -170,9 +171,57 @@ EOF
 
 			$oP->add_ready_script(
 				<<<EOF
-	$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $id) } );
+				$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $id) } );
 EOF
 			);
+		} else {
+			// Prepare form
+			$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName()));
+
+			$iTransactionId = utils::GetNewTransactionId();
+			$oP->SetTransactionId($iTransactionId);
+
+			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+			$oContentBlock = new UIContentBlock();
+			$oP->AddUiBlock($oContentBlock);
+
+			$oForm = FormUIBlockFactory::MakeStandard();
+			$oContentBlock->AddSubBlock($oForm);
+
+			$oForm->AddHtml($oAppContext->GetForForm())
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sNextOperation))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $id))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Block', '{$id}', '', '{null}');");
+			$oCancelButton->AddCSSClasses(['action', 'cancel']);
+			$oToolbarButtons->AddSubBlock($oCancelButton);
+			$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+			$oApplyButton->AddCSSClass('action');
+			$oToolbarButtons->AddSubBlock($oApplyButton);
+
+			$oObjectDetails = ObjectFactory::MakeDetails($this);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
+			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
+
+			$oForm->AddSubBlock($oObjectDetails);
+
+			// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
+			$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
+			$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+			$oP->SetCurrentTab(Dict::S($sUIPath));
+
+			// Display action fields and action buttons
+			$this->DisplayActionFieldsForOperationV3($oP, $oObjectDetails, $sOperation, $aDefault);
+
+			$oP->add_ready_script(
+				<<<EOF
+				$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $id) } );
+EOF
+			);
+
 		}
 	}
 
@@ -187,55 +236,55 @@ EOF
 		$sClass = get_class($this);
 		switch ($sOperation) {
 			case 'findspace':
-				return ('UI:IPManagement:Action:FindSpace:'.$sClass.':');
+				return ('UI:IPManagement:Action:FindSpace:'.$sClass);
 
 			case 'dofindspace':
-				return ('UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
+				return ('UI:IPManagement:Action:DoFindSpace:'.$sClass);
 
 			case 'listips':
-				return ('UI:IPManagement:Action:ListIps:'.$sClass.':');
+				return ('UI:IPManagement:Action:ListIps:'.$sClass);
 
 			case 'dolistips':
-				return ('UI:IPManagement:Action:DoListIps:'.$sClass.':');
+				return ('UI:IPManagement:Action:DoListIps:'.$sClass);
 
 			case 'shrinkblock':
 			case 'shrinksubnet':
 			case 'doshrinkblock':
 			case 'doshrinksubnet':
-				return ('UI:IPManagement:Action:Shrink:'.$sClass.':');
+				return ('UI:IPManagement:Action:Shrink:'.$sClass);
 
 			case 'splitblock':
 			case 'splitsubnet':
 			case 'dosplitblock':
 			case 'dosplitsubnet':
-				return ('UI:IPManagement:Action:Split:'.$sClass.':');
+				return ('UI:IPManagement:Action:Split:'.$sClass);
 
 			case 'expandblock':
 			case 'expandsubnet':
 			case 'doexpandblock':
 			case 'doexpandsubnet':
-				return ('UI:IPManagement:Action:Expand:'.$sClass.':');
+				return ('UI:IPManagement:Action:Expand:'.$sClass);
 
 			case 'csvexportips':
-				return ('UI:IPManagement:Action:CsvExportIps:'.$sClass.':');
+				return ('UI:IPManagement:Action:CsvExportIps:'.$sClass);
 
 			case 'docsvexportips':
-				return ('UI:IPManagement:Action:DoCsvExportIps:'.$sClass.':');
+				return ('UI:IPManagement:Action:DoCsvExportIps:'.$sClass);
 
 			case 'docalculator':
-				return ('UI:IPManagement:Action:DoCalculator:'.$sClass.':');
+				return ('UI:IPManagement:Action:DoCalculator:'.$sClass);
 
 			case 'calculator':
-				return ('UI:IPManagement:Action:Calculator:'.$sClass.':');
+				return ('UI:IPManagement:Action:Calculator:'.$sClass);
 
 			case 'delegate':
-				return ('UI:IPManagement:Action:Delegate:'.$sClass.':');
+				return ('UI:IPManagement:Action:Delegate:'.$sClass);
 
 			case 'allocateip':
-				return ('UI:IPManagement:Action:Allocate:'.$sClass.':');
+				return ('UI:IPManagement:Action:Allocate:'.$sClass);
 
 			default:
-				return (':');
+				return ('');
 		}
 	}
 
@@ -270,13 +319,13 @@ EOF
 	 */
 	public function SetPageTitles(WebPage $oP, $sUIPath, $bIcon = true) {
 		$sClassLabel = MetaModel::GetName(get_class($this));
-		$oP->set_title(Dict::Format($sUIPath.'PageTitle_Object_Class', $this->GetName(), $sClassLabel));
+		$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel));
 		$oP->add("<div class=\"page_header teemip_page_header\">\n");
 		$sIcon = '';
 		if ($bIcon) {
 			$sIcon = $this->GetIcon()."&nbsp;";
 		}
-		$oP->add("<h1>".$sIcon.Dict::Format($sUIPath.'Title_Class_Object', $sClassLabel,
+		$oP->add("<h1>".$sIcon.Dict::Format($sUIPath.':Title_Class_Object', $sClassLabel,
 				'<span class="hilite">'.$this->GetName().'</span>')."</h1>\n");
 		$oP->add("</div>\n");
 	}
@@ -385,6 +434,30 @@ EOF
 			$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
 			$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 			$oP->SetCurrentTab(Dict::Format($sTitle.$sClass, '', ''));
+		}
+	}
+
+	protected function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet) {
+		$iCount = $oSet->Count();
+		$sCount = ($iCount != 0) ? " ($iCount)" : "";
+		$oP->SetCurrentTab($sName.$sCount);
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
+			if ($iCount > 0) {
+				$oP->p($sInfoPanel);
+				$oBlock = new DisplayBlock($oSet->GetFilter(), 'list');
+				$oBlock->Display($oP, $sCode, array('menu' => false));
+			} else {
+				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+			}
+		} else {
+			$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
+			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-blocklist--medallion');
+			$oP->AddUiBlock($oClassIcon);
+			$oP->AddSubBlock(HtmlFactory::MakeParagraph(''))
+				->AddHtml($sInfoPanel);
+			$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
+			$oBlock->Display($oP, $sCode, array('menu' => false));
 		}
 	}
 
