@@ -20,12 +20,13 @@ use IPSubnet;
 use IPUsage;
 use IPv4Subnet;
 use MetaModel;
-use TeemIp\TeemIp\Extension\IPManagement\Controller\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
+use TeemIp\TeemIp\Extension\Framework\Controller\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;
 
-class _IPv4Subnet extends IPSubnet {
+class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * Return standard icon or extra small one
 	 *
@@ -1396,23 +1397,26 @@ EOF
 	/**
 	 * Display subnet in the node of a hierarchical tree
 	 *
-	 * @param \WebPage $oP
+	 * @param $bWithIcon
+	 * @param $iTreeOrgId
 	 *
+	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayAsLeaf(WebPage $oP) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
-		$oP->add($sHtml);
+
+		return $sHtml;
 	}
 
 	/**
 	 * Display attributes associated operation
 	 */
 	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).'Summary');
+		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
 		$oP->add('<table style="vertical-align:top"><tr>');
