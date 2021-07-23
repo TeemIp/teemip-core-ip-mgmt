@@ -7,9 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'TeemIp\\TeemIp\\Extension\\IPManagement\\Controller\\DisplayTree' => $baseDir . '/src/Controller/DisplayTree.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Controller\\FindSpace' => $baseDir . '/src/Controller/FindSpace.php',
-    'TeemIp\\TeemIp\\Extension\\IPManagement\\Controller\\TeemIpUtils' => $baseDir . '/src/Controller/TeemIpUtils.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\AllocateIPsToProductionCIs' => $baseDir . '/src/Hook/AllocateIPsToProductionCIs.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\IPMgmtExtraMenus' => $baseDir . '/src/Hook/IPMgmtExtraMenus.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\ReleaseIPsFromObsoleteCIs' => $baseDir . '/src/Hook/ReleaseIPsFromObsoleteCIs.php',
