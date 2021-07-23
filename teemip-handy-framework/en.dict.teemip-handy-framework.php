@@ -17,5 +17,5 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Core:AttributeIPPercentage' => 'IP percentage',
 	'Core:AttributeIPPercentage+' => 'Graphical display for percentage of usage',
 	'Core:AttributeMacAddress' => 'MAC address',
-	'Core:AttributeMacAddress+' => 'MAC adress string',
+	'Core:AttributeMacAddress+' => 'MAC address string',
 ));
