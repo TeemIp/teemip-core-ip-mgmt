@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace TeemIp\TeemIp\Extension\IPManagement\Controller;
+namespace TeemIp\TeemIp\Extension\Framework\Controller;
 
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
@@ -251,6 +251,8 @@ class DisplayTree {
 		$sHtml = '<ul>';
 		foreach ($aNodes as $oObject) {
 			$sHtml .= '<li>';
+			/** @var $oObject \TeemIp\TeemIp\Extension\Framework\Controller\iTree */
+			/** @var $oObject \cmdbAbstractObject */
 			$sHtml .= $oObject->GetAsLeaf($bWithIcon, $iOrgId);
 			if (get_class($oObject) == $sContainerClass) {
 				$sHtml .= DisplayTree::GetNode($iOrgId, $sContainerClass, $oObject->GetKey(), $sLeafClass);
