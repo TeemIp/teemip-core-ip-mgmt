@@ -22,12 +22,13 @@ use IPBlock;
 use IPConfig;
 use IPv4Subnet;
 use MetaModel;
-use TeemIp\TeemIp\Extension\IPManagement\Controller\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
+use TeemIp\TeemIp\Extension\Framework\Controller\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;
 
-class _IPv4Block extends IPBlock {
+class _IPv4Block extends IPBlock implements iTree {
 	/**
 	 * Returns icon to be displayed
 	 *
@@ -1067,7 +1068,6 @@ EOF
 	 *
 	 * @param $aParam
 	 *
-	 * @return $this
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
@@ -1244,7 +1244,7 @@ EOF
 		}
 		$sHtml .= "&nbsp;".$this->GetHyperlink();
 		$sHtml .= "&nbsp;&nbsp;&nbsp;[".$this->Get('firstip')." - ".$this->Get('lastip')."]";
-		$sHtml .= "&nbsp;&nbsp;&nbsp;".$this->GetAsHTML('iptype_name');
+		$sHtml .= "&nbsp;&nbsp;&nbsp;".$this->GetAsHTML('ipblocktype_name');
 
 		// Display delegation information if required
 		$iOrgId = $this->Get('org_id');
