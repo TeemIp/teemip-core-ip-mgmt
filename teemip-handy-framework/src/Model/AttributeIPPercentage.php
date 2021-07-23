@@ -12,7 +12,7 @@ class AttributeIPPercentage extends AttributeInteger
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
 		if ($oHostObject != null)
 		{
-			/** @var \IPObject $oHostObject */
+			/** @var $oHostObject TeemIp\TeemIp\Extension\IPManagement\Model\_IPObject */
 			$aParams = $oHostObject->GetAttributeParams($this->GetCode());
 			$sValue = $aParams ['value'];
 			$sColor = $aParams ['color'];
@@ -29,9 +29,8 @@ class AttributeIPPercentage extends AttributeInteger
 
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
 	{
-		if ($oHostObject != null)
-		{
-			/** @var \IPObject $oHostObject */
+		if ($oHostObject != null) {
+			/** @var $oHostObject TeemIp\TeemIp\Extension\IPManagement\Model\_IPObject */
 			$aParams = $oHostObject->GetAttributeParams($this->GetCode());
 			$sValue = $aParams ['value'];
 		}
