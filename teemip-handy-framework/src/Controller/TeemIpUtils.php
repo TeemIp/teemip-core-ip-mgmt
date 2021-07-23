@@ -4,17 +4,15 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-namespace TeemIp\TeemIp\Extension\IPManagement\Controller;
+namespace TeemIp\TeemIp\Extension\Framework\Controller;
 
-class TeemIpUtils
-{
+class TeemIpUtils {
 	/**
 	 * @param $sIp
 	 *
 	 * @return int
 	 */
-	public static function myip2long($sIp)
-	{
+	public static function myip2long($sIp) {
 		//return(($sIp == '255.255.255.255') ? MAX_IPV4_VALUE : ip2long($sIp)); // Doesn't work for IPs > 128.0.0.0
 		//return(($sIp == '255.255.255.255') ? MAX_IPV4_VALUE : sprintf("%u", ip2long($sIp))); // OK so far...
 		return (ip2long($sIp));
