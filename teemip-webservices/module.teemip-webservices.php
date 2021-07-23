@@ -16,7 +16,8 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-ip-mgmt/2.7.0'
+			'teemip-handy-framework/1.0.0',
+			'teemip-ip-mgmt/2.7.0',
 		),
 		'mandatory' => true,
 		'visible' => false,

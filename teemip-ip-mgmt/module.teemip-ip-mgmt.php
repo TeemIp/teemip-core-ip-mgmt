@@ -18,7 +18,8 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-tickets/2.7.0',
-			'teemip-network-mgmt/2.7.1'
+			'teemip-handy-framework/1.0.0',
+			'teemip-network-mgmt/2.7.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
