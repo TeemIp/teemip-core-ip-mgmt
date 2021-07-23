@@ -16,6 +16,7 @@ use IPBlock;
 use IPConfig;
 use IPv6Subnet;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
 use UserRights;
 use utils;
 use WebPage;
@@ -23,7 +24,7 @@ use WebPage;
 /**
  * Class _IPv6Block
  */
-class _IPv6Block extends IPBlock {
+class _IPv6Block extends IPBlock implements iTree {
 	/**
 	 * Returns icon to ne displayed
 	 *
@@ -776,7 +777,6 @@ EOF
 	 *
 	 * @param $aParam
 	 *
-	 * @return \CMDBObjectSet|\DBObjectSet
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
@@ -1102,7 +1102,6 @@ EOF
 	 *
 	 * @param $aParam
 	 *
-	 * @return \CMDBObjectSet|\DBObjectSet
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
