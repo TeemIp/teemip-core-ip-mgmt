@@ -411,7 +411,7 @@ EOF
 			$oBlock->Display($oP, 'baretab');
 
 			// Set titles
-			$this->SetPageTitles($oP, $sTitle.$sClass.':');
+			$this->SetPageTitles($oP, $sTitle.$sClass);
 		} else {
 			// The object can be read - Process request now
 			$sClassLabel = MetaModel::GetName($sClass);
