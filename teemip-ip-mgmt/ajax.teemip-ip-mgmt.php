@@ -30,8 +30,15 @@ try {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	$oP = new ajax_page("");
-	$oP->no_cache();
+	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+		$sVersion = '2x';
+		$oP = new ajax_page("");
+		$oP->no_cache();
+	} else {
+		$sVersion = '3x';
+		$oP = new AjaxPage("");
+		ContextTag::AddContext(ContextTag::TAG_CONSOLE);
+	}
 
 	$operation = utils::ReadParam('operation', '');
 	$iVId = utils::ReadParam('vid', '');
@@ -46,8 +53,13 @@ try {
 					$oObj->Set($sAttCode, $value);
 				}
 			}
-			$oP->add('<div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$iVId.'">');
-			$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sClass))."</h1>\n");
+			if ($sVersion == '2x') {
+				$oP->add('<div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$iVId.'">');
+				$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sClass))."</h1>\n");
+			} else {
+				$oP->SetContentType('text/html');
+				$oP->add('<div id="wizContainer"  style="vertical-align:top;"><div id="dcr_'.$iVId.'">');
+			}
 			cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, array(), array('noRelations' => true));
 			$oP->add('</div></div>');
 			$oP->add_ready_script("$('#dcr_{$iVId} form').removeAttr('onsubmit');");
@@ -76,12 +88,12 @@ try {
 					switch ($sClass) {
 						case 'IPv4Block':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
 							break;
 
 						case 'IPv4Subnet':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('changeid', '');
 							if ($iChangeId != 0) {
@@ -105,7 +117,7 @@ try {
 
 						case 'IPv4Range':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
 							break;
 
 						case 'IPv4Address':
@@ -123,12 +135,12 @@ try {
 
 						case 'IPv6Block':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
 							break;
 
 						case 'IPv6Subnet':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('changeid', '');
 							if ($iChangeId != 0) {
@@ -153,7 +165,7 @@ try {
 						case 'IPv6Range':
 						case 'IPv4Range':
 							$sIcon = $oObj->GetIcon(true, true);
-							$sResult = "&nbsp;".$sIcon.$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
+							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
 							break;
 
 						case 'IPv6Address':
@@ -232,6 +244,6 @@ try {
 
 	$oP->output();
 } catch (Exception $e) {
-	$oP->add($e->GetMessage());
-	IssueLog::Error($e->getMessage());
+	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
+	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
