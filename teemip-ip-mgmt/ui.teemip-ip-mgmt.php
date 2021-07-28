@@ -50,6 +50,7 @@ try {
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 	$oP->SetMessage($sLoginMessage);
 
+	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 	// All the following actions use advanced forms that require more javascript to be loaded
 	$oP->add_linked_script("../js/json.js");
 	$oP->add_linked_script("../js/forms-json-utils.js");
@@ -1177,7 +1178,7 @@ class TeemIpUI {
 	 */
 	public static function DisplaySuccessMessage(WebPage $oP, $sMessage) {
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
+			$sMessageContainer = "<div class=\"header_message message_ok teemip_message_status\">".$sMessage."</div>";
 			$oP->add($sMessageContainer);
 		} else {
 			$oPanel = PanelUIBlockFactory::MakeForSuccess('')
