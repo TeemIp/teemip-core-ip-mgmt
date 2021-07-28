@@ -3,65 +3,66 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-function IpWidget(id, sTargetClass, iChangeId, oDefault)
-{
+function IpWidget(id, sTargetClass, sTargetLabel, iChangeId, oDefault) {
 	this.id = id;
 	this.sTargetClass = sTargetClass;
+	this.sTargetLabel = sTargetLabel;
 	this.iChangeId = iChangeId;
 	this.oDefault = oDefault;
 	this.bCreationInProgress = false;
 	this.ajax_request = null;
 	this.v_html = '';
 	var me = this;
-	
-	this.Init = function()
-	{
+
+	this.Init = function () {
 	}
-	
-	this.StopPendingRequest = function()
-	{
-		if (me.ajax_request)
-		{
+
+	this.StopPendingRequest = function () {
+		if (me.ajax_request) {
 			me.ajax_request.abort();
 			me.ajax_request = null;
 		}
 	}
-	
-	this.DisplayCreationForm = function()
-	{
+
+	this.DisplayCreationForm = function () {
 		me.v_html = $('#v_'+me.id).html();
 		$('#v_'+me.id).html(me.v_html).append('<img src="'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/asset/img/ipindicator-xs.gif" />');
-		var theMap = { operation: 'get_ip_creation_form',
+		var theMap = {
+			operation: 'get_ip_creation_form',
 			vid: me.id,
 			class: me.sTargetClass,
 			default: me.oDefault
-			}
-		
+		}
+
 		// Make sure that we cancel any pending request before issuing another
 		// since responses may arrive in arbitrary order
 		me.StopPendingRequest();
-		
+
 		// Run the query
+		if ($('#dialog_content').length === 0) {
+			$('<div id="dialog_content"></div>').appendTo('body');
+		}
 		me.ajax_request = $.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php',
 			theMap,
-			function(data) {
+			function (data) {
 				$('#dialog_content').html(data);
-				$('#dialog_content').dialog({modal: true, width: 850});
-				$('#dialog_content').dialog( "option", "close", me.OnCloseCreateIpObject );			
+				$('#dialog_content').dialog({
+					title: Dict.Format('UI:CreationTitle_Class', me.sTargetLabel),
+					modal: true,
+					width: 850
+				});
+				$('#dialog_content').dialog("option", "close", me.OnCloseCreateIpObject);
 				// Modify the action of the cancel button
-				$('#dialog_content'+' button.cancel').unbind('click').click( me.CloseCreateIpObject );
+				$('#dialog_content'+' button.cancel').off('click').on('click', me.CloseCreateIpObject);
 				me.ajax_request = null;
 				// Adjust the dialog's size to fit into the screen
-				if ($('#dialog_content').width() > ($(window).width()-40))
-				{
+				if ($('#dialog_content').width() > ($(window).width()-40)) {
 					$('#dialog_content').width($(window).width()-40);
 				}
-				if ($('#dialog_content').height() > ($(window).height()-70))
-				{
+				if ($('#dialog_content').height() > ($(window).height()-70)) {
 					$('#dialog_content').height($(window).height()-70);
 				}
-				switch (me.sTargetClass)
-				{
+				switch (me.sTargetClass) {
 					// Warning: parameter '2' needs to be programmatically set
 					case 'IPv4Block':
 					case 'IPv4Block':
@@ -70,30 +71,30 @@ function IpWidget(id, sTargetClass, iChangeId, oDefault)
 						$('#2_parent_id').attr('readonly', true);
 						$('#2_firstip').attr('readonly', true);
 						$('#2_lastip').attr('readonly', true);
-					break;
-					
+						break;
+
 					case 'IPv6Subnet':
 					case 'IPv4Subnet':
 						$('#2_org_id').attr('readonly', true);
 						$('#2_block_id').attr('readonly', true);
 						$('#2_ip').attr('readonly', true);
 						$('#2_mask').attr('readonly', true);
-					break;
-					
+						break;
+
 					case 'IPv6Range':
 					case 'IPv4Range':
 						$('#2_org_id').attr('readonly', true);
 						$('#2_subnet_id').attr('readonly', true);
 						$('#2_firstip').attr('readonly', true);
 						$('#2_lastip').attr('readonly', true);
-					break;
-					
+						break;
+
 					case 'IPv4Address':
 					case 'IPv6Address':
 						$('#2_org_id').attr('readonly', true);
 						$('#2_ip').attr('readonly', true);
-					break;
-					
+						break;
+
 					default:
 				}
 				}
@@ -137,29 +138,28 @@ function IpWidget(id, sTargetClass, iChangeId, oDefault)
 			// Run the query
 			me.ajax_request = $.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php',
 				theMap,
-				function(data) {
+				function (data) {
 					// Insert newly created object in list
 					$('#v_'+me.id).html(data);
 					me.ajax_request = null;
-					}
-				);
+				}
+			);
 		}
 		return false; // do NOT submit the form 
 	}
-	
-	this.CloseCreateIpObject = function()
-	{
-		$('#dialog_content').dialog( "close" );
+
+	this.CloseCreateIpObject = function () {
+		$('#dialog_content').dialog("close");
 	}
-	
-	this.OnCloseCreateIpObject = function()
-	{
-		if (!me.bCreationInProgress)
-		{
+
+	this.OnCloseCreateIpObject = function () {
+		if (!me.bCreationInProgress) {
 			$('#v_'+me.id).html(me.v_html);
 		}
 		$('#dialog_content').dialog("destroy");
+		$('#dialog_content').remove();
 		me.ajax_request = null;
-		window.onbeforeunload = function() {};
+		window.onbeforeunload = function () {
+		};
 	}
 }
