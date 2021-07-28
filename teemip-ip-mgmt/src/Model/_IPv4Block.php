@@ -492,6 +492,8 @@ class _IPv4Block extends IPBlock implements iTree {
 		$iLocationId = $aParameter['location_id'];
 		$iRequestorId = $aParameter['requestor_id'];
 		$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $iOrgId);
+		$sIPv4BlockLabel = MetaModel::GetName('IPv4Block');
+		$sIPv4SubnetLabel = MetaModel::GetName('IPv4Subnet');
 		$bOfferBlock = ($iSize >= $iBlockMinSize) ? true : false;
 		if ($sOrigin == 'rir') {
 			$bOfferSubnet = false;
@@ -564,7 +566,7 @@ class _IPv4Block extends IPBlock implements iTree {
 							if ($iIpToStartFrom <= $iAnOccupiedIp) {
 								// Display object attributes
 								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
-								$sHtml .= "<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink();
+								$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 								if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 									$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 								} else {
@@ -592,7 +594,7 @@ class _IPv4Block extends IPBlock implements iTree {
 				$iAnOccupiedIp = $iLastFreeIp + 1;
 
 				// Display offer now
-				$sHtml .= "<li>".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>";
+				$sHtml .= "<li>&nbsp;".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>";
 
 				// If user has rights to create block, display block with icon to create it
 				if ($bOfferBlock) {
@@ -612,7 +614,7 @@ class _IPv4Block extends IPBlock implements iTree {
 						}
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', $iChangeId, $sPayLoad);
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', "$sIPv4BlockLabel", $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -629,7 +631,7 @@ EOF
 						$sHtml .= $sHTMLValue;
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', "$sIPv4SubnetLabel", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
 EOF
 						);
 					}
@@ -643,8 +645,15 @@ EOF
 			// Close table
 			$sHtml .= '</div>';
 			$sHtml .= '</td></tr></table>';
+			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+				$sHtml .= '</div>';         // ??
+			}
 			$oP->add_ready_script("\$('#tree ul').treeview();\n");
-			$sHtml .= "<div id=\"dialog_content\"/>\n";
+			$oP->add_dict_entry('UI:ValueMustBeSet');
+			$oP->add_dict_entry('UI:ValueMustBeChanged');
+			$oP->add_dict_entry('UI:ValueInvalidFormat');
+			$oP->add_dict_entry('UI:ValueInvalidFormat');
+			$oP->add_dict_entry('UI:CreationTitle_Class');
 		}
 
 		return $sHtml;
@@ -1723,13 +1732,13 @@ EOF
 					$iLastOccupiedIp = $aOccupiedSpace[$j]['firstip'] - 1;
 					$iNbIps = $iLastOccupiedIp - $iAnOccupiedIp + 1;
 					$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-					$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, TeemIpUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
+					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, TeemIpUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
 					$iAnOccupiedIp = $aOccupiedSpace[$j]['firstip'];
 				} else {
 					if ($iAnOccupiedIp == $aOccupiedSpace[$j]['firstip']) {
 						// Display object attributes
 						$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
-						$sHtml .= "<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink();
+						$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 						if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 							$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 						} else {
