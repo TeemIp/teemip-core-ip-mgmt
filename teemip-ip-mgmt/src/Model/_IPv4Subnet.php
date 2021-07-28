@@ -8,10 +8,9 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
 use cmdbAbstractObject;
 use CMDBObjectSet;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -1655,11 +1654,12 @@ EOF
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
-		$oColumn = new Column();
-		$oClassForm->AddSubBlock($oColumn);
-		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-		$oClassForm->AddSubBlock($oToolbar);
+		$oMultiColumn = new MultiColumn();
+		$oP->AddUIBlock($oMultiColumn);
 
+		// First column = labels or fields
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
 		switch ($sOperation) {
 			case 'findspace':
 				break;
@@ -1672,18 +1672,15 @@ EOF
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:'.$sTextOperation.':IPv4Subnet:LastIP');
 
 				// Subtitle
-				$oColumn->AddHtml($sSubTitle.'<br><br>');
+				$oColumn1->AddHtml($sSubTitle.'<br><br>');
 
 				// First IP
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv4Range', 'firstip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// Last IP
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv4Range', 'lastip', $sLabelOfAction2, '', OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			case 'shrinksubnet':
@@ -1698,32 +1695,22 @@ EOF
 
 				// IP
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv4Subnet', 'ip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// Mask
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv4Subnet', 'gatewayip', $sLabelOfAction2, '', OPT_ATT_NORMAL);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// CIDR
 				$sInputId = $this->m_iFormId.'_cidr';
 				$sHTML = "<input type=\"number\" id=\"$sInputId\" name=\"cidr\">\n";
 				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'cidr', $sLabelOfAction3, $sHTML);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				if ($this->GetKey() > 0) {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
-				} else {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.history.back();"));
-				}
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			default:
 				break;
 		};
-
-		// Apply button
-		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
