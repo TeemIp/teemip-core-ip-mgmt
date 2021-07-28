@@ -14,16 +14,14 @@ use IPConfig;
 use IPUsage;
 use MetaModel;
 
-class _IPConfig extends cmdbAbstractObject
-{
-	/**
+class _IPConfig extends cmdbAbstractObject {
+	/*
 	 * Check validity of new config attributes before creation
 	 */
-	function DoCheckToWrite()
-	{
+	function DoCheckToWrite() {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
-		
+
 		// Only one IPConfig object can exist within an organization
 		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
