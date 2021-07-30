@@ -19,7 +19,7 @@ use IPConfig;
 use IPSubnet;
 use IPUsage;
 use MetaModel;
-use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
 use WebPage;

@@ -295,7 +295,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:IPSpace:IPv6Objects+' => 'IPv6 Objects',
 	'Menu:Ipv6ShortCut' => 'IPv6 Shortcuts',
 	'Menu:Ipv6ShortCut+' => 'Shortcut that groups IPv6 objects',
-	'Menu:Ipv6ShortCut+' => 'Shortcut that groups IPv6 objects',
 	'Menu:IPv6Block' => 'Subnet Blocks',
 	'Menu:IPv6Block+' => 'IPv6 Subnet Blocks',
 	'Menu:IPv6Subnet' => 'Subnets',
@@ -342,7 +341,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv6Block:IsDelegated' => 'This block is delegated and therefore cannot be shrunk!',
 	'UI:IPManagement:Action:Shrink:IPv6Block:CannotBeShrunk' => 'Block cannot be shrunk: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv6Block:SmallerThanMinSize' => 'Block size cannot be smaller than /%1$s !',
-	'UI:IPManagement:Action:Shrink:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk.',
+	'UI:IPManagement:Action:Shrink:IPv6Block:Done' => '%1$s %2$s has been shrunk.',
 
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPv6Block' => 'Split',
@@ -356,7 +355,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPv6Block:IsDelegated' => 'This block is delegated and therefore cannot be split!',
 	'UI:IPManagement:Action:Split:IPv6Block:CannotBeSplit' => 'Block cannot be split: %1$s',
 	'UI:IPManagement:Action:Split:IPv6Block:SmallerThanMinSize' => 'Block size cannot be smaller than /%1$s !',
-	'UI:IPManagement:Action:Split:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> has been split.',
+	'UI:IPManagement:Action:Split:IPv6Block:Done' => '%1$s %2$s has been split.',
 
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPv6Block' => 'Expand',
@@ -370,7 +369,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv6Block:IsDelegated' => 'This block is delegated and therefore cannot be expanded!',
 	'UI:IPManagement:Action:Expand:IPv6Block:CannotBeExpanded' => 'Block cannot be expanded: %1$s',
 	'UI:IPManagement:Action:Expand:IPv6Block:SmallerThanMinSize' => 'Block size cannot be smaller than /%1$s !',
-	'UI:IPManagement:Action:Expand:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded.',
+	'UI:IPManagement:Action:Expand:IPv6Block:Done' => '%1$s %2$s has been expanded.',
 
 	// List space action on subnet blocks 
 	'UI:IPManagement:Action:ListSpace:IPv6Block' => 'List Space',
@@ -387,6 +386,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:FindSpace:IPv6Block:MaxNumberOfOffers' => 'Maximum number of offers :',
 
 	// Do find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPv6Block' => 'Found Space',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:Title_Class_Object' => 'Space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary' => '%1$s first /%2$s within block',
@@ -400,13 +400,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Delegate:IPv6Block:ChildBlock' => 'Child Organization to delegate the Block to:',
 	'UI:IPManagement:Action:Delegate:IPv6Block:NoChildOrg' => 'Block\'s organization doesn\'t have any children and therefore, block cannot be delegated!',
 	'UI:IPManagement:Action:Delegate:IPv6Block:CannotBeDelegated' => 'Block cannot be delegated: %1$s',
-	'UI:IPManagement:Action:Delegate:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> has been delegated.',
+	'UI:IPManagement:Action:Delegate:IPv6Block:Done' => '%1$s %2$s has been delegated.',
 
 	// Undelegate action on subnet blocks
 	'UI:IPManagement:Action:Undelegate:IPv6Block:CannotBeUndelegated' => 'Block cannot be undelegated: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv6Block' => 'Un-delegate',
 	'UI:IPManagement:Action:Undelegate:IPv6Block:PageTitle_Object_Class' => '%1$s - Un-delegate',
-	'UI:IPManagement:Action:Undelegate:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> has been un-delegated.',
+	'UI:IPManagement:Action:Undelegate:IPv6Block:Done' => '%1$s %2$s has been un-delegated.',
 
 //
 // Management of Subnets

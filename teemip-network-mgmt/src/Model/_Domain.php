@@ -8,13 +8,17 @@ namespace TeemIp\TeemIp\Extension\NetworkManagement\Model;
 
 use ApplicationContext;
 use CMDBObjectSet;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use DNSObject;
 use IPConfig;
 use MetaModel;
-use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use utils;
 use WebPage;
 
@@ -79,8 +83,8 @@ class _Domain extends DNSObject implements iTree {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		$sOrgId = $this->Get('org_id');
 		if (!$this->IsNew()) {
+			$iOrgId = $this->Get('org_id');
 			$sDomainName = $this->GetName();
 			$iDomainKey = $this->GetKey();
 
@@ -110,90 +114,62 @@ class _Domain extends DNSObject implements iTree {
 			$oHostsSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array(
 				'domain_name' => $sDomainName,
 				'domain_family' => '%'.$sDomainName,
-				'org_id' => $sOrgId,
+				'org_id' => $iOrgId,
 			));
-			// Open tab first
-			if ($oHostsSet->CountExceeds(0)) {
-				$oP->SetCurrentTab(Dict::Format('Class:Domain/Tab:hosts').' ('.$oHostsSet->Count().')');
-				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.$sTitle);
-			} else {
-				$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:hosts'));
-				$oP->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-			}
 			// Then, display form to select list of hosts if domain is not in edition
-			if (!$bEditMode) {
-				$oP->add('<div style="padding: 15px; background: #ddd;">');
-				$oP->add("<form>");
-				$oP->add("<table border=0>");
+			$sHtml = '';
+			if (!$bEditMode && $oHostsSet->CountExceeds(0)) {
+				$sHtml = '<div style="padding: 15px; background: #ddd;">';
+				$sHtml .= "<form>";
+				$sHtml .= "<table>";
 
-				$oP->add("<tr>");
+				$sHtml .= "<tr>";
 				$sChecked = ($iHostsFilter == 0) ? 'checked' : '';
 				if (!$sChecked) {
-					$oP->add("<td>");
-					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"0\">".Dict::S('Class:Domain/Tab:hosts/SelectList0').'</label>');
-					$oP->add("</td>");
+					$sHtml .= "<td><label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"0\">&nbsp;".Dict::S('Class:Domain/Tab:hosts/SelectList0')."&nbsp;&nbsp;</label></td>";
 				}
 				$sChecked = ($iHostsFilter == 1) ? 'checked' : '';
 				if (!$sChecked) {
-					$oP->add("<td>");
-					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"1\">".Dict::S('Class:Domain/Tab:hosts/SelectList1').'</label>');
-					$oP->add("</td>");
+					$sHtml .= "<td><label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"1\">&nbsp;".Dict::S('Class:Domain/Tab:hosts/SelectList1')."&nbsp;&nbsp;</label></td>";
 				}
 				$sChecked = ($iHostsFilter == 2) ? 'checked' : '';
 				if (!$sChecked) {
-					$oP->add("<td>");
-					$oP->add("<label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"2\">".Dict::S('Class:Domain/Tab:hosts/SelectList2').'</label>');
-					$oP->add("</td>\n");
+					$sHtml .= "<td><label><input type=\"radio\" $sChecked name=\"host_filter\" value=\"2\">&nbsp;".Dict::S('Class:Domain/Tab:hosts/SelectList2')."&nbsp;&nbsp;</label></td>";
 				}
-				$oP->add("</tr>\n");
+				$sHtml .= "</tr>\n";
 
-				$oP->add("</table><br>\n");
+				$sHtml .= "</table><br>\n";
 
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"Domain\">\n");
-				$oP->add("<input type=\"hidden\" name=\"id\" value=\"$iDomainKey\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"details\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
+				$sHtml .= "<input type=\"hidden\" name=\"class\" value=\"Domain\">\n";
+				$sHtml .= "<input type=\"hidden\" name=\"id\" value=\"$iDomainKey\">\n";
+				$sHtml .= "<input type=\"hidden\" name=\"operation\" value=\"details\">\n";
+				$sHtml .= "<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n";
 				$oAppContext = new ApplicationContext();
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("<input type=\"submit\" value=\"".Dict::S('Class:Domain/Tab:hosts/SelectList')."\">\n");
+				$sHtml .= $oAppContext->GetForForm();
+				$sHtml .= "<input type=\"submit\" value=\"".Dict::S('Class:Domain/Tab:hosts/SelectList')."\">\n";
 
-				$oP->add("</form>\n");
-				$oP->add('</div>');
+				$sHtml .= "</form>\n";
+				$sHtml .= "</div>";
 			}
-
-			// Display list of hosts if not empty
-			if ($oHostsSet->CountExceeds(0)) {
-				$oBlock = new DisplayBlock($oHostsSet->GetFilter(), 'list', false);
-				$oBlock->Display($oP, 'child_hosts', array('menu' => false));
-			}
+			$sName = Dict::Format('Class:Domain/Tab:hosts');
+			$this->DisplayTabContent($oP, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet);
 
 			// Tab for child domains
 			$sOQL = "SELECT Domain AS dc JOIN Domain AS dp ON dc.parent_id BELOW dp.id WHERE dp.id = :domain_id AND dc.id != :domain_id";
 			$oDomainsSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain_id' => $iDomainKey));
-			if ($oDomainsSet->CountExceeds(0)) {
-				$oP->SetCurrentTab(Dict::Format('Class:Domain/Tab:child_domain').' ('.$oDomainsSet->Count().')');
-				$oP->p(MetaModel::GetClassIcon('Domain').'&nbsp;'.Dict::Format('Class:Domain/Tab:child_domain+'));
-				$oBlock = new DisplayBlock($oDomainsSet->GetFilter(), 'list', false);
-				$oBlock->Display($oP, 'child_domains', array('menu' => false));
-			} else {
-				$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:child_domain'));
-				$oP->p(MetaModel::GetClassIcon('Domain').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-			}
+
+			$sName = Dict::Format('Class:Domain/Tab:child_domain');
+			$sTitle = Dict::Format('Class:Domain/Tab:child_domain+');
+			$this->DisplayTabContent($oP, $sName, 'child_domains', 'Domain', $sTitle, '', $oDomainsSet);
 
 			// Tab for related zones
 			if (class_exists('Zone')) {
 				$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
 				$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $this->GetName()));
-				$iZones = $oZonesSet->Count();
-				if ($iZones > 0) {
-					$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:zones_list').' ('.$iZones.')');
-					$oP->p(MetaModel::GetClassIcon('Zone').'&nbsp;'.Dict::S('Class:Domain/Tab:zones_list+'));
-					$oBlock = new DisplayBlock($oZonesSet->GetFilter(), 'list', false);
-					$oBlock->Display($oP, 'associated_zones', array('menu' => false));
-				} else {
-					$oP->SetCurrentTab(Dict::S('Class:Domain/Tab:zones_list'));
-					$oP->p(MetaModel::GetClassIcon('Zone').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-				}
+
+				$sName = Dict::Format('Class:Domain/Tab:zones_list');
+				$sTitle = Dict::Format('Class:Domain/Tab:zones_list+');
+				$this->DisplayTabContent($oP, $sName, 'associated_zones', 'Zone', $sTitle, '', $oZonesSet);
 			}
 		}
 	}
@@ -288,7 +264,7 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToDelegate($aParam) {
+	public function DoCheckToDelegate($aParam) {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iDomainId = $this->GetKey();
@@ -522,7 +498,7 @@ class _Domain extends DNSObject implements iTree {
 	}
 
 	/**
-	 * Display fields required for action
+	 * Display attributes associated to an operation for V < 3.0
 	 *
 	 * @param \WebPage $oP
 	 * @param $sOperation
@@ -535,7 +511,7 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -588,6 +564,73 @@ class _Domain extends DNSObject implements iTree {
 		$oP->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
 
 		$oP->add("</table>");
+	}
+
+	/**
+	 * Display attributes associated to an operation for V >= 3.0
+	 *
+	 * @param \WebPage $oP
+	 * @param $oClassForm
+	 * @param $sOperation
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+		$oMultiColumn = new MultiColumn();
+		$oP->AddUIBlock($oMultiColumn);
+
+		// First column = labels or fields
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
+		switch ($sOperation) {
+			case 'delegate':
+				// Second column = data
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
+
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:Domain:ChildDomain');
+
+				// Look for the organizations where the block can be delegated to
+				$iOrgId = $this->Get('org_id');
+				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_domain_to_children_only', $iOrgId);
+				if ($sDelegateToChildrenOnly == 'dtc_yes') {
+					// Block can only be delegated to children (grand children...) organizations
+					// Get block's children (list should not be empty at this stage)
+					// Block is not already delegated (checked previously) so it can be delegated to child organization
+					$sOQL = "SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = :org_id AND child.id != :org_id";
+				} else {
+					// Block can be delegated to any organization
+					$sOQL = "SELECT Organization AS o WHERE o.id != :org_id";
+				}
+				$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
+
+				// Display list of choices now
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('child_org_id');
+				$oColumn2->AddSubBlock($oSelect);
+				while ($oChildOrg = $oChildOrgSet->Fetch()) {
+					$iChildOrgKey = $oChildOrg->GetKey();
+					$sChildOrgName = $oChildOrg->GetName();
+					$bSelected = ($iChildOrgKey == $iOrgId) ? true : false;
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iChildOrgKey, $sChildOrgName, $bSelected));
+				}
+				break;
+
+			default:
+				break;
+		}
 	}
 
 	/**

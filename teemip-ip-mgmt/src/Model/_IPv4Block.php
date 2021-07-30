@@ -22,8 +22,8 @@ use IPBlock;
 use IPConfig;
 use IPv4Subnet;
 use MetaModel;
-use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
-use TeemIp\TeemIp\Extension\Framework\Controller\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;
@@ -454,29 +454,19 @@ class _IPv4Block extends IPBlock implements iTree {
 	}
 
 	/**
-	 * Check if space can be searched
-	 *
-	 * @param $aParam
-	 *
-	 * @return string
-	 */
-	public function DoCheckToDisplayAvailableSpace($aParam) {
-		return '';
-	}
-
-	/**
 	 * Get available space
 	 *
 	 * @param \WebPage $oP
 	 * @param $iChangeId
 	 * @param $aParameter
 	 *
+	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
 	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
 		$iId = $this->GetKey();
@@ -492,8 +482,6 @@ class _IPv4Block extends IPBlock implements iTree {
 		$iLocationId = $aParameter['location_id'];
 		$iRequestorId = $aParameter['requestor_id'];
 		$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $iOrgId);
-		$sIPv4BlockLabel = MetaModel::GetName('IPv4Block');
-		$sIPv4SubnetLabel = MetaModel::GetName('IPv4Subnet');
 		$bOfferBlock = ($iSize >= $iBlockMinSize) ? true : false;
 		if ($sOrigin == 'rir') {
 			$bOfferSubnet = false;
@@ -506,19 +494,24 @@ class _IPv4Block extends IPBlock implements iTree {
 		// Get list of free and occupied space in subnet range
 		$aFreeSpace = $this->GetFreeSpace($iSize, $iMaxOffer, $iIpToStartFrom);
 		$iSizeFreeArray = sizeof($aFreeSpace);
+		$sMessage = '';
 		if ($iSizeFreeArray == 0) {
-			$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
-			$sMessage = "<div class=\"header_message message_info teemip_message_status\">".$sIssueDesc."</div>";
-			$oP->add($sMessage);
-
+			$sMessage = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
 			$sHtml = $this->GetAllSpace($oP);
+
 		} else {
+			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+				$sIPv4BlockCreationTitle = '';
+				$sIPv4SubnetCreationTitle = '';
+			} else {
+				$sIPv4BlockCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Block')));
+				$sIPv4SubnetCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Subnet')));
+			}
 			$aOccupiedSpace = $this->GetOccupiedSpace();
 
 			// Check user rights
 			$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv4Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 			$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv4Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-
 
 			$sHtml = '';
 			// Open table
@@ -614,7 +607,7 @@ class _IPv4Block extends IPBlock implements iTree {
 						}
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', "$sIPv4BlockLabel", $iChangeId, $sPayLoad);
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', "$sIPv4BlockCreationTitle", $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -631,7 +624,7 @@ EOF
 						$sHtml .= $sHTMLValue;
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', "$sIPv4SubnetLabel", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', "$sIPv4SubnetCreationTitle", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
 EOF
 						);
 					}
@@ -639,7 +632,6 @@ EOF
 
 				$sHtml .= "</ul></li>\n";
 			} while (++$i < $iSizeFreeArray);
-
 			$sHtml .= "</ul></li></ul>\n";
 
 			// Close table
@@ -652,11 +644,9 @@ EOF
 			$oP->add_dict_entry('UI:ValueMustBeSet');
 			$oP->add_dict_entry('UI:ValueMustBeChanged');
 			$oP->add_dict_entry('UI:ValueInvalidFormat');
-			$oP->add_dict_entry('UI:ValueInvalidFormat');
-			$oP->add_dict_entry('UI:CreationTitle_Class');
 		}
 
-		return $sHtml;
+		return array($sMessage, $sHtml);
 	}
 
 	/**
@@ -1132,6 +1122,7 @@ EOF
 
 	/**
 	 * Check if block can be delegated
+	 *  Method may be called before child_org_id is set through the second step
 	 *
 	 * @param $aParam
 	 *
@@ -1152,24 +1143,23 @@ EOF
 		$iFirstIpBlockToDel = TeemIpUtils::myip2long($sFirstIpBlockToDel);
 		$sLastIpBlockToDel = $this->Get('lastip');
 		$iLastIpBlockToDel = TeemIpUtils::myip2long($sLastIpBlockToDel);
-		$iChildOrgId = $aParam['child_org_id'];
 
-		// If block should be delegated to children only and if it's already delegated,
-		// 	Make sure redelegation is done at the same level of organization.
-		// Not possible anymore as already delegated blocks are not redelegated
-		//if (($sDelegateToChildrenOnly == 'dtc_yes') && ($this->Get('parent_org_id') != 0))
-		//{
-		//	$oBlockOrg = MetaModel::GetObject('Organization', $iOrgId, true /* MustBeFound */);
-		//	$oChildBlockOrg = MetaModel::GetObject('Organization', $iChildOrgId, true /* MustBeFound */);
-		//	if ($oBlockOrg->Get('parent_id') != $oChildBlockOrg->Get('parent_id'))
-		//	{
-		//		return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:WrongLevelOfOrganization'));
-		//	}
-		//}
+		$iChildOrgId = (array_key_exists('child_org_id', $aParam)) ? $aParam['child_org_id'] : 0;
+		if ($iChildOrgId != 0) {
+			//  Make sure that new child organization is different from the current one
+			if ($iChildOrgId == $iOrgId) {
+				return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization'));
+			}
 
-		//  Make sure that new child organization is different from the current one
-		if ($iChildOrgId == $iOrgId) {
-			return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization'));
+			// Make sure block is not contained in a block that belongs to the organization that the block will be delegated to
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.org_id = $iChildOrgId"));
+			while ($oSRange = $oSRangeSet->Fetch()) {
+				$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
+				$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+				if ((($iCurrentFirstIp <= $iFirstIpBlockToDel) && ($iFirstIpBlockToDel <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iLastIpBlockToDel) && ($iLastIpBlockToDel <= $iCurrentLastIp))) {
+					return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
+				}
+			}
 		}
 
 		// Make sure block has no children blocks and no children subnets
@@ -1180,16 +1170,6 @@ EOF
 		$oChildrenSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iBlockId"));
 		if ($oChildrenSubnetSet->Count() != 0) {
 			return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets'));
-		}
-
-		// Make sure block is not contained in a block that belongs to the organization that the block will be delegated to
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.org_id = $iChildOrgId"));
-		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
-			if ((($iCurrentFirstIp <= $iFirstIpBlockToDel) && ($iFirstIpBlockToDel <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iLastIpBlockToDel) && ($iLastIpBlockToDel <= $iCurrentLastIp))) {
-				return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
-			}
 		}
 
 		// Everything looks good
@@ -1701,8 +1681,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected
-	function GetAllSpace(WebPage $oP) {
+	protected function GetAllSpace(WebPage $oP) {
 
 		// Get list of registered blocks and subnets in subnet range
 		$aOccupiedSpace = $this->GetOccupiedSpace();
@@ -1787,8 +1766,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -1816,7 +1794,7 @@ EOF
 
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
-			$sSubTitle = $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent');
+			$sSubTitle = ($oSubnetSet->Count() > 0) ? $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent') : '';
 			$this->DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet);
 		}
 	}
@@ -1826,8 +1804,7 @@ EOF
 	 *
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public
-	function ComputeValues() {
+	public function ComputeValues() {
 		if ($this->IsNew()) {
 			// At creation, compute parent_id only in the case where no delegation is done.
 			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
@@ -1866,8 +1843,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public
-	function DoCheckToWrite() {
+	public function DoCheckToWrite() {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -2072,8 +2048,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public
-	function AfterInsert() {
+	public function AfterInsert() {
 		parent::AfterInsert();
 
 		$iOrgId = $this->Get('org_id');
@@ -2141,8 +2116,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public
-	function AfterUpdate() {
+	public function AfterUpdate() {
 		if ($this->Get('write_reason') != 'split') {
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
@@ -2181,8 +2155,7 @@ EOF
 	 * @return int
 	 * @throws \CoreException
 	 */
-	public
-	function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		$aReadOnlyAttributes = array('firstip', 'lastip');
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
 			return OPT_ATT_READONLY;

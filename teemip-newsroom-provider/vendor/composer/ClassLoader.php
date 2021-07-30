@@ -1,8 +1,13 @@
 <?php
 
 /*
- * @copyright   Copyright (C) 2021 TeemIp
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of Composer.
+ *
+ * (c) Nils Adermann <naderman@naderman.de>
+ *     Jordi Boggiano <j.boggiano@seld.be>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace Composer\Autoload;

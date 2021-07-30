@@ -105,8 +105,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock:baseinfo' => 'General Information',
 	'Class:IPBlock:delegationinfo' => 'Delegation Information',
 	'Class:IPBlock:ipinfo' => 'IP Information',
-	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Delegated to organization: </font>%1$s',
-	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization: </font>%1$s',
+	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Delegated to organization: </delegation_highlight>%1$s',
+	'Class:IPBlock:DelegatedFromParent' => '<delegation_highlight>Delegated from organization: </delegation_highlight>%1$s',
 	'Class:IPBlock/Attribute:name' => 'Name',
 	'Class:IPBlock/Attribute:name+' => '',
 	'Class:IPBlock/Attribute:ipblocktype_id' => 'Type',
@@ -769,7 +769,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPRangeUsage/Attribute:description' => 'Description',
 	'Class:IPRangeUsage/Attribute:description+' => '',
 	'Class:IPRangeUsage/Attribute:ipranges_list' => 'IP ranges',
-	'Class:IPRangeUsage/Attribute:ipranges_list+' => '',
+	'Class:IPRangeUsage/Attribute:ipranges_list+' => 'IP ranges with that usage',
 ));
 
 //
@@ -788,7 +788,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPUsage/Attribute:description' => 'Description',
 	'Class:IPUsage/Attribute:description+' => '',
 	'Class:IPUsage/Attribute:ips_list' => 'IPs',
-	'Class:IPUsage/Attribute:ips_list+' => '',
+	'Class:IPUsage/Attribute:ips_list+' => 'IPs with that usage',
 ));
 
 //

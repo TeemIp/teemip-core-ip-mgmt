@@ -35,8 +35,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:Domain+' => 'DNS Domain',
 	'Class:Domain:baseinfo' => 'General Information',
 	'Class:Domain:admininfo' => 'Administrative Information',
-	'Class:Domain:DelegatedToChild' => '<font color=#ff0000>Delegated to organization : </font>%1$s',
-	'Class:Domain:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization : </font>%1$s',
+	'Class:Domain:DelegatedToChild' => '<delegation_highlight>Delegated to organization : </delegation_highlight>%1$s',
+	'Class:Domain:DelegatedFromParent' => '<delegation_highlight>Delegated from organization : </delegation_highlight>%1$s',
 	'Class:Domain/Attribute:name' => 'Name',
 	'Class:Domain/Attribute:name+' => '',
 	'Class:Domain/Attribute:parent_org_id' => 'Delegated from',
@@ -342,7 +342,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'DNS Domains',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Display Tree',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
@@ -353,7 +353,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Delegate action on domains
 	'UI:IPManagement:Action:Delegate:Domain' => 'Delegate',
 	'UI:IPManagement:Action:Delegate:Domain:PageTitle_Object_Class' => '%1$s - Delegate',
-	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegate %1$s <span class="hilite">%2$s</span> to organization',
+	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegate %1$s %2$s to organization',
 	'UI:IPManagement:Action:Delegate:Domain:ChildDomain' => 'Organization to delegate the Domain to:',
 	'UI:IPManagement:Action:Delegate:Domain:NoChildOrg' => 'Domain\'s organization doesn\'t have any children and therefore, domain cannot be delegated!',
 	'UI:IPManagement:Action:Delegate:Domain:NoOtherOrg' => 'There is no other organization than domain\'s organization!',
@@ -363,7 +363,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Delegate:Domain:HasHosts' => 'Domain has hosts!',
 	'UI:IPManagement:Action:Delegate:Domain:HasSubDomains' => 'Domain has sub-domains!',
 	'UI:IPManagement:Action:Delegate:Domain:HasZones' => 'Zones are referring to the domain!',
-	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> has been delegated.',
+	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s %2$s has been delegated.',
 
 	// Undelegate action on domains
 	'UI:IPManagement:Action:Undelegate:Domain' => 'Un-delegate',
@@ -373,6 +373,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasHosts' => 'Domain has hosts!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasSubDomains' => 'Domain has sub-domains!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Zones are referring to the domain!',
-	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> has been un-delegated.',
+	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s has been un-delegated.',
 
 ));

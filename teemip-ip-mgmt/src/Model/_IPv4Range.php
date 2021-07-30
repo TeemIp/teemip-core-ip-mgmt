@@ -17,7 +17,7 @@ use Dict;
 use DisplayBlock;
 use IPRange;
 use MetaModel;
-use TeemIp\TeemIp\Extension\Framework\Controller\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;

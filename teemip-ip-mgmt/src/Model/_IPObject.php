@@ -195,7 +195,7 @@ EOF
 				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
 			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
-			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Block', '{$id}', '', '{null}');");
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('{$sClass}', '{$id}', '', '{null}');");
 			$oCancelButton->AddCSSClasses(['action', 'cancel']);
 			$oToolbarButtons->AddSubBlock($oCancelButton);
 			$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);

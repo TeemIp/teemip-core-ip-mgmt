@@ -9,14 +9,20 @@ namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
 use ApplicationException;
 use cmdbAbstractObject;
 use CMDBObjectSet;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use IPBlock;
 use IPConfig;
 use IPv6Subnet;
 use MetaModel;
-use TeemIp\TeemIp\Extension\Framework\Controller\iTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
 use WebPage;
@@ -474,7 +480,7 @@ class _IPv6Block extends IPBlock implements iTree {
 	 *
 	 * @return array
 	 */
-	function GetPostedParam($sOperation) {
+	public function GetPostedParam($sOperation) {
 		$aParam = array();
 		switch ($sOperation) {
 			case 'dofindspace':
@@ -515,30 +521,21 @@ class _IPv6Block extends IPBlock implements iTree {
 	}
 
 	/**
-	 * Check if space can be searched
-	 *
-	 * @param $aParam
-	 *
-	 * @return string
-	 */
-	function DoCheckToDisplayAvailableSpace($aParam) {
-		return '';
-	}
-
-	/**
-	 * Displays available space
+	 * Get available space
 	 *
 	 * @param \WebPage $oP
 	 * @param $iChangeId
 	 * @param $aParameter
 	 *
+	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$sOrigin = $this->Get('origin');
@@ -563,25 +560,36 @@ class _IPv6Block extends IPBlock implements iTree {
 		// Get list of free and occupied space in subnet range
 		$aFreeSpace = $this->GetFreeSpace($iPrefix, $iMaxOffer);
 		$iSizeFreeArray = sizeof($aFreeSpace);
+		$sMessage = '';
 		if ($iSizeFreeArray == 0) {
-			$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
-			$sMessage = "<div class=\"header_message message_info teemip_message_status\">".$sIssueDesc."</div>";
-			$oP->add($sMessage);
-
-			$this->DisplayAllSpace($oP);
+			$sMessage = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
+			$sHtml = $this->GetAllSpace($oP);
 		} else {
+			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+				$sIPv6BlockCreationTitle = '';
+				$sIPv6SubnetCreationTitle = '';
+			} else {
+				$sIPv6BlockCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Block')));
+				$sIPv6SubnetCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Subnet')));
+			}
 			$aOccupiedSpace = $this->GetOccupiedSpace();
 
 			// Check user rights
 			$UserHasRightsToCreateBlocks = (UserRights::IsActionAllowed('IPv6Block', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 			$UserHasRightsToCreateSubnets = (UserRights::IsActionAllowed('IPv6Subnet', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 
+			$sHtml = '';
+			// Open table
+			$sHtml .= '<table style="width:100%"><tr><td colspan="2">';
+			$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
 			// Display Summary of parameters
-			$sHtml = "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary', $iMaxOffer, $iPrefix)."</b>&nbsp;";
+			$sHtml .= "<ul><li>";
+			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary', $iMaxOffer, $iPrefix)."</b>&nbsp;";
 			$sHtml .= ($iId > 0) ? $this->GetHyperlink() : '';
 			$sHtml .= "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]&nbsp;";
 			$sHtml .= (array_key_exists('ip', $aParameter)) ? Dict::Format('IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom', $sIpToStartFrom) : '';
-			$oP->add("<ul><li>".$sHtml."<ul>\n");
+			$sHtml .= "<ul>\n";
 
 			// Display possible choices as list
 			$i = 0;
@@ -606,7 +614,7 @@ class _IPv6Block extends IPBlock implements iTree {
 							if ($oIpToStartFrom->IsSmallerOrEqual($oAnOccupiedIp)) {
 								$iNbIps = $oAnOccupiedIp->GetSizeInterval($oLastOccupiedIp);
 								if ($iNbIps < $iSize) {
-									$oP->add("<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnOccupiedIp->GetAsCompressed(), $oLastOccupiedIp->GetAsCompressed(), $iNbIps)."</li>\n");
+									$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnOccupiedIp->GetAsCompressed(), $oLastOccupiedIp->GetAsCompressed(), $iNbIps)."</li>\n";
 								}
 							}
 							$oAnOccupiedIp = $oNextOccupiedFirstIp;
@@ -615,23 +623,23 @@ class _IPv6Block extends IPBlock implements iTree {
 							if ($oIpToStartFrom->IsSmallerOrEqual($oAnOccupiedIp)) {
 								// Display object attributes
 								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
-								$oP->add("<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink());
+								$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 								if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet') {
-									$oP->add("&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask')));
+									$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 								} else {
-									$oP->add("&nbsp;[".$aOccupiedSpace[$j]['firstip']->GetAsCompressed()." - ".$aOccupiedSpace[$j]['lastip']->GetAsCompressed()."]");
+									$sHtml .= "&nbsp;[".$aOccupiedSpace[$j]['firstip']->GetAsCompressed()." - ".$aOccupiedSpace[$j]['lastip']->GetAsCompressed()."]";
 
 									// Display delegation information if required
 									$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
 									if ($iParentOrgId == $iOrgId) {
 										// Block is delegated to child org
-										$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id')));
+										$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedToChild', $aOccupiedSpace[$j]['obj']->GetAsHTML('org_id'));
 									} elseif ($iParentOrgId != 0) {
 										// Block is delegated from parent org
-										$oP->add("&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $aOccupiedSpace[$j]['obj']->GetAsHTML('parent_org_id')));
+										$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $aOccupiedSpace[$j]['obj']->GetAsHTML('parent_org_id'));
 									}
 								}
-								$oP->add("</li>\n");
+								$sHtml .= "</li>\n";
 							}
 							$oAnOccupiedIp = $aOccupiedSpace[$j]['lastip']->GetNextIp();
 							$j++;
@@ -645,7 +653,7 @@ class _IPv6Block extends IPBlock implements iTree {
 				// Display offer now
 				$sAFreeIp = $oAFreeIp->GetAsCompressed();
 				$sLastFreeIp = $oLastFreeIp->GetAsCompressed();
-				$oP->add("<li>".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>");
+				$sHtml .= "<li>&nbsp;".$sAFreeIp." - ".$sLastFreeIp."\n"."<ul>";
 
 				// If user has rights to create block
 				// Display block with icon to create it
@@ -656,7 +664,7 @@ class _IPv6Block extends IPBlock implements iTree {
 						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsBlock')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
-						$oP->add($sHTMLValue);
+						$sHtml .= $sHTMLValue;
 						if ($sOrigin == 'rir') {
 							// Creation implies a delegation
 							$sPayLoad = '{\'org_id\': \''.$iOrgId.'\', \'parent_org_id\': \''.$iOrgId.'\', \'parent_id\': \''.$iId.'\', \'origin\': \''.$sTargetOrigin.'\', \'firstip\': \''.$sAFreeIp.'\', \'lastip\': \''.$sLastFreeIp.'\'}';
@@ -666,7 +674,7 @@ class _IPv6Block extends IPBlock implements iTree {
 						}
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', $iChangeId, $sPayLoad);
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', "$sIPv6BlockCreationTitle", $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -680,19 +688,32 @@ EOF
 						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
 						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsSubnet')."&nbsp;&nbsp;";
 						$sHTMLValue .= "</span></div></li>\n";
-						$oP->add($sHTMLValue);
+						$sHtml .= $sHTMLValue;
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAFreeIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', "$sIPv6SubnetCreationTitle", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAFreeIp'});
 EOF
 						);
 					}
 				}
 
-				$oP->add("</ul></li>\n");
+				$sHtml .= "</ul></li>\n";
 			} while (++$i < $iSizeFreeArray);
-			$oP->add("</ul></li></ul>\n");
+			$sHtml .= "</ul></li></ul>\n";
+
+			// Close table
+			$sHtml .= '</div>';
+			$sHtml .= '</td></tr></table>';
+			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+				$sHtml .= '</div>';         // ??
+			}
+			$oP->add_ready_script("\$('#tree ul').treeview();\n");
+			$oP->add_dict_entry('UI:ValueMustBeSet');
+			$oP->add_dict_entry('UI:ValueMustBeChanged');
+			$oP->add_dict_entry('UI:ValueInvalidFormat');
 		}
+
+		return array($sMessage, $sHtml);
 	}
 
 	/**
@@ -707,7 +728,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToShrink($aParam) {
+	public function DoCheckToShrink($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -838,7 +859,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToSplit($aParam) {
+	public function DoCheckToSplit($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -912,7 +933,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoSplit($aParam) {
+	public function DoSplit($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -937,7 +958,7 @@ EOF
 		$oNewBlock->Set('parent_id', $this->Get('parent_id'));
 		$oNewBlock->Set('firstip', $oSplitIp);
 		$oNewBlock->Set('lastip', $oLastIpCurrentBlock);
-		$oNewBlock->Set('type', $this->Get('type'));
+		$oNewBlock->Set('ipblocktype_id', $this->Get('ipblocktype_id'));
 		$oNewBlock->Set('comment', $this->Get('comment'));
 		if (!is_null($iRequestorId)) {
 			$oNewBlock->Set('requestor_id', $iRequestorId);
@@ -1012,7 +1033,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToExpand($aParam) {
+	public function DoCheckToExpand($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -1109,7 +1130,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoExpand($aParam) {
+	public function DoExpand($aParam) {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
@@ -1155,6 +1176,7 @@ EOF
 
 	/**
 	 * Check if block can be delegated
+	 *  Method may be called before child_org_id is set through the second step
 	 *
 	 * @param $aParam
 	 *
@@ -1167,28 +1189,29 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToDelegate($aParam) {
+	public function DoCheckToDelegate($aParam) {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iBlockId = $this->GetKey();
 		$oFirstIpBlockToDel = $this->Get('firstip');
 		$oLastIpBlockToDel = $this->Get('lastip');
-		$iChildOrgId = $aParam['child_org_id'];
-		$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_to_children_only', $iOrgId);
 
-		// If block should be delegated to children only and if it's already delegated, 
-		// 	Make sure redelegation is done at the same level of organization.
-		if (($sDelegateToChildrenOnly == 'dtc_yes') && ($this->Get('parent_org_id') != 0)) {
-			$oBlockOrg = MetaModel::GetObject('Organization', $iOrgId, true /* MustBeFound */);
-			$oChildBlockOrg = MetaModel::GetObject('Organization', $iChildOrgId, true /* MustBeFound */);
-			if ($oBlockOrg->Get('parent_id') != $oChildBlockOrg->Get('parent_id')) {
-				return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:WrongLevelOfOrganization'));
+		$iChildOrgId = (array_key_exists('child_org_id', $aParam)) ? $aParam['child_org_id'] : 0;
+		if ($iChildOrgId != 0) {
+			//  Make sure that new child organization is different from the current one
+			if ($iChildOrgId == $iOrgId) {
+				return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization'));
 			}
-		}
 
-		//  Make sure that new child organization is different from the current one
-		if ($iChildOrgId == $iOrgId) {
-			return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:NoChangeOfOrganization'));
+			// Make sure block is not contained in a block that belongs to the organization that the block will be delegated to
+			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = $iChildOrgId"));
+			while ($oSRange = $oSRangeSet->Fetch()) {
+				$oCurrentFirstIp = $oSRange->Get('firstip');
+				$oCurrentLastIp = $oSRange->Get('lastip');
+				if (($oCurrentFirstIp->IsSmallerOrEqual($oFirstIpBlockToDel) && $oFirstIpBlockToDel->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oLastIpBlockToDel) && $oLastIpBlockToDel->IsSmallerOrEqual($oCurrentLastIp))) {
+					return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
+				}
+			}
 		}
 
 		// Make sure block has no children blocks and no children subnets
@@ -1199,16 +1222,6 @@ EOF
 		$oChildrenSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = $iBlockId"));
 		if ($oChildrenSubnetSet->Count() != 0) {
 			return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnets'));
-		}
-
-		// Make sure block is not contained in a block that belongs to the organization that the block will be delegated to
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.org_id = $iChildOrgId"));
-		while ($oSRange = $oSRangeSet->Fetch()) {
-			$oCurrentFirstIp = $oSRange->Get('firstip');
-			$oCurrentLastIp = $oSRange->Get('lastip');
-			if (($oCurrentFirstIp->IsSmallerOrEqual($oFirstIpBlockToDel) && $oFirstIpBlockToDel->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oLastIpBlockToDel) && $oLastIpBlockToDel->IsSmallerOrEqual($oCurrentLastIp))) {
-				return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
-			}
 		}
 
 		// Everything looks good
@@ -1225,7 +1238,7 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoCheckToUndelegate() {
+	public function DoCheckToUndelegate() {
 		// Set working variables
 		$iBlockId = $this->GetKey();
 
@@ -1262,13 +1275,13 @@ EOF
 	public function GetAsLeaf($bWithIcon, $sTreeOrgId) {
 		$sHtml = '';
 		if ($bWithIcon) {
-			$sHtml = $this->GetIcon(true, true)."&nbsp;&nbsp;";
+			$sHtml = $this->GetIcon(true, true);
 		}
-		$sHtml .= $this->GetHyperlink();
+		$sHtml .= "&nbsp;".$this->GetHyperlink();
 		$oFirstIp = $this->Get('firstip');
 		$oLastIp = $this->Get('lastip');
 		$sHtml .= "&nbsp;&nbsp;&nbsp;[".$oFirstIp->ToString()." - ".$oLastIp->ToString()."]";
-		$sHtml .= "&nbsp;&nbsp;&nbsp;".$this->Get('type');
+		$sHtml .= "&nbsp;&nbsp;&nbsp;".$this->Get('ipblocktype_name');
 
 		// Display delegation information if required
 		$iOrgId = $this->Get('org_id');
@@ -1297,7 +1310,7 @@ EOF
 	 *
 	 * @throws \CoreException
 	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
+	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
@@ -1352,7 +1365,7 @@ EOF
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
+	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 		$sLabelOfAction = Dict::Format('Class:IPBlock/Tab:globalparam');
 		$aParameter = array('ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
 
@@ -1368,7 +1381,7 @@ EOF
 	}
 
 	/**
-	 * Display attributes associated operation
+	 * Display attributes associated to an operation for V < 3.0
 	 *
 	 * @param \WebPage $oP
 	 * @param $sOperation
@@ -1382,7 +1395,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -1528,6 +1541,146 @@ EOF
 	}
 
 	/**
+	 * Display attributes associated to an operation for V >= 3.0
+	 *
+	 * @param \WebPage $oP
+	 * @param $oClassForm
+	 * @param $sOperation
+	 * @param $aDefault
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
+	 */
+	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+		$oMultiColumn = new MultiColumn();
+		$oP->AddUIBlock($oMultiColumn);
+
+		// First column = labels or fields
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
+		switch ($sOperation) {
+			case 'findspace':
+				// Second column = data
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
+
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Block:SizeOfSpace');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Block:MaxNumberOfOffers');
+
+				// Size (in term of prefix) of space
+				// Compute max possible 'CIDR aligned' space to look for,
+				$iBlockPrefix = $this->GetMinTheoriticalBlockPrefix();
+
+				// Display list of choices now
+				// Size of space
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('spacesize');
+				$oColumn2->AddSubBlock($oSelect);
+				$InputPrefix = IPV6_SUBNET_MIN_PREFIX;
+				while (--$InputPrefix >= $iBlockPrefix) {
+					$bSelected = ($InputPrefix == IPV6_SUBNET_MAX_PREFIX) ? true : false;
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputPrefix, '/'.$InputPrefix, $bSelected));
+				}
+				$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
+
+				// Max number of offers
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction2));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
+				$oColumn2->AddSubBlock($oInput);
+				break;
+
+			case 'shrinkblock':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Shrink:IPv6Block:NewFirstIP');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Shrink:IPv6Block:NewLastIP');
+
+				// New first IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Block', 'firstip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// New last IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Block', 'lastip', $sLabelOfAction2, '', OPT_ATT_MANDATORY);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				break;
+
+			case 'splitblock':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Split:IPv6Block:At');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Split:IPv6Block:NameNewBlock');
+
+				// Split IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Address', 'ip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// Name of new block
+				$sInputId = $this->m_iFormId.'newname';
+				$sHTML = "<input type=\"string\" id=\"$sInputId\" name=\"newname\">\n";
+				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'cidr', $sLabelOfAction2, $sHTML);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				break;
+
+			case 'expandblock':
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Expand:IPv6Block:NewFirstIP');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Expand:IPv6Block:NewLastIP');
+
+				// New first IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Block', 'firstip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+				// New last IP
+				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Block', 'lastip', $sLabelOfAction2, '', OPT_ATT_MANDATORY);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				break;
+
+			case 'delegate':
+				// Second column = data
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
+
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:IPv6Block:ChildBlock');
+
+				// Look for the organizations where the block can be delegated to
+				$iOrgId = $this->Get('org_id');
+				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_to_children_only', $iOrgId);
+				if ($sDelegateToChildrenOnly == 'dtc_yes') {
+					// Block can only be delegated to children (grand children...) organizations
+					// Get block's children (list should not be empty at this stage)
+					// Block is not already delegated (checked previously) so it can be delegated to child organization
+					$sOQL = "SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = :org_id AND child.id != :org_id";
+				} else {
+					// Block can be delegated to any organization
+					$sOQL = "SELECT Organization AS o WHERE o.id != :org_id";
+				}
+				$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
+
+				// Display list of choices now
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('child_org_id');
+				$oColumn2->AddSubBlock($oSelect);
+				while ($oChildOrg = $oChildOrgSet->Fetch()) {
+					$iChildOrgKey = $oChildOrg->GetKey();
+					$sChildOrgName = $oChildOrg->GetName();
+					$bSelected = ($iChildOrgKey == $iOrgId) ? true : false;
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iChildOrgKey, $sChildOrgName, $bSelected));
+				}
+				break;
+
+			default:
+				break;
+		};
+	}
+
+	/**
 	 * Get all space (used and non used within block)
 	 *
 	 * @param \WebPage $oP
@@ -1567,12 +1720,12 @@ EOF
 					// Display free space
 					$oALastIp = $aOccupiedSpace[$j]['firstip']->GetPreviousIp();
 					$iNbIps = $oAnIp->GetSizeInterval($oALastIp);
-					$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace', $oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100);
+					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace', $oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100);
 					$oAnIp = $aOccupiedSpace[$j]['firstip'];
 				} elseif ($oAnIp->IsEqual($aOccupiedSpace[$j]['firstip'])) {
 					// Display object attributes
 					$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
-					$sHtml .= "<li>".$sIcon.$aOccupiedSpace[$j]['obj']->GetHyperlink();
+					$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 					if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet') {
 						$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 					} else {
@@ -1646,23 +1799,17 @@ EOF
 			// Tab for subnets
 			$oSubnetSearch = DBObjectSearch::FromOQL("SELECT IPv6Subnet AS subnet WHERE subnet.block_id = $iBlockId AND subnet.org_id = $iOrgId");
 			$oSubnetSet = new CMDBObjectSet($oSubnetSearch);
-			$iSubnets = $oSubnetSet->Count();
-			if ($iSubnets > 0) {
-				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:subnet').' ('.$iSubnets.')');
-				$oP->p(MetaModel::GetClassIcon('IPv6Subnet').'&nbsp;'.Dict::Format('Class:IPBlock/Tab:subnet+'));
-				$oP->p($this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent'));
-				$oBlock = new DisplayBlock($oSubnetSearch, 'list');
-				$oBlock->Display($oP, 'child_subnets', $aExtraParams);
-			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPBlock/Tab:subnet'));
-				$oP->p(MetaModel::GetClassIcon('IPv6Subnet').'&nbsp;'.Dict::S('Class:IPBlock/Tab:subnet+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
-			}
+
+			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
+			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
+			$sSubTitle = ($oSubnetSet->Count() > 0) ? $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent') : '';
+			$this->DisplayTabContent($oP, $sName, 'child_subnets', 'IPv6Subnet', $sTitle, $sSubTitle, $oSubnetSet);
 		}
 	}
 
 	/**
 	 * Compute attributes before writing object
+	 *l
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException

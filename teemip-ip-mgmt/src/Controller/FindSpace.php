@@ -25,6 +25,7 @@ use IPv4Block;
 use IPv4Subnet;
 use IPv6Block;
 use MetaModel;
+use TeemIpUI;
 use UserRights;
 use utils;
 use WebPage;
@@ -106,12 +107,12 @@ class FindSpace {
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			$sClassIcon = MetaModel::GetClassIcon('IPv4Block');
 			$oP->add(<<<HTML
-			<!-- Display title -->
-			<div class="page_header teemip_page_header">
-				<h1>$sClassIcon $sHeaderTitle</h1>
-			</div>
-			<!-- Beginning of wizContainer -->
-			<div class="wizContainer">
+				<!-- Display title -->
+				<div class="page_header teemip_page_header">
+					<h1>$sClassIcon $sHeaderTitle</h1>
+				</div>
+				<!-- Beginning of wizContainer -->
+				<div class="wizContainer">
 HTML
 			);
 
@@ -512,7 +513,10 @@ HTML
 			$oBlock->Set('name', '['.$sIp.' - '.$sLastIP.']');
 		}
 
-		$sHtml = $oBlock->GetAvailableSpace($oP, 0, $aParameter);
+		list ($sMessage, $sHtml) = $oBlock->GetAvailableSpace($oP, 0, $aParameter);
+		if ($sMessage != '') {
+			TeemIpUI::DisplayInfoMessage($oP, $sMessage);
+		}
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			$oBlock->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
 			$oP->add($sHtml);

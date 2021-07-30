@@ -368,7 +368,7 @@
           <attributes/>
         </naming>
         <display_template/>
-        <icon/>
+        <icon>asset/img/ipblock.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -849,7 +849,7 @@
           <attributes/>
         </naming>
         <display_template/>
-        <icon/>
+        <icon>asset/img/ipsubnet.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1764,7 +1764,7 @@
           <attributes/>
         </naming>
         <display_template/>
-        <icon/>
+        <icon>asset/img/iprange.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="range"/>

@@ -12,6 +12,7 @@ use DBObjectSearch;
 use Dict;
 use IPConfig;
 use IPObject;
+use TeemIpUI;
 use utils;
 use WebPage;
 
@@ -334,6 +335,17 @@ class _IPBlock extends IPObject {
 	}
 
 	/**
+	 * Check if space can be searched
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 */
+	public function DoCheckToDisplayAvailableSpace($aParam) {
+		return '';
+	}
+
+	/**
 	 * Displays available space
 	 *
 	 * @param \WebPage $oP
@@ -349,8 +361,11 @@ class _IPBlock extends IPObject {
 	 * @throws \OQLException
 	 */
 	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+		list($sMessage, $sHtml) = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
+		if ($sMessage != '') {
+			TeemIpUI::DisplayInfoMessage($oP, $sMessage);
+		}
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
-		$sHtml = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
 		$oP->add($sHtml);
 	}
 
@@ -361,10 +376,10 @@ class _IPBlock extends IPObject {
 	 * @param $iChangeId
 	 * @param $aParameter
 	 *
-	 * @return string
+	 * @return array
 	 */
 	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
-		return '';
+		return array();
 	}
 
 	/**
