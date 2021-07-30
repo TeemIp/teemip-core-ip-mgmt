@@ -1,8 +1,0 @@
-{
-  "license": "AGPLv3",
-  "autoload": {
-    "psr-4": {
-      "TeemIp\\TeemIp\\Extension\\Framework\\": "src/"
-    }
-  }
-}
