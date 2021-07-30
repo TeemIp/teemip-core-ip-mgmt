@@ -32,8 +32,13 @@ li .ip_lookup_img {
 }
 
 .teemip_page_header {
-	margin-top: 5px;
+    margin-top: 5px;
 }
+
 .teemip_message_error {
-	margin-top: 5px;
+    margin-top: 5px;
+}
+
+delegation_highlight {
+    color: #ff0000;
 }

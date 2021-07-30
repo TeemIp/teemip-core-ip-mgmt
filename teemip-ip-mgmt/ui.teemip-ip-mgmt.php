@@ -15,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
-use TeemIp\TeemIp\Extension\Framework\Controller\DisplayTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\DisplayTree;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /*******************************************************************
@@ -207,9 +207,8 @@ try {
 						$sErrorString = $oObj->DoCheckToDisplayAvailableSpace($aPostedParam);
 						if ($sErrorString != '') {
 							// Found issues, explain and give the user another chance
-							$sIssueDesc = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':'.$sErrorString);
-							$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-							$oP->add($sMessage);
+							$sMessage = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':'.$sErrorString);
+							TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 							$sNextOperation = $oObj->GetNextOperation($operation);
 							$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -228,8 +227,7 @@ try {
 					list ($sIssueDesc, $aPostedParam['block_id']) = FindSpace::DoCheckToDisplayAvailableSpace($aPostedParam);
 					if ($sIssueDesc != '') {
 						// Found issues, explain and give the user another chance
-						$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-						$oP->add($sMessage);
+						TeemIpUI::DisplayWarningMessage($oP, $sIssueDesc);
 
 						FindSpace::DisplayOperationForm($oP, $oAppContext, $aPostedParam);
 					} else {
@@ -406,7 +404,7 @@ try {
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':CannotBeShrunk', $sErrorString);
-					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -466,7 +464,7 @@ try {
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':CannotBeSplit', $sErrorString);
-					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -527,7 +525,7 @@ try {
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':CannotBeExpanded', $sErrorString);
-					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -819,7 +817,16 @@ HTML
 				}
 
 				// Process request now
-				$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
+				$sErrorString = $oObj->DoCheckToDelegate(array());
+				if ($sErrorString != '') {
+					// Found issues, explain and give the user another chance
+					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
+
+					$oObj->DisplayDetails($oP);
+				} else {
+					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
+				}
 			}
 			break; // End case delegate
 
@@ -854,7 +861,7 @@ HTML
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
-					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -908,7 +915,7 @@ HTML
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
 					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':CannotBeUndelegated', $sErrorString);
-					TeemIpUI::DisplayErrorMessage($oP, $sMessage);
+					TeemIpUI::DisplayWarningMessage($oP, $sMessage);
 
 					$oObj->DisplayDetails($oP);
 				} else {
@@ -1185,14 +1192,28 @@ class TeemIpUI {
 				->AddHtml($sMessage);
 			$oP->AddUiBlock($oPanel);
 		}
-
 	}
 
 	/**
 	 * @param \WebPage $oP
 	 * @param $sMessage
 	 */
-	public static function DisplayErrorMessage(WebPage $oP, $sMessage) {
+	public static function DisplayInfoMessage(WebPage $oP, $sMessage) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sMessageContainer = "<div class=\"header_message message_info teemip_message_status\">".$sMessage."</div>";
+			$oP->add($sMessageContainer);
+		} else {
+			$oPanel = PanelUIBlockFactory::MakeForInformation('')
+				->AddHtml($sMessage);
+			$oP->AddUiBlock($oPanel);
+		}
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sMessage
+	 */
+	public static function DisplayWarningMessage(WebPage $oP, $sMessage) {
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
 			$oP->add($sMessageContainer);
@@ -1201,6 +1222,5 @@ class TeemIpUI {
 				->AddHtml($sMessage);
 			$oP->AddUiBlock($oPanel);
 		}
-
 	}
 }

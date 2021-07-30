@@ -3,10 +3,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-function IpWidget(id, sTargetClass, sTargetLabel, iChangeId, oDefault) {
+function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 	this.id = id;
 	this.sTargetClass = sTargetClass;
-	this.sTargetLabel = sTargetLabel;
+	this.sTitle = sTitle;
 	this.iChangeId = iChangeId;
 	this.oDefault = oDefault;
 	this.bCreationInProgress = false;
@@ -47,7 +47,7 @@ function IpWidget(id, sTargetClass, sTargetLabel, iChangeId, oDefault) {
 			function (data) {
 				$('#dialog_content').html(data);
 				$('#dialog_content').dialog({
-					title: Dict.Format('UI:CreationTitle_Class', me.sTargetLabel),
+					title: me.sTitle,
 					modal: true,
 					width: 850
 				});

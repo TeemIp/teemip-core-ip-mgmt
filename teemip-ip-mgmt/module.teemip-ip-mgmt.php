@@ -18,7 +18,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-tickets/2.7.0',
-			'teemip-handy-framework/1.0.0',
+			'teemip-framework/1.0.0',
 			'teemip-network-mgmt/2.7.1',
 		),
 		'mandatory' => false,
@@ -33,11 +33,6 @@ SetupWebPage::AddModule(
 			'src/Hook/AllocateIPsToProductionCIs.php',
 			'src/Hook/ReleaseIPsFromObsoleteCIs.php',
 			'src/Hook/UnassignIPsWithNoCI.php',
-			'src/Model/AttributeAliasList.php',
-			'src/Model/AttributeDomainName.php',
-			'src/Model/AttributeHostName.php',
-			'src/Model/AttributeIPPercentage.php',
-			'src/Model/AttributeMacAddress.php',
 			'model.teemip-ip-mgmt.php',
 		),
 		'data.struct' => array(
