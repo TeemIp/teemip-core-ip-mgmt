@@ -8,12 +8,12 @@ namespace TeemIp\TeemIp\Extension\Webservices\Hook;
 
 use CMDBSource;
 use IPConfig;
-use IPv4Subnet;
 use iRestServiceProvider;
 use MetaModel;
 use RestResult;
 use RestResultWithObjects;
 use RestUtils;
+use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
 use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultCountIps;
 use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultWithTextFile;
 use UserRights;
@@ -285,9 +285,8 @@ class TeemIpServices implements iRestServiceProvider
 							// Block exists
 							// Pick first free subnet
 							// Register subnet, if any
-							if ($sSubnetClass == 'IPv4Subnet')
-							{
-								$iSubnetSize = IPv4Subnet::MaskToSize($aFields['mask']);
+							if ($sSubnetClass == 'IPv4Subnet') {
+								$iSubnetSize = TeemIpUtils::MaskToSize($aFields['mask']);
 							}
 							else
 							{

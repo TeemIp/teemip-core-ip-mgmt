@@ -20,12 +20,12 @@ class ComposerStaticInit8025869d7922d0380a3544e4f1de10c6
         ),
     );
 
-    public static $classMap = array (
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => __DIR__ . '/../..' . '/src/Helper/DisplayTree.php',
-        'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\TeemIpUtils' => __DIR__ . '/../..' . '/src/Helper/TeemIpUtils.php',
-        'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => __DIR__ . '/../..' . '/src/Helper/iTree.php',
-        'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_TeemIpObject' => __DIR__ . '/../..' . '/src/Model/_TeemIpObject.php',
+    public static $classMap = array(
+	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => __DIR__.'/../..'.'/src/Helper/DisplayMessage.php',
+	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => __DIR__.'/../..'.'/src/Helper/DisplayTree.php',
+	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\TeemIpUtils' => __DIR__.'/../..'.'/src/Helper/TeemIpUtils.php',
+	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => __DIR__.'/../..'.'/src/Helper/iTree.php',
+	    'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_TeemIpObject' => __DIR__.'/../..'.'/src/Model/_TeemIpObject.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

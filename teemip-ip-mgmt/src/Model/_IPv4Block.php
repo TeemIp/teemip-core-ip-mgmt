@@ -20,7 +20,6 @@ use DBObjectSearch;
 use Dict;
 use IPBlock;
 use IPConfig;
-use IPv4Subnet;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
@@ -38,14 +37,14 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipblock-xs.png';
 
 			return ("<img src=\"$sIcon\" alt=\"IP Block\" style=\"vertical-align:middle;\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**
@@ -152,7 +151,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \OQLException
 	 */
 	public function GetFreeSpace($iSize, $iMaxOffer, $iOffsetIp) {
-		$bitMask = IPv4Subnet::SizeToMask($iSize);
+		$bitMask = TeemIpUtils::SizeToMask($iSize);
 		$iOrgId = $this->Get('org_id');
 		$iKey = ($this->GetKey() > 0) ? $this->GetKey() : 0;
 		$aFreeSpace = array();
@@ -319,11 +318,11 @@ class _IPv4Block extends IPBlock implements iTree {
 	public function GetMinTheoriticalBlockPrefix() {
 		//	1. Search space that can fit in block only
 		$iBlockSize = $this->GetSize();
-		$iMaxSize = IPv4Subnet::MaskToSize("192.0.0.0");
+		$iMaxSize = TeemIpUtils::MaskToSize("192.0.0.0");
 		while ($iBlockSize <= $iMaxSize) {
 			$iMaxSize /= 2;
 		}
-		$bitMask = TeemIpUtils::myip2long(IPv4Subnet::SizeToMask($iMaxSize));
+		$bitMask = TeemIpUtils::myip2long(TeemIpUtils::SizeToMask($iMaxSize));
 		//	2. Make sure block holds space of $iMaxSize CIDR aligned
 		$iFirstIp = TeemIpUtils::myip2long($this->Get('firstip'));
 		$iLastIp = TeemIpUtils::myip2long($this->Get('lastip'));
@@ -333,7 +332,7 @@ class _IPv4Block extends IPBlock implements iTree {
 				$bitMask = $bitMask >> 1;
 			}
 		}
-		$i = IPv4Subnet::SizeToBit($iMaxSize);
+		$i = TeemIpUtils::SizeToBit($iMaxSize);
 
 		return $i;
 	}
@@ -397,7 +396,7 @@ class _IPv4Block extends IPBlock implements iTree {
 			}
 			// Check that FirstIp is CIDR aligned
 			// Call to ip2long(long2ip()) is a workaround to handle integers that are above their max size
-			$iMask = IPv4Subnet::SizeToMask($Size);
+			$iMask = TeemIpUtils::SizeToMask($Size);
 			if (($iFirstIp & TeemIpUtils::myip2long($iMask)) != $iFirstIp) {
 				return false;
 			}
@@ -475,7 +474,7 @@ class _IPv4Block extends IPBlock implements iTree {
 		$sIpToStartFrom = array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip');
 		$iIpToStartFrom = TeemIpUtils::myip2long($sIpToStartFrom);
 		$iSize = $aParameter['spacesize'];
-		$bitMask = IPv4Subnet::SizeToMask($iSize);
+		$bitMask = TeemIpUtils::SizeToMask($iSize);
 		$iMaxOffer = $aParameter['maxoffer'];
 		$sStatusSubnet = $aParameter['status_subnet'];
 		$sType = $aParameter['type'];
@@ -520,7 +519,7 @@ class _IPv4Block extends IPBlock implements iTree {
 
 			// Display Summary of parameters
 			$sHtml .= "<ul><li>";
-			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary', $iMaxOffer, IPv4Subnet::SizeToBit($iSize))."</b>&nbsp;";
+			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary', $iMaxOffer, TeemIpUtils::SizeToBit($iSize))."</b>&nbsp;";
 			$sHtml .= ($iId > 0) ? $this->GetHyperlink() : '';
 			$sHtml .= "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]&nbsp;";
 			$sHtml .= (array_key_exists('ip', $aParameter)) ? Dict::Format('IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom', $sIpToStartFrom) : '';
@@ -558,7 +557,7 @@ class _IPv4Block extends IPBlock implements iTree {
 							// Display space only if within requested scope
 							if ($iIpToStartFrom <= $iAnOccupiedIp) {
 								// Display object attributes
-								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+								$sIcon = $aOccupiedSpace[$j]['obj']->GetMultiSizeIcon(true, true);
 								$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 								if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 									$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
@@ -1229,7 +1228,7 @@ EOF
 	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
 		$sHtml = '';
 		if ($bWithIcon) {
-			$sHtml = $this->GetIcon(true, true);
+			$sHtml = $this->GetMultiSizeIcon(true, true);
 		}
 		$sHtml .= "&nbsp;".$this->GetHyperlink();
 		$sHtml .= "&nbsp;&nbsp;&nbsp;[".$this->Get('firstip')." - ".$this->Get('lastip')."]";
@@ -1378,12 +1377,12 @@ EOF
 				$sAttCode = 'spacesize';
 				$sInputId = $iFormId.'_'.$sAttCode;
 				$sHTMLValue = "<select id=\"$sInputId\" name=\"$sAttCode\">\n";
-				$InputSize = IPv4Subnet::MaskToSize(IPv4Subnet::BitToMask($i)); // Corrects pb with some 64bits OS - Centos...
+				$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($i)); // Corrects pb with some 64bits OS - Centos...
 				while ($i <= 32) {
 					if ($i == $iDefaultMask) {
-						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".IPv4Subnet::BitToMask($i)." /$i</option>\n";
+						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".TeemIpUtils::BitToMask($i)." /$i</option>\n";
 					} else {
-						$sHTMLValue .= "<option value=\"$InputSize\">".IPv4Subnet::BitToMask($i)." /$i</option>\n";
+						$sHTMLValue .= "<option value=\"$InputSize\">".TeemIpUtils::BitToMask($i)." /$i</option>\n";
 					}
 					$InputSize /= 2;
 					$i++;
@@ -1532,9 +1531,6 @@ EOF
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
-//		$oClassForm->AddSubBlock($oMultiColumn);
-//		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-//		$oClassForm->AddSubBlock($oToolbar);
 
 		// First column = labels or fields
 		$oColumn1 = new Column();
@@ -1559,7 +1555,7 @@ EOF
 						$iDefaultMask = 31;
 					}
 				}
-				$InputSize = IPv4Subnet::MaskToSize(IPv4Subnet::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
+				$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
 
 				// Display list of choices now
 				// Size of space
@@ -1569,7 +1565,7 @@ EOF
 				$oColumn2->AddSubBlock($oSelect);
 				while ($iPrefix <= 32) {
 					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPv4Subnet::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, TeemIpUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
 					$InputSize /= 2;
 					$iPrefix++;
 				}
@@ -1716,7 +1712,7 @@ EOF
 				} else {
 					if ($iAnOccupiedIp == $aOccupiedSpace[$j]['firstip']) {
 						// Display object attributes
-						$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+						$sIcon = $aOccupiedSpace[$j]['obj']->GetMultiSizeIcon(true, true);
 						$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 						if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 							$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
@@ -2096,7 +2092,7 @@ EOF
 					'requestor_id' => $this->Get('requestor_id'),
 					'block_id' => $iKey,
 					'ip' => $sFirstIp,
-					'mask' => IPv4Subnet::SizeToMask($iSize),
+					'mask' => TeemIpUtils::SizeToMask($iSize),
 					'allocation_date' => time(),
 				);
 				$oSubnet = MetaModel::NewObject('IPv4Subnet', $aValues);

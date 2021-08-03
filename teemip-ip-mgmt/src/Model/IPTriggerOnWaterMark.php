@@ -6,14 +6,14 @@
 
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
+use DBObject;
 use MetaModel;
 use Trigger;
 use utils;
 
 class IPTriggerOnWaterMark extends Trigger
 {
-	public static function Init()
-	{
+	public static function Init() {
 		$aParams = array
 		(
 			"category" => "bizmodel",
@@ -41,15 +41,11 @@ class IPTriggerOnWaterMark extends Trigger
 	}
 
 	/**
-	 * @param \DBObject $oObject
-	 *
-	 * @return bool
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @inheritDoc
 	 */
-	public function IsInScope(DBObject $oObject)
-	{
+	public function IsInScope(DBObject $oObject) {
 		$sTargetClass = $this->Get('target_class');
+
 		return  ($oObject instanceof $sTargetClass);
 	}
 }

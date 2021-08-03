@@ -93,7 +93,7 @@ class _IPSubnet extends IPObject {
 		$aParam = array();
 		switch ($sOperation) {
 			case 'dofindspace':
-				$aParam['rangesize'] = utils::ReadPostedParam('rangesize', '', 'raw_data');
+				$aParam['spacesize'] = utils::ReadPostedParam('spacesize', '', 'raw_data');
 				$aParam['maxoffer'] = utils::ReadPostedParam('maxoffer', 'DEFAULT_MAX_FREE_SPACE_OFFERS', 'raw_data');
 				$aParam['status_subnet'] = '';
 				$aParam['type'] = '';
@@ -203,9 +203,7 @@ class _IPSubnet extends IPObject {
 	}
 
 	/**
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
+	 * @inheritdoc
 	 */
 	public function OnInsert() {
 		parent::OnInsert();
@@ -224,9 +222,7 @@ class _IPSubnet extends IPObject {
 	}
 
 	/**
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
+	 * @inheritdoc
 	 */
 	public function OnUpdate() {
 		parent::OnUpdate();
@@ -245,14 +241,7 @@ class _IPSubnet extends IPObject {
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritDoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		switch ($sAttCode) {
@@ -274,21 +263,22 @@ class _IPSubnet extends IPObject {
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified at creation.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritDoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
 		switch ($sAttCode) {
 			case 'last_discovery_date':
 			case 'ping_duration':
+			case 'ping_discovered':
 			case 'iplookup_duration':
+			case 'iplookup_discovered':
 			case 'scan_duration':
-				return OPT_ATT_READONLY;
+			case 'scan_discovered':
+				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+					return OPT_ATT_READONLY;
+				} else {
+					return OPT_ATT_HIDDEN;
+				}
 
 			default:
 				break;
@@ -349,6 +339,76 @@ HTML
 HTML
 			);
 		}
+	}
+
+	/**
+	 * @param \WebPage $oP
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function DoListIps(WebPage $oP, $aParam) {
+		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:ListIps:');
+		$oP->add($this->GetListIps($oP, $aParam));
+	}
+
+	/**
+	 * Displays list of IP addresses within GUI
+	 *
+	 * @param \WebPage $oP
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 */
+	protected function GetListIps(WebPage $oP, $aParam) {
+		return '';
+	}
+
+	/**
+	 * Displays available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParameter
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+		$sHtml = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
+		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
+		$oP->add($sHtml);
+	}
+
+	/**
+	 * Displays available space
+	 *
+	 * @param \WebPage $oP
+	 * @param $iChangeId
+	 * @param $aParam
+	 *
+	 * @return string
+	 */
+	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+		return '';
 	}
 
 	/**

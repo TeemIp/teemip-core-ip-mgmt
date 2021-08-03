@@ -21,8 +21,6 @@ class ComposerStaticInit1e3d7afeae82c7ba9567c7cfb5c5b152
     );
 
     public static $classMap = array (
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_DNSObject' => __DIR__ . '/../..' . '/src/Model/_DNSObject.php',
         'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_Domain' => __DIR__ . '/../..' . '/src/Model/_Domain.php',
     );
 

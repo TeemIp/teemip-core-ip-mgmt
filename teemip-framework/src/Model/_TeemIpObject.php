@@ -20,7 +20,6 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
-use IPConfig;
 use MenuBlock;
 use MetaModel;
 use utils;
@@ -540,28 +539,28 @@ EOF
 	 */
 	protected function DisplayGlobalParametersInLocalModifyForm(WebPage $oP, $aParameter, $aDefault = array()) {
 		// Get Global config object
-		$oIpConfig = IPConfig::GetGlobalIPConfig($this->Get('org_id'));
+//		$oIpConfig = IPConfig::GetGlobalIPConfig($this->Get('org_id'));
 		$aDetails = array();
 
 		// Display Parameter with option to be changed for the transaction
-		foreach ($aParameter as $sParam) {
-			$sInputId = $sParam;
-			$oAttDef = MetaModel::GetAttributeDef('IPConfig', $sParam);
-			$sValue = (array_key_exists($sParam, $aDefault)) ? $aDefault[$sParam] : $oIpConfig->Get($sParam);
-			$sDisplayValue = $oIpConfig->GetEditValue($sParam);
-			$iFlags = $oIpConfig->GetAttributeFlags($sParam);
-			$aArgs = array(
-				'this' => $oIpConfig,
-				'formPrefix' => '',
-			);
-			$sHTMLValue = "<span id=\"field_{$sInputId}\">".$oIpConfig->GetFormElementForField($oP, 'IPConfig', $sParam, $oAttDef, $sValue,
-					$sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-			$aDetails[] = array(
-				'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
-				'value' => $sHTMLValue,
-			);
-		}
-
+		/*		foreach ($aParameter as $sParam) {
+					$sInputId = $sParam;
+					$oAttDef = MetaModel::GetAttributeDef('IPConfig', $sParam);
+					$sValue = (array_key_exists($sParam, $aDefault)) ? $aDefault[$sParam] : $oIpConfig->Get($sParam);
+					$sDisplayValue = $oIpConfig->GetEditValue($sParam);
+					$iFlags = $oIpConfig->GetAttributeFlags($sParam);
+					$aArgs = array(
+						'this' => $oIpConfig,
+						'formPrefix' => '',
+					);
+					$sHTMLValue = "<span id=\"field_{$sInputId}\">".$oIpConfig->GetFormElementForField($oP, 'IPConfig', $sParam, $oAttDef, $sValue,
+							$sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+					$aDetails[] = array(
+						'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
+						'value' => $sHTMLValue,
+					);
+				}
+		*/
 		$oP->Details($aDetails);
 	}
 

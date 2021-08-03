@@ -6,9 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => $baseDir . '/src/Helper/DisplayTree.php',
-    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\TeemIpUtils' => $baseDir . '/src/Helper/TeemIpUtils.php',
-    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => $baseDir . '/src/Helper/iTree.php',
-    'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_TeemIpObject' => $baseDir . '/src/Model/_TeemIpObject.php',
+	'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => $baseDir.'/src/Helper/DisplayMessage.php',
+	'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => $baseDir.'/src/Helper/DisplayTree.php',
+	'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\TeemIpUtils' => $baseDir.'/src/Helper/TeemIpUtils.php',
+	'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => $baseDir.'/src/Helper/iTree.php',
+	'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_TeemIpObject' => $baseDir.'/src/Model/_TeemIpObject.php',
 );

@@ -6,6 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'TeemIp\\TeemIp\\Extension\\NewsroomProvider\\Controller\\TeemIpNewsroomProvider' => $baseDir . '/src/Controller/TeemIpNewsroomProvider.php',
 );

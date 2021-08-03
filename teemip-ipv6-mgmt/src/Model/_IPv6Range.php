@@ -34,14 +34,14 @@ class _IPv6Range extends IPRange {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/ipv6range-xs.png';
 
 			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**

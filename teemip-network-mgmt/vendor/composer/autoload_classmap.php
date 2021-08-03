@@ -6,7 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
-    'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_DNSObject' => $baseDir . '/src/Model/_DNSObject.php',
     'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_Domain' => $baseDir . '/src/Model/_Domain.php',
 );

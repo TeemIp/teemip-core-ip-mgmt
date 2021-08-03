@@ -4,8 +4,7 @@
     <class id="IPObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
-        <name>TeemIp\TeemIp\Extension\IPManagement\Model\_IPObject</name>
-        <file>src/Model/_IPObject.php</file>
+        <name>TeemIp\TeemIp\Extension\Framework\Model\_TeemIpObject</name>
       </php_parent>
       <properties>
         <comment/>

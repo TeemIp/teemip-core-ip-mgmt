@@ -22,10 +22,10 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
 use IPv4Block;
-use IPv4Subnet;
 use IPv6Block;
 use MetaModel;
-use TeemIpUI;
+use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
+use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;
@@ -261,7 +261,7 @@ HTML
 					$iDefaultMask = 31;
 				}
 			}
-			$InputSize = IPv4Subnet::MaskToSize(IPv4Subnet::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
+			$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
 		}
 
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
@@ -310,9 +310,9 @@ HTML
 			if ($sSpaceType == 'ipv4space') {
 				while ($iPrefix <= 32) {
 					if ($iPrefix == $iDefaultMask) {
-						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".IPv4Subnet::BitToMask($iPrefix)." /$iPrefix</option>\n";
+						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".TeemIpUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
 					} else {
-						$sHTMLValue .= "<option value=\"$InputSize\">".IPv4Subnet::BitToMask($iPrefix)." /$iPrefix</option>\n";
+						$sHTMLValue .= "<option value=\"$InputSize\">".TeemIpUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
 					}
 					$InputSize /= 2;
 					$iPrefix++;
@@ -410,7 +410,7 @@ HTML
 			if ($sSpaceType == 'ipv4space') {
 				while ($iPrefix <= 32) {
 					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPv4Subnet::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, TeemIpUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
 					$InputSize /= 2;
 					$iPrefix++;
 				}
@@ -515,7 +515,7 @@ HTML
 
 		list ($sMessage, $sHtml) = $oBlock->GetAvailableSpace($oP, 0, $aParameter);
 		if ($sMessage != '') {
-			TeemIpUI::DisplayInfoMessage($oP, $sMessage);
+			DisplayMessage::Info($oP, $sMessage);
 		}
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			$oBlock->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');

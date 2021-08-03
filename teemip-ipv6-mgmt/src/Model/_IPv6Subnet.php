@@ -38,14 +38,14 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/ipv6subnet-xs.png';
 
 			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**
@@ -489,13 +489,15 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \CoreException
 	 */
 	public function DoCheckToDisplayAvailableSpace($aParam) {
-		$iRangeSize = $aParam['rangesize'];
+		$iSpaceSize = $aParam['spacesize'];
 
 		// Get list of registered IPs & ranges in subnet
 		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize) {
+		if ($iSpaceSize >= $iSubnetSize) {
 			// Required range size is to big, exit
 			return ('RangeTooBig');
+		} elseif ($iSpaceSize == 0) {
+			return ('RangeEmpty');
 		}
 
 		return '';
@@ -517,7 +519,7 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		$iRangeSize = $aParam['rangesize'];
+		$iRangeSize = $aParam['spacesize'];
 		$iMaxOffer = $aParam['maxoffer'];
 
 		// Get list of registered IPs & ranges in subnet
@@ -624,7 +626,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DoListIps(WebPage $oP, $iChangeId, $aParam) {
+	public function DoListIps(WebPage $oP, $aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
@@ -676,7 +678,7 @@ EOF
 
 		// Display first IP
 		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
+		$oP->add("<li>".$this->GetMultiSizeIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
 
 		// ... and dummy line if display doesn't start at first IP
 		if ($bPrintDummyFirstLine) {
@@ -694,7 +696,7 @@ EOF
 				}
 
 				// Display name and range attributes
-				$sIcon = $oIpRange->GetIcon(true, true);
+				$sIcon = $oIpRange->GetMultiSizeIcon(true, true);
 				$oP->add("<li>".$sIcon.$oIpRange->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oIpRange->Get('firstip')." - ".$oIpRange->Get('lastip')."]");
 				$oP->add("&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>\n");
 				$oIpRangeLastIp = $oIpRange->Get('lastip');
@@ -719,7 +721,7 @@ EOF
 					$oP->add($sHTMLValue);
 					$oP->add_ready_script(
 						<<<EOF
-					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
+					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', '', 0, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				} else {
@@ -846,8 +848,8 @@ EOF
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers');
 
 				// Size of range
-				$sInputId = $iFormId.'_'.'rangesize';
-				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"rangesize\" maxlength=\"4\" size=\"4\">\n";
+				$sInputId = $iFormId.'_'.'spacesize';
+				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"spacesize\" maxlength=\"4\" size=\"4\">\n";
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
 					'value' => $sHTMLValue,

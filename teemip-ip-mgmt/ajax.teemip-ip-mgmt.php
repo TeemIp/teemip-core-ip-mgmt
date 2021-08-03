@@ -15,7 +15,6 @@ if (!defined('APPROOT')) {
 	}
 }
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 /************************************************
@@ -87,12 +86,14 @@ try {
 					$oObj->DBInsert();
 					switch ($sClass) {
 						case 'IPv4Block':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv4Block $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
 							break;
 
 						case 'IPv4Subnet':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv4Subnet $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('changeid', '');
@@ -116,11 +117,13 @@ try {
 							break;
 
 						case 'IPv4Range':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv4Range $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')." - ".$oObj->Get('lastip')."]";
 							break;
 
 						case 'IPv4Address':
+							/** @var \IPv4Address $oObj */
 							$sResult = "&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp; - ".$oObj->GetAsHtml('status')."&nbsp;&nbsp; - ".$oObj->Get('short_name').".".$oObj->Get('domain_name');
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('iChangeId', '');
@@ -134,12 +137,14 @@ try {
 							break;
 
 						case 'IPv6Block':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv6Block $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
 							break;
 
 						case 'IPv6Subnet':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv6Subnet $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$oObj->Get('mask'));
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('changeid', '');
@@ -163,12 +168,13 @@ try {
 							break;
 
 						case 'IPv6Range':
-						case 'IPv4Range':
-							$sIcon = $oObj->GetIcon(true, true);
+							/** @var \IPv6Range $oObj */
+							$sIcon = $oObj->GetMultiSizeIcon(true, true);
 							$sResult = "&nbsp;".$sIcon."&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oObj->Get('firstip')->GetAsCompressed()." - ".$oObj->Get('lastip')->GetAsCompressed()."]";
 							break;
 
 						case 'IPv6Address':
+							/** @var \IPv6Address $oObj */
 							$sResult = "&nbsp;".$oObj->GetHyperlink()."&nbsp;&nbsp; - ".$oObj->GetAsHtml('status')."&nbsp;&nbsp; - ".$oObj->Get('short_name').".".$oObj->Get('domain_name');
 							// Update IP Change if appropriate
 							$iChangeId = utils::ReadParam('iChangeId', '');

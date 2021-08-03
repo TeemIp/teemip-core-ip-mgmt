@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Address' => $baseDir . '/src/Model/_IPv6Address.php',
     'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Block' => $baseDir . '/src/Model/_IPv6Block.php',
     'TeemIp\\TeemIp\\Extension\\IPv6Management\\Model\\_IPv6Range' => $baseDir . '/src/Model/_IPv6Range.php',

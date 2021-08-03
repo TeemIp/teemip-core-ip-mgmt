@@ -6,7 +6,6 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Controller\\FindSpace' => $baseDir . '/src/Controller/FindSpace.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\AllocateIPsToProductionCIs' => $baseDir . '/src/Hook/AllocateIPsToProductionCIs.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\IPMgmtExtraMenus' => $baseDir . '/src/Hook/IPMgmtExtraMenus.php',
@@ -17,7 +16,6 @@ return array(
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPApplication' => $baseDir . '/src/Model/_IPApplication.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPBlock' => $baseDir . '/src/Model/_IPBlock.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPConfig' => $baseDir . '/src/Model/_IPConfig.php',
-    'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPObject' => $baseDir . '/src/Model/_IPObject.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPRange' => $baseDir . '/src/Model/_IPRange.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPSubnet' => $baseDir . '/src/Model/_IPSubnet.php',
     'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPUsage' => $baseDir . '/src/Model/_IPUsage.php',

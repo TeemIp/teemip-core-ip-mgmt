@@ -26,14 +26,14 @@ class _IPv4Range extends IPRange {
 	/**
 	 * Returns icon to be displayed
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/iprange-xs.png';
 
 			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**
@@ -269,7 +269,7 @@ class _IPv4Range extends IPRange {
 
 		// Display first IP
 		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
+		$oP->add("<li>".$this->GetMultiSizeIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
 
 		// ... and dummy line if display doesn't start at first IP
 		if ($bPrintDummyFirstLine) {

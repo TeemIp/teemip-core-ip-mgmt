@@ -2,10 +2,9 @@
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
   <classes>
     <class id="DNSObject" _delta="define">
-      <parent>TeemIpObject</parent>
+      <parent>cmdbAbstractObject</parent>
       <php_parent>
-        <name>TeemIp\TeemIp\Extension\NetworkManagement\Model\_DNSObject</name>
-        <file>src/Model/_DNSObject.php</file>
+        <name>TeemIp\TeemIp\Extension\Framework\Model\_TeemIpObject</name>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt,dnsmgmt</category>

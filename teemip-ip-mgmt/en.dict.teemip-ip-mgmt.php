@@ -235,9 +235,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:subnets_list' => 'NAT Subnets',
 	'Class:IPSubnet/Attribute:subnets_list+' => 'List of NAT subnets',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
-	'Class:IPSubnet/Attribute:vlans_list+' => '',
+	'Class:IPSubnet/Attribute:vlans_list+' => 'List of VLANs that the subnet belong to',
 	'Class:IPSubnet/Attribute:vrfs_list' => 'VRFs',
-	'Class:IPSubnet/Attribute:vrfs_list+' => '',
+	'Class:IPSubnet/Attribute:vrfs_list+' => 'List of VRFs that the subnet belong to',
 	'Class:IPSubnet/Attribute:location_list' => 'Locations',
 	'Class:IPSubnet/Attribute:location_list+' => 'Locations where the Subnet expands',
 	'Class:IPSubnet/Attribute:summary/cell0' => 'Registered IPs by status',
@@ -1154,10 +1154,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers' => 'Maximum number of offers:',
 
 	// Do find Space action on subnet
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet' => 'Found Space',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Title_Class_Object' => 'Space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Summary' => '%1$s first free %2$s IPs ranges within subnet',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeTooBig' => 'Requested space doesn\'t fit within subnet. Please, try a lower value.',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeEmpty' => 'Requested space is null! Please, try a bigger value.',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeTooBig' => 'Requested space doesn\'t fit within subnet! Please, try a lower value.',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:CreateAsRange' => 'Create as an IP range',
 
 	// List IPs action on subnets 

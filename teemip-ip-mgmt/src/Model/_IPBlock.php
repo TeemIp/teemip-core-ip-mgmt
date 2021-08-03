@@ -12,7 +12,7 @@ use DBObjectSearch;
 use Dict;
 use IPConfig;
 use IPObject;
-use TeemIpUI;
+use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use utils;
 use WebPage;
 
@@ -363,7 +363,7 @@ class _IPBlock extends IPObject {
 	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
 		list($sMessage, $sHtml) = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
 		if ($sMessage != '') {
-			TeemIpUI::DisplayInfoMessage($oP, $sMessage);
+			DisplayMessage::Info($oP, $sMessage);
 		}
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
 		$oP->add($sHtml);

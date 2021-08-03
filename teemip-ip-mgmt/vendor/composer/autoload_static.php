@@ -21,7 +21,6 @@ class ComposerStaticInitd2c0e4e7347fc9496b4630d36925ce3f
     );
 
     public static $classMap = array (
-        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Controller\\FindSpace' => __DIR__ . '/../..' . '/src/Controller/FindSpace.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\AllocateIPsToProductionCIs' => __DIR__ . '/../..' . '/src/Hook/AllocateIPsToProductionCIs.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Hook\\IPMgmtExtraMenus' => __DIR__ . '/../..' . '/src/Hook/IPMgmtExtraMenus.php',
@@ -32,7 +31,6 @@ class ComposerStaticInitd2c0e4e7347fc9496b4630d36925ce3f
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPApplication' => __DIR__ . '/../..' . '/src/Model/_IPApplication.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPBlock' => __DIR__ . '/../..' . '/src/Model/_IPBlock.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPConfig' => __DIR__ . '/../..' . '/src/Model/_IPConfig.php',
-        'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPObject' => __DIR__ . '/../..' . '/src/Model/_IPObject.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPRange' => __DIR__ . '/../..' . '/src/Model/_IPRange.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPSubnet' => __DIR__ . '/../..' . '/src/Model/_IPSubnet.php',
         'TeemIp\\TeemIp\\Extension\\IPManagement\\Model\\_IPUsage' => __DIR__ . '/../..' . '/src/Model/_IPUsage.php',

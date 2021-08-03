@@ -40,14 +40,14 @@ class _IPv6Block extends IPBlock implements iTree {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/ipv6block-xs.png';
 
 			return ("<img src=\"$sIcon\" style=\"vertical-align:middle;\" alt=\"\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**
@@ -622,7 +622,7 @@ class _IPv6Block extends IPBlock implements iTree {
 							// Display space only if within requested scope
 							if ($oIpToStartFrom->IsSmallerOrEqual($oAnOccupiedIp)) {
 								// Display object attributes
-								$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+								$sIcon = $aOccupiedSpace[$j]['obj']->GetMultiSizeIcon(true, true);
 								$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 								if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet') {
 									$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
@@ -1275,7 +1275,7 @@ EOF
 	public function GetAsLeaf($bWithIcon, $sTreeOrgId) {
 		$sHtml = '';
 		if ($bWithIcon) {
-			$sHtml = $this->GetIcon(true, true);
+			$sHtml = $this->GetMultiSizeIcon(true, true);
 		}
 		$sHtml .= "&nbsp;".$this->GetHyperlink();
 		$oFirstIp = $this->Get('firstip');
@@ -1724,7 +1724,7 @@ EOF
 					$oAnIp = $aOccupiedSpace[$j]['firstip'];
 				} elseif ($oAnIp->IsEqual($aOccupiedSpace[$j]['firstip'])) {
 					// Display object attributes
-					$sIcon = $aOccupiedSpace[$j]['obj']->GetIcon(true, true);
+					$sIcon = $aOccupiedSpace[$j]['obj']->GetMultiSizeIcon(true, true);
 					$sHtml .= "<li>".$sIcon."&nbsp;".$aOccupiedSpace[$j]['obj']->GetHyperlink();
 					if ($aOccupiedSpace[$j]['type'] == 'IPv6Subnet') {
 						$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));

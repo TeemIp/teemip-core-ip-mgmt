@@ -9,15 +9,15 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use IPConfig;
 use IPSubnet;
 use IPUsage;
-use IPv4Subnet;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
@@ -36,14 +36,14 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipsubnet-xs.png';
 
 			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}
 
-		return parent::GetIcon($bImgTag);
+		return $this->GetIcon($bImgTag);
 	}
 
 	/**
@@ -67,7 +67,7 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	public function GetSize() {
 		$sMask = $this->Get('mask');
 
-		return $this->MaskToSize($sMask);
+		return TeemIpUtils::MaskToSize($sMask);
 	}
 
 	/**
@@ -137,6 +137,15 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 	/**
 	 * Automatically get a free IP in the subnet
+	 *
+	 * @param $iCreationOffset
+	 *
+	 * @return float|int|mixed|\ormLinkSet|string|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetFreeIP($iCreationOffset) {
 		$sFirstIp = $this->Get('ip');
@@ -180,6 +189,15 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 	/**
 	 * Count number of IPs in subnet, in given status
+	 *
+	 * @param $sStatus
+	 *
+	 * @return int
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function IPCount($sStatus) {
 		switch ($sStatus) {
@@ -204,6 +222,16 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 	/**
 	 * Find space within the subnet to create range
+	 *
+	 * @param $iRangeSize
+	 * @param $iMaxOffer
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
 	public function GetFreeSpace($iRangeSize, $iMaxOffer) {
 		$iOrgId = $this->Get('org_id');
@@ -277,6 +305,17 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 	/**
 	 * List IP addresses in subnet in CSV format
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	protected function GetIPsAsCSV($aParam) {
 		// Define first and last IPs to display
@@ -424,7 +463,7 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 		$sMask = $this->Get('mask');
 		switch ($sOperation) {
 			case 'findspace':
-				if ($this->MaskToBit($sMask) > 28) {
+				if (TeemIpUtils::MaskToBit($sMask) > 28) {
 					// No point to look for space in less than /28
 					return ('SizeTooSmall');
 				}
@@ -437,14 +476,14 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 			case 'shrinksubnet':
 			case 'splitsubnet':
-				if ($this->MaskToBit($sMask) > 30) {
+				if (TeemIpUtils::MaskToBit($sMask) > 30) {
 					// To small to be shrunk or split. Minimum size is /30
 					return ('SizeTooSmall');
 				}
 				break;
 
 			case 'expandsubnet':
-				if ($this->MaskToBit($sMask) < 17) {
+				if (TeemIpUtils::MaskToBit($sMask) < 17) {
 					// To big to be expanded. Maximum size is /17 (by choice - bigger doesn't make sense))
 					return ('SizeTooBig');
 				}
@@ -507,86 +546,106 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 	/**
 	 * Check if space can be searched
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckToDisplayAvailableSpace($aParam) {
-		$iRangeSize = $aParam['rangesize'];
+	public function DoCheckToDisplayAvailableSpace($aParam) {
+		$iSpaceSize = $aParam['spacesize'];
 
 		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize) {
-			// Required range size is to big, exit
+		if ($iSpaceSize >= $iSubnetSize) {
 			return ('RangeTooBig');
+		} elseif ($iSpaceSize == 0) {
+			return ('RangeEmpty');
 		}
 
 		return '';
 	}
 
 	/**
-	 * Displays available space
+	 * @inheritdoc
 	 */
-	function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		$iRangeSize = $aParam['rangesize'];
+		$iRangeSize = $aParam['spacesize'];
 		$iMaxOffer = $aParam['maxoffer'];
 
-		// Get list of registered IPs & ranges in subnet
-		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize) {
-			// Required range size is to big, exit
-			// This should have been checked before
-			$oP->add(Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeTooBig')."<br><br>");
+		// Get list of free space in subnet
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sIPv4RangeCreationTitle = '';
 		} else {
-			// Get list of free space in subnet
-			$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
-
-			// Check user rights
-			$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv4Range', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-
-			// Set CRLF format according to version
-			$sCrLf = (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) ? "\n" : "<br>";
-
-			// Display Summary of parameters
-			$oP->add("<ul>\n");
-			$oP->add("<li>"."&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Summary', $iMaxOffer, $iRangeSize)."<ul>\n");
-
-			// Display possible choices as list
-			$iSizeFreeArray = sizeof($aFreeSpace);
-			if ($iSizeFreeArray != 0) {
-				$i = 0;
-				$iVIdCounter = 1;
-				do {
-					$sRangeFirstIp = $aFreeSpace[$i]['firstip'];
-					$sRangeLastIp = $aFreeSpace[$i]['lastip'];
-					$oP->add("<li>".$sRangeFirstIp." - ".$sRangeLastIp.$sCrLf);
-
-					// If user has rights to create range
-					// Display range with icon to create it
-					if ($UserHasRightsToCreate) {
-						$iVId = $iVIdCounter++;
-						$sHTMLValue = "<ul><li><div><span id=\"v_{$iVId}\">";
-						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
-						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Subnet:CreateAsRange')."&nbsp;&nbsp;";
-						$sHTMLValue .= "</span></div></li>\n";
-						$oP->add($sHTMLValue);
-						$oP->add_ready_script(
-							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Range', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'firstip': '$sRangeFirstIp', 'lastip': '$sRangeLastIp'});
-EOF
-						);
-						$oP->add("</ul></li>\n");
-					} else {
-						$oP->add("</li>\n");
-					}
-				} while (++$i < $iSizeFreeArray);
-			}
-			$oP->add("</ul></li></ul>\n");
+			$sIPv4RangeCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Range')));
 		}
+		$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
+
+		// Check user rights
+		$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv4Range', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+
+		// Open table
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
+		// Display Summary of parameters
+		$sHtml .= "<ul>";
+		$sHtml .= "<li>"."&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Summary', $iMaxOffer, $iRangeSize)."<ul>";
+
+		// Display possible choices as list
+		$iSizeFreeArray = sizeof($aFreeSpace);
+		if ($iSizeFreeArray != 0) {
+			$i = 0;
+			$iVIdCounter = 1;
+			do {
+				$sRangeFirstIp = $aFreeSpace[$i]['firstip'];
+				$sRangeLastIp = $aFreeSpace[$i]['lastip'];
+				$sHtml .= "<li>".$sRangeFirstIp." - ".$sRangeLastIp;
+
+				// If user has rights to create range
+				// Display range with icon to create it
+				if ($UserHasRightsToCreate) {
+					$iVId = $iVIdCounter++;
+					$sHtml .= "<ul><li><div><span id=\"v_{$iVId}\">";
+					$sHtml .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHtml .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Subnet:CreateAsRange')."&nbsp;&nbsp;";
+					$sHtml .= "</span></div></li>";
+					$oP->add_ready_script(
+						<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Range', "$sIPv4RangeCreationTitle", $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'firstip': '$sRangeFirstIp', 'lastip': '$sRangeLastIp'});
+EOF
+					);
+					$sHtml .= "</ul></li>";
+				} else {
+					$sHtml .= "</li>";
+				}
+			} while (++$i < $iSizeFreeArray);
+		}
+		$sHtml .= "</ul></li></ul>";
+
+		// Close table
+		$sHtml .= '</div>';
+		$sHtml .= '</td></tr></table>';
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
+
+		return $sHtml;
 	}
 
 	/**
 	 * Check if IPs can be listed
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckToListIps($aParam) {
+	public function DoCheckToListIps($aParam) {
 		$sIp = $this->Get('ip');
 		$iIp = TeemIpUtils::myip2long($sIp);
 		$sBroadcastIp = $this->Get('broadcastip');
@@ -618,9 +677,9 @@ EOF
 	}
 
 	/**
-	 * Displays list of IP addresses within GUI
+	 * @inheritdoc
 	 */
-	function DoListIps(WebPage $oP, $iChangeId, $aParam) {
+	protected function GetListIps(WebPage $oP, $aParam) {
 		// Add related style sheeet
 		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
@@ -650,9 +709,12 @@ EOF
 		$aRangeIPs = $oIpRangeSet->GetColumnAsArray('firstip', false);
 		$oIpRangeSet->Rewind();
 
-		// Preset display of name and subnet attributes
-		$sHtml = "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$sMask)."	 - ".$this->GetLabel('type').': '.$this->GetAsHTML('type');
-
+		// Preset display subnet attributes
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sIPv4CreationTitle = '';
+		} else {
+			$sIPv4CreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Address')));
+		}
 		$sStatusIp = $aParam['status_ip'];
 		$sShortName = $aParam['short_name'];
 		$iDomainId = $aParam['domain_id'];
@@ -666,13 +728,17 @@ EOF
 		// Check user rights
 		$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv4Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 
+		// Open table
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
 		// Display first IP
-		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
+		$sHtml .= "<ul>";
+		$sHtml .= "<li>".$this->GetMultiSizeIcon(true, true).$this->GetHyperlink()."&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$sMask)."	 - ".$this->GetLabel('type').': '.$this->GetAsHTML('type')."<ul>";
 
 		// ... and dummy line if display doesn't start at first IP
 		if ($bPrintDummyFirstLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
 
 		// Display other IPs as list
@@ -687,9 +753,9 @@ EOF
 				}
 
 				// Display name and range attributes
-				$sIcon = $oIpRange->GetIcon(true, true);
-				$oP->add("<li>".$sIcon.$oIpRange->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oIpRange->Get('firstip')." - ".$oIpRange->Get('lastip')."]");
-				$oP->add("&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>\n");
+				$sIcon = $oIpRange->GetMultiSizeIcon(true, true);
+				$sHtml .= "<li>".$sIcon.$oIpRange->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oIpRange->Get('firstip')." - ".$oIpRange->Get('lastip')."]";
+				$sHtml .= "&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>";
 				$iLastRangeIp = TeemIpUtils::myip2long($oIpRange->Get('lastip'));
 			}
 			if (in_array($sAnIp, $aRegisteredIPs)) {
@@ -699,63 +765,80 @@ EOF
 				while ($oIpRegistered->Get('ip') != $sAnIp) {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
-				$sHTML = "<li><span class=\"ipv4_address\">&nbsp;".$oIpRegistered->GetHyperlink()."</span>";
-				$sHTML .= "<span class=\"ip_status\">".$oIpRegistered->GetAsHTML('status')."</span>";
-				$sHTML .= "<span class=\"ip_fqdn\" title=\"".$oIpRegistered->Get('fqdn')."\">".$oIpRegistered->Get('fqdn')."</span>";
+				$sHtml .= "<li><span class=\"ipv4_address\">&nbsp;".$oIpRegistered->GetHyperlink()."</span>";
+				$sHtml .= "<span class=\"ip_status\">".$oIpRegistered->GetAsHTML('status')."</span>";
+				$sHtml .= "<span class=\"ip_fqdn\" title=\"".$oIpRegistered->Get('fqdn')."\">".$oIpRegistered->Get('fqdn')."</span>";
 				if (class_exists('IPDiscovery')) {
-					$sHTML .= "<span class=\"ip_ping_img\">";
+					$sHtml .= "<span class=\"ip_ping_img\">";
 					if ($oIpRegistered->Get('responds_to_ping') == 'yes') {
-						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-ping-xs.png\" style=\"vertical-align:middle\"/>";
+						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-ping-xs.png\" style=\"vertical-align:middle\"/>";
 					}
-					$sHTML .= "</span><span class=\"ip_scan_img\">";
+					$sHtml .= "</span><span class=\"ip_scan_img\">";
 					if ($oIpRegistered->Get('responds_to_scan') == 'yes') {
-						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-scan-xs.png\" style=\"vertical-align:middle\"/>";
+						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-scan-xs.png\" style=\"vertical-align:middle\"/>";
 					}
-					$sHTML .= "</span><span class=\"ip_lookup_img\">";
+					$sHtml .= "</span><span class=\"ip_lookup_img\">";
 					if ($oIpRegistered->Get('responds_to_iplookup') == 'yes') {
-						$sHTML .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-lookup-xs.png\" alt=\"\" style=\"vertical-align:middle\"/></span>";
-						$sHTML .= "<span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup')."</span>";
+						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-lookup-xs.png\" alt=\"\" style=\"vertical-align:middle\"/></span>";
+						$sHtml .= "<span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup')."</span>";
 					}
-					$sHTML .= "</span>";
+					$sHtml .= "</span>";
 				}
-				$sHTML .= "</li>";
-				$oP->add($sHTML);
+				$sHtml .= "</li>";
 			} else {
 				// If user has rights to create IPs
 				// Display unregistered IP with icon to create it
 				if ($UserHasRightsToCreate) {
 					$iVId = $iVIdCounter++;
-					$sHTML = "<li><div><span id=\"v_{$iVId}\">";
-					$sHTML .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
-					$sHTML .= "&nbsp;".$sAnIp."&nbsp;&nbsp;";
-					$sHTML .= "</span></div></li>";
-					$oP->add($sHTML);
+					$sHtml .= "<li><div><span id=\"v_{$iVId}\">";
+					$sHtml .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHtml .= "&nbsp;".$sAnIp."&nbsp;&nbsp;";
+					$sHtml .= "</span></div></li>";
 					$oP->add_ready_script(
 						<<<EOF
-					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$sAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
+					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Address', "$sIPv4CreationTitle", 0, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$sAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				} else {
-					$oP->add("<li>".$sAnIp."</li>");
+					$sHtml .= "<li>".$sAnIp."</li>";
 				}
 			}
 			if ($iAnIp == $iLastRangeIp) {
-				$oP->add("</ul></li>\n");
+				$sHtml .= "</ul></li>";
 			}
 			$iAnIp++;
 		}
 
 		// Add dummy line if display doesn't finish at broadcast IP
 		if ($bPrintDummyLastLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
-		$oP->add("</ul></li></ul>\n");
+		$sHtml .= "</ul></li></ul>";
+
+		// Close table
+		$sHtml .= '</div>';
+		$sHtml .= '</td></tr></table>';
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sHtml .= '</div>';         // ??
+		}
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
+
+		return $sHtml;
 	}
 
 	/**
 	 * Check if IPs can be exported in CSV
+	 *
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	function DoCheckToCsvExportIps($aParam) {
+	public function DoCheckToCsvExportIps($aParam) {
 		$sIp = $this->Get('ip');
 		$iIp = TeemIpUtils::myip2long($sIp);
 		$sBroadcastIp = $this->Get('broadcastip');
@@ -797,7 +880,7 @@ EOF
 			return (Dict::Format('UI:IPManagement:Action:DoCalculator:IPv4Subnet:EnterMaskOrCIDR'));
 		}
 
-		if (($sMask != '') && ($this->MaskToSize($sMask) == -1)) {
+		if (($sMask != '') && (TeemIpUtils::MaskToSize($sMask) == -1)) {
 			return (Dict::Format('UI:IPManagement:Action:DoCalculator:IPv4Subnet:WrongMask'));
 		}
 
@@ -875,7 +958,7 @@ EOF
 				break;
 		}
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
-		$iIpBroadcastNewSubnet = $iIpSubnetToShrink + $this->MaskToSize($sMaskNewSubnet) - 1;
+		$iIpBroadcastNewSubnet = $iIpSubnetToShrink + TeemIpUtils::MaskToSize($sMaskNewSubnet) - 1;
 
 		// Check that no IP range within subnet sits across future border or becomes orphean
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = $iSubnetKey"));
@@ -938,7 +1021,7 @@ EOF
 				break;
 		}
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
-		$iIpBroadcastNewSubnet = $iIpSubnetToShrink + $this->MaskToSize($sMaskNewSubnet) - 1;
+		$iIpBroadcastNewSubnet = $iIpSubnetToShrink + TeemIpUtils::MaskToSize($sMaskNewSubnet) - 1;
 		$sIpBroadcastNewSubnet = TeemIpUtils::mylong2ip($iIpBroadcastNewSubnet);
 		$this->Set('mask', $sMaskNewSubnet);
 		$this->Set('broadcastip', $sIpBroadcastNewSubnet);
@@ -946,7 +1029,7 @@ EOF
 		$this->DBUpdate();
 
 		// Delete old broadcast IP
-		// Creation of missing broadcast IP is done by IPv4Subnet::AfterUpdate
+		// Creation of missing broadcast IP is done by TeemIpUtils::AfterUpdate
 		$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcastSubnetToShrink' AND i.org_id = $iOrgId", null, false);
 		if (!is_null($oIp)) {
 			$oIp->DBDelete();
@@ -1027,7 +1110,7 @@ EOF
 				break;
 		}
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
-		$iSizeNewSubnet = $this->MaskToSize($sMaskNewSubnet);
+		$iSizeNewSubnet = TeemIpUtils::MaskToSize($sMaskNewSubnet);
 
 		// Check that no IP range within subnet sits across future borders
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = $iSubnetKey"));
@@ -1086,7 +1169,7 @@ EOF
 				break;
 		}
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
-		$iSizeNewSubnet = $this->MaskToSize($sMaskNewSubnet);
+		$iSizeNewSubnet = TeemIpUtils::MaskToSize($sMaskNewSubnet);
 
 		// Update initial subnet and register it.
 		if (!is_null($iRequestorId)) {
@@ -1241,7 +1324,7 @@ EOF
 		}
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
 		$iIpNewSubnet = TeemIpUtils::myip2long(long2ip(ip2long(long2ip($iIpSubnetToExpand)) & ip2long(long2ip($iMaskNewSubnet))));
-		$iIpBroadcastNewSubnet = $iIpNewSubnet + $this->MaskToSize($sMaskNewSubnet) - 1;
+		$iIpBroadcastNewSubnet = $iIpNewSubnet + TeemIpUtils::MaskToSize($sMaskNewSubnet) - 1;
 
 		// Check that new subnet is fully contained within its block. If not, cancell the action
 		$oBlock = MetaModel::GetObject('IPv4Block', $this->Get('block_id'), true /* MustBeFound */);
@@ -1291,7 +1374,7 @@ EOF
 		$sMaskNewSubnet = TeemIpUtils::mylong2ip($iMaskNewSubnet);
 		$iIpNewSubnet = TeemIpUtils::myip2long(long2ip(ip2long(long2ip($iIpSubnetToExpand)) & ip2long(long2ip($iMaskNewSubnet))));
 		$sIpNewSubnet = TeemIpUtils::mylong2ip($iIpNewSubnet);
-		$iIpBroadcastNewSubnet = $iIpNewSubnet + $this->MaskToSize($sMaskNewSubnet) - 1;
+		$iIpBroadcastNewSubnet = $iIpNewSubnet + TeemIpUtils::MaskToSize($sMaskNewSubnet) - 1;
 		$sIpBroadcastNewSubnet = TeemIpUtils::mylong2ip($iIpBroadcastNewSubnet);
 
 		// List subnets currently in range of new subnet and delete them all but the one newly updated one
@@ -1412,7 +1495,7 @@ EOF
 	}
 
 	/**
-	 * Display attributes associated operation
+	 * @inheritDoc
 	 */
 	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
@@ -1464,7 +1547,7 @@ EOF
 	}
 
 	/**
-	 * Display attributes associated to operation
+	 * @inheritDoc
 	 */
 	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 	}
@@ -1482,8 +1565,8 @@ EOF
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers');
 
 				// Size of range
-				$sInputId = $iFormId.'_'.'rangesize';
-				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"rangesize\" maxlength=\"4\" size=\"4\">\n";
+				$sInputId = $iFormId.'_'.'spacesize';
+				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"spacesize\" maxlength=\"4\" size=\"4\">\n";
 				$aDetails[] = array(
 					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
 					'value' => $sHTMLValue,
@@ -1662,6 +1745,24 @@ EOF
 		$oMultiColumn->AddColumn($oColumn1);
 		switch ($sOperation) {
 			case 'findspace':
+				// Second column = data
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
+
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeOfRange');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers');
+
+				// Size of range
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'spacesize', '');
+				$oColumn2->AddSubBlock($oInput);
+
+				// Max number of offers
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction2));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
+				$oColumn2->AddSubBlock($oInput);
 				break;
 
 			case 'listips':
@@ -1727,10 +1828,10 @@ EOF
 		$sIp = $aParam['ip'];
 		$sMask = $aParam['mask'];
 		if ($sMask != '') {
-			$iCidr = $this->MaskToBit($sMask);
+			$iCidr = TeemIpUtils::MaskToBit($sMask);
 		} else {
 			$iCidr = $aParam['cidr'];
-			$sMask = $this->BitToMask($iCidr);
+			$sMask = TeemIpUtils::BitToMask($iCidr);
 		}
 		$iIp = ip2long($sIp);
 		$iMask = ip2long($sMask);
@@ -1740,10 +1841,10 @@ EOF
 
 		$sWildCard = long2ip(~(ip2long($sMask)));
 
-		$iBroadcastIp = $iSubnetIp + $this->MaskToSize($sMask) - 1;
+		$iBroadcastIp = $iSubnetIp + TeemIpUtils::MaskToSize($sMask) - 1;
 		$sBroadcastIp = TeemIpUtils::mylong2ip($iBroadcastIp);
 
-		$iIpNumber = $this->MaskToSize($sMask);
+		$iIpNumber = TeemIpUtils::MaskToSize($sMask);
 		if ($iIpNumber > 2) {
 			$iUsableHosts = $iIpNumber - 2;
 		} else {
@@ -1760,7 +1861,7 @@ EOF
 		if ($sBroadcastIp == '255.255.255.255') {
 			$sNextSubnetIp = Dict::Format('UI:IPManagement:Action:DoCalculator:IPv4Subnet:NextSubnet:NA');
 		} else {
-			$iNextSubnetIp = $iSubnetIp + $this->MaskToSize($sMask);
+			$iNextSubnetIp = $iSubnetIp + TeemIpUtils::MaskToSize($sMask);
 			$sNextSubnetIp = TeemIpUtils::mylong2ip($iNextSubnetIp);
 		}
 
@@ -1808,6 +1909,14 @@ EOF
 			return $sHtml;
 		}
 
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sIPv4BlockCreationTitle = '';
+			$sIPv4SubnetCreationTitle = '';
+		} else {
+			$sIPv4BlockCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Block')));
+			$sIPv4SubnetCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Subnet')));
+		}
+
 		$sHtml .= '<tr><td>&nbsp;&nbsp;</td><td colspan="2">'.Dict::S('UI:IPManagement:Action:DoCalculator:IPSubnet:SelectCreation').'</td></tr>';
 		if ($this->GetKey() > 0) {
 			$iOrgId = $this->Get('org_id');
@@ -1827,7 +1936,7 @@ EOF
 		}
 		$aSubnetIps[$sSubnetIp] = $sBroadcastIp;
 		if ($sBroadcastIp != '255.255.255.255') {
-			$aSubnetIps[$sNextSubnetIp] = TeemIpUtils::mylong2ip(ip2long($sNextSubnetIp) + $this->MaskToSize($sMask) - 1);
+			$aSubnetIps[$sNextSubnetIp] = TeemIpUtils::mylong2ip(ip2long($sNextSubnetIp) + TeemIpUtils::MaskToSize($sMask) - 1);
 		}
 		foreach ($aSubnetIps as $sFirstIp => $sLastIp) {
 			if ($sFirstIp == $sSubnetIp) {
@@ -1847,7 +1956,7 @@ EOF
 					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstIp", 'lastip': '$sLastIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', "$sIPv4BlockCreationTitle", 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstIp", 'lastip': '$sLastIp'});
 EOF
 					);
 				} else {
@@ -1866,7 +1975,7 @@ EOF
 					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstIp", 'mask': '$sMask'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', "$sIPv4SubnetCreationTitle", 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstIp", 'mask': '$sMask'});
 EOF
 					);
 				} else {
@@ -1877,16 +1986,32 @@ EOF
 
 		}
 		$sHtml .= '</div></td></tr></table>';
-		$sHtml .= '</div>';     // ??
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sHtml .= '</div>';         // ??
+		}
 
 		$oP->add_ready_script("\$('#tree ul').treeview();\n");
-		$sHtml .= "<div id=\"dialog_content\"/>\n";
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
 
 		return $sHtml;
 	}
 
 	/**
 	 * Displays the tabs related to IPv4Subnets
+	 *
+	 * @param \WebPage $oP
+	 * @param false $bEditMode
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
@@ -1898,9 +2023,6 @@ EOF
 			$sIp = $this->Get('ip');
 			$sIpBroadcast = $this->Get('broadcastip');
 			$iSubnetSize = $this->GetSize();
-
-			$aExtraParams = array();
-			$aExtraParams['menu'] = false;
 
 			// Tab for Registered IPs
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId");
@@ -1929,16 +2051,13 @@ EOF
 
 				}
 				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:ipregistered').' ('.$iRegistered.')');
-				$oP->p(MetaModel::GetClassIcon('IPv4Address').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:ipregistered+'));
-				$oP->p($this->GetAsHTML('ip_occupancy').Dict::Format('Class:IPSubnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSubnetSize));
-				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
-				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
+				$sHtml = $this->GetAsHTML('ip_occupancy').Dict::Format('Class:IPSubnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSubnetSize);
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:ipregistered'));
-				$oP->p(MetaModel::GetClassIcon('IPv4Address').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:ipregistered+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+			$sName = Dict::S('Class:IPSubnet/Tab:ipregistered');
+			$sTitle = Dict::S('Class:IPSubnet/Tab:ipregistered+');
+			$this->DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet);
 
 			// Tab for IP Ranges
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$iKey' AND r.org_id = $iOrgId");
@@ -1949,34 +2068,27 @@ EOF
 				while ($oIpRange = $oIpRangeSet->Fetch()) {
 					$iCountRange += TeemIpUtils::myip2long($oIpRange->Get('lastip')) - TeemIpUtils::myip2long($oIpRange->Get('firstip')) + 1;
 				}
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:iprange').' ('.$iIpRange.')');
-				$oP->p(MetaModel::GetClassIcon('IPv4Range').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:iprange+'));
-				$oP->p($this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent'));
-				$oBlock = new DisplayBlock($oIpRangeSearch, 'list');
-				$oBlock->Display($oP, 'ip_ranges', $aExtraParams);
+				$sHtml = $this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent');
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:iprange'));
-				$oP->p(MetaModel::GetClassIcon('IPv4Range').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:iprange+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+			$sName = Dict::S('Class:IPSubnet/Tab:iprange');
+			$sTitle = Dict::S('Class:IPSubnet/Tab:iprange+');
+			$this->DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv4Range', $sTitle, $sHtml, $oIpRangeSet);
 
 			// Tab for IP Requests
 			if (MetaModel::IsValidClass('IPRequestSubnet')) {
 				$oSubnetRequestSearch = DBObjectSearch::FromOQL("SELECT IPRequestSubnet AS r WHERE r.subnet_id = $iKey");
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
-				$sCount = $oSubnetRequestSet->Count();
-				if ($sCount > 0) {
-					$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:requests').' ('.$sCount.')');
-					$oP->p(MetaModel::GetClassIcon('IPRequestSubnet').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:requests+'));
-					$oBlock = new DisplayBlock($oSubnetRequestSearch, 'list');
-					$oBlock->Display($oP, 'subnet_requests', $aExtraParams);
-				}
+				$sName = Dict::S('Class:IPSubnet/Tab:requests');
+				$sTitle = Dict::S('Class:IPSubnet/Tab:requests+');
+				$this->DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet);
 			}
 		}
 	}
 
 	/**
-	 * Compute attributes before writing object
+	 * @inheritdoc
 	 */
 	public function ComputeValues() {
 		$sIp = $this->Get('ip');
@@ -2036,7 +2148,7 @@ EOF
 	}
 
 	/**
-	 * Check validity of new subnet attributes before creation
+	 * @inheritdoc
 	 */
 	function DoCheckToWrite() {
 		// Run standard iTop checks first
@@ -2147,7 +2259,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to subnet creation:
+	 * @inheritdoc
 	 */
 	protected function AfterInsert() {
 		parent::AfterInsert();
@@ -2242,7 +2354,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to subnet update:
+	 * @inheritdoc
 	 */
 	protected function AfterUpdate() {
 		parent::AfterUpdate();
@@ -2345,7 +2457,7 @@ EOF
 		}
 	}
 
-	/**
+	/*
 	 * Check validity of deletion request
 	 */
 	protected function DoCheckToDelete(&$oDeletionPlan) {
@@ -2372,359 +2484,52 @@ EOF
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
+	 * @inheritDoc
+	 */
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		switch ($sAttCode) {
+			case 'gatewayip':
+				$iOrgId = $this->Get('org_id');
+				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				if ($sGatewayIPFormat != 'free_setup') {
+					return OPT_ATT_READONLY;
+				}
+				break;
+
+			default:
+				break;
+		}
+
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}
+
+	/**
+	 * @inheritDoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'block_id') || ($sAttCode == 'ip') || ($sAttCode == 'mask') || ($sAttCode == 'broadcastip') || ($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy'))) {
-			return OPT_ATT_READONLY;
-		}
-		if ((!$this->IsNew()) && ($sAttCode == 'gatewayip')) {
-			$iOrgId = $this->Get('org_id');
-			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
-			if ($sGatewayIPFormat != 'free_setup') {
+		switch ($sAttCode) {
+			case 'org_id':
+			case 'block_id':
+			case 'ip':
+			case 'mask':
+			case 'broadcastip':
+			case 'ip_occupancy':
+			case 'range_occupancy':
 				return OPT_ATT_READONLY;
-			}
+
+			case 'gatewayip':
+				$iOrgId = $this->Get('org_id');
+				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				if ($sGatewayIPFormat != 'free_setup') {
+					return OPT_ATT_READONLY;
+				}
+				break;
+
+			default:
+				break;
 		}
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 
-	/**
-	 * Functions to handle masks and sizes
-	 */
-
-	/**
-	 * @param $Mask
-	 *
-	 * @return int
-	 */
-	public static function MaskToSize($Mask) {
-		// Provides size of subnet according to dotted string mask
-		switch ($Mask) {
-			case "0.0.0.0":
-				return 4294967296;
-			case "128.0.0.0":
-				return 2147483648;
-			case "192.0.0.0":
-				return 1073741824;
-			case "224.0.0.0":
-				return 536870912;
-			case "240.0.0.0":
-				return 268435456;
-			case "248.0.0.0":
-				return 134217728;
-			case "252.0.0.0":
-				return 67108864;
-			case "254.0.0.0":
-				return 33554432;
-			case "255.0.0.0":
-				return 16777216;
-			case "255.128.0.0":
-				return 8388608;
-			case "255.192.0.0":
-				return 4194304;
-			case "255.224.0.0":
-				return 2097152;
-			case "255.240.0.0":
-				return 1048576;
-			case "255.248.0.0":
-				return 524288;
-			case "255.252.0.0":
-				return 262144;
-			case "255.254.0.0":
-				return 131072;
-			case "255.255.0.0":
-				return 65536;
-			case "255.255.128.0":
-				return 32768;
-			case "255.255.192.0":
-				return 16384;
-			case "255.255.224.0":
-				return 8192;
-			case "255.255.240.0":
-				return 4096;
-			case "255.255.248.0":
-				return 2048;
-			case "255.255.252.0":
-				return 1024;
-			case "255.255.254.0":
-				return 512;
-			case "255.255.255.0":
-				return 256;
-			case "255.255.255.128":
-				return 128;
-			case "255.255.255.192":
-				return 64;
-			case "255.255.255.224":
-				return 32;
-			case "255.255.255.240":
-				return 16;
-			case "255.255.255.248":
-				return 8;
-			case "255.255.255.252":
-				return 4;
-			case "255.255.255.254":
-				return 2;
-			case "255.255.255.255":
-				return 1;
-			default:
-				return -1;
-		}
-	}
-
-	/**
-	 * @param $iPrefix
-	 *
-	 * @return string
-	 */
-	public static function BitToMask($iPrefix) {
-		// Provides size of subnet according to dotted string mask
-		switch ($iPrefix) {
-			case 0:
-				return "0.0.0.0";
-			case 1:
-				return "128.0.0.0";
-			case 2:
-				return "192.0.0.0";
-			case 3:
-				return "224.0.0.0";
-			case 4:
-				return "240.0.0.0";
-			case 5:
-				return "248.0.0.0";
-			case 6:
-				return "252.0.0.0";
-			case 7:
-				return "254.0.0.0";
-			case 8:
-				return "255.0.0.0";
-			case 9:
-				return "255.128.0.0";
-			case 10:
-				return "255.192.0.0";
-			case 11:
-				return "255.224.0.0";
-			case 12:
-				return "255.240.0.0";
-			case 13:
-				return "255.248.0.0";
-			case 14:
-				return "255.252.0.0";
-			case 15:
-				return "255.254.0.0";
-			case 16:
-				return "255.255.0.0";
-			case 17:
-				return "255.255.128.0";
-			case 18:
-				return "255.255.192.0";
-			case 19:
-				return "255.255.224.0";
-			case 20:
-				return "255.255.240.0";
-			case 21:
-				return "255.255.248.0";
-			case 22:
-				return "255.255.252.0";
-			case 23:
-				return "255.255.254.0";
-			case 24:
-				return "255.255.255.0";
-			case 25:
-				return "255.255.255.128";
-			case 26:
-				return "255.255.255.192";
-			case 27:
-				return "255.255.255.224";
-			case 28:
-				return "255.255.255.240";
-			case 29:
-				return "255.255.255.248";
-			case 30:
-				return "255.255.255.252";
-			case 31:
-				return "255.255.255.254";
-			case 32:
-				return "255.255.255.255";
-			default:
-				return "";
-		}
-	}
-
-	/**
-	 * @param $Mask
-	 *
-	 * @return int
-	 */
-	public static function MaskToBit($Mask) {
-		// Provides number of bits within a dotted string mask
-		return IPv4Subnet::SizeToBit(IPv4Subnet::MaskToSize($Mask));
-	}
-
-	/**
-	 * @param $Size
-	 *
-	 * @return string
-	 */
-	public static function SizeToMask($Size) {
-		// Convert size of subnet into mask
-		/*		if (($Size & ($Size - 1)) == 0)
-				{
-					//return (~($Size - 1));
-					return (sprintf("%u", ~($Size - 1)));
-				}
-				else
-				{
-					return null;
-				}*/
-		switch ($Size) {
-			case 4294967296:
-				return "0.0.0.0";
-			case 2147483648:
-				return "128.0.0.0";
-			case 1073741824:
-				return "192.0.0.0";
-			case 536870912:
-				return "224.0.0.0";
-			case 268435456:
-				return "240.0.0.0";
-			case 134217728:
-				return "248.0.0.0";
-			case 67108864:
-				return "252.0.0.0";
-			case 33554432:
-				return "254.0.0.0";
-			case 16777216:
-				return "255.0.0.0";
-			case 8388608:
-				return "255.128.0.0";
-			case 4194304:
-				return "255.192.0.0";
-			case 2097152:
-				return "255.224.0.0";
-			case 1048576:
-				return "255.240.0.0";
-			case 524288:
-				return "255.248.0.0";
-			case 262144:
-				return "255.252.0.0";
-			case 131072:
-				return "255.254.0.0";
-			case 65536:
-				return "255.255.0.0";
-			case 32768:
-				return "255.255.128.0";
-			case 16384:
-				return "255.255.192.0";
-			case 8192:
-				return "255.255.224.0";
-			case 4096:
-				return "255.255.240.0";
-			case 2048:
-				return "255.255.248.0";
-			case 1024:
-				return "255.255.252.0";
-			case 512:
-				return "255.255.254.0";
-			case 256:
-				return "255.255.255.0";
-			case 128:
-				return "255.255.255.128";
-			case 64:
-				return "255.255.255.192";
-			case 32:
-				return "255.255.255.224";
-			case 16:
-				return "255.255.255.240";
-			case 8:
-				return "255.255.255.248";
-			case 4:
-				return "255.255.255.252";
-			case 2:
-				return "255.255.255.254";
-			case 1:
-				return "255.255.255.255";
-			default:
-				return "";
-		}
-	}
-
-	/**
-	 * @param $Size
-	 *
-	 * @return int
-	 */
-	public static function SizeToBit($Size) {
-		// Provides number of bits for a given subnet size
-		switch ($Size) {
-			case 4294967296:
-				return 0;
-			case 2147483648:
-				return 1;
-			case 1073741824:
-				return 2;
-			case 536870912:
-				return 3;
-			case 268435456:
-				return 4;
-			case 134217728:
-				return 5;
-			case 67108864:
-				return 6;
-			case 33554432:
-				return 7;
-			case 16777216:
-				return 8;
-			case 8388608:
-				return 9;
-			case 4194304:
-				return 10;
-			case 2097152:
-				return 11;
-			case 1048576:
-				return 12;
-			case 524288:
-				return 13;
-			case 262144:
-				return 14;
-			case 131072:
-				return 15;
-			case 65536:
-				return 16;
-			case 32768:
-				return 17;
-			case 16384:
-				return 18;
-			case 8192:
-				return 19;
-			case 4096:
-				return 20;
-			case 2048:
-				return 21;
-			case 1024:
-				return 22;
-			case 512:
-				return 23;
-			case 256:
-				return 24;
-			case 128:
-				return 25;
-			case 64:
-				return 26;
-			case 32:
-				return 27;
-			case 16:
-				return 28;
-			case 8:
-				return 29;
-			case 4:
-				return 30;
-			case 2:
-				return 31;
-			case 1:
-				return 32;
-			default:
-				return -1;
-		}
-	}
 }
