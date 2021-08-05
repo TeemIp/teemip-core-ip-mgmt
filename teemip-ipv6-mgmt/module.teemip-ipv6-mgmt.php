@@ -4,21 +4,19 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-/** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ipv6-mgmt/2.7.1',
+	'teemip-ipv6-mgmt/3.0.0',
 	array(
 		// Identification
 		//
 		'label' => 'IPv6 Management',
 		'category' => 'business',
-		
+
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-framework/1.0.0',
-			'teemip-ip-mgmt/2.7.1',
+			'teemip-ip-mgmt/3.0.0',
 		),
 		'mandatory' => false,
 		'visible' => true,

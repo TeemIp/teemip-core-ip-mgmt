@@ -440,6 +440,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers' => 'Maximum number of offers :',
 
 	// Do find Space action on subnet
+	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet' => 'Found space',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:PageTitle_Object_Class' => '%1$s - Find space',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Title_Class_Object' => 'Space within %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Summary' => '%1$s first free %2$s IPs ranges within subnet',

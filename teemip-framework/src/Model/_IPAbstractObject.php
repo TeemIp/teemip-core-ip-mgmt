@@ -10,22 +10,19 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use MenuBlock;
 use MetaModel;
 use utils;
 use WebPage;
 
-class _TeemIpObject extends cmdbAbstractObject {
+class _IPAbstractObject extends cmdbAbstractObject {
 	/**
 	 * Provides attributes' parameters
 	 *
@@ -401,30 +398,6 @@ EOF
 			$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
 			$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 			$oP->SetCurrentTab(Dict::Format($sTitle.$sClass, '', ''));
-		}
-	}
-
-	protected function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet) {
-		$iCount = $oSet->Count();
-		$sCount = ($iCount != 0) ? " ($iCount)" : "";
-		$oP->SetCurrentTab($sName.$sCount);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
-			if ($iCount > 0) {
-				$oP->p($sInfoPanel);
-				$oBlock = new DisplayBlock($oSet->GetFilter(), 'list');
-				$oBlock->Display($oP, $sCode, array('menu' => false));
-			} else {
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
-			}
-		} else {
-			$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-blocklist--medallion');
-			$oP->AddUiBlock($oClassIcon);
-			$oP->AddSubBlock(HtmlFactory::MakeParagraph(''))
-				->AddHtml($sInfoPanel);
-			$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-			$oBlock->Display($oP, $sCode, array('menu' => false));
 		}
 	}
 

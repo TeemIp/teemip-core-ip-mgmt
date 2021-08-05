@@ -114,7 +114,7 @@ class _IPSubnet extends IPObject {
 			case 'doshrinksubnet':
 			case 'dosplitsubnet':
 			case 'doexpandsubnet':
-				$aParam['scale_id'] = utils::ReadPostedParam('scale_id', '', 'raw_data');
+				$aParam['scale'] = utils::ReadPostedParam('scale', '', 'raw_data');
 				$aParam['requestor_id'] = utils::ReadPostedParam('attr_requestor_id', null);
 				break;
 

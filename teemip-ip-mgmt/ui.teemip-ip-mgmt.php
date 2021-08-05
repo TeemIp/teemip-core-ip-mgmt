@@ -400,11 +400,11 @@ try {
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
@@ -460,11 +460,11 @@ try {
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
@@ -521,11 +521,11 @@ try {
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
 					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
 					} else {
 						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale_id'])
+							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
 							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
@@ -1024,11 +1024,10 @@ HTML
 				// Make sure object can be unallocated
 				$sErrorString = $oObj->DoCheckToUnallocate(array());
 				if ($sErrorString != '') {
-					// Found issues: explain and display block again
-					// No search bar (2.5 standard)
+					// Found issues: explain and display object again
+					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated', $sErrorString);
+					DisplayMessage::Warning($oP, $sMessage);
 
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated', $sErrorString);
-					cmdbAbstractObject::SetSessionMessage($sClass, $id, 'unallocate', $sIssueDesc, 'error', 0, true /* must not exist */);
 					$oObj->DisplayDetails($oP);
 				} else {
 					// Unallocate IP
@@ -1037,9 +1036,12 @@ HTML
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
+					} else {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					}
+					DisplayMessage::Success($oP, $sMessage);
 					$oObj->DisplayDetails($oP);
 				}
 			}

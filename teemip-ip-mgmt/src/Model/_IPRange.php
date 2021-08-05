@@ -65,14 +65,7 @@ class _IPRange extends IPObject {
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'occupancy'))) {
@@ -167,19 +160,7 @@ class _IPRange extends IPObject {
 	}
 
 	/**
-	 * Computes and display specific tabs
-	 *
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first
@@ -199,7 +180,7 @@ class _IPRange extends IPObject {
 	}
 
 	/**
-	 * Check coherency of model before saving object
+	 * @inheritdoc
 	 */
 	public function DoCheckToWrite() {
 		parent::DoCheckToWrite();
@@ -216,22 +197,63 @@ class _IPRange extends IPObject {
 
 	/**
 	 * @param \WebPage $oP
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function DoListIps(WebPage $oP, $aParam) {
+		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:ListIps:');
+		$oP->add($this->GetListIps($oP, $aParam));
+	}
+
+	/**
+	 * Displays list of IP addresses within GUI
+	 *
+	 * @param \WebPage $oP
+	 * @param $aParam
+	 *
+	 * @return string
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 *
+	 */
+	protected function GetListIps(WebPage $oP, $aParam) {
+		return '';
+	}
+
+	/**
+	 * @param \WebPage $oP
 	 * @param $aParam
 	 */
 	public function DisplayIPsAsCSV(WebPage $oP, $aParam) {
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 		$sHtml = $this->GetIPsAsCSV($aParam);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) {
-			$oP->add("<div id=\"3\" class=\"display_block\">\n");
-			$oP->add("<textarea>\n");
-			$oP->add($sHtml);
-			$oP->add("</textarea>\n");
-			$oP->add("</div>\n");
-
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$oP->add(<<<HTML
+				<div id="listipscsv" class="display_block">
+				<textarea>{$sHtml}</textarea>
+				</div>
+HTML
+			);
 			// Adjust the size of the block
-			$oP->add_ready_script(" $('#3>textarea').height($('#3').parent().height() - 220).width( $('#3').parent().width() - 30);");
+			$oP->add_ready_script(" $('#listipscsv>textarea').height($('#listipscsv').parent().height() - 220).width( $('#listipscsv').parent().width() - 30);");
 		} else {
-			$oP->add($sHtml);
+			$oP->add(<<<HTML
+				<div id="listipscsv" class="ibo-is-code">
+				{$sHtml}
+				</div>
+HTML
+			);
 		}
 	}
 

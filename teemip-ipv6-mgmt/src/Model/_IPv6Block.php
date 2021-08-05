@@ -22,6 +22,7 @@ use IPBlock;
 use IPConfig;
 use IPv6Subnet;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
@@ -565,13 +566,6 @@ class _IPv6Block extends IPBlock implements iTree {
 			$sMessage = Dict::Format('UI:IPManagement:Action:DoFindSpace:IPBlock:NoSpaceFound', $this->GetName());
 			$sHtml = $this->GetAllSpace($oP);
 		} else {
-			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-				$sIPv6BlockCreationTitle = '';
-				$sIPv6SubnetCreationTitle = '';
-			} else {
-				$sIPv6BlockCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Block')));
-				$sIPv6SubnetCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Subnet')));
-			}
 			$aOccupiedSpace = $this->GetOccupiedSpace();
 
 			// Check user rights
@@ -674,7 +668,7 @@ class _IPv6Block extends IPBlock implements iTree {
 						}
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', "$sIPv6BlockCreationTitle", $iChangeId, $sPayLoad);
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', '', $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -691,7 +685,7 @@ EOF
 						$sHtml .= $sHTMLValue;
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', "$sIPv6SubnetCreationTitle", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAFreeIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', '', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$iPrefix', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId', 'gatewayip': '$sAFreeIp'});
 EOF
 						);
 					}
@@ -1803,7 +1797,7 @@ EOF
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
 			$sSubTitle = ($oSubnetSet->Count() > 0) ? $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent') : '';
-			$this->DisplayTabContent($oP, $sName, 'child_subnets', 'IPv6Subnet', $sTitle, $sSubTitle, $oSubnetSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv6Subnet', $sTitle, $sSubTitle, $oSubnetSet);
 		}
 	}
 

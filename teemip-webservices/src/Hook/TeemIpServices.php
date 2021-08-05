@@ -13,7 +13,7 @@ use MetaModel;
 use RestResult;
 use RestResultWithObjects;
 use RestUtils;
-use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultCountIps;
 use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultWithTextFile;
 use UserRights;
@@ -286,7 +286,7 @@ class TeemIpServices implements iRestServiceProvider
 							// Pick first free subnet
 							// Register subnet, if any
 							if ($sSubnetClass == 'IPv4Subnet') {
-								$iSubnetSize = TeemIpUtils::MaskToSize($aFields['mask']);
+								$iSubnetSize = IPUtils::MaskToSize($aFields['mask']);
 							}
 							else
 							{

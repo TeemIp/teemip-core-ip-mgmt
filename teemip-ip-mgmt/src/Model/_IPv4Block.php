@@ -21,8 +21,8 @@ use Dict;
 use IPBlock;
 use IPConfig;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
-use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
 use UserRights;
 use utils;
 use WebPage;
@@ -55,7 +55,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	public function GetIndexForTree() {
-		return TeemIpUtils::myip2long($this->Get('firstip'));
+		return IPUtils::myip2long($this->Get('firstip'));
 	}
 
 	/**
@@ -66,7 +66,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	public function GetSize() {
-		return (TeemIpUtils::myip2long($this->Get('lastip')) - TeemIpUtils::myip2long($this->Get('firstip')) + 1);
+		return (IPUtils::myip2long($this->Get('lastip')) - IPUtils::myip2long($this->Get('firstip')) + 1);
 	}
 
 	/**
@@ -151,16 +151,16 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \OQLException
 	 */
 	public function GetFreeSpace($iSize, $iMaxOffer, $iOffsetIp) {
-		$bitMask = TeemIpUtils::SizeToMask($iSize);
+		$bitMask = IPUtils::SizeToMask($iSize);
 		$iOrgId = $this->Get('org_id');
 		$iKey = ($this->GetKey() > 0) ? $this->GetKey() : 0;
 		$aFreeSpace = array();
 
 		// Get list of registered blocks and subnets in subnet range
 		$sFirstIp = $this->Get('firstip');
-		$iObjFirstIp = TeemIpUtils::myip2long($sFirstIp);
+		$iObjFirstIp = IPUtils::myip2long($sFirstIp);
 		$sLastIp = $this->Get('lastip');
-		$iObjLastIp = TeemIpUtils::myip2long($sLastIp);
+		$iObjLastIp = IPUtils::myip2long($sLastIp);
 		if ($iKey == 0) {
 			// Search at root space, outside any block - delegated or not
 			$sOQL = "SELECT IPv4Block AS b WHERE b.org_id = :org_id AND b.parent_id = 0 UNION SELECT IPv4Block AS b WHERE b.parent_org_id = :org_id AND b.parent_id = 0";
@@ -173,17 +173,17 @@ class _IPv4Block extends IPBlock implements iTree {
 		$aList = array();
 		$i = 0;
 		while ($oChildBlock = $oChildBlockSet->Fetch()) {
-			$iBlockFirstIp = TeemIpUtils::myip2long($oChildBlock->Get('firstip'));
+			$iBlockFirstIp = IPUtils::myip2long($oChildBlock->Get('firstip'));
 			$aList[$i] = array();
 			$aList[$i]['firstip'] = $iBlockFirstIp;
-			$aList[$i]['lastip'] = TeemIpUtils::myip2long($oChildBlock->Get('lastip'));
+			$aList[$i]['lastip'] = IPUtils::myip2long($oChildBlock->Get('lastip'));
 			$i++;
 		}
 		while ($oSubnet = $oSubnetSet->Fetch()) {
-			$iSubnetFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
+			$iSubnetFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
 			$aList[$i] = array();
 			$aList[$i]['firstip'] = $iSubnetFirstIp;
-			$aList[$i]['lastip'] = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+			$aList[$i]['lastip'] = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 			$i++;
 		}
 		// Sort $aList by 'firstip' and create array of free ranges
@@ -232,7 +232,7 @@ class _IPv4Block extends IPBlock implements iTree {
 				// Align $iAnIp to mask
 				if (($iAnIp & ip2long($bitMask)) != $iAnIp) {
 					$iAnIp = ($iAnIp & ip2long($bitMask)) + $iSize;
-					//$iAnIp = TeemIpUtils::myip2long(long2ip($iAnIp));
+					//$iAnIp = IPUtils::myip2long(long2ip($iAnIp));
 				}
 				$iLastFreeIp = $aFreeList[$j]['lastip'];
 				$iLastIp = $iAnIp + $iSize - 1;
@@ -240,8 +240,8 @@ class _IPv4Block extends IPBlock implements iTree {
 					// Skip space if it not beyond offset
 					if ($iOffsetIp <= $iAnIp) {
 						$aFreeSpace[$n] = array();
-						$aFreeSpace[$n]['firstip'] = TeemIpUtils::mylong2ip($iAnIp);
-						$aFreeSpace[$n]['lastip'] = TeemIpUtils::mylong2ip($iLastIp);
+						$aFreeSpace[$n]['firstip'] = IPUtils::mylong2ip($iAnIp);
+						$aFreeSpace[$n]['lastip'] = IPUtils::mylong2ip($iLastIp);
 						$aFreeSpace[$n]['mask'] = $bitMask;
 						$n++;
 					}
@@ -284,16 +284,16 @@ class _IPv4Block extends IPBlock implements iTree {
 		while ($oChildBlock = $oChildBlockSet->Fetch()) {
 			$aList[$i] = array();
 			$aList[$i]['type'] = 'IPv4Block';
-			$aList[$i]['firstip'] = TeemIpUtils::myip2long($oChildBlock->Get('firstip'));
-			$aList[$i]['lastip'] = TeemIpUtils::myip2long($oChildBlock->Get('lastip'));
+			$aList[$i]['firstip'] = IPUtils::myip2long($oChildBlock->Get('firstip'));
+			$aList[$i]['lastip'] = IPUtils::myip2long($oChildBlock->Get('lastip'));
 			$aList[$i]['obj'] = $oChildBlock;
 			$i++;
 		}
 		while ($oSubnet = $oSubnetSet->Fetch()) {
 			$aList[$i] = array();
 			$aList[$i]['type'] = 'IPv4Subnet';
-			$aList[$i]['firstip'] = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-			$aList[$i]['lastip'] = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+			$aList[$i]['firstip'] = IPUtils::myip2long($oSubnet->Get('ip'));
+			$aList[$i]['lastip'] = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 			$aList[$i]['obj'] = $oSubnet;
 			$i++;
 		}
@@ -318,21 +318,21 @@ class _IPv4Block extends IPBlock implements iTree {
 	public function GetMinTheoriticalBlockPrefix() {
 		//	1. Search space that can fit in block only
 		$iBlockSize = $this->GetSize();
-		$iMaxSize = TeemIpUtils::MaskToSize("192.0.0.0");
+		$iMaxSize = IPUtils::MaskToSize("192.0.0.0");
 		while ($iBlockSize <= $iMaxSize) {
 			$iMaxSize /= 2;
 		}
-		$bitMask = TeemIpUtils::myip2long(TeemIpUtils::SizeToMask($iMaxSize));
+		$bitMask = IPUtils::myip2long(IPUtils::SizeToMask($iMaxSize));
 		//	2. Make sure block holds space of $iMaxSize CIDR aligned
-		$iFirstIp = TeemIpUtils::myip2long($this->Get('firstip'));
-		$iLastIp = TeemIpUtils::myip2long($this->Get('lastip'));
+		$iFirstIp = IPUtils::myip2long($this->Get('firstip'));
+		$iLastIp = IPUtils::myip2long($this->Get('lastip'));
 		if (($iFirstIp & $bitMask) != $iFirstIp) {
 			if (($iLastIp - (($iFirstIp & $bitMask) + $bitMask + 1)) > $iMaxSize) {
 				$iMaxSize /= 2;
 				$bitMask = $bitMask >> 1;
 			}
 		}
-		$i = TeemIpUtils::SizeToBit($iMaxSize);
+		$i = IPUtils::SizeToBit($iMaxSize);
 
 		return $i;
 	}
@@ -387,8 +387,8 @@ class _IPv4Block extends IPBlock implements iTree {
 			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv4_block_cidr_aligned', $iOrgId);
 		}
 		if ($sBlockCidrAligned == 'bca_yes') {
-			$iFirstIp = ($iNewFirstIp == 0) ? TeemIpUtils::myip2long($this->Get('firstip')) : $iNewFirstIp;
-			$iLastIp = ($iNewLastIp == 0) ? TeemIpUtils::myip2long($this->Get('lastip')) : $iNewLastIp;
+			$iFirstIp = ($iNewFirstIp == 0) ? IPUtils::myip2long($this->Get('firstip')) : $iNewFirstIp;
+			$iLastIp = ($iNewLastIp == 0) ? IPUtils::myip2long($this->Get('lastip')) : $iNewLastIp;
 			// Compute size of new block and check if it corresponds to size of a CIDR block
 			$Size = $iLastIp - $iFirstIp + 1;
 			if (($Size & ($Size - 1)) != 0) {
@@ -396,8 +396,8 @@ class _IPv4Block extends IPBlock implements iTree {
 			}
 			// Check that FirstIp is CIDR aligned
 			// Call to ip2long(long2ip()) is a workaround to handle integers that are above their max size
-			$iMask = TeemIpUtils::SizeToMask($Size);
-			if (($iFirstIp & TeemIpUtils::myip2long($iMask)) != $iFirstIp) {
+			$iMask = IPUtils::SizeToMask($Size);
+			if (($iFirstIp & IPUtils::myip2long($iMask)) != $iFirstIp) {
 				return false;
 			}
 		}
@@ -472,9 +472,9 @@ class _IPv4Block extends IPBlock implements iTree {
 		$iOrgId = $this->Get('org_id');
 		$sOrigin = $this->Get('origin');
 		$sIpToStartFrom = array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip');
-		$iIpToStartFrom = TeemIpUtils::myip2long($sIpToStartFrom);
+		$iIpToStartFrom = IPUtils::myip2long($sIpToStartFrom);
 		$iSize = $aParameter['spacesize'];
-		$bitMask = TeemIpUtils::SizeToMask($iSize);
+		$bitMask = IPUtils::SizeToMask($iSize);
 		$iMaxOffer = $aParameter['maxoffer'];
 		$sStatusSubnet = $aParameter['status_subnet'];
 		$sType = $aParameter['type'];
@@ -499,13 +499,6 @@ class _IPv4Block extends IPBlock implements iTree {
 			$sHtml = $this->GetAllSpace($oP);
 
 		} else {
-			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-				$sIPv4BlockCreationTitle = '';
-				$sIPv4SubnetCreationTitle = '';
-			} else {
-				$sIPv4BlockCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Block')));
-				$sIPv4SubnetCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv4Subnet')));
-			}
 			$aOccupiedSpace = $this->GetOccupiedSpace();
 
 			// Check user rights
@@ -519,7 +512,7 @@ class _IPv4Block extends IPBlock implements iTree {
 
 			// Display Summary of parameters
 			$sHtml .= "<ul><li>";
-			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary', $iMaxOffer, TeemIpUtils::SizeToBit($iSize))."</b>&nbsp;";
+			$sHtml .= "<b>&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary', $iMaxOffer, IPUtils::SizeToBit($iSize))."</b>&nbsp;";
 			$sHtml .= ($iId > 0) ? $this->GetHyperlink() : '';
 			$sHtml .= "&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]&nbsp;";
 			$sHtml .= (array_key_exists('ip', $aParameter)) ? Dict::Format('IPManagement:Action:DoFindSpace:IPBlock:IPToStartFrom', $sIpToStartFrom) : '';
@@ -529,14 +522,14 @@ class _IPv4Block extends IPBlock implements iTree {
 			$i = 0;
 			$j = 0;
 			$iVIdCounter = 1;
-			$iAnOccupiedIp = TeemIpUtils::myip2long(array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip'));
-			$iIpToStartFrom = TeemIpUtils::myip2long($sIpToStartFrom);
+			$iAnOccupiedIp = IPUtils::myip2long(array_key_exists('ip', $aParameter) ? $aParameter['ip'] : $this->Get('firstip'));
+			$iIpToStartFrom = IPUtils::myip2long($sIpToStartFrom);
 			$iSizeOccupiedArray = sizeof($aOccupiedSpace);
 			do {
 				$sAFreeIp = $aFreeSpace[$i]['firstip'];
-				$iAFreeIp = TeemIpUtils::myip2long($sAFreeIp);
+				$iAFreeIp = IPUtils::myip2long($sAFreeIp);
 				$sLastFreeIp = $aFreeSpace[$i]['lastip'];
-				$iLastFreeIp = TeemIpUtils::myip2long($sLastFreeIp);
+				$iLastFreeIp = IPUtils::myip2long($sLastFreeIp);
 
 				// Before displaying offer, display already occupied space sitting before that offer
 				if ($iSizeOccupiedArray != 0) {
@@ -549,7 +542,7 @@ class _IPv4Block extends IPBlock implements iTree {
 								$iNbIps = $iLastOccupiedIp - $iAnOccupiedIp + 1;
 								if ($iNbIps < $iSize) {
 									$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-									$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent', TeemIpUtils::mylong2ip($iAnOccupiedIp), TeemIpUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps)."</li>\n";
+									$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent', IPUtils::mylong2ip($iAnOccupiedIp), IPUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps)."</li>\n";
 								}
 							}
 							$iAnOccupiedIp = $aOccupiedSpace[$j]['firstip'];
@@ -562,7 +555,7 @@ class _IPv4Block extends IPBlock implements iTree {
 								if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 									$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 								} else {
-									$sHtml .= "&nbsp;[".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['firstip'])." - ".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['lastip'])."]";
+									$sHtml .= "&nbsp;[".IPUtils::mylong2ip($aOccupiedSpace[$j]['firstip'])." - ".IPUtils::mylong2ip($aOccupiedSpace[$j]['lastip'])."]";
 
 									// Display delegation information if required
 									$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
@@ -606,7 +599,7 @@ class _IPv4Block extends IPBlock implements iTree {
 						}
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', "$sIPv4BlockCreationTitle", $iChangeId, $sPayLoad);
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Block', '', $iChangeId, $sPayLoad);
 EOF
 						);
 					}
@@ -623,7 +616,7 @@ EOF
 						$sHtml .= $sHTMLValue;
 						$oP->add_ready_script(
 							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', "$sIPv4SubnetCreationTitle", $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv4Subnet', '', $iChangeId, {'org_id': '$iOrgId', 'block_id': '$iId', 'ip': '$sAFreeIp', 'mask': '$bitMask', 'status': '$sStatusSubnet', 'type': '$sType', 'location_id': '$iLocationId', 'requestor_id': '$iRequestorId'});
 EOF
 						);
 					}
@@ -666,13 +659,13 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = TeemIpUtils::myip2long($sFirstIpCurrentBlock);
+		$iFirstIpCurrentBlock = IPUtils::myip2long($sFirstIpCurrentBlock);
 		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = TeemIpUtils::myip2long($sLastIpCurrentBlock);
+		$iLastIpCurrentBlock = IPUtils::myip2long($sLastIpCurrentBlock);
 		$sNewFirstIp = $aParam['firstip'];
-		$iNewFirstIp = TeemIpUtils::myip2long($sNewFirstIp);
+		$iNewFirstIp = IPUtils::myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
-		$iNewLastIp = TeemIpUtils::myip2long($sNewLastIp);
+		$iNewLastIp = IPUtils::myip2long($sNewLastIp);
 
 		// Make sure new first IPs is smaller than new last IP
 		if ($iNewFirstIp >= $iNewLastIp) {
@@ -703,8 +696,8 @@ EOF
 		// Make sure that no child block sits accross border
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp < $iNewLastIp) && ($iNewLastIp <= $iCurrentLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Shrink:IPBlock:BlockAccrossBorder'));
 			}
@@ -713,8 +706,8 @@ EOF
 		// Make sure that no child subnet sits accross border
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp < $iNewLastIp) && ($iNewLastIp <= $iCurrentLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Shrink:IPBlock:SubnetAccrossBorder'));
 			}
@@ -747,9 +740,9 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$sNewFirstIp = $aParam['firstip'];
-		$iNewFirstIp = TeemIpUtils::myip2long($sNewFirstIp);
+		$iNewFirstIp = IPUtils::myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
-		$iNewLastIp = TeemIpUtils::myip2long($sNewLastIp);
+		$iNewLastIp = IPUtils::myip2long($sNewLastIp);
 		$sRequestor_id = $aParam['requestor_id'];
 
 		// Update initial block and register it.
@@ -763,8 +756,8 @@ EOF
 		//	Attach dropped child blocks to parent block
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 			if (($iCurrentLastIp < $iNewFirstIp) || ($iNewLastIp < $iCurrentFirstIp)) {
 				$oSRange->Set('parent_id', $iParentId);
 				$oSRange->DBUpdate();
@@ -774,8 +767,8 @@ EOF
 		//	Attach child subnets to parent block
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 			if (($iCurrentLastIp < $iNewFirstIp) || ($iNewLastIp < $iCurrentFirstIp)) {
 				$oSubnet->Set('block_id', $iParentId);
 				$oSubnet->DBUpdate();
@@ -800,11 +793,11 @@ EOF
 		$iBlockId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = TeemIpUtils::myip2long($sFirstIpCurrentBlock);
+		$iFirstIpCurrentBlock = IPUtils::myip2long($sFirstIpCurrentBlock);
 		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = TeemIpUtils::myip2long($sLastIpCurrentBlock);
+		$iLastIpCurrentBlock = IPUtils::myip2long($sLastIpCurrentBlock);
 		$sSplitIp = $aParam['ip'];
-		$iSplitIp = TeemIpUtils::myip2long($sSplitIp);
+		$iSplitIp = IPUtils::myip2long($sSplitIp);
 		$sNewName = $aParam['newname'];
 
 		// Make sure split Ip is in block
@@ -826,8 +819,8 @@ EOF
 		// Make sure that no child block sits accross border
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 			if (($iCurrentFirstIp < $iSplitIp) && ($iSplitIp <= $iCurrentLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:Split:IPBlock:BlockAccrossBorder'));
 			}
@@ -836,8 +829,8 @@ EOF
 		// Make sure that no child subnet sits accross border
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 			if (($iCurrentFirstIp < $iSplitIp) && ($iSplitIp <= $iCurrentLastIp)) {
 				return (Dict::Format('UI:IPManagement:Action:Split:IPBlock:SubnetAccrossBorder'));
 			}
@@ -879,7 +872,7 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$sLastIpCurrentBlock = $this->Get('lastip');
 		$sSplitIp = $aParam['ip'];
-		$iSplitIp = TeemIpUtils::myip2long($sSplitIp);
+		$iSplitIp = IPUtils::myip2long($sSplitIp);
 		$sNewName = $aParam['newname'];
 		$sRequestor_id = $aParam['requestor_id'];
 
@@ -887,7 +880,7 @@ EOF
 		if (!is_null($sRequestor_id)) {
 			$this->Set('requestor_id', $sRequestor_id);
 		}
-		$this->Set('lastip', TeemIpUtils::mylong2ip($iSplitIp - 1));
+		$this->Set('lastip', IPUtils::mylong2ip($iSplitIp - 1));
 		$this->Set('write_reason', 'split');
 		$this->DBUpdate();
 
@@ -937,7 +930,7 @@ EOF
 		//	Attach child blocks to that new block
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
 			if ($iSplitIp <= $iCurrentFirstIp) {
 				$oSRange->Set('parent_id', $iNewBlockKey);
 				$oSRange->Set('write_reason', 'split');
@@ -948,7 +941,7 @@ EOF
 		//	Attach child subnets to that new block
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
 			if ($iSplitIp <= $iCurrentFirstIp) {
 				$oSubnet->Set('block_id', $iNewBlockKey);
 				$oSubnet->DBUpdate();
@@ -979,13 +972,13 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$sFirstIpCurrentBlock = $this->Get('firstip');
-		$iFirstIpCurrentBlock = TeemIpUtils::myip2long($sFirstIpCurrentBlock);
+		$iFirstIpCurrentBlock = IPUtils::myip2long($sFirstIpCurrentBlock);
 		$sLastIpCurrentBlock = $this->Get('lastip');
-		$iLastIpCurrentBlock = TeemIpUtils::myip2long($sLastIpCurrentBlock);
+		$iLastIpCurrentBlock = IPUtils::myip2long($sLastIpCurrentBlock);
 		$sNewFirstIp = $aParam['firstip'];
-		$iNewFirstIp = TeemIpUtils::myip2long($sNewFirstIp);
+		$iNewFirstIp = IPUtils::myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
-		$iNewLastIp = TeemIpUtils::myip2long($sNewLastIp);
+		$iNewLastIp = IPUtils::myip2long($sNewLastIp);
 
 		// Make sure new first IPs is smaller than new last IP
 		if ($iNewFirstIp >= $iNewLastIp) {
@@ -1017,8 +1010,8 @@ EOF
 		if ($iParentId != 0) {
 			$oParent = MetaModel::GetObject('IPv4Block', $iParentId, false /* MustBeFound */);
 			if (!is_null($oParent)) {
-				$iParentFirstIp = TeemIpUtils::myip2long($oParent->Get('firstip'));
-				$iParentLastIp = TeemIpUtils::myip2long($oParent->Get('lastip'));
+				$iParentFirstIp = IPUtils::myip2long($oParent->Get('firstip'));
+				$iParentLastIp = IPUtils::myip2long($oParent->Get('lastip'));
 				if (($iNewFirstIp < $iParentFirstIp) || ($iParentLastIp < $iNewLastIp) || (($iNewFirstIp == $iParentFirstIp) && ($iParentLastIp == $iNewLastIp))) {
 					return (Dict::Format('UI:IPManagement:Action:Expand:IPBlock:BlockBiggerThanParent'));
 				}
@@ -1028,8 +1021,8 @@ EOF
 		// Make sure that new borders don't include existing delegated block
 		$oDelegatedSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_org_id != 0 AND b.org_id = $iOrgId"));
 		while ($oDelegatedSRange = $oDelegatedSRangeSet->Fetch()) {
-			$iDelegatedSRangeFirstIp = TeemIpUtils::myip2long($oDelegatedSRange->Get('firstip'));
-			$iDelegatedSRangeLastIp = TeemIpUtils::myip2long($oDelegatedSRange->Get('lastip'));
+			$iDelegatedSRangeFirstIp = IPUtils::myip2long($oDelegatedSRange->Get('firstip'));
+			$iDelegatedSRangeLastIp = IPUtils::myip2long($oDelegatedSRange->Get('lastip'));
 			if ((($iNewFirstIp <= $iDelegatedSRangeFirstIp) && ($iDelegatedSRangeFirstIp <= $iNewLastIp)) || (($iNewFirstIp <= $iDelegatedSRangeLastIp) && ($iDelegatedSRangeLastIp <= $iNewLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Expand:IPBlock:DelegatedBlockAccrossBorder'));
 			}
@@ -1038,8 +1031,8 @@ EOF
 		// Make sure that no brother block sits accross new borders
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND b.org_id = $iOrgId"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iNewLastIp) && ($iNewLastIp < $iCurrentLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Expand:IPBlock:BlockAccrossBorder'));
 			}
@@ -1049,8 +1042,8 @@ EOF
 		if ($iParentId != 0) {
 			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-				$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+				$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
+				$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 				if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iNewLastIp) && ($iNewLastIp < $iCurrentLastIp))) {
 					return (Dict::Format('UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder'));
 				}
@@ -1079,9 +1072,9 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iParentId = $this->Get('parent_id');
 		$sNewFirstIp = $aParam['firstip'];
-		$iNewFirstIp = TeemIpUtils::myip2long($sNewFirstIp);
+		$iNewFirstIp = IPUtils::myip2long($sNewFirstIp);
 		$sNewLastIp = $aParam['lastip'];
-		$iNewLastIp = TeemIpUtils::myip2long($sNewLastIp);
+		$iNewLastIp = IPUtils::myip2long($sNewLastIp);
 		$sRequestor_id = $aParam['requestor_id'];
 
 		// Update initial block and register it.
@@ -1096,8 +1089,8 @@ EOF
 		// Absorb brother blocks
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
-			$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-			$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 			if (($iNewFirstIp <= $iCurrentFirstIp) && ($iCurrentLastIp <= $iNewLastIp)) {
 				$oSRange->Set('parent_id', $iBlockId);
 				$oSRange->DBUpdate();
@@ -1109,8 +1102,8 @@ EOF
 			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			$oSubnetSet->Rewind();
 			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$iCurrentFirstIp = TeemIpUtils::myip2long($oSubnet->Get('ip'));
-				$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+				$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
+				$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 				if (($iNewFirstIp <= $iCurrentFirstIp) && ($iCurrentLastIp <= $iNewLastIp)) {
 					$oSubnet->Set('block_id', $iBlockId);
 					$oSubnet->DBUpdate();
@@ -1139,9 +1132,9 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iBlockId = $this->GetKey();
 		$sFirstIpBlockToDel = $this->Get('firstip');
-		$iFirstIpBlockToDel = TeemIpUtils::myip2long($sFirstIpBlockToDel);
+		$iFirstIpBlockToDel = IPUtils::myip2long($sFirstIpBlockToDel);
 		$sLastIpBlockToDel = $this->Get('lastip');
-		$iLastIpBlockToDel = TeemIpUtils::myip2long($sLastIpBlockToDel);
+		$iLastIpBlockToDel = IPUtils::myip2long($sLastIpBlockToDel);
 
 		$iChildOrgId = (array_key_exists('child_org_id', $aParam)) ? $aParam['child_org_id'] : 0;
 		if ($iChildOrgId != 0) {
@@ -1153,8 +1146,8 @@ EOF
 			// Make sure block is not contained in a block that belongs to the organization that the block will be delegated to
 			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.org_id = $iChildOrgId"));
 			while ($oSRange = $oSRangeSet->Fetch()) {
-				$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-				$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+				$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+				$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 				if ((($iCurrentFirstIp <= $iFirstIpBlockToDel) && ($iFirstIpBlockToDel <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iLastIpBlockToDel) && ($iLastIpBlockToDel <= $iCurrentLastIp))) {
 					return (Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
 				}
@@ -1377,12 +1370,12 @@ EOF
 				$sAttCode = 'spacesize';
 				$sInputId = $iFormId.'_'.$sAttCode;
 				$sHTMLValue = "<select id=\"$sInputId\" name=\"$sAttCode\">\n";
-				$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($i)); // Corrects pb with some 64bits OS - Centos...
+				$InputSize = IPUtils::MaskToSize(IPUtils::BitToMask($i)); // Corrects pb with some 64bits OS - Centos...
 				while ($i <= 32) {
 					if ($i == $iDefaultMask) {
-						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".TeemIpUtils::BitToMask($i)." /$i</option>\n";
+						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".IPUtils::BitToMask($i)." /$i</option>\n";
 					} else {
-						$sHTMLValue .= "<option value=\"$InputSize\">".TeemIpUtils::BitToMask($i)." /$i</option>\n";
+						$sHTMLValue .= "<option value=\"$InputSize\">".IPUtils::BitToMask($i)." /$i</option>\n";
 					}
 					$InputSize /= 2;
 					$i++;
@@ -1555,7 +1548,7 @@ EOF
 						$iDefaultMask = 31;
 					}
 				}
-				$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
+				$InputSize = IPUtils::MaskToSize(IPUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
 
 				// Display list of choices now
 				// Size of space
@@ -1565,7 +1558,7 @@ EOF
 				$oColumn2->AddSubBlock($oSelect);
 				while ($iPrefix <= 32) {
 					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, TeemIpUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
 					$InputSize /= 2;
 					$iPrefix++;
 				}
@@ -1656,12 +1649,6 @@ EOF
 			default:
 				break;
 		};
-
-		// Cancel button
-//		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Block', '{$this->GetKey()}', '', '{null}');"));
-
-		// Apply button
-//		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
@@ -1682,8 +1669,8 @@ EOF
 		// Get list of registered blocks and subnets in subnet range
 		$aOccupiedSpace = $this->GetOccupiedSpace();
 
-		$iObjFirstIp = TeemIpUtils::myip2long($this->Get('firstip'));
-		$iObjLastIp = TeemIpUtils::myip2long($this->Get('lastip'));
+		$iObjFirstIp = IPUtils::myip2long($this->Get('firstip'));
+		$iObjLastIp = IPUtils::myip2long($this->Get('lastip'));
 		$iBlockSize = $this->GetSize();
 
 		$sHtml = '';
@@ -1700,14 +1687,14 @@ EOF
 		$j = 0;
 		$iAnOccupiedIp = $iObjFirstIp;
 		while ($iAnOccupiedIp <= $iObjLastIp) {
-			$sAnIp = TeemIpUtils::mylong2ip($iAnOccupiedIp);
+			$sAnIp = IPUtils::mylong2ip($iAnOccupiedIp);
 			if ($j < $iSizeArray) {
 				if ($iAnOccupiedIp < $aOccupiedSpace[$j]['firstip']) {
 					// Display free space
 					$iLastOccupiedIp = $aOccupiedSpace[$j]['firstip'] - 1;
 					$iNbIps = $iLastOccupiedIp - $iAnOccupiedIp + 1;
 					$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, TeemIpUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
+					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, IPUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
 					$iAnOccupiedIp = $aOccupiedSpace[$j]['firstip'];
 				} else {
 					if ($iAnOccupiedIp == $aOccupiedSpace[$j]['firstip']) {
@@ -1717,7 +1704,7 @@ EOF
 						if ($aOccupiedSpace[$j]['type'] == 'IPv4Subnet') {
 							$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$aOccupiedSpace[$j]['obj']->Get('mask'));
 						} else {
-							$sHtml .= "&nbsp;[".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['firstip'])." - ".TeemIpUtils::mylong2ip($aOccupiedSpace[$j]['lastip'])."]";
+							$sHtml .= "&nbsp;[".IPUtils::mylong2ip($aOccupiedSpace[$j]['firstip'])." - ".IPUtils::mylong2ip($aOccupiedSpace[$j]['lastip'])."]";
 
 							// Display delegation information if required
 							$iParentOrgId = $aOccupiedSpace[$j]['obj']->Get('parent_org_id');
@@ -1732,7 +1719,7 @@ EOF
 			} else {
 				$iNbIps = $iObjLastIp - $iAnOccupiedIp + 1;
 				$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, TeemIpUtils::mylong2ip($iObjLastIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
+				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, IPUtils::mylong2ip($iObjLastIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
 				$iAnOccupiedIp = $iObjLastIp + 1;
 			}
 			$sHtml .= "</li>\n";
@@ -1791,7 +1778,7 @@ EOF
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
 			$sSubTitle = ($oSubnetSet->Count() > 0) ? $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent') : '';
-			$this->DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet);
 		}
 	}
 
@@ -1850,8 +1837,8 @@ EOF
 			$iKey = $this->GetKey();
 		}
 		$sName = $this->Get('name');
-		$iFirstIp = TeemIpUtils::myip2long($this->Get('firstip'));
-		$iLastIp = TeemIpUtils::myip2long($this->Get('lastip'));
+		$iFirstIp = IPUtils::myip2long($this->Get('firstip'));
+		$iLastIp = IPUtils::myip2long($this->Get('lastip'));
 
 		// Check name doesn't already exist
 		$sOQL = "SELECT IPv4Block AS b WHERE b.name = :name AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
@@ -1909,8 +1896,8 @@ EOF
 			if ($iParentId != 0) {
 				$oParent = MetaModel::GetObject('IPv4Block', $iParentId, false /* MustBeFound */);
 				if (!is_null($oParent)) {
-					$iParentFirstIp = TeemIpUtils::myip2long($oParent->Get('firstip'));
-					$iParentLastIp = TeemIpUtils::myip2long($oParent->Get('lastip'));
+					$iParentFirstIp = IPUtils::myip2long($oParent->Get('firstip'));
+					$iParentLastIp = IPUtils::myip2long($oParent->Get('lastip'));
 					if (($iFirstIp < $iParentFirstIp) || ($iParentLastIp < $iLastIp) || (($iFirstIp == $iParentFirstIp) && ($iParentLastIp == $iLastIp))) {
 						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NotInParent');
 
@@ -1934,8 +1921,8 @@ EOF
 				$oSRangeSet->Append($oSRangeSet2);
 			}
 			while ($oSRange = $oSRangeSet->Fetch()) {
-				$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-				$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+				$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+				$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 
 				// Does the range already exist?
 				if (($iCurrentFirstIp == $iFirstIp) && ($iCurrentLastIp == $iLastIp)) {
@@ -1998,8 +1985,8 @@ EOF
 					'parent_org_id' => $iParentOrgId,
 				));
 				while ($oSRange = $oSRangeSet->Fetch()) {
-					$iCurrentFirstIp = TeemIpUtils::myip2long($oSRange->Get('firstip'));
-					$iCurrentLastIp = TeemIpUtils::myip2long($oSRange->Get('lastip'));
+					$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+					$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 					if ((($iCurrentFirstIp < $iFirstIp) && ($iFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iLastIp) && ($iLastIp < $iCurrentLastIp))) {
 						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg');
 
@@ -2092,7 +2079,7 @@ EOF
 					'requestor_id' => $this->Get('requestor_id'),
 					'block_id' => $iKey,
 					'ip' => $sFirstIp,
-					'mask' => TeemIpUtils::SizeToMask($iSize),
+					'mask' => IPUtils::SizeToMask($iSize),
 					'allocation_date' => time(),
 				);
 				$oSubnet = MetaModel::NewObject('IPv4Subnet', $aValues);
@@ -2118,7 +2105,7 @@ EOF
 			$iKey = $this->GetKey();
 			$iParentId = $this->Get('parent_id');
 			$iFirstIp = ip2long($this->Get('firstip'));
-			$iLastIp = TeemIpUtils::myip2long($this->Get('lastip'));
+			$iLastIp = IPUtils::myip2long($this->Get('lastip'));
 
 			// Look for all subnets attached to block that may have fallen out of block
 			//	Attach them to parent block
@@ -2126,7 +2113,7 @@ EOF
 			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch()) {
 				$iCurrentFirstIp = ip2long($oSubnet->Get('ip'));
-				$iCurrentLastIp = TeemIpUtils::myip2long($oSubnet->Get('broadcastip'));
+				$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
 				if (($iCurrentLastIp < $iFirstIp) || ($iLastIp < $iCurrentFirstIp)) {
 					if ($iParentId == 0) {
 						throw new ApplicationException(Dict::Format('UI:IPManagement:Action:Modify:IPv4Block:ParentIdNull', $iKey));

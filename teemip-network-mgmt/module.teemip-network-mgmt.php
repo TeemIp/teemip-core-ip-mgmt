@@ -6,18 +6,17 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-network-mgmt/2.7.1',
+	'teemip-network-mgmt/3.0.0',
 	array(
 		// Identification
 		//
 		'label' => 'Network Management',
 		'category' => 'business',
-		
+
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.7.0',
-			'teemip-framework/1.0.0',
+			'teemip-framework/3.0.0',
 		),
 		'mandatory' => false,
 		'visible' => true,

@@ -8,17 +8,18 @@ namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
 
 use cmdbAbstractObject;
 use CMDBObjectSet;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use IPConfig;
 use IPSubnet;
 use IPUsage;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
@@ -504,75 +505,75 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	}
 
 	/**
-	 * Displays available space
-	 *
-	 * @param \WebPage $oP
-	 * @param $iChangeId
-	 * @param $aParam
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
-	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iRangeSize = $aParam['spacesize'];
 		$iMaxOffer = $aParam['maxoffer'];
 
-		// Get list of registered IPs & ranges in subnet
-		$iSubnetSize = $this->GetSize();
-		if ($iRangeSize >= $iSubnetSize) {
-			// Required range size is to big, exit
-			// This should have been checked before
-			$oP->add(Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:RangeTooBig')."<br><br>");
+		// Get list of free space in subnet
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sIPv6RangeCreationTitle = '';
 		} else {
-			// Get list of free space in subnet
-			$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
-
-			// Check user rights
-			$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv6Range', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
-
-			// Display Summary of parameters
-			$oP->add("<ul>\n");
-			$oP->add("<li>"."&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Summary', $iMaxOffer, $iRangeSize)."<ul>\n");
-
-			// Display possible choices as list
-			$iSizeFreeArray = sizeof($aFreeSpace);
-			if ($iSizeFreeArray != 0) {
-				$i = 0;
-				$iVIdCounter = 1;
-				do {
-					$oRangeFirstIp = $aFreeSpace[$i]['firstip'];
-					$sRangeFirstIp = $oRangeFirstIp->GetAsCannonical();
-					$oRangeLastIp = $aFreeSpace[$i]['lastip'];
-					$sRangeLastIp = $oRangeLastIp->GetAsCannonical();
-					$oP->add("<li>".$sRangeFirstIp." - ".$sRangeLastIp."\n");
-
-					// If user has rights to create range
-					// Display range with icon to create it
-					if ($UserHasRightsToCreate) {
-						$iVId = $iVIdCounter++;
-						$sHTMLValue = "<ul><li><div><span id=\"v_{$iVId}\">";
-						$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
-						$sHTMLValue .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:CreateAsRange')."&nbsp;&nbsp;";
-						$sHTMLValue .= "</span></div></li>\n";
-						$oP->add($sHTMLValue);
-						$oP->add_ready_script(
-							<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Range', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'firstip': '$oRangeFirstIp', 'lastip': '$oRangeLastIp'});
-EOF
-						);
-						$oP->add("</ul></li>\n");
-					} else {
-						$oP->add("</li>\n");
-					}
-				} while (++$i < $iSizeFreeArray);
-			}
-			$oP->add("</ul></li></ul>\n");
+			$sIPv6RangeCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Range')));
 		}
+		$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
+
+		// Check user rights
+		$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv6Range', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
+
+		// Open table
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
+		// Display Summary of parameters
+		$sHtml .= "<ul>";
+		$sHtml .= "<li>"."&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Summary', $iMaxOffer, $iRangeSize)."<ul>";
+
+		// Display possible choices as list
+		$iSizeFreeArray = sizeof($aFreeSpace);
+		if ($iSizeFreeArray != 0) {
+			$i = 0;
+			$iVIdCounter = 1;
+			do {
+				$oRangeFirstIp = $aFreeSpace[$i]['firstip'];
+				$sRangeFirstIp = $oRangeFirstIp->GetAsCannonical();
+				$oRangeLastIp = $aFreeSpace[$i]['lastip'];
+				$sRangeLastIp = $oRangeLastIp->GetAsCannonical();
+				$sHtml .= "<li>".$sRangeFirstIp." - ".$sRangeLastIp;
+
+				// If user has rights to create range
+				// Display range with icon to create it
+				if ($UserHasRightsToCreate) {
+					$iVId = $iVIdCounter++;
+					$sHtml .= "<ul><li><div><span id=\"v_{$iVId}\">";
+					$sHtml .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHtml .= "&nbsp;".Dict::Format('UI:IPManagement:Action:DoFindSpace:IPv6Subnet:CreateAsRange')."&nbsp;&nbsp;";
+					$sHtml .= "</span></div></li>";
+					$oP->add_ready_script(
+						<<<EOF
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Range', '', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'firstip': '$oRangeFirstIp', 'lastip': '$oRangeLastIp'});
+EOF
+					);
+					$sHtml .= "</ul></li>";
+				} else {
+					$sHtml .= "</li>";
+				}
+			} while (++$i < $iSizeFreeArray);
+		}
+		$sHtml .= "</ul></li></ul>";
+
+		// Close table
+		$sHtml .= '</div>';
+		$sHtml .= '</td></tr></table>';
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
+
+		return $sHtml;
 	}
 
 	/**
@@ -613,20 +614,9 @@ EOF
 	}
 
 	/**
-	 * Display list IP addresses within GUI
-	 *
-	 * @param \WebPage $oP
-	 * @param $iChangeId
-	 * @param $aParam
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
-	public function DoListIps(WebPage $oP, $aParam) {
+	public function GetListIps(WebPage $oP, $aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
@@ -661,8 +651,11 @@ EOF
 		$aIpRange = $oIpRangeSet->GetColumnAsArray('firstip', false);
 
 		// Preset display of name and subnet attributes
-		$sHtml = "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'))."	 - ".$this->GetLabel('type').': '.$this->GetAsHTML('type');
-
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sIPv6CreationTitle = '';
+		} else {
+			$sIPv6CreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Address')));
+		}
 		$sStatusIp = $aParam['status_ip'];
 		$sShortName = $aParam['short_name'];
 		$iDomainId = $aParam['domain_id'];
@@ -676,13 +669,17 @@ EOF
 		// Check user rights
 		$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv6Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 
+		// Open table
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
 		// Display first IP
-		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetMultiSizeIcon(true, true).$this->GetHyperlink().$sHtml."<ul>\n");
+		$sHtml .= "<ul>";
+		$sHtml .= "<li>".$this->GetMultiSizeIcon(true, true)."&nbsp;".$this->GetHyperlink()."&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'))."  - ".$this->GetLabel('type').': '.$this->GetAsHTML('type')."<ul>";
 
 		// ... and dummy line if display doesn't start at first IP
 		if ($bPrintDummyFirstLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
 
 		// Display other IPs as list
@@ -697,8 +694,8 @@ EOF
 
 				// Display name and range attributes
 				$sIcon = $oIpRange->GetMultiSizeIcon(true, true);
-				$oP->add("<li>".$sIcon.$oIpRange->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oIpRange->Get('firstip')." - ".$oIpRange->Get('lastip')."]");
-				$oP->add("&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>\n");
+				$sHtml .= "<li>".$sIcon."&nbsp;".$oIpRange->GetHyperlink()."&nbsp;&nbsp;&nbsp;[".$oIpRange->Get('firstip')." - ".$oIpRange->Get('lastip')."]";
+				$sHtml .= "&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>";
 				$oIpRangeLastIp = $oIpRange->Get('lastip');
 			}
 			if (in_array($oAnIp, $aIpRegistered)) {
@@ -708,37 +705,49 @@ EOF
 				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip'))) {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
-				$oP->add("<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn'));
+				$sHtml .= "<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn');
 			} else {
 				// If user has rights to create IPs
 				// Display unregistered IP with icon to create it
 				if ($UserHasRightsToCreate) {
 					$iVId = $iVIdCounter++;
-					$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
-					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
-					$sHTMLValue .= "&nbsp;".$oAnIp->GetAsCompressed()."&nbsp;&nbsp;";
-					$sHTMLValue .= "</span></div>";
-					$oP->add($sHTMLValue);
+					$sHtml .= "<li><div><span id=\"v_{$iVId}\">";
+					$sHtml .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHtml .= "&nbsp;".$oAnIp->GetAsCompressed()."&nbsp;&nbsp;";
+					$sHtml .= "</span></div>";
 					$oP->add_ready_script(
 						<<<EOF
 					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', '', 0, {'org_id': '$iOrgId', 'subnet_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				} else {
-					$oP->add("<li>".$oAnIp->GetAsCompressed());
+					$sHtml .= "<li>".$oAnIp->GetAsCompressed();
 				}
 			}
 			if ($oAnIp->IsEqual($oIpRangeLastIp)) {
-				$oP->add("</ul></li>\n");
+				$sHtml .= "</ul></li>";
 			}
 			$oAnIp = $oAnIp->GetNextIp();
 		}
 
 		// Add dummy line if display doesn't finish at broadcast IP
 		if ($bPrintDummyLastLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
-		$oP->add("</ul></li></ul>\n");
+		$sHtml .= "</ul></li></ul>";
+
+		// Close table
+		$sHtml .= '</div>';
+		$sHtml .= '</td></tr></table>';
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sHtml .= '</div>';         // ??
+		}
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
+
+		return $sHtml;
 	}
 
 	/**
@@ -972,13 +981,33 @@ EOF
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
-		$oColumn = new Column();
-		$oClassForm->AddSubBlock($oColumn);
-		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-		$oClassForm->AddSubBlock($oToolbar);
+		$oMultiColumn = new MultiColumn();
+		$oP->AddUIBlock($oMultiColumn);
 
+		// First column = labels or fields
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
 		switch ($sOperation) {
 			case 'findspace':
+				// Second column = data
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
+
+				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:SizeOfRange');
+				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers');
+
+				// Size of range
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'spacesize', '');
+				$oColumn2->AddSubBlock($oInput);
+				$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+
+				// Max number of offers
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction2));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oInput = InputUIBlockFactory::MakeStandard('integer', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
+				$oColumn2->AddSubBlock($oInput);
 				break;
 
 			case 'listips':
@@ -993,20 +1022,17 @@ EOF
 				$sSubnetIp = $oSubnetIp->GetAsCompressed();
 
 				// Subtitle
-				$oColumn->AddHtml($sSubTitle.'<br><br>');
+				$oColumn1->AddHtml($sSubTitle.'<br><br>');
 
 				// First IP
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : $sSubnetIp;
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'firstip', $sLabelOfAction1, $sDefault, OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// Last IP
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : $sSubnetIp;
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'lastip', $sLabelOfAction2, $sDefault, OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			case 'calculator':
@@ -1015,28 +1041,18 @@ EOF
 
 				// IP
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Subnet', 'ip', $sLabelOfAction1, '', OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// CIDR
 				$sInputId = $this->m_iFormId.'_cidr';
 				$sHTML = "<input type=\"number\" id=\"$sInputId\" name=\"cidr\">\n";
 				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'cidr', $sLabelOfAction2, $sHTML);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				if ($this->GetKey() > 0) {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
-				} else {
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.history.back();"));
-				}
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			default:
 				break;
 		};
-
-		// Apply button
-		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
@@ -1168,7 +1184,7 @@ EOF
 					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstSubnetIp", 'lastip': '$sLastSubnetIp'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Block', '', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'firstip': "$sFirstSubnetIp", 'lastip': '$sLastSubnetIp'});
 EOF
 					);
 				} else {
@@ -1187,7 +1203,7 @@ EOF
 					$sHtml .= $sHTMLValue;
 					$oP->add_ready_script(
 						<<<EOF
-						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstSubnetIp", 'mask': '$iPrefix'});
+						oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Subnet', '', 0, {'org_id': '$iOrgId', 'parent_id': '$iId', 'ip': "$sFirstSubnetIp", 'mask': '$iPrefix'});
 EOF
 					);
 				} else {
@@ -1260,16 +1276,13 @@ EOF
 
 				}
 				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:ipregistered').' ('.$iRegistered.')');
-				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:ipregistered+'));
-				$oP->p(Dict::Format('Class:IPv6Subnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated));
-				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
-				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
+				$sHtml = Dict::Format('Class:IPv6Subnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated);
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:ipregistered'));
-				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:ipregistered+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+			$sName = Dict::S('Class:IPSubnet/Tab:ipregistered');
+			$sTitle = Dict::S('Class:IPSubnet/Tab:ipregistered+');
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv6Address', $sTitle, $sHtml, $oIpRegisteredSet);
 
 			// Tab for IP Ranges
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key", array('key' => $iKey));
@@ -1280,28 +1293,21 @@ EOF
 				while ($oIpRange = $oIpRangeSet->Fetch()) {
 					$iCountRange += $oIpRange->GetSize();
 				}
-				$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:iprange').' ('.$iIpRange.')');
-				$oP->p(MetaModel::GetClassIcon('IPv6Range').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:iprange+'));
-				$oP->p($this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent'));
-				$oBlock = new DisplayBlock($oIpRangeSearch, 'list');
-				$oBlock->Display($oP, 'ip_ranges', $aExtraParams);
+				$sHtml = $this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent');
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPSubnet/Tab:iprange'));
-				$oP->p(MetaModel::GetClassIcon('IPv6Range').'&nbsp;'.Dict::S('Class:IPSubnet/Tab:iprange+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+			$sName = Dict::S('Class:IPSubnet/Tab:iprange');
+			$sTitle = Dict::S('Class:IPSubnet/Tab:iprange+');
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv6Range', $sTitle, $sHtml, $oIpRangeSet);
 
 			// Tab for related subnet requests, if any, in non edit mode
 			if (MetaModel::IsValidClass('IPRequestSubnet')) {
 				$oSubnetRequestSearch = DBObjectSearch::FromOQL("SELECT IPRequestSubnet AS r WHERE r.subnet_id = $iKey");
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
-				$sCount = $oSubnetRequestSet->Count();
-				if ($sCount > 0) {
-					$oP->SetCurrentTab(Dict::Format('Class:IPSubnet/Tab:requests').' ('.$sCount.')');
-					$oP->p(MetaModel::GetClassIcon('IPRequestSubnet').'&nbsp;'.Dict::Format('Class:IPSubnet/Tab:requests+'));
-					$oBlock = new DisplayBlock($oSubnetRequestSearch, 'list');
-					$oBlock->Display($oP, 'subnet_requests', $aExtraParams);
-				}
+				$sName = Dict::S('Class:IPSubnet/Tab:requests');
+				$sTitle = Dict::S('Class:IPSubnet/Tab:requests+');
+				IPUtils::DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet);
 			}
 		}
 	}

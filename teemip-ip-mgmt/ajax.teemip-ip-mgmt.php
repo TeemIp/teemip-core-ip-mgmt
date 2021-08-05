@@ -63,6 +63,7 @@ try {
 			$oP->add('</div></div>');
 			$oP->add_ready_script("$('#dcr_{$iVId} form').removeAttr('onsubmit');");
 			$oP->add_ready_script("$('#dcr_{$iVId} form').bind('submit', oIpWidget_{$iVId}.DoCreateIpObject);");
+			$oP->add_ready_script("$('#dcr_{$iVId} form').bind('cancel', oIpWidget_{$iVId}.CloseCreateIpObject);");
 			break;
 
 		case 'do_create_ip_object':

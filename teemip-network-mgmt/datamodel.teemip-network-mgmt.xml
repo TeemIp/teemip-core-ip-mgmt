@@ -4,7 +4,7 @@
     <class id="DNSObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
-        <name>TeemIp\TeemIp\Extension\Framework\Model\_TeemIpObject</name>
+        <name>TeemIp\TeemIp\Extension\Framework\Model\_IPAbstractObject</name>
       </php_parent>
       <properties>
         <category>bizmodel,ipmgmt,dnsmgmt</category>

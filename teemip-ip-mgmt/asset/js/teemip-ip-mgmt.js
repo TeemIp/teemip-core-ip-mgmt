@@ -15,6 +15,9 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 	var me = this;
 
 	this.Init = function () {
+		// make sure that the form is clean
+		$('#'+this.id+'_btnRemove').prop('disabled', true);
+		$('#'+this.id+'_linksToRemove').val('');
 	}
 
 	this.StopPendingRequest = function () {
@@ -26,7 +29,7 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 
 	this.DisplayCreationForm = function () {
 		me.v_html = $('#v_'+me.id).html();
-		$('#v_'+me.id).html(me.v_html).append('<img src="'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/asset/img/ipindicator-xs.gif" />');
+		$('#v_'+me.id).html(me.v_html).append('<img src="'+GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/asset/img/ipindicator-xs.gif" alt="" />');
 		var theMap = {
 			operation: 'get_ip_creation_form',
 			vid: me.id,
@@ -34,14 +37,15 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 			default: me.oDefault
 		}
 
-		// Make sure that we cancel any pending request before issuing another
-		// since responses may arrive in arbitrary order
+		// Make sure that we cancel any pending request before issuing another since responses may arrive in arbitrary order
 		me.StopPendingRequest();
 
-		// Run the query
+		// Create dialog zone
 		if ($('#dialog_content').length === 0) {
 			$('<div id="dialog_content"></div>').appendTo('body');
 		}
+
+		// Run the query
 		me.ajax_request = $.post(GetAbsoluteUrlModulesRoot()+'teemip-ip-mgmt/ajax.teemip-ip-mgmt.php',
 			theMap,
 			function (data) {
@@ -65,7 +69,7 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 				switch (me.sTargetClass) {
 					// Warning: parameter '2' needs to be programmatically set
 					case 'IPv4Block':
-					case 'IPv4Block':
+					case 'IPv6Block':
 						$('#field_2_org_id').attr('readonly', true);
 						$('#2_org_id').attr('readonly', true);
 						$('#2_parent_id').attr('readonly', true);
@@ -73,16 +77,16 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 						$('#2_lastip').attr('readonly', true);
 						break;
 
-					case 'IPv6Subnet':
 					case 'IPv4Subnet':
+					case 'IPv6Subnet':
 						$('#2_org_id').attr('readonly', true);
 						$('#2_block_id').attr('readonly', true);
 						$('#2_ip').attr('readonly', true);
 						$('#2_mask').attr('readonly', true);
 						break;
 
-					case 'IPv6Range':
 					case 'IPv4Range':
+					case 'IPv6Range':
 						$('#2_org_id').attr('readonly', true);
 						$('#2_subnet_id').attr('readonly', true);
 						$('#2_firstip').attr('readonly', true);
@@ -116,10 +120,8 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 			// Gather the values from the form
 			// Gather the parameters from the search form
 			$('#'+sFormId+' :input').each(
-				function(i)
-				{
-					if (this.name != '')
-					{
+				function () {
+					if (this.name != '') {
 						theMap[this.name] = this.value;
 					}
 				}
@@ -159,7 +161,7 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 		$('#dialog_content').dialog("destroy");
 		$('#dialog_content').remove();
 		me.ajax_request = null;
-		window.onbeforeunload = function () {
-		};
+//		window.onbeforeunload = function () {
+//		};
 	}
 }

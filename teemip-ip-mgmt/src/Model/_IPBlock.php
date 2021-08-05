@@ -13,6 +13,7 @@ use Dict;
 use IPConfig;
 use IPObject;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
 use WebPage;
 
@@ -301,7 +302,7 @@ class _IPBlock extends IPObject {
 			}
 
 			$sName = Dict::Format('Class:IPBlock/Tab:childblock');
-			$this->DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet);
 		}
 	}
 

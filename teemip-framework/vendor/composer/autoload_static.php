@@ -13,28 +13,30 @@ class ComposerStaticInit8025869d7922d0380a3544e4f1de10c6
         ),
     );
 
-    public static $prefixDirsPsr4 = array (
-        'TeemIp\\TeemIp\\Extension\\Framework\\' => 
-        array (
-            0 => __DIR__ . '/../..' . '/src',
-        ),
-    );
+	public static $prefixDirsPsr4 = array(
+		'TeemIp\\TeemIp\\Extension\\Framework\\' =>
+			array(
+				0 => __DIR__.'/../..'.'/src',
+			),
+	);
 
-    public static $classMap = array(
-	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => __DIR__.'/../..'.'/src/Helper/DisplayMessage.php',
-	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => __DIR__.'/../..'.'/src/Helper/DisplayTree.php',
-	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\TeemIpUtils' => __DIR__.'/../..'.'/src/Helper/TeemIpUtils.php',
-	    'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => __DIR__.'/../..'.'/src/Helper/iTree.php',
-	    'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_TeemIpObject' => __DIR__.'/../..'.'/src/Model/_TeemIpObject.php',
-    );
+	public static $classMap = array(
+		'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => __DIR__.'/../..'.'/src/Helper/DisplayMessage.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => __DIR__.'/../..'.'/src/Helper/DisplayTree.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\IPUtils' => __DIR__.'/../..'.'/src/Helper/IPUtils.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\iTree' => __DIR__.'/../..'.'/src/Helper/iTree.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_IPAbstractObject' => __DIR__.'/../..'.'/src/Model/_IPAbstractObject.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_IPApplication' => __DIR__.'/../..'.'/src/Model/_IPApplication.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_IPConfig' => __DIR__.'/../..'.'/src/Model/_IPConfig.php',
+		'TeemIp\\TeemIp\\Extension\\Framework\\Model\\_IPUsage' => __DIR__.'/../..'.'/src/Model/_IPUsage.php',
+	);
 
-    public static function getInitializer(ClassLoader $loader)
-    {
-        return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$classMap;
+	public static function getInitializer(ClassLoader $loader) {
+		return \Closure::bind(function () use ($loader) {
+			$loader->prefixLengthsPsr4 = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$prefixLengthsPsr4;
+			$loader->prefixDirsPsr4 = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$prefixDirsPsr4;
+			$loader->classMap = ComposerStaticInit8025869d7922d0380a3544e4f1de10c6::$classMap;
 
-        }, null, ClassLoader::class);
+		}, null, ClassLoader::class);
     }
 }

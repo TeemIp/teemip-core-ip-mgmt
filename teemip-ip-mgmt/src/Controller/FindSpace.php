@@ -25,7 +25,7 @@ use IPv4Block;
 use IPv6Block;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
-use TeemIp\TeemIp\Extension\Framework\Helper\TeemIpUtils;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use UserRights;
 use utils;
 use WebPage;
@@ -261,7 +261,7 @@ HTML
 					$iDefaultMask = 31;
 				}
 			}
-			$InputSize = TeemIpUtils::MaskToSize(TeemIpUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
+			$InputSize = IPUtils::MaskToSize(IPUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
 		}
 
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
@@ -310,9 +310,9 @@ HTML
 			if ($sSpaceType == 'ipv4space') {
 				while ($iPrefix <= 32) {
 					if ($iPrefix == $iDefaultMask) {
-						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".TeemIpUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
+						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".IPUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
 					} else {
-						$sHTMLValue .= "<option value=\"$InputSize\">".TeemIpUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
+						$sHTMLValue .= "<option value=\"$InputSize\">".IPUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
 					}
 					$InputSize /= 2;
 					$iPrefix++;
@@ -410,7 +410,7 @@ HTML
 			if ($sSpaceType == 'ipv4space') {
 				while ($iPrefix <= 32) {
 					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, TeemIpUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
 					$InputSize /= 2;
 					$iPrefix++;
 				}

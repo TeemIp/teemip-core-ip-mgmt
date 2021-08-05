@@ -8,15 +8,14 @@ namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
 
 use cmdbAbstractObject;
 use CMDBObjectSet;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
 use Dict;
-use DisplayBlock;
 use IPRange;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use UserRights;
 use utils;
 use WebPage;
@@ -26,13 +25,14 @@ use WebPage;
  */
 class _IPv6Range extends IPRange {
 	/**
-	 * Returns icon to be displayed
+	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
-	 * @param bool $bXsIcon
+	 * @param false $bXsIcon
 	 *
 	 * @return string
-	 * @throws \Exception
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
@@ -45,11 +45,7 @@ class _IPv6Range extends IPRange {
 	}
 
 	/**
-	 * Returns size of range
-	 *
-	 * @return int
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetSize() {
 		$oFirstIp = $this->Get('firstip');
@@ -258,20 +254,9 @@ class _IPv6Range extends IPRange {
 	}
 
 	/**
-	 * Display list of IPs addresses within GUI
-	 *
-	 * @param \WebPage $oP
-	 * @param $iChangeId
-	 * @param $aParam
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
-	function DoListIps(WebPage $oP, $iChangeId, $aParam) {
+	function GetListIps(WebPage $oP, $aParam) {
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oFirstIpRange = $this->Get('firstip');
@@ -318,13 +303,17 @@ class _IPv6Range extends IPRange {
 		// Check user rights
 		$UserHasRightsToCreate = (UserRights::IsActionAllowed('IPv6Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES) ? true : false;
 
+		// Open table
+		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
+		$sHtml .= '<div style="vertical-align:top;" id="tree">';
+
 		// Display first IP
-		$oP->add("<ul>\n");
-		$oP->add("<li>".$this->GetHyperlink().$sHtml."<ul>\n");
+		$sHtml .= "<ul>\n";
+		$sHtml .= "<li>".$this->GetHyperlink()."&nbsp;[".$this->GetAsHTML('firstip')." - ".$this->GetAsHTML('lastip')."]<ul>";
 
 		// ... and dummy line if display doesn't start at first IP
 		if ($bPrintDummyFirstLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
 
 		// Display other IPs as list
@@ -336,35 +325,47 @@ class _IPv6Range extends IPRange {
 				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip'))) {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
-				$oP->add("<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn'));
+				$sHtml .= "<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn');
 			} else {
 				// If user has rights to create IPs
 				// Display unregistered IP with icon to create it
 				if ($UserHasRightsToCreate) {
 					$iVId = $iVIdCounter++;
-					$sHTMLValue = "<li><div><span id=\"v_{$iVId}\">";
-					$sHTMLValue .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
-					$sHTMLValue .= "&nbsp;".$oAnIp->GetAsCompressed()."&nbsp;&nbsp;";
-					$sHTMLValue .= "</span></div>";
-					$oP->add($sHTMLValue);
+					$sHtml .= "<li><div><span id=\"v_{$iVId}\">";
+					$sHtml .= "<img style=\"border:0;vertical-align:middle;cursor:pointer;\" src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/asset/img/ipmini-add-xs.png\" onClick=\"oIpWidget_{$iVId}.DisplayCreationForm();\"/>&nbsp;";
+					$sHtml .= "&nbsp;".$oAnIp->GetAsCompressed()."&nbsp;&nbsp;";
+					$sHtml .= "</span></div>";
 					$oP->add_ready_script(
 						<<<EOF
-					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', $iChangeId, {'org_id': '$iOrgId', 'subnet_id': '$iSubnetId', 'range_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
+					oIpWidget_{$iVId} = new IpWidget($iVId, 'IPv6Address', '', 0, {'org_id': '$iOrgId', 'subnet_id': '$iSubnetId', 'range_id': '$iId', 'ip': '$oAnIp', 'status': '$sStatusIp', 'short_name': '$sShortName', 'domain_id': '$iDomainId', 'usage_id': '$iUsageId', 'requestor_id': '$iRequestorId'});
 EOF
 					);
 				} else {
-					$oP->add("<li>".$oAnIp->GetAsCompressed());
+					$sHtml .= "<li>".$oAnIp->GetAsCompressed();
 				}
 			}
-			$oP->add("</li>\n");
+			$sHtml .= "</li>";
 			$oAnIp = $oAnIp->GetNextIp();
 		}
 
 		// Add dummy line if display doesn't finish at broadcast IP
 		if ($bPrintDummyLastLine) {
-			$oP->add("<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>");
+			$sHtml .= "<li>&nbsp;&nbsp;...&nbsp;//&nbsp;... </li>";
 		}
-		$oP->add("</ul></li></ul>\n");
+		$sHtml .= "</ul></li></ul>";
+
+		// Close table
+		$sHtml .= '</div>';
+		$sHtml .= '</td></tr></table>';
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$sHtml .= '</div>';         // ??
+		}
+		$oP->add_ready_script("\$('#tree ul').treeview();\n");
+		$oP->add_dict_entry('UI:ValueMustBeSet');
+		$oP->add_dict_entry('UI:ValueMustBeChanged');
+		$oP->add_dict_entry('UI:ValueInvalidFormat');
+
+		return $sHtml;
 	}
 
 	/**
@@ -467,11 +468,12 @@ EOF
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
-		$oColumn = new Column();
-		$oClassForm->AddSubBlock($oColumn);
-		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-		$oClassForm->AddSubBlock($oToolbar);
+		$oMultiColumn = new MultiColumn();
+		$oP->AddUIBlock($oMultiColumn);
 
+		// First column = labels or fields
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
 		switch ($sOperation) {
 			case 'listips':
 			case 'csvexportips':
@@ -481,44 +483,26 @@ EOF
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:'.$sTextOperation.':IPv6Subnet:LastIP');
 
 				// Subtitle
-				$oColumn->AddHtml($sSubTitle.'<br><br>');
+				$oColumn1->AddHtml($sSubTitle.'<br><br>');
 
 				// First IP
 				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'firstip', $sLabelOfAction1, $sDefault, OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 
 				// Last IP
 				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
 				$val = $this->GetClassFieldForForm($oP, '', 'IPv6Range', 'lastip', $sLabelOfAction2, $sDefault, OPT_ATT_MANDATORY);
-				$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-
-				// Cancel button
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('IPv4Subnet', '{$this->GetKey()}', '', '{null}');"));
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			default:
 				break;
 		};
-
-		// Apply button
-		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
-	 * Displays the tabs related to IPv6Ranges
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
@@ -530,9 +514,6 @@ EOF
 			$sLastIp = $this->Get('lastip')->GetAsCannonical();
 
 			$iSize = $this->GetSize();
-
-			$aExtraParams = array();
-			$aExtraParams['menu'] = false;
 
 			// Tab for Registered IPs
 			$oIpRegisteredSearch = DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
@@ -565,27 +546,18 @@ EOF
 
 				}
 				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
-				$oP->SetCurrentTab(Dict::Format('Class:IPRange/Tab:ipregistered').' ('.$iRegistered.')');
-				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::Format('Class:IPRange/Tab:ipregistered+'));
-				$oP->p($this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize));
-				$oBlock = new DisplayBlock($oIpRegisteredSearch, 'list');
-				$oBlock->Display($oP, 'ip_addresses', $aExtraParams);
+				$sHtml = $this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize);
 			} else {
-				$oP->SetCurrentTab(Dict::S('Class:IPRange/Tab:ipregistered'));
-				$oP->p(MetaModel::GetClassIcon('IPv6Address').'&nbsp;'.Dict::S('Class:IPRange/Tab:ipregistered+'));
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
+				$sHtml = '';
 			}
+			$sName = Dict::S('Class:IPRange/Tab:ipregistered');
+			$sTitle = Dict::S('Class:IPRange/Tab:ipregistered+');
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv6Address', $sTitle, $sHtml, $oIpRegisteredSet);
 		}
 	}
 
 	/**
-	 * Check validity of new IP attributes before creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	function DoCheckToWrite() {
 		// Run standard iTop checks first
@@ -665,14 +637,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to IPv6 range creation:
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	protected function AfterInsert() {
 		parent::AfterInsert();
@@ -698,14 +663,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to IPv6 range update:
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	protected function AfterUpdate() {
 		parent::AfterUpdate();
@@ -742,14 +700,7 @@ EOF
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		if ((!$this->IsNew()) && ($sAttCode == 'subnet_id')) {
