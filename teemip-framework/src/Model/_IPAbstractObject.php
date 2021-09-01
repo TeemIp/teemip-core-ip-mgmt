@@ -140,6 +140,7 @@ EOF
 			);
 		} else {
 			// Prepare form
+			/** @var \iTopWebPage $oP */
 			$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName()));
 
 			$iTransactionId = utils::GetNewTransactionId();
@@ -378,14 +379,13 @@ EOF
 			$this->SetPageTitles($oP, $sTitle.$sClass);
 		} else {
 			// The object can be read - Process request now
+			/** @var \iTopWebPage $oP */
 			$sClassLabel = MetaModel::GetName($sClass);
 
 			$oP->set_title(Dict::Format('UI:DetailsPageTitle', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 			$oObjectDetails = ObjectFactory::MakeDetails($this);
 
-			// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-			/** @var \iTopWebPage $oPage */
 			$aHeadersBlocks = $this->DisplayBareHeader($oP, false, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW);
 			if (false === empty($aHeadersBlocks['subtitle'])) {
 				$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
