@@ -509,6 +509,9 @@ EOF
 		parent::DisplayBareRelations($oP, $bEditMode);
 
 		if (!$this->IsNew()) {
+			// Add related style sheet
+			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+
 			$iOrgId = $this->Get('org_id');
 			$sFirstIp = $this->Get('firstip')->GetAsCannonical();
 			$sLastIp = $this->Get('lastip')->GetAsCannonical();
@@ -546,7 +549,7 @@ EOF
 
 				}
 				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
-				$sHtml = $this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize);
+				$sHtml = '<div class="teemip-space-occupation">'.$this->GetAsHTML('occupancy').Dict::Format('Class:IPRange/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated, $iSize).'</div>';
 			} else {
 				$sHtml = '';
 			}

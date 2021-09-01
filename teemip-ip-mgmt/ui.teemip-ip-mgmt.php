@@ -973,9 +973,8 @@ HTML
 				$sErrorString = $oObj->DoCheckToAllocate($aPostedParam);
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
-					$sIssueDesc = Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI', $sErrorString);
-					$sMessage = "<div class=\"header_message message_error teemip_message_status\">".$sIssueDesc."</div>";
-					$oP->add($sMessage);
+					$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI', $sErrorString);
+					DisplayMessage::Warning($oP, $sMessage);
 
 					$sNextOperation = $oObj->GetNextOperation($operation);
 					$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -985,9 +984,12 @@ HTML
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					$sMessageContainer = "<div class=\"header_message message_ok\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
+					} else {
+						$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					}
+					DisplayMessage::Success($oP, $sMessage);
 					$oObj->DisplayDetails($oP);
 
 					// Close transaction

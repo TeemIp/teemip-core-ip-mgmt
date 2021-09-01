@@ -997,7 +997,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:SizeTooSmallBy' => 'Subnet is too small to be shrunk by %1$s!',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Shrink cannot be performed!',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Range: <b>%1$s [%2$s - %3$s]</b> will be dropped from subnet. Shrink cannot be performed!',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been shrunk by %3$s.',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s %2$s has been shrunk by %3$s.',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:By' => 'Shrink by:',
 
 	// Split action on subnets
@@ -1011,7 +1011,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmall' => 'Subnet is too small to be split!',
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmallBy' => 'Subnet is too small to be split by %1$s!',
 	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'Range: <b>%1$s [%2$s - %3$s]</b> sits across new subnet boundaries. Split cannot be performed!',
-	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been split in %3$s.',
+	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s %2$s has been split in %3$s.',
 	'UI:IPManagement:Action:Split:IPv4Subnet:In' => 'Split in:',
 
 	// Expand action on subnets
@@ -1025,7 +1025,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBig' => 'Subnet is too big to be expanded!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBigBy' => 'Subnet is too big to be expanded by %1$s!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:NotInIPBlock' => 'The block hosting the subnet is too small to contain the new expanded subnet!',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s <span class="hilite">%2$s</span> has been expanded by %3$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s %2$s< has been expanded by %3$s',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:By' => 'Expand by:',
 
 	// CSV Export action on subnets
@@ -1152,6 +1152,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'CI\'s attribute is R/O!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of a synchronization!',
+	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'Address is already allocated!',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Address cannot be un-allocated: %1$s',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'IP is attached to a CI\'s attribute that is R/O!',
@@ -1161,11 +1162,15 @@ Dict::Add('EN US', 'English', 'English', array(
 // Management of IPv4 Addresses
 //
 	// Allocation to CI / Unallocation from CI
+	'UI:IPManagement:Action:Allocate:IPv4Address' => 'Allocate address to CI',
 	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Allocate IP',
 	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Allocate %1$s %2$s to CI',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been allocated.',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s %2$s has been allocated.',
+	'UI:IPManagement:Action:Allocate:IPv4Address:IPAlreadyAllocated' => 'Address is already allocated!',
+	'UI:IPManagement:Action:UnAllocate:IPv4Address' => 'Un-allocate address from all CIs',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Un-allocate IP',
-	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> has been unallocated.',
+	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s %2$s has been unallocated.',
+	'UI:IPManagement:Action:UnAllocate:IPv4Address:IPNotAllocated' => 'Address is not allocated!',
 
 //
 // Management of Domains

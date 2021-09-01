@@ -242,6 +242,9 @@ class _IPBlock extends IPObject {
 		parent::DisplayBareRelations($oP, $bEditMode);
 
 		if (!$bEditMode) {
+			// Add related style sheet
+			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+
 			$sClass = get_class($this);
 			$iBlockId = $this->GetKey();
 			$iOrgId = $this->Get('org_id');
@@ -266,10 +269,10 @@ class _IPBlock extends IPObject {
 			$oChildBlockSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('block_id' => $iBlockId, 'org_id' => $iOrgId));
 
 			if ($oChildBlockSet->CountExceeds(0)) {
-				$sHtml = $this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent');
+				$sHtml = '<div class="teemip-space-occupation">'.$this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent').'</div>';
 
 				// Then, display form to select list of hosts if domain is not in edition
-				$sHtml .= '<p><div style="padding: 15px; background: #ddd;">';
+				$sHtml .= '<br><div style="padding: 15px; background: #ddd;">';
 				$sHtml .= '<form>';
 				$sHtml .= '<table>';
 
@@ -296,7 +299,7 @@ class _IPBlock extends IPObject {
 				$sHtml .= "<input type=\"submit\" value=\"".Dict::S('Class:IPBlock/Tab:childblock/SelectList')."\">\n";
 
 				$sHtml .= '</form>';
-				$sHtml .= '</div></p>';
+				$sHtml .= '</div>';
 			} else {
 				$sHtml = '';
 			}

@@ -1313,7 +1313,7 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
+	public function DisplayTabContentDisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
 		$sLabelOfAction = Dict::Format('Class:IPBlock/Tab:globalparam');
 		$aParameter = array('ipv4_block_min_size', 'ipv4_block_cidr_aligned');
 
@@ -1768,6 +1768,8 @@ EOF
 				$oP->add('</tr></table>');
 			}
 		} else {
+			// Add related style sheet - Done in parent class
+
 			$iBlockId = $this->GetKey();
 			$iOrgId = $this->Get('org_id');
 
@@ -1777,7 +1779,7 @@ EOF
 
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
-			$sSubTitle = ($oSubnetSet->Count() > 0) ? $this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent') : '';
+			$sSubTitle = ($oSubnetSet->Count() > 0) ? '<div class="teemip-space-occupation">'.$this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent').'</div>' : '';
 			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet);
 		}
 	}

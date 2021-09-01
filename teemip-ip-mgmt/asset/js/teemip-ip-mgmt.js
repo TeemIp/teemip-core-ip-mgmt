@@ -57,7 +57,10 @@ function IpWidget(id, sTargetClass, sTitle, iChangeId, oDefault) {
 				});
 				$('#dialog_content').dialog("option", "close", me.OnCloseCreateIpObject);
 				// Modify the action of the cancel button
-				$('#dialog_content'+' button.cancel').off('click').on('click', me.CloseCreateIpObject);
+				$('#dialog_content'+' button.cancel').off('click').on('click', function (e) {
+					me.CloseCreateIpObject();
+					e.stopImmediatePropagation();
+				});
 				me.ajax_request = null;
 				// Adjust the dialog's size to fit into the screen
 				if ($('#dialog_content').width() > ($(window).width()-40)) {

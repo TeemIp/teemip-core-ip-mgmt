@@ -394,10 +394,10 @@ class IPUtils {
 			}
 		} else {
 			$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-blocklist--medallion');
+			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
 			$oP->AddUiBlock($oClassIcon);
-			$oP->AddSubBlock(HtmlFactory::MakeParagraph(''))
-				->AddHtml($sInfoPanel);
+			$oHtml = HtmlFactory::MakeRaw($sInfoPanel);
+			$oP->AddSubBlock($oHtml);
 			$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 			$oBlock->Display($oP, $sCode, array('menu' => false));
 		}

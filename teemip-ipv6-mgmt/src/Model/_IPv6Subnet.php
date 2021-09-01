@@ -1237,6 +1237,9 @@ EOF
 		parent::DisplayBareRelations($oP, $bEditMode);
 
 		if (!$bEditMode) {
+			// Add related style sheet
+			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
 			$sIp = $this->Get('ip')->GetAsCannonical();
@@ -1276,7 +1279,7 @@ EOF
 
 				}
 				$iUnallocated = $iRegistered - $iAllocated - $iReleased - $iReserved;
-				$sHtml = Dict::Format('Class:IPv6Subnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated);
+				$sHtml = '<div class="teemip-space-occupation">'.Dict::Format('Class:IPv6Subnet/Tab:ipregistered-count', $iReserved, $iAllocated, $iReleased, $iUnallocated).'</div>';
 			} else {
 				$sHtml = '';
 			}
@@ -1293,7 +1296,7 @@ EOF
 				while ($oIpRange = $oIpRangeSet->Fetch()) {
 					$iCountRange += $oIpRange->GetSize();
 				}
-				$sHtml = $this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent');
+				$sHtml = '<div class="teemip-space-occupation">'.$this->GetAsHTML('range_occupancy').Dict::Format('Class:IPSubnet/Tab:iprange-count-percent').'</div>';
 			} else {
 				$sHtml = '';
 			}

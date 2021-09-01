@@ -42,3 +42,8 @@ li .ip_lookup_img {
 delegation_highlight {
     color: #ff0000;
 }
+
+.teemip-space-occupation {
+    display: flex;
+    justify-content: center;
+}
