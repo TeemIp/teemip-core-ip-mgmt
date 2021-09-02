@@ -3389,13 +3389,6 @@
           <class id="lnkDocToIPObject"/>
         </classes>
       </group>
-      <group id="IPApplication" _delta="define">
-        <classes>
-          <class id="IPApplication"/>
-          <class id="lnkContactToFunctionalCI"/>
-          <class id="lnkDocumentToFunctionalCI"/>
-        </classes>
-      </group>
     </groups>
     <profiles>
       <profile id="3" _delta="must_exist">

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
-    <class id="IPApplication" _created_in="teemip-ip-mgmt" _delta="define">
+    <class id="IPApplication" _delta="define">
       <parent>FunctionalCI</parent>
       <php_parent>
         <name>TeemIp\TeemIp\Extension\Framework\Model\_IPApplication</name>
@@ -720,4 +720,15 @@
     <constant id="BROADCAST_IP_CODE" xsi:type="string" _delta="define">Broadcast</constant>
     <constant id="BROADCAST_IP_DESC" xsi:type="string" _delta="define">Broadcast IP</constant>
   </constants>
+  <user_rights>
+    <groups>
+      <group id="IPApplication" _delta="define">
+        <classes>
+          <class id="IPApplication"/>
+          <class id="lnkContactToFunctionalCI"/>
+          <class id="lnkDocumentToFunctionalCI"/>
+        </classes>
+      </group>
+    </groups>
+  </user_rights>
 </itop_design>
