@@ -22,9 +22,10 @@ class orm64bit
 {
 	protected $sHexValue;
 	
-	/**
+	/*
 	 * Create an orm64bit object from a text string
-	 * @param string $sHexValue The hexadecimal representation of the value, without the 0x prefix.
+	 *
+	 * @param $sHexValue
 	 */
 	public function __construct($sHexValue)
 	{

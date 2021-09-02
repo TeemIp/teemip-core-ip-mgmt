@@ -341,7 +341,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -367,7 +367,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -393,7 +393,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -419,7 +419,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -445,7 +445,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return bool
 	 * @throws \Exception
@@ -467,9 +467,9 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6
 	 * @throws \Exception
 	 */
 	public function BitwiseAnd(ormIP $oIp)
@@ -489,9 +489,9 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6
 	 * @throws \Exception
 	 */
 	public function BitwiseOr(ormIP $oIp)
@@ -511,7 +511,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP
 	 */
 	public function BitwiseNot()
 	{
@@ -527,7 +527,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP
 	 */
 	public function LeftShift()
 	{
@@ -569,9 +569,9 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6
 	 * @throws \Exception
 	 */
 	public function Add(ormIP $oIp)
@@ -603,7 +603,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP
 	 */
 	public function GetNextIp()
 	{
@@ -638,7 +638,7 @@ class ormIPv6 extends ormIP
 
 
 	/**
-	 * @return \ormIPv6
+	 * @return \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP
 	 */
 	public function GetPreviousIp()
 	{
@@ -672,7 +672,7 @@ class ormIPv6 extends ormIP
 	}
 
 	/**
-	 * @param \ormIP $oIp
+	 * @param \TeemIp\TeemIp\Extension\IPManagement\Model\ormIP $oIp
 	 *
 	 * @return float|int
 	 * @throws \Exception

@@ -19,7 +19,7 @@ class AttributeIPv6Address extends AttributeString
 	/**
 	 * @param \DBObject|null $oHostObject
 	 *
-	 * @return mixed|\ormIPv6
+	 * @return mixed|\TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6
 	 */
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
@@ -40,18 +40,18 @@ class AttributeIPv6Address extends AttributeString
 		}
 		else
 		{
-			/** @var \ormIPv6 $value */
+			/** @var \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6 $value */
 			return $value->GetAsCompressed();
 		}
 	}
 
 	/**
-	 * 	Facilitate things: allow the user to Set the value from a string
+	 *    Facilitate things: allow the user to Set the value from a string
 	 *
 	 * @param $proposedValue
 	 * @param $oHostObj
 	 *
-	 * @return mixed|\ormIPv6|string
+	 * @return mixed|\TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6|string
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
@@ -85,7 +85,7 @@ class AttributeIPv6Address extends AttributeString
 	 * @param array $aCols
 	 * @param string $sPrefix
 	 *
-	 * @return mixed|\ormIPv6
+	 * @return mixed|\TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6
 	 */
 	public function FromSQLToValue($aCols, $sPrefix = '')
 	{

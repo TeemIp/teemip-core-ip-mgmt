@@ -62,12 +62,6 @@ class _IPAddress extends IPObject {
 		}
 	}
 
-	/*
-	 * Get the gateway of the subnet that the IP belongs to, if any.
-	 *
-	 * @return string
-	 */
-
 	/**
 	 * Manage status of IP when detached from a device
 	 *
@@ -154,10 +148,6 @@ class _IPAddress extends IPObject {
 		}
 	}
 
-	/*
-	 * Computes and display specific tabs
-	 */
-
 	/**
 	 * Get the list of IPAttributes (external key toward an IP(v4-6)Address class
 	 *
@@ -203,28 +193,23 @@ class _IPAddress extends IPObject {
 		return "";
 	}
 
+	/**
+	 * @return string
+	 */
 	public function GetSubnetGatewayFromIp() {
 		return "";
 	}
 
 	/**
-	 * Compute attributes before writing object
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
+	 * @inheritdoc
 	 */
-	public function ComputeValues()
-	{
+	public function ComputeValues() {
 		parent::ComputeValues();
 
 		// Set FQDN
-		if ($this->Get('short_name') != '')
-		{
+		if ($this->Get('short_name') != '') {
 			$this->Set('fqdn', DNSObject::ComputeFqdn($this->Get('short_name'), $this->Get('domain_name')));
-		}
-		else
-		{
+		} else {
 			$sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $this->Get('org_id'));
 			if ($sComputeFqdnWithEmptyShortname == 'yes')
 			{
@@ -238,16 +223,7 @@ class _IPAddress extends IPObject {
 	}
 
 	/**
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first
@@ -415,11 +391,7 @@ class _IPAddress extends IPObject {
 	}
 
 	/**
-	 * Check validity of new IP attributes before creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function DoCheckToWrite() {
 		// Run standard iTop checks first
@@ -526,7 +498,7 @@ class _IPAddress extends IPObject {
 		return $aParam;
 	}
 
-	/*
+	/**
 	 * Return next operation after current one
 	 *
 	 * @param $sOperation
@@ -763,25 +735,29 @@ class _IPAddress extends IPObject {
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
 
-	/*
-	 * Prototypes for DNS management
+	/**
+	 * Prototype for DNS management
+	 *
 	 */
 	public function DoCheckUpdateRRs() {
 	}
 
+	/**
+	 * Prototype for DNS management
+	 *
+	 */
 	public function UpdateRRs() {
-
 	}
 
+	/**
+	 * Prototype for DNS management
+	 *
+	 */
 	public function CleanRRs() {
 	}
 
 	/**
-	 * Perform actions when object is updated in DB
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @inheritdoc
 	 */
 	public function OnUpdate() {
 		parent::OnUpdate();
@@ -799,11 +775,7 @@ class _IPAddress extends IPObject {
 	}
 
 	/**
-	 * Perform actions after object is updated in DB
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Exception
+	 * @inheritdoc
 	 */
 	public function AfterUpdate() {
 		parent::AfterUpdate();

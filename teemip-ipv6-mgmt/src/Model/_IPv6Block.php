@@ -1752,19 +1752,7 @@ EOF
 	}
 
 	/**
-	 * Displays the tabs listing the child blocks and the subnets belonging to a block
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first 
@@ -1804,14 +1792,7 @@ EOF
 	}
 
 	/**
-	 * Compute attributes before writing object
-	 *l
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function ComputeValues() {
 		if ($this->IsNew()) {
@@ -1858,23 +1839,7 @@ EOF
 	}
 
 	/**
-	 * Check
-	 * validity
-	 * of
-	 * new
-	 * block
-	 * attributes
-	 * before
-	 * creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \Exception
+	 * @inheritdoc
 	 */
 	public function DoCheckToWrite() {
 		// Run standard iTop checks first
@@ -2072,14 +2037,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to block creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function AfterInsert() {
 		parent::AfterInsert();
@@ -2154,15 +2112,7 @@ EOF
 	}
 
 	/**
-	 * Perform specific tasks related to block modification
-	 *
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	public function AfterUpdate() {
 		if ($this->Get('write_reason') != 'split') {
@@ -2195,14 +2145,7 @@ EOF
 	}
 
 	/**
-	 * Change default flag of attribute.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		$aReadOnlyAttributes = array('firstip', 'lastip');
