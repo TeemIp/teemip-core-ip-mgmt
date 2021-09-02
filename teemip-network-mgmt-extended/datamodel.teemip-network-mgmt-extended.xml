@@ -741,20 +741,10 @@
            // Search for ConnectableCIs linked to NetworkDevices that make the cluster
             $sOQL = "SELECT ConnectableCI AS c JOIN lnkConnectableCIToNetworkDevice AS l ON l.connectableci_id = c.id JOIN NetworkDevice AS nd ON l.networkdevice_id = nd.id JOIN ClusterNetwork AS cn ON nd.clusternetwork_id = cn.id WHERE cn.id = :id AND l.connection_type='downlink'";
             $oConnectableCIsSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $this->GetKey()));
-            $iConnectableCIs = $oConnectableCIsSet->Count();
-            if ($iConnectableCIs > 0)
-            {
-                $oP->SetCurrentTab(Dict::S('Class:ClusterNetwork/Tab:connectablecis_list').' ('.$iConnectableCIs.')');
-                $oP->p(MetaModel::GetClassIcon('ConnectableCI').'&nbsp;'.Dict::Format('Class:ClusterNetwork/Tab:connectablecis_list+'));
-                $oBlock = new DisplayBlock($oConnectableCIsSet->GetFilter(), 'list', false);
-                $oBlock->Display($oP, 'connectable_cis', array('menu' => false));
-            }
-            else
-            {
-                $oP->SetCurrentTab(Dict::S('Class:ClusterNetwork/Tab:connectablecis_list'));
-                $oP->p(MetaModel::GetClassIcon('ConnectableCI').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-            }
-        }
+            $sName = Dict::S('Class:ClusterNetwork/Tab:connectablecis_list');
+            $sTitle = Dict::S('Class:ClusterNetwork/Tab:connectablecis_list+');
+            TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oP, $sName, 'connectable_cis', 'ConnectableCI', $sTitle, '', $oConnectableCIsSet);
+       }
     }]]></code>
         </method>
       </methods>
