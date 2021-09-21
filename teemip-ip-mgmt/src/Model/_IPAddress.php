@@ -297,7 +297,7 @@ class _IPAddress extends IPObject {
 			$iNbIPInterfaces = $oIPInterfaceToIPAddressSet->Count();
 			$iNbAllCIs += $iNbIPInterfaces;
 			$oIPInterfaceSet = array();
-			while ($oLnk = $oIPInterfaceToIPAddressSet->fetch()) {
+			while ($oLnk = $oIPInterfaceToIPAddressSet->Fetch()) {
 				$iIpIntKey = $oLnk->Get('ipinterface_id');
 				$oIPInterfaceSet[] = MetaModel::GetObject('IPInterface', $iIpIntKey, false);
 			}
@@ -416,7 +416,7 @@ class _IPAddress extends IPObject {
 	 * @throws \OQLException
 	 */
 	public function IsFqdnUnique() {
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		if ($this->IsNew()) {
 			$iKey = -1;
 		} else {
@@ -427,15 +427,30 @@ class _IPAddress extends IPObject {
 		// The check takes into account the global parameters that defines if duplicate FQDNs are authorized or not
 		$sIpAllowDuplicateName = utils::ReadPostedParam('attr_ip_allow_duplicate_name', '');
 		if (empty($sIpAllowDuplicateName)) {
-			$sIpAllowDuplicateName = IPConfig::GetFromGlobalIPConfig('ip_allow_duplicate_name', $sOrgId);
+			$sIpAllowDuplicateName = IPConfig::GetFromGlobalIPConfig('ip_allow_duplicate_name', $iOrgId);
 		}
-		if ($sIpAllowDuplicateName == 'ipdup_no') {
-			if ($sFqdn != "") {
-				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPAddress AS i WHERE i.fqdn = '$sFqdn' AND i.org_id = $sOrgId AND i.id != $iKey"));
+		// Check is not done on empty names
+		if ($sFqdn != "") {
+			if ($sIpAllowDuplicateName != 'ipdup_yes') {
+				// Duplicates are allowed between different organizations
+				// Duplicates don't count on released IPs
+				$sOQL = "SELECT IPAddress AS i WHERE i.fqdn = :fqdn AND i.org_id = :org_id AND i.status != 'released' AND i.id != :key";
+				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('fqdn' => $sFqdn, 'org_id' => $iOrgId, 'key' => $iKey));
 				// Match for creations is verbiden. Match for modifications as well unless the current name is kept
+				$bDualStackMatchConsummed = false;
 				while ($oIp = $oIpSet->Fetch()) {
-					// Check status of IP before complaining - Released IPs don't count.
-					if ($oIp->Get('status') != 'released') {
+					// In case of dual stack, the same name can be shared between an IPv4 and an IPv6
+					if ($sIpAllowDuplicateName == 'ipdup_dualstack') {
+						if ($bDualStackMatchConsummed == true) {
+							return false;
+						} else {
+							if (get_class($this) != get_class($oIp)) {
+								$bDualStackMatchConsummed = true;
+							} else {
+								return false;
+							}
+						}
+					} else {
 						return false;
 					}
 				}

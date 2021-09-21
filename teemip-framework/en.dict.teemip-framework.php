@@ -105,6 +105,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_no+' => '',
 	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_yes' => 'Yes',
 	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_yes+' => '',
+	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_dualstack' => 'Dual stack',
+	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_dualstack+' => 'Duplicate are authorized between unique IPv4 and IPv6',
 	'Class:IPConfig/Attribute:mac_address_format' => 'MAC Address Output Format',
 	'Class:IPConfig/Attribute:mac_address_format+' => '',
 	'Class:IPConfig/Attribute:mac_address_format/Value:colons' => '01:23:45:67:89:ab',

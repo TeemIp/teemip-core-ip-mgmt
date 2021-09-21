@@ -254,6 +254,7 @@
           <values>
             <value>ipdup_no</value>
             <value>ipdup_yes</value>
+            <value>ipdup_dualstack</value>
           </values>
           <sql>ip_allow_duplicate_name</sql>
           <default_value>ipdup_no</default_value>
