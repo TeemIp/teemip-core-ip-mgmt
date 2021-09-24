@@ -375,4 +375,6 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Zones are referring to the domain!',
 	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s has been un-delegated.',
 
+	// Look for domain when exploding FQDN
+	'UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain' => 'Cannot find registered domain in FQDN ',
 ));

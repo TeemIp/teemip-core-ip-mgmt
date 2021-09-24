@@ -18,6 +18,7 @@ use DBObjectSearch;
 use Dict;
 use DisplayBlock;
 use DNSObject;
+use Domain;
 use IPAddress;
 use IPConfig;
 use IPObject;
@@ -245,40 +246,32 @@ class _IPAddress extends IPObject {
 
 			$oP->add('</td>');
 			$oP->add('</tr></table>');
-		}
-		else
-		{
+		} else {
 			$iKey = $this->GetKey();
 
-			// Tab for CIs using the IP
-			// Retrieve CIs first
+			// Tab for CIs using the IP 
+			//   Retrieve CIs first
+			//     -- FunctionalCIs with a 1:n relation to the IP
 			$sClass = get_class($this);
 			$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
 			$iNbAllCIs = 0;
-			foreach ($aCIsToList as $sCI => $sKey)
-			{
+			foreach ($aCIsToList as $sCI => $sKey) {
 				$sOQL = "SELECT $sCI WHERE";
 				$aIPAttributes = $aCIsToList[$sCI]['IPAddress'];
-				for ($i = 0; $i < sizeof($aIPAttributes); $i++)
-				{
+				for ($i = 0; $i < sizeof($aIPAttributes); $i++) {
 					$sOQL = ($i == 0) ? $sOQL." ($aIPAttributes[$i] = $iKey)" : $sOQL." OR ($aIPAttributes[$i] = $iKey)";
 				}
 				$aIPvNAttributes = $aCIsToList[$sCI][$sClass];
-				for($j = 0; $j < sizeof($aIPvNAttributes); $j++)
-				{
-					if ($i != 0)
-					{
+				for ($j = 0; $j < sizeof($aIPvNAttributes); $j++) {
+					if ($i != 0) {
 						$sOQL = $sOQL." OR ";
 						$i = 0;
 					}
 					$sOQL = ($j == 0) ? $sOQL." ($aIPvNAttributes[$j] = $iKey)" : $sOQL." OR ($aIPvNAttributes[$j] = $iKey)";
 				}
-				if (empty($aIPAttributes) && empty($aIPvNAttributes))
-				{
+				if (empty($aIPAttributes) && empty($aIPvNAttributes)) {
 					unset($aCIsToList[$sCI]);
-				}
-				else
-				{
+				} else {
 					$oCISearch = DBObjectSearch::FromOQL($sOQL);
 					$oCISet = new CMDBObjectSet($oCISearch);
 					// Obsolete CIs must be visible from the IP
@@ -290,6 +283,19 @@ class _IPAddress extends IPObject {
 				}
 			}
 
+			//    -- Functional CIs with a n:n relation to the IP
+			if (class_exists('ClusterNetwork')) {
+				$sOQL = 'SELECT ClusterNetwork AS cn JOIN lnkClusterNetworkToIPAddress AS l ON l.clusternetwork_id = cn.id WHERE l.ipaddress_id = :ip_id';
+				$oClusterNetworkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip_id' => $iKey));
+				$iNbClusterNetwork = $oClusterNetworkSet->Count();
+				if ($iNbClusterNetwork > 0) {
+					$aCIsToList['ClusterNetwork']['nb_to_list'] = $iNbClusterNetwork;
+					$aCIsToList['ClusterNetwork']['set'] = $oClusterNetworkSet;
+					$iNbAllCIs += $iNbClusterNetwork;
+				}
+			}
+
+			//    -- Interfaces with a n:n relation to the IP
 			$oIPInterfaceToIPAddressSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress AS l WHERE l.ipaddress_id = $iKey");
 			$oIPInterfaceToIPAddressSet = new CMDBObjectSet($oIPInterfaceToIPAddressSearch);
 			// Obsolete CIs must be visible from the IP
@@ -548,17 +554,32 @@ class _IPAddress extends IPObject {
 		$oCI = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 		if (is_null($oCI)) {
 			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist'));
-		} else {
-			$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
-			if ($iFlags & OPT_ATT_READONLY) {
-				// Attribute is read only
-				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly'));
-			}
-			if ($iFlags & OPT_ATT_SLAVE) {
-				// Attribute is read only because of a synchro
-				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
+		}
+		$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
+		if ($iFlags & OPT_ATT_READONLY) {
+			// Attribute is read only
+			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly'));
+		}
+		if ($iFlags & OPT_ATT_SLAVE) {
+			// Attribute is read only because of a synchro
+			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
+		}
+
+		// Chek for potential duplicate names
+		$iOrgId = $this->Get('org_id');
+		$sCopyCiNameToShortname = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
+		if ($sCopyCiNameToShortname == 'yes') {
+			$sName = $oCI->GetNameForIPAttribute($sIPAttribute);
+			$sOldName = $this->Get('short_name');
+			$this->Set('short_name', $sName);
+			$bIsFqdnUnique = $this->IsFqdnUnique();
+			$this->Set('short_name', $sOldName);
+			if (!$bIsFqdnUnique) {
+				// FQDN won't be unique
+				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting'));
 			}
 		}
+
 		return '';
 	}
 
@@ -571,7 +592,7 @@ class _IPAddress extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToUnallocate($aParam) {
+	public function DoCheckToUnallocate() {
 		// Make sure IP is allocated
 		if ($this->Get('status') != 'allocated') {
 			return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated'));
@@ -639,7 +660,7 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoUnallocate($aParam) {
+	public function DoUnallocate() {
 		// Remove from CIs & interfaces
 		$this->RemoveFromCIs();
 		$this->RemoveFromInterfaces();
@@ -647,6 +668,60 @@ class _IPAddress extends IPObject {
 		// Update IP status
 		$this->Set('status', 'unassigned');
 		$this->DBUpdate();
+	}
+
+	/**
+	 * Check if given FQDN can be expoded
+	 *
+	 * @$sFqdnAttr FQDN attribute that should be exploded
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+		$sClass = get_class($this);
+		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList($sClass))) {
+			// $sFqdnAttr is not a valid attribute for the class
+			return (Dict::Format('UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist', $sFqdnAttr));
+		}
+		$sFqdn = $this->Get($sFqdnAttr);
+		if ($sFqdn == '') {
+			// Don't count empty string as error
+			return '';
+		}
+		list($sError, $iDomainId) = Domain::GetDomainFromFqdn($sFqdn, $this->Get('org_id'));
+		if ($sError != '') {
+			return $sError;
+		}
+
+		return '';
+	}
+
+	/**
+	 * Explode FQDN
+	 *
+	 * @$sFqdnAttr FQDN attribute that should be exploded
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 */
+	public function DoExplodeFQDN($sFqdnAttr) {
+		$sFqdn = $this->Get($sFqdnAttr);
+		list($sError, $iDomainId) = Domain::GetDomainFromFqdn($sFqdn, $this->Get('org_id'));
+		if ($sError == '') {
+			$oDomain = MetaModel::GetObject('Domain', $iDomainId);
+			if ($oDomain != null) {
+				$sDomainName = $oDomain->Get('name');
+				$sHostname = substr_replace($sFqdn, '', -strlen('.'.$sDomainName));
+				$this->Set('short_name', $sHostname);
+				$this->Set('domain_id', $iDomainId);
+				$this > $this->DBUpdate();
+			}
+		}
 	}
 
 	/**

@@ -66,6 +66,36 @@ class _Domain extends DNSObject implements iTree {
 	}
 
 	/**
+	 * Provides longer domain name contained in FQDN
+	 *
+	 * @param $sFqdn
+	 * @param $iOrgId
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	static function GetDomainFromFqdn($sFqdn, $iOrgId) {
+		$sError = '';
+		if ((strlen($sFqdn) == 0) || ($iOrgId == 0)) {
+			return array(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain'), 0);
+		}
+		$sOQL = "SELECT Domain WHERE org_id = :org_id AND name = :name";
+		$oDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'name' => $sFqdn));
+		if ($oDomain = $oDomainSet->Fetch()) {
+			$iZoneId = $oDomain->GetKey();
+		} else {
+			$i = strpos($sFqdn, '.');
+			$sNextFqdn = substr($sFqdn, $i + 1);
+			list($sError, $iZoneId) = static::GetDomainFromFqdn($sNextFqdn, $iOrgId);
+		}
+
+		return array($sError, $iZoneId);
+	}
+
+	/**
 	 * Displays the tabs listing the child blocks and the subnets belonging to a block
 	 *
 	 * @param \WebPage $oP

@@ -1074,6 +1074,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DoCalculator:IPv4Subnet:WrongMask' => 'Mask is invalid!',
 	'UI:IPManagement:Action:DoCalculator:IPv4Subnet:WrongCIDR' => 'CIDR is invalid!',
 
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:CannotBeExploded' => 'FQDN cannot be exploded into short and domain name',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:PageTitle_Object_Class' => 'Explode FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:Done' => 'FQDN has been exploded on %1$s %2$s',
+
 //
 // Management of IP ranges
 //
@@ -1129,6 +1134,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:LastIPOutOfRange' => 'Last IP is out of range!',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:FirstIpBiggerThanLastIp' => 'First IP of range is higher than last IP!',
 
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:CannotBeExploded' => 'FQDN cannot be exploded into short and domain name',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:PageTitle_Object_Class' => 'Explode FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:Done' => 'FQDN has been exploded on %1$s %2$s',
+
 //
 // Management of IP Addresses
 //
@@ -1152,11 +1162,15 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'CI\'s attribute is R/O!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of a synchronization!',
+	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'New FQDN will conflict with duplicate rules defined in configuration',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'Address is already allocated!',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Address cannot be un-allocated: %1$s',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'IP is attached to a CI\'s attribute that is R/O!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'IP is attached to a CI\'s attribute that is slave of a synchronization!',
+
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist' => 'Attribute %1$s is not an attribute of IP address!',
 
 //
 // Management of IPv4 Addresses
@@ -1171,6 +1185,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Un-allocate IP',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s %2$s has been unallocated.',
 	'UI:IPManagement:Action:UnAllocate:IPv4Address:IPNotAllocated' => 'Address is not allocated!',
+
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:CannotBeExploded' => 'FQDN cannot be exploded into short and domain name',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:PageTitle_Object_Class' => 'Explode FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:Done' => 'FQDN has been exploded on %1$s %2$s',
 
 //
 // Management of Domains

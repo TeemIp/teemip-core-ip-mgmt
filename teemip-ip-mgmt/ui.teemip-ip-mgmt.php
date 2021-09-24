@@ -1024,7 +1024,7 @@ HTML
 				}
 
 				// Make sure object can be unallocated
-				$sErrorString = $oObj->DoCheckToUnallocate(array());
+				$sErrorString = $oObj->DoCheckToUnallocate();
 				if ($sErrorString != '') {
 					// Found issues: explain and display object again
 					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated', $sErrorString);
@@ -1033,7 +1033,7 @@ HTML
 					$oObj->DisplayDetails($oP);
 				} else {
 					// Unallocate IP
-					$oObj->DoUnallocate(array());
+					$oObj->DoUnallocate();
 
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
@@ -1048,6 +1048,59 @@ HTML
 				}
 			}
 			break; // End case unallocateip
+
+		///////////////////////////////////////////////////////////////////////////////////////////
+
+		case 'explodefqdn':    // Explode IPs' discovered FQDN into short name and domain name
+			$sClass = utils::ReadParam('class', '', false, 'class');
+			$id = utils::ReadParam('id', '');
+			$sFqdnAttr = utils::ReadParam('fqdn_attribute', '');
+			// Check if right parameters have been given
+			if (empty($sClass) || empty($id) || empty($sFqdnAttr)) {
+				throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'id', 'fqdn_attribute'));
+			}
+			if (!in_array($sClass, array('IPv4Subnet', 'IPv6Subnet', 'IPv4Range', 'IPv6Range', 'IPv4Address', 'IPv6Address'))) {
+				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
+			}
+
+			// Check if the object exists
+			$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			if (is_null($oObj)) {
+				$oP->set_title(Dict::S('UI:ErrorPageTitle'));
+				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
+			} else {
+				// Check now that user is allowed to modify IP addresses
+				if ((in_array($sClass, array('IPv4Subnet', 'IPv4Range', 'IPv4Address'))) && (!UserRights::IsActionAllowed('IPv4Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+					throw new SecurityException('User not allowed to modify this object', array('class' => 'IPv4Address', 'id' => $id));
+				} elseif ((in_array($sClass, array('IPv6Subnet', 'IPv6Range', 'IPv6Address'))) && (!UserRights::IsActionAllowed('IPv4Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+					throw new SecurityException('User not allowed to modify this object', array('class' => 'IPv6Address', 'id' => $id));
+				}
+
+				// Make sure object can be unallocated
+				$sErrorString = $oObj->DoCheckToExplodeFQDN($sFqdnAttr);
+				if ($sErrorString != '') {
+					// Found issues: explain and display object again
+					$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':CannotBeExploded', $sErrorString);
+					DisplayMessage::Warning($oP, $sMessage);
+
+					$oObj->DisplayDetails($oP);
+				} else {
+					// Unallocate IP
+					$oObj->DoExplodeFQDN($sFqdnAttr);
+
+					// Display result
+					$sClassLabel = MetaModel::GetName($sClass);
+					$oP->set_title(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+						$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
+					} else {
+						$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
+					}
+					DisplayMessage::Success($oP, $sMessage);
+					$oObj->DisplayDetails($oP);
+				}
+			}
+			break; // End case explodefqdn
 
 		///////////////////////////////////////////////////////////////////////////////////////////
 

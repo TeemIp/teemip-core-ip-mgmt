@@ -1536,6 +1536,29 @@ EOF
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList('IPv4Address'))) {
+			// $sFqdnAttr is not a valid attribute for the class
+			return (Dict::Format('UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist', $sFqdnAttr));
+		}
+
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function DoExplodeFQDN($sFqdnAttr) {
+		$iKey = $this->GetKey();
+		$oIPsSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address WHERE $sFqdnAttr != '' AND $sFqdnAttr != fqdn AND subnet_id = :key"), array(), array('key' => $iKey));
+		while ($oIP = $oIPsSet->Fetch()) {
+			$oIP->DoExplodeFQDN($sFqdnAttr);
+		}
+	}
+
+	/**
 	 * Display subnet in the node of a hierarchical tree
 	 *
 	 * @param $bWithIcon

@@ -268,4 +268,32 @@ HTML
 		return '';
 	}
 
+	/**
+	 * Check if given FQDN can be expoded
+	 *
+	 * @$sFqdnAttr FQDN attribute that should be exploded
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+
+		return '';
+	}
+
+	/**
+	 * Explode FQDN
+	 *
+	 * @$sFqdnAttr FQDN attribute that should be exploded
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \Exception
+	 */
+	public function DoExplodeFQDN($sFqdnAttr) {
+	}
+
 }
