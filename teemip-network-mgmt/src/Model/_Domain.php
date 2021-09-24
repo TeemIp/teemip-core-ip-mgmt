@@ -149,7 +149,7 @@ class _Domain extends DNSObject implements iTree {
 			));
 			// Then, display form to select list of hosts if domain is not in edition
 			$sHtml = '';
-			if (!$bEditMode && $oHostsSet->CountExceeds(0)) {
+			if (!$bEditMode) {
 				$sHtml = '<div style="padding: 15px; background: #ddd;">';
 				$sHtml .= "<form>";
 				$sHtml .= "<table>";
