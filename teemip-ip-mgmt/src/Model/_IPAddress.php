@@ -230,26 +230,10 @@ class _IPAddress extends IPObject {
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if ($bEditMode) {
-			// Tab for Global Parameters
-			$oP->SetCurrentTab(Dict::Format('Class:IPAddress/Tab:globalparam'));
-			$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-			$oP->add('<table style="vertical-align:top"><tr>');
-			$oP->add('<td style="vertical-align:top">');
+		$iKey = $this->GetKey();
 
-			if ($this->IsNew()) {
-				$aParameter = array('ip_allow_duplicate_name', 'ping_before_assign');
-			} else {
-				$aParameter = array('ip_allow_duplicate_name');
-			}
-			$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter);
-
-			$oP->add('</td>');
-			$oP->add('</tr></table>');
-		} else {
-			$iKey = $this->GetKey();
-
-			// Tab for CIs using the IP 
+		if (!$bEditMode) {
+			// Tab for CIs using the IP
 			//   Retrieve CIs first
 			//     -- FunctionalCIs with a 1:n relation to the IP
 			$sClass = get_class($this);
@@ -431,8 +415,8 @@ class _IPAddress extends IPObject {
 		$sFqdn = $this->Get('fqdn');
 
 		// The check takes into account the global parameters that defines if duplicate FQDNs are authorized or not
-		$sIpAllowDuplicateName = utils::ReadPostedParam('attr_ip_allow_duplicate_name', '');
-		if (empty($sIpAllowDuplicateName)) {
+		$sIpAllowDuplicateName = $this->Get('ip_allow_duplicate_name');
+		if ($sIpAllowDuplicateName == 'default') {
 			$sIpAllowDuplicateName = IPConfig::GetFromGlobalIPConfig('ip_allow_duplicate_name', $iOrgId);
 		}
 		// Check is not done on empty names
@@ -772,16 +756,11 @@ class _IPAddress extends IPObject {
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		switch ($sAttCode) {
+			case 'org_id':
 			case 'fqdn':
 			case 'last_discovery_date':
 			case 'responds_to_ping':
@@ -793,20 +772,11 @@ class _IPAddress extends IPObject {
 			default:
 				break;
 		}
-		if ((!$this->IsNew()) && ($sAttCode == 'org_id')) {
-			return OPT_ATT_READONLY;
-		}
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified at creation.
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
 		switch ($sAttCode) {

@@ -13,7 +13,6 @@ use Dict;
 use IPAddress;
 use IPConfig;
 use MetaModel;
-use utils;
 
 class _IPv4Address extends IPAddress {
 	/**
@@ -30,8 +29,11 @@ class _IPv4Address extends IPAddress {
 	 */
 	function GetSubnetMaskFromIp() {
 		$sIp = $this->Get('ip');
-		$sOrgId = $this->Get('org_id');
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(s.broadcastip) AND s.org_id = $sOrgId"));
+		$iOrgId = $this->Get('org_id');
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(s.broadcastip) AND s.org_id = :org_id"), array(), array(
+			'ip' => $sIp,
+			'org_id' => $iOrgId,
+		));
 		if ($oSubnetSet->Count() != 0) {
 			$oSubnet = $oSubnetSet->Fetch();
 
@@ -55,8 +57,11 @@ class _IPv4Address extends IPAddress {
 	 */
 	function GetSubnetGatewayFromIp() {
 		$sIp = $this->Get('ip');
-		$sOrgId = $this->Get('org_id');
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(s.broadcastip) AND s.org_id = $sOrgId"));
+		$iOrgId = $this->Get('org_id');
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(s.broadcastip) AND s.org_id = :org_id"), array(), array(
+			'ip' => $sIp,
+			'org_id' => $iOrgId,
+		));
 		if ($oSubnetSet->Count() != 0) {
 			$oSubnet = $oSubnetSet->Fetch();
 			$sGwIp = $oSubnet->Get('gatewayip');
@@ -73,14 +78,17 @@ class _IPv4Address extends IPAddress {
 	public function ComputeValues() {
 		parent::ComputeValues();
 
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip');
 
 		$iSubnetId = $this->Get('subnet_id');
 		if ($iSubnetId == 0) {
 			// No subnet parent set yet. Look for the only one that IP may belong to.
 			// If none -> orphean IP
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(s.broadcastip) AND s.org_id = $sOrgId"));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(s.broadcastip) AND s.org_id = :org_id"), array(), array(
+				'ip' => $sIp,
+				'org_id' => $iOrgId,
+			));
 			if ($oSubnetSet->Count() != 0) {
 				$oSubnet = $oSubnetSet->Fetch();
 				$this->Set('subnet_id', $oSubnet->GetKey());
@@ -96,11 +104,11 @@ class _IPv4Address extends IPAddress {
 
 		// For new IPs only
 		if ($this->IsNew()) {
-			$sOrgId = $this->Get('org_id');
+			$iOrgId = $this->Get('org_id');
 			$sIp = $this->Get('ip');
 
 			// Make sure IP doesn't already exist for creation
-			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIp' AND i.org_id = $sOrgId"));
+			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.ip = :ip AND i.org_id = :org_id"), array(), array('ip' => $sIp, 'org_id' => $iOrgId));
 			while ($oIp = $oIpSet->Fetch()) {
 				// It's a creation -> deny it
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision');
@@ -130,7 +138,10 @@ class _IPv4Address extends IPAddress {
 				}
 			} else {
 				// If not look for IP Range that IP may belong to
-				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE INET_ATON(r.firstip) <= INET_ATON('$sIp') AND INET_ATON('$sIp') <= INET_ATON(r.lastip) AND r.org_id = $sOrgId"));
+				$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE INET_ATON(r.firstip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(r.lastip) AND r.org_id = :org_id"), array(), array(
+					'ip' => $sIp,
+					'org_id' => $iOrgId,
+				));
 				if ($oIpRangeSet->Count() != 0) {
 					$oIpRange = $oIpRangeSet->Fetch();
 					$this->Set('range_id', $oIpRange->GetKey());
@@ -138,9 +149,9 @@ class _IPv4Address extends IPAddress {
 			}
 
 			// If required by global parameters, ping IP before assigning it
-			$sPingBeforeAssign = utils::ReadPostedParam('attr_ping_before_assign', '');
-			if (empty($sPingBeforeAssign)) {
-				$sPingBeforeAssign = IPConfig::GetFromGlobalIPConfig('ping_before_assign', $sOrgId);
+			$sPingBeforeAssign = $this->Get('ping_before_assign');
+			if ($sPingBeforeAssign == 'default') {
+				$sPingBeforeAssign = IPConfig::GetFromGlobalIPConfig('ping_before_assign', $iOrgId);
 			}
 			if ($sPingBeforeAssign == 'ping_yes') {
 				$aOutput = $this->DoCheckIpPings($this->Get('ip'), TIME_TO_WAIT_FOR_PING_LONG);
@@ -198,7 +209,7 @@ class _IPv4Address extends IPAddress {
 	 * @inheritdoc
 	 */
 	public function AfterInsert() {
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 
 		// Execute parent function first 
 		parent::AfterInsert();
@@ -211,8 +222,8 @@ class _IPv4Address extends IPAddress {
 			$iSubnetId = $this->Get('subnet_id');
 			if ($iSubnetId != 0) {
 				$oSubnet = MetaModel::GetObject('IPv4Subnet', $iSubnetId, true /* MustBeFound */);
-				$sSubnetLowWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $sOrgId);
-				$sSubnetHighWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $sOrgId);
+				$sSubnetLowWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $iOrgId);
+				$sSubnetHighWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $iOrgId);
 				if ($oSubnet->GetSize() > 4) {
 					$oSubnetOccupancy = $oSubnet->GetOccupancy('IPv4Address');
 					$oSubnetAlarm = $oSubnet->Get('alarm_water_mark');
@@ -221,7 +232,7 @@ class _IPv4Address extends IPAddress {
 						if ($oSubnetAlarm != 'high_sent') {
 							$oSubnet->Set('alarm_water_mark', 'high_sent');
 							$oSubnet->DBUpdate();
-							$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Subnet' AND t.event = 'cross_high' AND t.org_id = $sOrgId"));
+							$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Subnet' AND t.event = 'cross_high' AND t.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 							while ($oTrigger = $oTriggerSet->Fetch()) {
 								$oTrigger->DoActivate($oSubnet->ToArgs('this'));
 							}
@@ -232,7 +243,7 @@ class _IPv4Address extends IPAddress {
 							if ($oSubnetAlarm != 'no_alarm') {
 								$oSubnet->Set('alarm_water_mark', 'low_sent');
 								$oSubnet->DBUpdate();
-								$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Subnet' AND t.event = 'cross_low' AND t.org_id = $sOrgId"));
+								$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Subnet' AND t.event = 'cross_low' AND t.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 								while ($oTrigger = $oTriggerSet->Fetch()) {
 									$oTrigger->DoActivate($oSubnet->ToArgs('this'));
 								}
@@ -247,8 +258,8 @@ class _IPv4Address extends IPAddress {
 			$iIpRangeId = $this->Get('range_id');
 			if ($iIpRangeId != null) {
 				$oIpRange = MetaModel::GetObject('IPv4Range', $iIpRangeId, true /* MustBeFound */);
-				$sIpRangeLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $sOrgId);
-				$sIpRangeHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $sOrgId);
+				$sIpRangeLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $iOrgId);
+				$sIpRangeHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $iOrgId);
 
 				$oIpRangeOccupancy = $oIpRange->GetOccupancy('IPv4Address');
 				$oIpRangeAlarm = $oIpRange->Get('alarm_water_mark');
@@ -257,7 +268,7 @@ class _IPv4Address extends IPAddress {
 					if ($oIpRangeAlarm != 'high_sent') {
 						$oIpRange->Set('alarm_water_mark', 'high_sent');
 						$oIpRange->DBUpdate();
-						$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Range' AND t.event = 'cross_high' AND t.org_id = $sOrgId"));
+						$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Range' AND t.event = 'cross_high' AND t.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 						while ($oTrigger = $oTriggerSet->Fetch()) {
 							$oTrigger->DoActivate($oIpRange->ToArgs('this'));
 						}
@@ -268,7 +279,7 @@ class _IPv4Address extends IPAddress {
 						if ($oIpRangeAlarm != 'no_alarm') {
 							$oIpRange->Set('alarm_water_mark', 'low_sent');
 							$oIpRange->DBUpdate();
-							$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Range' AND t.event = 'cross_low' AND t.org_id = $sOrgId"));
+							$oTriggerSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPTriggerOnWaterMark AS t WHERE t.target_class = 'IPv4Range' AND t.event = 'cross_low' AND t.org_id = :org_id"), array(), array('org_id' => $iOrgId));
 							while ($oTrigger = $oTriggerSet->Fetch()) {
 								$oTrigger->DoActivate($oIpRange->ToArgs('this'));
 							}
@@ -285,15 +296,15 @@ class _IPv4Address extends IPAddress {
 	public function AfterDelete() {
 		parent::AfterDelete();
 
-		$sOrgId = $this->Get('org_id');
+		$iOrgId = $this->Get('org_id');
 
 		// Look for subnet where IP belongs to (should be only one)
 		//  Generate event if Low Water Mark is crossed 
 		$iSubnetId = $this->Get('subnet_id');
 		$oSubnet = MetaModel::GetObject('IPv4Subnet', $iSubnetId, false /* MustBeFound */);
 		if (!is_null($oSubnet)) {
-			$sSubnetLowWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $sOrgId);
-			$sSubnetHighWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $sOrgId);
+			$sSubnetLowWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $iOrgId);
+			$sSubnetHighWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $iOrgId);
 
 			$oSubnetOccupancy = $oSubnet->GetOccupancy('IPv4Address');
 			$oSubnetAlarm = $oSubnet->Get('alarm_water_mark');
@@ -319,8 +330,8 @@ class _IPv4Address extends IPAddress {
 		$iIpRangeId = $this->Get('range_id');
 		if ($iIpRangeId != null) {
 			$oIpRange = MetaModel::GetObject('IPv4Range', $iIpRangeId, true /* MustBeFound */);
-			$sIpRangeLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $sOrgId);
-			$sIpRangeHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $sOrgId);
+			$sIpRangeLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $iOrgId);
+			$sIpRangeHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $iOrgId);
 
 			$oIpRangeOccupancy = $oIpRange->GetOccupancy('IPv4Address');
 			$oIpRangeAlarm = $oIpRange->Get('alarm_water_mark');
@@ -346,10 +357,14 @@ class _IPv4Address extends IPAddress {
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && ($sAttCode == 'ip' || $sAttCode == 'subnet_id' || $sAttCode == 'range_id')) {
-			return OPT_ATT_READONLY;
-		} elseif ($this->IsNew() && ($sAttCode == 'fqdn')) {
-			return OPT_ATT_READONLY;
+		switch ($sAttCode) {
+			case 'ip':
+			case 'subnet_id':
+			case 'range_id':
+				return OPT_ATT_READONLY;
+
+			default:
+				break;
 		}
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);

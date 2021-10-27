@@ -1629,12 +1629,6 @@ EOF
 	}
 
 	/**
-	 * @inheritDoc
-	 */
-	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
@@ -2185,6 +2179,7 @@ EOF
 		$sIp = $this->Get('ip');
 		$iIp = IPUtils::myip2long($sIp);
 		$sMask = $this->Get('mask');
+		$iOrgId = $this->Get('org_id');
 
 		// Set Broadcast IP
 		$iIpBroadcast = $iIp + $this->GetSize() - 1;
@@ -2193,8 +2188,10 @@ EOF
 
 		// Set Gateway IP
 		if ($sMask != '255.255.255.255') {
-			$iOrgId = $this->Get('org_id');
-			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+			$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+			if ($sGatewayIPFormat == 'default') {
+				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+			}
 			switch ($sGatewayIPFormat) {
 				case 'subnetip_plus_1':
 					$iGatewayIp = $iIp + 1;
@@ -2221,7 +2218,6 @@ EOF
 		if (($sIp != '') && ($sMask != '')) {
 			// Look for all blocks containing the new subnet
 			// Pick the smallest one
-			$iOrgId = $this->Get('org_id');
 			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE INET_ATON(b.firstip) <= INET_ATON('$sIp') AND INET_ATON('$sIpBroadcast') <= INET_ATON(b.lastip) AND b.org_id = $iOrgId"));
 			$iMinSize = 0;
 			$iBlockId = 0;
@@ -2333,7 +2329,10 @@ EOF
 		}
 
 		// If allocation of Gateway Ip is free, make sure it is contained in subnet
-		$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+		$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+		if ($sGatewayIPFormat == 'default') {
+			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+		}
 		if ($sGatewayIPFormat == 'free_setup') {
 			$sGatewayIp = $this->Get('gatewayip');
 			if ($sGatewayIp != '') {
@@ -2581,7 +2580,10 @@ EOF
 		switch ($sAttCode) {
 			case 'gatewayip':
 				$iOrgId = $this->Get('org_id');
-				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+				if ($sGatewayIPFormat == 'default') {
+					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				}
 				if ($sGatewayIPFormat != 'free_setup') {
 					return OPT_ATT_READONLY;
 				}
@@ -2599,18 +2601,21 @@ EOF
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		switch ($sAttCode) {
-			case 'org_id':
 			case 'block_id':
 			case 'ip':
 			case 'mask':
 			case 'broadcastip':
 			case 'ip_occupancy':
 			case 'range_occupancy':
+			case 'ipv4_gateway_ip_format':
 				return OPT_ATT_READONLY;
 
 			case 'gatewayip':
 				$iOrgId = $this->Get('org_id');
-				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+				if ($sGatewayIPFormat == 'default') {
+					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				}
 				if ($sGatewayIPFormat != 'free_setup') {
 					return OPT_ATT_READONLY;
 				}

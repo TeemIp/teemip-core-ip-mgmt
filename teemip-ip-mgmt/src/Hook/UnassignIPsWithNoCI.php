@@ -81,7 +81,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 		CMDBObject::SetTrackInfo('Automatic - Background task to unassign IPs with no CI');
 		CMDBObject::SetTrackOrigin('custom-extension');
 
-		// Get and chack target state for IPs
+		// Get and check target state for IPs
 		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
 		$sTargetStatus = $aFunctionSettings[static::FUNCTION_SETTING_TARGET_STATUS];
 		if (!in_array($sTargetStatus, array('unassigned' ,'released')))

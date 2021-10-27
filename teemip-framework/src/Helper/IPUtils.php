@@ -385,8 +385,8 @@ class IPUtils {
 		$oP->SetCurrentTab($sName.$sCount);
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
+			$oP->p($sInfoPanel);
 			if ($iCount > 0) {
-				$oP->p($sInfoPanel);
 				$oBlock = new DisplayBlock($oSet->GetFilter(), 'list');
 				$oBlock->Display($oP, $sCode, array('menu' => false));
 			} else {

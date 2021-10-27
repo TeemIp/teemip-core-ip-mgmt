@@ -77,7 +77,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	private function GetMinBlockSize() {
-		$iBlockMinSize = utils::ReadPostedParam('attr_ipv4_block_min_size', '');
+		$iBlockMinSize = $this->Get('ipv4_block_min_size');
 		if (empty($iBlockMinSize)) {
 			$iOrgId = $this->Get('org_id');
 			$iBlockMinSize = IPConfig::GetFromGlobalIPConfig('ipv4_block_min_size', $iOrgId);
@@ -381,8 +381,8 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	private function DoCheckCIDRAligned($iNewFirstIp = 0, $iNewLastIp = 0) {
-		$sBlockCidrAligned = utils::ReadPostedParam('attr_ipv4_block_cidr_aligned', '');
-		if (empty($sBlockCidrAligned)) {
+		$sBlockCidrAligned = $this->Get('ipv4_block_cidr_aligned');
+		if ($sBlockCidrAligned == 'default') {
 			$iOrgId = $this->Get('org_id');
 			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv4_block_cidr_aligned', $iOrgId);
 		}
@@ -1304,31 +1304,6 @@ EOF
 	}
 
 	/**
-	 * Display global block parameters
-	 *
-	 * @param \WebPage $oP
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	public function DisplayTabContentDisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
-		$sLabelOfAction = Dict::Format('Class:IPBlock/Tab:globalparam');
-		$aParameter = array('ipv4_block_min_size', 'ipv4_block_cidr_aligned');
-
-		$oP->SetCurrentTab($sLabelOfAction);
-		$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-		$oP->add('<table style="vertical-align:top"><tr>');
-		$oP->add('<td style="vertical-align:top">');
-
-		$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter, $aDefault);
-
-		$oP->add('</td>');
-		$oP->add('</tr></table>');
-	}
-
-	/**
 	 * Display fields required for action
 	 *
 	 * @param \WebPage $oP
@@ -1753,21 +1728,7 @@ EOF
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if ($bEditMode) {
-			if ($this->IsNew()) {
-				// Tab for Global Parameters at creation time only
-				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:globalparam'));
-				$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-				$oP->add('<table style="vertical-align:top"><tr>');
-				$oP->add('<td style="vertical-align:top">');
-
-				$aParameter = array('ipv4_block_min_size', 'ipv4_block_cidr_aligned');
-				$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter);
-
-				$oP->add('</td>');
-				$oP->add('</tr></table>');
-			}
-		} else {
+		if (!$bEditMode) {
 			// Add related style sheet - Done in parent class
 
 			$iBlockId = $this->GetKey();
@@ -1790,6 +1751,8 @@ EOF
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
 	public function ComputeValues() {
+		parent::ComputeValues();
+
 		if ($this->IsNew()) {
 			// At creation, compute parent_id only in the case where no delegation is done.
 			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
@@ -1844,11 +1807,7 @@ EOF
 
 		// Check name doesn't already exist
 		$sOQL = "SELECT IPv4Block AS b WHERE b.name = :name AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array(
-			'name' => $sName,
-			'id' => $iKey,
-			'org_id' => $iOrgId,
-		));
+		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'id' => $iKey, 'org_id' => $iOrgId));
 		if ($oSRangeSet->CountExceeds(0)) {
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
 
@@ -2141,7 +2100,7 @@ EOF
 	 * @throws \CoreException
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$aReadOnlyAttributes = array('firstip', 'lastip');
+		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv4_block_min_size', 'ipv4_block_cidr_aligned');
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
 			return OPT_ATT_READONLY;
 		}

@@ -245,6 +245,7 @@ class _IPSubnet extends IPObject {
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
 		switch ($sAttCode) {
+			case 'org_id':
 			case 'last_discovery_date':
 			case 'ping_duration':
 			case 'ping_discovered':

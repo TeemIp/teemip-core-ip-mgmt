@@ -79,6 +79,21 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="ipconfig_id" xsi:type="AttributeExternalKey">
+          <filter><![CDATA[SELECT IPConfig AS c WHERE c.org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <sql>ipconfig_id</sql>
+          <target_class>IPConfig</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="ipconfig_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
         <field id="contact_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkContactToIPObject</linked_class>
           <ext_key_to_me>ipobject_id</ext_key_to_me>
@@ -96,7 +111,26 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="ComputeValues">
+          <comment/>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[ public function ComputeValues()
+ {
+ 		parent::ComputeValues();
+
+		if ($this->IsNew()) {
+			// Make sure IPConfig exists for the organization
+			$iOrgId = $this->Get('org_id');
+			if (($iOrgId != '') && ($this->Get('ipconfig_id') == '')) {
+				IPConfig::GetGlobalIPConfig($this->Get('org_id'));
+			}
+		}
+ }]]></code>
+        </method>
+      </methods>
       <presentation>
         <default_search>
           <items>
@@ -674,7 +708,30 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
-      </fields>
+        <field id="ipconfig_ipv4_block_min_size" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv4_block_min_size</target_attcode>
+        </field>
+        <field id="ipconfig_ipv4_block_cidr_aligned" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv4_block_cidr_aligned</target_attcode>
+        </field>
+        <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
+          <sql>ipv4_block_min_size</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ipv4_block_cidr_aligned" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>bca_yes</value>
+            <value>bca_no</value>
+          </values>
+          <sql>ipv4_block_cidr_aligned</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+     </fields>
       <methods/>
       <presentation>
         <details>
@@ -694,24 +751,24 @@
                 <item id="fieldset:Class:IPBlock:baseinfo">
                   <rank>10</rank>
                   <items>
-		            <item id="org_id">
-		              <rank>10</rank>
-		            </item>
-		            <item id="name">
-		              <rank>20</rank>
-		            </item>
-		            <item id="ipblocktype_id">
-		              <rank>30</rank>
-		            </item>
-		            <item id="comment">
-		              <rank>40</rank>
-		            </item>
-		            <item id="requestor_id">
-		              <rank>50</rank>
-		            </item>
-                <item id="allocation_date">
-                  <rank>60</rank>
-                </item>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="ipblocktype_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="comment">
+                      <rank>40</rank>
+                    </item>
+                    <item id="requestor_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="allocation_date">
+                      <rank>60</rank>
+                    </item>
                  </items>
                 </item>
               </items>
@@ -739,12 +796,52 @@
                     <item id="parent_id">
                       <rank>10</rank>
                     </item>
-		            <item id="firstip">
-		              <rank>20</rank>
-		            </item>
-		            <item id="lastip">
-		              <rank>30</rank>
-		            </item>
+                    <item id="firstip">
+                      <rank>20</rank>
+                    </item>
+                    <item id="lastip">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>60</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_ipv4_block_min_size">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ipv4_block_cidr_aligned">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPBlock:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="ipv4_block_min_size">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipv4_block_cidr_aligned">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -899,6 +996,10 @@
           <sql>alarm_water_mark</sql>
           <default_value>no_alarm</default_value>
           <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ipconfig_reserve_subnet_ips" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>reserve_subnet_IPs</target_attcode>
         </field>
         <field id="reserve_subnet_ips" xsi:type="AttributeEnum">
           <values>
@@ -1509,8 +1610,10 @@
         </field>
         <field id="gatewayip" xsi:type="AttributeIPAddress">
           <dependencies>
+            <attribute id="org_id"/>
             <attribute id="ip"/>
             <attribute id="mask"/>
+            <attribute id="ipv4_gateway_ip_format"/>
           </dependencies>
           <sql>gatewayip</sql>
           <default_value/>
@@ -1524,6 +1627,21 @@
           <sql>broadcastip</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ipconfig_ipv4_gateway_ip_format" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv4_gateway_ip_format</target_attcode>
+        </field>
+        <field id="ipv4_gateway_ip_format" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>subnetip_plus_1</value>
+            <value>broadcastip_minus_1</value>
+            <value>free_setup</value>
+          </values>
+          <sql>ipv4_gateway_ip_format</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="summary" xsi:type="AttributeDashboard">
           <is_user_editable>true</is_user_editable>
@@ -1624,11 +1742,7 @@
                 </item>
                 <item id="fieldset:Class:IPSubnet:automation">
                   <rank>20</rank>
-                  <items>
-                    <item id="reserve_subnet_ips">
-                      <rank>10</rank>
-                    </item>
-                  </items>
+                  <items/>
                 </item>
               </items>
             </item>
@@ -1653,6 +1767,46 @@
 		            <item id="broadcastip">
 		              <rank>50</rank>
 		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>90</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_reserve_subnet_ips">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ipv4_gateway_ip_format">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPSubnet:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="reserve_subnet_ips">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipv4_gateway_ip_format">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -2300,6 +2454,35 @@
           <extkey_attcode>usage_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="ipconfig_ip_allow_duplicate_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ip_allow_duplicate_name</target_attcode>
+        </field>
+        <field id="ipconfig_ping_before_assign" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ping_before_assign</target_attcode>
+        </field>
+        <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>ipdup_no</value>
+            <value>ipdup_yes</value>
+            <value>ipdup_dualstack</value>
+          </values>
+          <sql>ip_allow_duplicate_name</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ping_before_assign" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>ping_no</value>
+            <value>ping_yes</value>
+          </values>
+          <sql>ping_before_assign</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="ip_list" xsi:type="AttributeLinkedSetIndirect">
           <linked_class>lnkIPAdressToIPAddress</linked_class>
           <ext_key_to_me>ip1_id</ext_key_to_me>
@@ -2882,6 +3065,46 @@
 		            <item id="ip">
 		              <rank>30</rank>
 		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>60</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_ip_allow_duplicate_name">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ping_before_assign">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPAddress:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="ip_allow_duplicate_name">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ping_before_assign">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
                   </items>
                 </item>
               </items>

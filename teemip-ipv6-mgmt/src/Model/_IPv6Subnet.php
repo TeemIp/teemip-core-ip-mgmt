@@ -836,15 +836,6 @@ EOF
 	}
 
 	/**
-	 * Display global attributes for associated operation
-	 *
-	 * @param $oP
-	 * @param $aDefault
-	 */
-	function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
@@ -1339,7 +1330,10 @@ EOF
 		// Set Gateway IP
 		if ($iOrgId > 0) {
 			if ($sBitMask != '128') {
-				$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+				if ($sGatewayIPFormat == 'default') {
+					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+				}
 				switch ($sGatewayIPFormat) {
 					case 'subnetip_plus_1':
 						$oFirstIpFromMask = new ormIPv6('::1');
@@ -1722,26 +1716,56 @@ EOF
 	}
 
 	/**
-	 * Change flag of attributes that shouldn't be modified beside creation.
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @inheritDoc
+	 */
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		switch ($sAttCode) {
+			case 'gatewayip':
+				$iOrgId = $this->Get('org_id');
+				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+				if ($sGatewayIPFormat == 'default') {
+					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+				}
+				if ($sGatewayIPFormat != 'free_setup') {
+					return OPT_ATT_READONLY;
+				}
+				break;
+
+			default:
+				break;
+		}
+
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}
+
+	/**
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'block_id') || ($sAttCode == 'ip') || ($sAttCode == 'mask') || ($sAttCode == 'lastip') || ($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy'))) {
-			return OPT_ATT_READONLY;
-		}
-		if ((!$this->IsNew()) && ($sAttCode == 'gatewayip')) {
-			$iOrgId = $this->Get('org_id');
-			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
-			if ($sGatewayIPFormat != 'free_setup') {
+		switch ($sAttCode) {
+			case 'org_id':
+			case 'block_id':
+			case 'ip':
+			case 'mask':
+			case 'lastip':
+			case 'ip_occupancy':
+			case 'range_occupancy':
+			case 'ipv6_gateway_ip_format':
 				return OPT_ATT_READONLY;
-			}
+
+			case 'gatewayip':
+				$iOrgId = $this->Get('org_id');
+				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+				if ($sGatewayIPFormat == 'default') {
+					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+				}
+				if ($sGatewayIPFormat != 'free_setup') {
+					return OPT_ATT_READONLY;
+				}
+				break;
+
+			default:
+				break;
 		}
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);

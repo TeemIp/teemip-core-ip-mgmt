@@ -179,12 +179,46 @@
           <default_value>256</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="ipv6_block_min_prefix" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value>48</value>
+            <value>49</value>
+            <value>50</value>
+            <value>51</value>
+            <value>52</value>
+            <value>53</value>
+            <value>54</value>
+            <value>55</value>
+            <value>56</value>
+            <value>57</value>
+            <value>58</value>
+            <value>59</value>
+            <value>60</value>
+            <value>61</value>
+            <value>62</value>
+            <value>63</value>
+            <value>64</value>
+          </values>
+          <sql>ipv6_block_min_prefix</sql>
+          <default_value>64</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="ipv4_block_cidr_aligned" xsi:type="AttributeEnum">
           <values>
             <value>bca_yes</value>
             <value>bca_no</value>
           </values>
           <sql>ipv4_block_cidr_aligned</sql>
+          <default_value>bca_yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="ipv6_block_cidr_aligned" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value>bca_yes</value>
+            <value>bca_no</value>
+          </values>
+          <sql>ipv6_block_cidr_aligned</sql>
           <default_value>bca_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
@@ -196,6 +230,7 @@
           <sql>delegate_to_children_only</sql>
           <default_value>dtc_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
         </field>
         <!-- Settings for subnets -->
         <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
@@ -215,6 +250,16 @@
             <value>free_setup</value>
           </values>
           <sql>ipv4_gateway_ip_format</sql>
+          <default_value>subnetip_plus_1</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ipv6_gateway_ip_format" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value>subnetip_plus_1</value>
+            <value>lastip</value>
+            <value>free_setup</value>
+          </values>
+          <sql>ipv6_gateway_ip_format</sql>
           <default_value>subnetip_plus_1</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
@@ -390,8 +435,14 @@
                     <item id="ipv4_block_min_size">
                       <rank>10</rank>
                     </item>
+                    <item id="ipv6_block_min_prefix" _delta="define">
+                      <rank>20</rank>
+                    </item>
                     <item id="ipv4_block_cidr_aligned">
                       <rank>30</rank>
+                    </item>
+                    <item id="ipv6_block_cidr_aligned" _delta="define">
+                      <rank>40</rank>
                     </item>
                     <item id="delegate_to_children_only">
                       <rank>50</rank>
@@ -411,6 +462,9 @@
                     </item>
                     <item id="ipv4_gateway_ip_format">
                       <rank>20</rank>
+                    </item>
+                    <item id="ipv6_gateway_ip_format" _delta="define">
+                      <rank>30</rank>
                     </item>
                     <item id="subnet_symetrical_nat">
                       <rank>40</rank>
@@ -506,8 +560,14 @@
             <item id="ipv4_block_min_size">
               <rank>10</rank>
             </item>
+            <item id="ipv6_block_min_prefix" _delta="define">
+              <rank>20</rank>
+            </item>
             <item id="ipv4_block_cidr_aligned">
               <rank>30</rank>
+            </item>
+            <item id="ipv6_block_cidr_aligned" _delta="define">
+              <rank>40</rank>
             </item>
             <item id="delegate_to_children_only">
               <rank>50</rank>
@@ -517,6 +577,9 @@
             </item>
             <item id="ipv4_gateway_ip_format">
               <rank>70</rank>
+            </item>
+            <item id="ipv6_gateway_ip_format" _delta="define">
+              <rank>80</rank>
             </item>
             <item id="subnet_low_watermark">
               <rank>90</rank>

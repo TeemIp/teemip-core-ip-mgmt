@@ -68,7 +68,7 @@ class _IPRange extends IPObject {
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id') || ($sAttCode == 'occupancy'))) {
+		if (($sAttCode == 'org_id') || ($sAttCode == 'occupancy')) {
 			return OPT_ATT_READONLY;
 		}
 
@@ -175,6 +175,21 @@ class _IPRange extends IPObject {
 				//      $sTabName = $oPage->FindTab($sPattern);
 				$sTabName = 'Class:'.get_class($this).'/Attribute:functionalcis_list';
 				$oPage->RemoveTab($sTabName);
+			}
+		}
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function ComputeValues() {
+		parent::ComputeValues();
+
+		if ($this->IsNew()) {
+			// Ugly workaround to not display the ipconfig_id parameter as it is not needed for that class !
+			$iOrgId = $this->Get('org_id');
+			if ($iOrgId != '') {
+				$this->Set('ipconfig_id', $iOrgId);
 			}
 		}
 	}

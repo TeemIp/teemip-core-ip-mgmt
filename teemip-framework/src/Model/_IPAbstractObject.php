@@ -55,6 +55,25 @@ class _IPAbstractObject extends cmdbAbstractObject {
 	}
 
 	/**
+	 * Change default flag of attribute.
+	 *
+	 * @param string $sAttCode
+	 * @param array $aReasons
+	 * @param string $sTargetState
+	 *
+	 * @return int
+	 * @throws \CoreException
+	 */
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$aReadOnlyAttributes = array('ipconfig_id');
+		if (in_array($sAttCode, $aReadOnlyAttributes)) {
+			return OPT_ATT_READONLY;
+		}
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+	/**
 	 * Displays choices related to operation.
 	 *
 	 * @param \WebPage $oP
@@ -498,43 +517,5 @@ EOF
 
 		return $val;
 	}
-
-	/**
-	 * Display global parameters associated to the object
-	 *
-	 * @param \WebPage $oP
-	 * @param $aParameter
-	 * @param array $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	protected function DisplayGlobalParametersInLocalModifyForm(WebPage $oP, $aParameter, $aDefault = array()) {
-		// Get Global config object
-//		$oIpConfig = IPConfig::GetGlobalIPConfig($this->Get('org_id'));
-		$aDetails = array();
-
-		// Display Parameter with option to be changed for the transaction
-		/*		foreach ($aParameter as $sParam) {
-					$sInputId = $sParam;
-					$oAttDef = MetaModel::GetAttributeDef('IPConfig', $sParam);
-					$sValue = (array_key_exists($sParam, $aDefault)) ? $aDefault[$sParam] : $oIpConfig->Get($sParam);
-					$sDisplayValue = $oIpConfig->GetEditValue($sParam);
-					$iFlags = $oIpConfig->GetAttributeFlags($sParam);
-					$aArgs = array(
-						'this' => $oIpConfig,
-						'formPrefix' => '',
-					);
-					$sHTMLValue = "<span id=\"field_{$sInputId}\">".$oIpConfig->GetFormElementForField($oP, 'IPConfig', $sParam, $oAttDef, $sValue,
-							$sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
-					$aDetails[] = array(
-						'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
-						'value' => $sHTMLValue,
-					);
-				}
-		*/
-		$oP->Details($aDetails);
-	}
-
+	
 }

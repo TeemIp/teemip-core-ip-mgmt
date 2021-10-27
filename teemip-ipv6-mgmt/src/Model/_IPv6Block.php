@@ -111,8 +111,8 @@ class _IPv6Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	private function GetMinBlockPrefix() {
-		$iBlockMinPrefix = utils::ReadPostedParam('attr_ipv6_block_min_prefix', '');
-		if (empty($iBlockMinPrefix)) {
+		$iBlockMinPrefix = $this->Get('ipv6_block_min_prefix');
+		if ($iBlockMinPrefix == 'default') {
 			$iOrgId = $this->Get('org_id');
 			$iBlockMinPrefix = IPConfig::GetFromGlobalIPConfig('ipv6_block_min_prefix', $iOrgId);
 		} else {
@@ -399,8 +399,8 @@ class _IPv6Block extends IPBlock implements iTree {
 	 * @throws \CoreException
 	 */
 	public function DoCheckMustBeCIDRAligned() {
-		$sBlockCidrAligned = utils::ReadPostedParam('attr_ipv6_block_cidr_aligned', '');
-		if (empty($sBlockCidrAligned)) {
+		$sBlockCidrAligned = $this->Get('ipv6_block_cidr_aligned');
+		if ($sBlockCidrAligned == 'default') {
 			$iOrgId = $this->Get('org_id');
 			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv6_block_cidr_aligned', $iOrgId);
 		}
@@ -1351,30 +1351,6 @@ EOF
 	}
 
 	/**
-	 * Display attributes associated operation
-	 *
-	 * @param \WebPage $oP
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 */
-	public function DisplayGlobalAttributesForOperation(WebPage $oP, $aDefault) {
-		$sLabelOfAction = Dict::Format('Class:IPBlock/Tab:globalparam');
-		$aParameter = array('ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
-
-		$oP->SetCurrentTab($sLabelOfAction);
-		$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-		$oP->add('<table style="vertical-align:top"><tr>');
-		$oP->add('<td style="vertical-align:top">');
-
-		$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter, $aDefault);
-
-		$oP->add('</td>');
-		$oP->add('</tr></table>');
-	}
-
-	/**
 	 * Display attributes associated to an operation for V < 3.0
 	 *
 	 * @param \WebPage $oP
@@ -1758,27 +1734,11 @@ EOF
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if ($bEditMode) {
-			if ($this->IsNew()) {
-				$oP->SetCurrentTab(Dict::Format('Class:IPBlock/Tab:globalparam'));
-				$oP->p(Dict::Format('UI:IPManagement:Action:Modify:GlobalConfig'));
-				$oP->add('<table style="vertical-align:top"><tr>');
-				$oP->add('<td style="vertical-align:top">');
-
-				$aParameter = array('ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
-				$this->DisplayGlobalParametersInLocalModifyForm($oP, $aParameter);
-
-				$oP->add('</td>');
-				$oP->add('</tr></table>');
-			}
-		} else {
+		if (!$bEditMode) {
 			// Add related style sheet - Done in parent class
 
 			$iBlockId = $this->GetKey();
 			$iOrgId = $this->Get('org_id');
-
-			$aExtraParams = array();
-			$aExtraParams['menu'] = false;
 
 			// Tab for subnets
 			$oSubnetSearch = DBObjectSearch::FromOQL("SELECT IPv6Subnet AS subnet WHERE subnet.block_id = $iBlockId AND subnet.org_id = $iOrgId");
@@ -2148,7 +2108,7 @@ EOF
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$aReadOnlyAttributes = array('firstip', 'lastip');
+		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
 			return OPT_ATT_READONLY;
 		}

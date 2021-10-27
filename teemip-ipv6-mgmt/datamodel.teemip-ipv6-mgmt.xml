@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
   <classes>
     <class id="IPv6Block" _delta="define">
       <parent>IPBlock</parent>
@@ -69,6 +69,49 @@
           </dependencies>
           <sql>lastip</sql>
           <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ipconfig_ipv6_block_min_prefix" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv6_block_min_prefix</target_attcode>
+        </field>
+        <field id="ipv6_block_min_prefix" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>48</value>
+            <value>49</value>
+            <value>50</value>
+            <value>51</value>
+            <value>52</value>
+            <value>53</value>
+            <value>54</value>
+            <value>55</value>
+            <value>56</value>
+            <value>57</value>
+            <value>58</value>
+            <value>59</value>
+            <value>60</value>
+            <value>61</value>
+            <value>62</value>
+            <value>63</value>
+            <value>64</value>
+          </values>
+          <sql>ipv6_block_min_prefix</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="ipconfig_ipv6_block_cidr_aligned" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv6_block_cidr_aligned</target_attcode>
+        </field>
+        <field id="ipv6_block_cidr_aligned" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>bca_yes</value>
+            <value>bca_no</value>
+          </values>
+          <sql>ipv6_block_cidr_aligned</sql>
+          <default_value>default</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
@@ -142,6 +185,46 @@
 		            <item id="lastip">
 		              <rank>20</rank>
 		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>60</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_ipv6_block_min_prefix">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ipv6_block_cidr_aligned">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPBlock:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="ipv6_block_min_prefix">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipv6_block_cidr_aligned">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -363,6 +446,7 @@
             <attribute id="org_id"/>
             <attribute id="ip"/>
             <attribute id="mask"/>
+            <attribute id="ipv6_gateway_ip_format"/>
           </dependencies>
           <sql>gatewayip</sql>
           <default_value/>
@@ -376,6 +460,21 @@
           <sql>lastip</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="ipconfig_ipv6_gateway_ip_format" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipconfig_id</extkey_attcode>
+          <target_attcode>ipv6_gateway_ip_format</target_attcode>
+        </field>
+        <field id="ipv6_gateway_ip_format" xsi:type="AttributeEnum">
+          <values>
+            <value>default</value>
+            <value>subnetip_plus_1</value>
+            <value>lastip</value>
+            <value>free_setup</value>
+          </values>
+          <sql>ipv6_gateway_ip_format</sql>
+          <default_value>default</default_value>
+          <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="summary" xsi:type="AttributeDashboard">
           <is_user_editable>true</is_user_editable>
@@ -476,11 +575,7 @@
                 </item>
                 <item id="fieldset:Class:IPSubnet:automation">
                   <rank>20</rank>
-                  <items>
-                    <item id="reserve_subnet_ips">
-                      <rank>10</rank>
-                    </item>
-                  </items>
+                  <items/>
                 </item>
               </items>
             </item>
@@ -502,6 +597,46 @@
 		            <item id="gatewayip">
 		              <rank>40</rank>
 		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>90</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_reserve_subnet_ips">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ipv6_gateway_ip_format">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPSubnet:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="reserve_subnet_ips">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipv6_gateway_ip_format">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -944,6 +1079,46 @@
                 </item>
               </items>
             </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>60</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ipconfig_ip_allow_duplicate_name">
+                          <rank>20</rank>
+                        </item>
+                        <item id="ipconfig_ping_before_assign">
+                          <rank>30</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPAddress:localconfigparameters">
+                      <rank>20</rank>
+                      <items>
+                        <item id="ip_allow_duplicate_name">
+                          <rank>10</rank>
+                        </item>
+                        <item id="ping_before_assign">
+                          <rank>20</rank>
+                        </item>
+                      </items>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
           </items>
         </details>
         <default_search>
@@ -1030,98 +1205,6 @@
             </item>
           </items>
         </list>
-      </presentation>
-    </class>
-    <class id="IPConfig" _delta="must_exist">
-      <fields>
-        <field id="ipv6_block_min_prefix" xsi:type="AttributeEnum" _delta="define">
-          <values>
-			<value>48</value>
-			<value>49</value>
-			<value>50</value>
-			<value>51</value>
-			<value>52</value>
-			<value>53</value>
-			<value>54</value>
-			<value>55</value>
-			<value>56</value>
-			<value>57</value>
-			<value>58</value>
-			<value>59</value>
-            <value>60</value>
-            <value>61</value>
-            <value>62</value>
-            <value>63</value>
-            <value>64</value>
-          </values>
-          <sql>ipv6_block_min_prefix</sql>
-          <default_value>64</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="ipv6_block_cidr_aligned" xsi:type="AttributeEnum" _delta="define">
-          <values>
-            <value>bca_yes</value>
-            <value>bca_no</value>
-          </values>
-          <sql>ipv6_block_cidr_aligned</sql>
-          <default_value>bca_yes</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="ipv6_gateway_ip_format" xsi:type="AttributeEnum" _delta="define">
-          <values>
-            <value>subnetip_plus_1</value>
-            <value>lastip</value>
-            <value>free_setup</value>
-          </values>
-          <sql>ipv6_gateway_ip_format</sql>
-          <default_value>subnetip_plus_1</default_value>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-      </fields>
-      <presentation>
-        <details>
-          <items>
-            <item id="col:col1">
-              <items>
-                <item id="fieldset:Class:IPConfig:blockinfo">
-                  <items>
-                    <item id="ipv6_block_min_prefix" _delta="define">
-                      <rank>20</rank>
-                    </item>
-                    <item id="ipv6_block_cidr_aligned" _delta="define">
-                      <rank>40</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-            <item id="col:col2">
-              <items>
-                <item id="fieldset:Class:IPConfig:subnetinfo">
-                  <items>
-                    <item id="ipv6_gateway_ip_format" _delta="define">
-                      <rank>30</rank>
-                    </item>
-                  </items>
-                </item>
-              </items>
-            </item>
-          </items>
-        </details>
-        <search>
-          <items>
-            <item id="ipv6_block_min_prefix" _delta="define">
-              <rank>20</rank>
-            </item>
-            <item id="ipv6_block_cidr_aligned" _delta="define">
-              <rank>40</rank>
-            </item>
-            <item id="ipv6_gateway_ip_format" _delta="define">
-              <rank>70</rank>
-            </item>
-          </items>
-        </search>
-        <list/>
       </presentation>
     </class>
   </classes>
