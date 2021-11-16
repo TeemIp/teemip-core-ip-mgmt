@@ -50,17 +50,6 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	}
 
 	/**
-	 * @return mixed
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	public function GetName() {
-		return $this->GetAsHtml('ip');
-	}
-
-	/**
 	 * Returns index to be used within tree computations
 	 *
 	 * @return int

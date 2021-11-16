@@ -24,16 +24,6 @@ use utils;
 class _IPv6Address extends IPAddress
 {
 	/**
-	 * @return string
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	function GetName() {
-		return $this->GetAsHtml('ip');
-	}
-
-	/**
 	 * Get the subnet mask of the subnet that the IP belongs to, if any.
 	 *
 	 * @return int|mixed|\ormLinkSet|string|null
