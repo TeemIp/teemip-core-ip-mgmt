@@ -74,9 +74,10 @@ if (!class_exists('NetworkMgmtExtendedInstaller'))
 			{
 				SetupPage::log_info("Module teemip-network-mgmt-extended: copy VLAN tags to name and reset them as they become integers only");
 
-				$sSQL1 = "ALTER TABLE vlan ADD name varchar(255)";
-				$sSQL2 = "UPDATE vlan SET name = vlan_tag";
-				$sSQL3 = "UPDATE vlan SET vlan_tag = 0";
+				$sDBSubname = $oConfiguration->Get('db_subname');
+				$sSQL1 = "ALTER TABLE ".$sDBSubname."vlan ADD name varchar(255)";
+				$sSQL2 = "UPDATE ".$sDBSubname."vlan SET name = vlan_tag";
+				$sSQL3 = "UPDATE ".$sDBSubname."vlan SET vlan_tag = 0";
 				CMDBSource::Query($sSQL1);
 				CMDBSource::Query($sSQL2);
 				CMDBSource::Query($sSQL3);
