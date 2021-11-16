@@ -401,6 +401,7 @@ HTML
 			);
 			$oField = FieldUIBlockFactory::MakeFromParams($val);
 			$oColumn2->AddSubBlock($oField);
+			$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
 
 			// Size
 			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:SpaceSize')));
