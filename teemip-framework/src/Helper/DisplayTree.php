@@ -147,6 +147,8 @@ class DisplayTree {
 			->AddHtml(self::GetTree($sClass, $iCurrentOrganization));
 
 		$oP->add_ready_script("\$('#tree ul').treeview();");
+		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-framework/asset/css/teemip-display-tree.css');
+
 	}
 
 	static private function GetTree($sClass, $iOrganization) {
