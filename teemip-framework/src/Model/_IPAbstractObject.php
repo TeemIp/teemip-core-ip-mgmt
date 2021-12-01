@@ -119,6 +119,7 @@ class _IPAbstractObject extends cmdbAbstractObject {
 			$oP->add("<form action=\"$sFormAction\" id=\"form_{$m_iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$m_iFormId}');\">\n");
 			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
+			// Display object attributes as a reminder
 			if (in_array($sOperation, array('shrinkblock', 'shrinksubnet', 'splitblock', 'splitsubnet', 'expandblock', 'expandsubnet'))) {
 				// Display main tab
 				$oP->AddTabContainer(OBJECT_PROPERTIES_TAB);
@@ -165,7 +166,7 @@ EOF
 			$iTransactionId = utils::GetNewTransactionId();
 			$oP->SetTransactionId($iTransactionId);
 
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 			$oContentBlock = new UIContentBlock();
 			$oP->AddUiBlock($oContentBlock);
 
@@ -402,10 +403,10 @@ EOF
 			$sClassLabel = MetaModel::GetName($sClass);
 
 			$oP->set_title(Dict::Format('UI:DetailsPageTitle', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 			$oObjectDetails = ObjectFactory::MakeDetails($this);
 
-			$aHeadersBlocks = $this->DisplayBareHeader($oP, false, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW);
+			$aHeadersBlocks = $this->DisplayBareHeader($oP, false, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW);
 			if (false === empty($aHeadersBlocks['subtitle'])) {
 				$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 			}
@@ -517,5 +518,23 @@ EOF
 
 		return $val;
 	}
-	
+
+	protected function GetClassFieldForDisplay($sClass, $sAttCode, $sStateAttCode) {
+		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		$sAttDefClass = get_class($oAttDef);
+		$val = $this->GetFieldAsHtml($sClass, $sAttCode, $sStateAttCode);
+
+		// Add extra data for markup generation
+		// - Attribute code and AttributeDef. class
+		$val['attcode'] = $sAttCode;
+		$val['atttype'] = $sAttDefClass;
+		$val['attlabel'] = MetaModel::GetLabel($sClass, $sAttCode);
+		$val['attflags'] = OPT_ATT_READONLY;
+
+		// - How the field should be rendered
+		$val['layout'] = Field::ENUM_FIELD_LAYOUT_SMALL;
+
+		return $val;
+	}
+
 }
