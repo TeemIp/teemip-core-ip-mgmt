@@ -1,9 +1,16 @@
+/**
+ * @copyright   Copyright (C) 2021 TeemIp
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 [data-resource-id="iTop::ConfigureList"] {
 	display: none;
 }
+
 [data-resource-id="UI:Menu:AddToDashboard"] {
 	display: none;
 }
+
 [data-resource-id="UI:Menu:ShortcutList"] {
 	display: none;
 }
