@@ -21,6 +21,7 @@ class ComposerStaticInit8025869d7922d0380a3544e4f1de10c6
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => __DIR__ . '/../..' . '/src/Helper/DisplayMessage.php',
         'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => __DIR__ . '/../..' . '/src/Helper/DisplayTree.php',
         'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\IPUtils' => __DIR__ . '/../..' . '/src/Helper/IPUtils.php',

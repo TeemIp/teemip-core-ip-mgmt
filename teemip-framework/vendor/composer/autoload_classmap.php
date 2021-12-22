@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
     'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayMessage' => $baseDir . '/src/Helper/DisplayMessage.php',
     'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\DisplayTree' => $baseDir . '/src/Helper/DisplayTree.php',
     'TeemIp\\TeemIp\\Extension\\Framework\\Helper\\IPUtils' => $baseDir . '/src/Helper/IPUtils.php',
