@@ -130,7 +130,6 @@
             <attribute id="org_name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipconfig.png</icon>
         <reconciliation>
           <attributes>
@@ -638,7 +637,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
