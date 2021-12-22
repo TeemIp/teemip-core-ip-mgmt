@@ -6,10 +6,13 @@
 
 namespace TeemIp\TeemIp\Extension\Framework\Helper;
 
+use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Dict;
 use DisplayBlock;
+use iTopWebPage;
 use MetaModel;
 use WebPage;
 
@@ -402,5 +405,20 @@ class IPUtils {
 			$oBlock->Display($oP, $sCode, array('menu' => false));
 		}
 	}
+
+	/**
+	 * @param \iTopWebPage $oP
+	 * @param $oObj
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	public static function DisplayDetails(iTopWebPage $oP, $oObj) {
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '>=')) {
+			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
+		}
+		$oObj->DisplayDetails($oP);
+	}
+
 
 }
