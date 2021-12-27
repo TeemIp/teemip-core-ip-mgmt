@@ -6,6 +6,7 @@
 
 namespace TeemIp\TeemIp\Extension\Webservices\Controller;
 
+use DBObject;
 use ObjectResult;
 use RestResult;
 
@@ -16,15 +17,14 @@ class RestResultWithTextFile extends RestResult
 	/**
 	 * Report the given object
 	 *
-	 * @param int An error code (RestResult::OK is no issue has been found)
+	 * @param $iCode
 	 * @param string $sMessage Description of the error if any, an empty string otherwise
 	 * @param DBObject $oObject The object being reported
-	 * @param array $aFieldSpec An array of class => attribute codes (Cf. RestUtils::GetFieldList). List of the attributes to be reported.
-	 * @param boolean $bExtendedOutput Output all of the link set attributes ?
+	 * @param $sText
+	 *
 	 * @return void
 	 */
-	public function AddObject($iCode, $sMessage, $oObject, $sText)
-	{
+	public function AddObject($iCode, $sMessage, $oObject, $sText) {
 		$sClass = get_class($oObject);
 		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
 		$oObjRes->code = $iCode;
