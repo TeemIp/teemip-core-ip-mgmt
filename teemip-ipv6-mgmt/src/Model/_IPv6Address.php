@@ -15,7 +15,6 @@ use Dict;
 use IPAddress;
 use IPConfig;
 use MetaModel;
-use SetupPage;
 use utils;
 
 /**
@@ -238,7 +237,7 @@ class _IPv6Address extends IPAddress
 	 * @throws \OQLException
 	 */
 	static public function IPv6CompressionMigration() {
-		SetupPage::log_info("Module teemip-ipv6-mgmt: for all IPv6Attribute, fill new _comp (compressed) column with compressed value of IP");
+		SetupLog::Info("Module teemip-ipv6-mgmt: for all IPv6Attribute, fill new _comp (compressed) column with compressed value of IP");
 
 		// Get list of all non abstract classes under cmdbAbstractObject that have at least one IPv6Attribute and list these attributes
 		$aCIChildClasses = MetaModel::GetClasses('bizmodel');
@@ -291,9 +290,9 @@ class _IPv6Address extends IPAddress
 						CMDBSource::Query($sSQL);
 					}
 				}
-				SetupPage::log_info("Module teemip-ipv6-mgmt: all IPv6Attribute of class $sClass have been migrated");
+				SetupLog::Info("Module teemip-ipv6-mgmt: all IPv6Attribute of class $sClass have been migrated");
 			}
 		}
-		SetupPage::log_info("Module teemip-ipv6-mgmt: compression migration done");
+		SetupLog::Info("Module teemip-ipv6-mgmt: compression migration done");
 	}
 }
