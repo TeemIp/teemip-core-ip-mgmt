@@ -19,7 +19,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -103,7 +102,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/domain.png</icon>
         <reconciliation>
           <attributes>
@@ -328,7 +326,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/wanlink.png</icon>
         <reconciliation>
           <attributes>
@@ -704,7 +701,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -768,7 +764,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/asnumber.png</icon>
         <reconciliation>
           <attributes>
@@ -932,7 +927,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/vrf.png</icon>
         <reconciliation>
           <attributes>
@@ -1102,7 +1096,6 @@
             <attribute id="vrf_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1190,7 +1183,6 @@
             <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ndvi.png</icon>
         <reconciliation>
           <attributes>
@@ -1345,7 +1337,6 @@
             <attribute id="vlan_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1435,7 +1426,6 @@
             <attribute id="vrf_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
