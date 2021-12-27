@@ -1517,6 +1517,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oSubnetIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -1541,6 +1542,7 @@ EOF
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('ip', $oGatewayIp);
 						$oIp->Set('org_id', $iOrgId);
+						$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageGatewayIpId);
 						$oIp->DBInsert();
@@ -1605,6 +1607,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oSubnetIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -1628,6 +1631,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $oGatewayIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageGatewayIpId);
 					$oIp->DBInsert();

@@ -15,6 +15,7 @@ use Dict;
 use IPAddress;
 use IPConfig;
 use MetaModel;
+use SetupLog;
 use utils;
 
 /**
