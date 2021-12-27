@@ -91,7 +91,7 @@ if (!class_exists('IPv6ManagementInstaller'))
 		{
 			// For migration above 2.6.0
 			// Add column xx_comp for all IPv6Attribute where the compressed version of the Ip is stored now.
-			SetupPage::log_info("Module teemip-ipv6-mgmt: for all IPv6Attribute, fill new _comp (compressed) column with compressed value of IP");
+			SetupLog::Info("Module teemip-ipv6-mgmt: for all IPv6Attribute, fill new _comp (compressed) column with compressed value of IP");
 
 			// Get list of all non abstract classes under cmdbAbstractObject that have at least one IPv6Attribute and list these attributes
 			$aCIChildClasses = MetaModel::GetClasses('bizmodel');
@@ -156,10 +156,10 @@ if (!class_exists('IPv6ManagementInstaller'))
 							CMDBSource::Query($sSQL);
 						}
 					}
-					SetupPage::log_info("Module teemip-ipv6-mgmt: $iCount instances of class $sClass have had their IPv6 Attributes migrated");
+					SetupLog::Info("Module teemip-ipv6-mgmt: $iCount instances of class $sClass have had their IPv6 Attributes migrated");
 				}
 			}
-			SetupPage::log_info("Module teemip-ipv6-mgmt: compression migration done");
+			SetupLog::Info("Module teemip-ipv6-mgmt: compression migration done");
 		}
 	}
 }
