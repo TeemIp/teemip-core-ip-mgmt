@@ -66,9 +66,16 @@ class TeemIpServices implements iRestServiceProvider
 
 	/**
 	 * Enumerate services delivered by this class
+	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
+	 * @param string $sVerb
+	 * @param object $aParams
+	 *
 	 * @return RestResult The standardized result structure (at least a message)
-	 * @throws Exception in case of internal failure.
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \SimpleGraphException
+	 * @throws \Exception
 	 */
 	public function ExecOperation($sVersion, $sVerb, $aParams)
 	{
@@ -174,9 +181,9 @@ class TeemIpServices implements iRestServiceProvider
 							}
 
 							$sIP = $oIPSubnet->GetFreeIP($iCreationOffset);
-							if ($sIP != '')
-							{
+							if ($sIP != '') {
 								$aFields['org_id'] = $iOrgId;
+								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
 								$aFields['ip'] = $sIP;
 								$oIP = RestUtils::MakeObjectFromFields($sIPClass, $aFields);
 								$oIP->DBInsert();
@@ -230,9 +237,10 @@ class TeemIpServices implements iRestServiceProvider
 							// Pick first free IP address
 							// Register IP, if any
 							$sIP = $oIPRange->GetFreeIP(0);
-							if ($sIP != '')
-							{
-								$aFields['org_id'] = $oIPRange->Get('org_id');
+							if ($sIP != '') {
+								$iOrgId = $oIPRange->Get('org_id');
+								$aFields['org_id'] = $iOrgId;
+								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
 								$aFields['ip'] = $sIP;
 								$oIP = RestUtils::MakeObjectFromFields($sIPClass, $aFields);
 								$oIP->DBInsert();
@@ -292,17 +300,15 @@ class TeemIpServices implements iRestServiceProvider
 							{
 								$iSubnetSize = $aFields['mask'];
 							}
-							$aFreeSpace = $oIPBlock->GetFreeSpace($iSubnetSize, 1);
-							if (sizeof($aFreeSpace) != 0)
-							{
-								$aFields['org_id'] = $oIPBlock->Get('org_id');
+							$aFreeSpace = $oIPBlock->GetFreeSpace($iSubnetSize, 1, 0);
+							if (sizeof($aFreeSpace) != 0) {
+								$iOrgId = $oIPBlock->Get('org_id');
+								$aFields['org_id'] = $iOrgId;
+								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
 								$aFields['block_id'] = $key;
-								if ($sSubnetClass == 'IPv4Subnet')
-								{
+								if ($sSubnetClass == 'IPv4Subnet') {
 									$aFields['ip'] = $aFreeSpace[0]['firstip'];
-								}
-								else
-								{
+								} else {
 									$aFields['ip'] = $aFreeSpace[0]['firstip']->ToString();
 								}
 								$oSubnet = RestUtils::MakeObjectFromFields($sSubnetClass, $aFields);
