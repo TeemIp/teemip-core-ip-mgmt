@@ -27,12 +27,32 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv6Block+' => '',
 	'Class:IPv6Block/Attribute:parent_id' => 'Padre',
 	'Class:IPv6Block/Attribute:parent_id+' => '',
-	'Class:IPv6Block/Attribute:parent_name' => 'Nombr Padre',
+	'Class:IPv6Block/Attribute:parent_name' => 'Nombre Padre',
 	'Class:IPv6Block/Attribute:parent_name+' => '',
+	'Class:IPv6Block/Attribute:parent_origin' => 'Origen del bloque padre',
+	'Class:IPv6Block/Attribute:parent_origin+' => '',
 	'Class:IPv6Block/Attribute:firstip' => 'Primer IP',
 	'Class:IPv6Block/Attribute:firstip+' => 'Primer dirección IP de Bloque de Subred',
 	'Class:IPv6Block/Attribute:lastip' => 'Última IP',
 	'Class:IPv6Block/Attribute:lastip+' => 'Última dirección IP de Bloque de Subred',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_min_prefix' => 'Tamaño mínimo de los bloques de subred IPv6',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_min_prefix+' => '',
+	'Class:IPv6Block/Attribute:ipv6_block_min_prefix' => 'Talla minima',
+	'Class:IPv6Block/Attribute:ipv6_block_min_prefix+' => '',
+	'Class:IPv6Block/Attribute:ipv6_block_min_prefix/Value:default' => 'Alineado con la configuración de IP global ',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned' => 'Alinear bloques de subred IPv6 con CIDR',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned+' => '',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned/Value:bca_no' => 'No',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned/Value:bca_no+' => '',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned/Value:bca_yes' => 'Si',
+	'Class:IPv6Block/Attribute:ipconfig_ipv6_block_cidr_aligned/Value:bca_yes+' => '',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned' => 'Alinear bloques de subred con CIDR',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned+' => '',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:default' => 'Alineado con la configuración de IP global',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_no' => 'No',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_no+' => '',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_yes' => 'Si',
+	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_yes+' => '',
 ));
 
 //
@@ -50,13 +70,28 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv6Subnet/Attribute:ip+' => '',
 	'Class:IPv6Subnet/Attribute:mask' => 'Máscara',
 	'Class:IPv6Subnet/Attribute:mask+' => '',
-	'Class:IPv6Subnet/Attribute:mask/Value:64' => 'FFFF:FFFF:FFFF:FFFF:: - /64',
-	'Class:IPv6Subnet/Attribute:mask/Value_cidr:64' => '/64',
 	'Class:IPv6Subnet/Attribute:gatewayip' => 'Gateway IP',
 	'Class:IPv6Subnet/Attribute:gatewayip+' => '',
 	'Class:IPv6Subnet/Attribute:lastip' => 'Última IP de Subred',
 	'Class:IPv6Subnet/Attribute:lastip+' => '',
 	'Class:IPv6Subnet/Attribute:summary' => 'Resumen',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format' => 'IPv6 Gateway IP',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format+' => '',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:subnetip_plus_1' => 'Subred IP + 1',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:subnetip_plus_1+' => '',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:lastip' => 'Última IP de subred',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:free_setup' => 'Asignación libra',
+	'Class:IPv6Subnet/Attribute:ipconfig_ipv6_gateway_ip_format/Value:free_setup+' => '',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format' => 'Gateway IP',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format+' => '',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:default' => 'Alineado con la configuración de IP global',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:subnetip_plus_1' => 'Subnet IP + 1',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:subnetip_plus_1+' => '',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:lastip' => 'Última IP de subred',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:lastip+' => '',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:free_setup' => 'Asignación libra',
+	'Class:IPv6Subnet/Attribute:ipv6_gateway_ip_format/Value:free_setup+' => '',
 ));
 
 //
@@ -97,63 +132,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPv6Address/Attribute:range_id+' => 'Rango IPv6',
 	'Class:IPv6Address/Attribute:ip' => 'Dirección',
 	'Class:IPv6Address/Attribute:ip+' => 'Dirección IPv6',
-));
-
-//
-// Class: IPConfig
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix' => 'Tamaño Mínomo de Bloques de Subred IPv6',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:48' => '/48',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:48+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:49' => '/49',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:49+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:50' => '/50',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:50+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:51' => '/51',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:51+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:52' => '/52',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:52+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:53' => '/53',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:53+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:54' => '/54',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:54+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:55' => '/55',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:55+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:56' => '/56',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:56+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:57' => '/57',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:57+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:58' => '/58',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:58+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:59' => '/59',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:59+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:60' => '/60',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:60+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:61' => '/61',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:61+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:62' => '/62',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:62+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:63' => '/63',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:63+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:64' => '/64',
-	'Class:IPConfig/Attribute:ipv6_block_min_prefix/Value:64+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned' => 'Alinear Bloques de Subred IPv6 a CIDR',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned/Value:bca_no' => 'No',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned/Value:bca_no+' => '',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned/Value:bca_yes' => 'Si',
-	'Class:IPConfig/Attribute:ipv6_block_cidr_aligned/Value:bca_yes+' => '',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format' => 'Gateway IP IPv6',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format+' => '',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:subnetip_plus_1' => 'Subred IP + 1',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:subnetip_plus_1+' => '',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:lastip' => 'Última IP Subred',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:lastip+' => '',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:free_setup' => 'Libre Asignación',
-	'Class:IPConfig/Attribute:ipv6_gateway_ip_format/Value:free_setup+' => '',
 ));
 
 //
@@ -198,65 +176,65 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:DisplayTree:IPv6Block:PageTitle_Class' => 'Bloques Subred IPv6',
 	'UI:IPManagement:Action:DisplayTree:IPv6Block:Title_Class' => 'Bloques Subred IPv6',
 	'UI:IPManagement:Action:DisplayTree:IPv6Block:OrgName' => 'Organización %1$s',
-	
+
 	// Shrink action on subnet blocks
 	'UI:IPManagement:Action:Shrink:IPv6Block' => 'Compresión',
 	'UI:IPManagement:Action:Shrink:IPv6Block+' => '',
 	'UI:IPManagement:Action:Shrink:IPv6Block:Summary' => 'Resumen',
 	'UI:IPManagement:Action:Shrink:IPv6Block:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv6Block:PageTitle_Object_Class' => '%1$s - %2$s comprimir',
-	'UI:IPManagement:Action:Shrink:IPv6Block:Title_Class_Object' => 'Comprimir %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Shrink:IPv6Block:Title_Class_Object' => 'Comprimir %1$s: %2$s',
 	'UI:IPManagement:Action:Shrink:IPv6Block:NewFirstIP' => 'Nueva primer IP del Bloque :',
-	'UI:IPManagement:Action:Shrink:IPv6Block:NewLastIP' => 'Nueva última IP del Bloque :',            
+	'UI:IPManagement:Action:Shrink:IPv6Block:NewLastIP' => 'Nueva última IP del Bloque :',
 	'UI:IPManagement:Action:Shrink:IPv6Block:IsDelegated' => 'Este bloque está delegado y por lo tanto no puede comprimirse!',
-	'UI:IPManagement:Action:Shrink:IPv6Block:CannotBeShrunk' =>  'Bloque no puede ser comprimido: %1$s',
+	'UI:IPManagement:Action:Shrink:IPv6Block:CannotBeShrunk' => 'Bloque no puede ser comprimido: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv6Block:SmallerThanMinSize' => 'Tamaño de Bloque no puede ser menor a /%1$s !',
-	'UI:IPManagement:Action:Shrink:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> ha sido comprimido.',
-	
+	'UI:IPManagement:Action:Shrink:IPv6Block:Done' => '%1$s %2$s ha sido comprimido.',
+
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPv6Block' => 'División',
 	'UI:IPManagement:Action:Split:IPv6Block+' => '',
 	'UI:IPManagement:Action:Split:IPv6Block:Summary' => 'Resumen',
 	'UI:IPManagement:Action:Split:IPv6Block:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv6Block:PageTitle_Object_Class' => '%1$s - %2$s dividir',
-	'UI:IPManagement:Action:Split:IPv6Block:Title_Class_Object' => 'Dividir %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Split:IPv6Block:Title_Class_Object' => 'Dividir %1$s: %2$s',
 	'UI:IPManagement:Action:Split:IPv6Block:At' => 'Primer IP del nuevo Bloque de Subred :',
 	'UI:IPManagement:Action:Split:IPv6Block:NameNewBlock' => 'Nombre de nuevo Bloque de Subred :',
 	'UI:IPManagement:Action:Split:IPv6Block:IsDelegated' => 'Este bloque está delegado y por lotanto no puede dividirse!',
-	'UI:IPManagement:Action:Split:IPv6Block:CannotBeSplit' =>  'Bloque no puede ser dividido: %1$s',
+	'UI:IPManagement:Action:Split:IPv6Block:CannotBeSplit' => 'Bloque no puede ser dividido: %1$s',
 	'UI:IPManagement:Action:Split:IPv6Block:SmallerThanMinSize' => 'Tamaño de Bloque no puede ser menor a /%1$s !',
-	'UI:IPManagement:Action:Split:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> ha sido dividido.',
-	
+	'UI:IPManagement:Action:Split:IPv6Block:Done' => '%1$s %2$s ha sido dividido.',
+
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPv6Block' => 'Expandir',
 	'UI:IPManagement:Action:Expand:IPv6Block+' => '',
 	'UI:IPManagement:Action:Expand:IPv6Block:Summary' => 'Resumen',
 	'UI:IPManagement:Action:Expand:IPv6Block:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv6Block:PageTitle_Object_Class' => '%1$s - %2$s expandir',
-	'UI:IPManagement:Action:Expand:IPv6Block:Title_Class_Object' => 'Expandir %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Expand:IPv6Block:Title_Class_Object' => 'Expandir %1$s: %2$s',
 	'UI:IPManagement:Action:Expand:IPv6Block:NewFirstIP' => 'Nueva primer IP del Bloque :',
 	'UI:IPManagement:Action:Expand:IPv6Block:NewLastIP' => 'Nueva última IP del Bloque :',
 	'UI:IPManagement:Action:Expand:IPv6Block:IsDelegated' => 'Este bloque está delegado y por lotanto no puede expandirse!',
-	'UI:IPManagement:Action:Expand:IPv6Block:CannotBeExpanded' =>  'Bloque no puede ser expandido: %1$s',
+	'UI:IPManagement:Action:Expand:IPv6Block:CannotBeExpanded' => 'Bloque no puede ser expandido: %1$s',
 	'UI:IPManagement:Action:Expand:IPv6Block:SmallerThanMinSize' => 'Tamaño de Bloque no puede ser menor a /%1$s !',
-	'UI:IPManagement:Action:Expand:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> ha sido expandido.',
+	'UI:IPManagement:Action:Expand:IPv6Block:Done' => '%1$s %2$s ha sido expandido.',
 
 	// List space action on subnet blocks 
-	'UI:IPManagement:Action:ListSpace:IPv6Block' => 'Listar Espacio',                                               
+	'UI:IPManagement:Action:ListSpace:IPv6Block' => 'Listar Espacio',
 	'UI:IPManagement:Action:ListSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Espacio',
-	'UI:IPManagement:Action:ListSpace:IPv6Block:Title_Class_Object' => 'Espacio contenido %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:ListSpace:IPv6Block:Title_Class_Object' => 'Espacio contenido %1$s: %2$s',
 	'UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace' => 'Libre [%1$s - %2$s] - %3$.2e IPs - %4$.2f %%',
-	
+
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv6Block' => 'Encontrar Espacio',
 	'UI:IPManagement:Action:FindSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Encontrar espacio',
-	'UI:IPManagement:Action:FindSpace:IPv6Block:Title_Class_Object' => 'Ver espacio contenido en %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv6Block:Title_Class_Object' => 'Ver espacio contenido en %1$s: %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv6Block:SizeOfSpace' => 'Tamaño de espacio a ver por :',
 	'UI:IPManagement:Action:FindSpace:IPv6Block:MaxNumberOfOffers' => 'Máximo número de oferentes :',
-	
+
 	// Do find Space action on subnet blocks
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:PageTitle_Object_Class' => '%1$s - Encontrar Espacio',
-	'UI:IPManagement:Action:DoFindSpace:IPv6Block:Title_Class_Object' => 'Espacio contenido en %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv6Block:Title_Class_Object' => 'Espacio contenido en %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:Summary' => '%1$s primer /%2$s dentro de bloque',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsBlock' => 'Crear como bloque hijo',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Block:CreateAsSubnet' => 'Crear como subred',
@@ -264,17 +242,18 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPv6Block' => 'Delegar',
 	'UI:IPManagement:Action:Delegate:IPv6Block:PageTitle_Object_Class' => '%1$s - Delegar',
-	'UI:IPManagement:Action:Delegate:IPv6Block:Title_Class_Object' => 'Delegar %1$s <span class="hilite">%2$s</span> a Organización dependiente',
+	'UI:IPManagement:Action:Delegate:IPv6Block:Title_Class_Object' => 'Delegar %1$s %2$s a Organización dependiente',
 	'UI:IPManagement:Action:Delegate:IPv6Block:ChildBlock' => 'Organización Dependiente a delegar Bloque:',
 	'UI:IPManagement:Action:Delegate:IPv6Block:NoChildOrg' => 'Organización del Bloque no tiene dependientes, por lo que el bloque no puede ser delegado!',
 	'UI:IPManagement:Action:Delegate:IPv6Block:CannotBeDelegated' => 'Bloque no puede ser delegado: %1$s',
-	'UI:IPManagement:Action:Delegate:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> ha sido delegado.',
+	'UI:IPManagement:Action:Delegate:IPv6Block:Done' => '%1$s %2$s ha sido delegado.',
 
 	// Undelegate action on subnet blocks
+	'UI:IPManagement:Action:Undelegate:IPv6Block:CannotBeUndelegated' => 'Bloque no se puede anular la delegación : %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv6Block' => 'Eliminar Delegación',
 	'UI:IPManagement:Action:Undelegate:IPv6Block:PageTitle_Object_Class' => '%1$s - eliminar delegación',
-	'UI:IPManagement:Action:Undelegate:IPv6Block:Done' => '%1$s <span class="hilite">%2$s</span> se ha eliminado delegación.',
-	
+	'UI:IPManagement:Action:Undelegate:IPv6Block:Done' => '%1$s %2$s se ha eliminado delegación.',
+
 //
 // Management of Subnets
 //
@@ -290,42 +269,42 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:DisplayList:IPv6Subnet+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv6Subnet:PageTitle_Class' => 'Subredes IPv6',
 	'UI:IPManagement:Action:DisplayList:IPv6Subnet:Title_Class' => 'Subredes IPv6',
-	
+
 	// Display tree of subnets
 	'UI:IPManagement:Action:DisplayTree:IPv6Subnet' => 'Desplegar Árbol',
 	'UI:IPManagement:Action:DisplayTree:IPv6Subnet+' => '',
 	'UI:IPManagement:Action:DisplayTree:IPv6Subnet:PageTitle_Class' => 'Subredes IPv6',
 	'UI:IPManagement:Action:DisplayTree:IPv6Subnet:Title_Class' => 'Subredes IPv6',
 	'UI:IPManagement:Action:DisplayTree:IPv6Subnet:OrgName' => 'Organización %1$s',
-	
+
 	// Find space action on subnets 
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet' => 'Encontrar Espacio',
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet:PageTitle_Object_Class' => '%1$s - Encontrar Espacio',
-	'UI:IPManagement:Action:FindSpace:IPv6Subnet:Title_Class_Object' => 'Buscar espacio contenido en %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv6Subnet:Title_Class_Object' => 'Buscar espacio contenido en %1$s: %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet:SizeTooSmall' => 'Subred es demasiado pequeña para buscar por espacio, por favor cancelar!',
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet:SizeOfRange' => 'Tamaño de espacio para buscar :',
 	'UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers' => 'Máximo número de oferentes :',
-	
+
 	// Do find Space action on subnet
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:PageTitle_Object_Class' => '%1$s - Encontrar Espacio',
-	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Title_Class_Object' => 'Espacio contenido en %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Title_Class_Object' => 'Espacio contenido en %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:Summary' => '%1$s primer rango IP %2$s libre dentro de la subred',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:RangeTooBig' => 'Espacio solicitado no cabe en la subred. Por favor intentar un valor menor.',
 	'UI:IPManagement:Action:DoFindSpace:IPv6Subnet:CreateAsRange' => 'Crear como rango IPv6',
 
 	// List IPs action on subnets 
-	'UI:IPManagement:Action:ListIps:IPv6Subnet' => 'Listar & Seleccionar IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv6Subnet' => 'Listar & Seleccionar IPs',
 	'UI:IPManagement:Action:ListIps:IPv6Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv6Subnet:Title_Class_Object' => 'Lista de IPs contenidas en %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv6Subnet:Subtitle_ListRange' => 'Subred es demasiado grande para listar todas las IPs. Por favor seleccione un rango para desplegar:',                                               
-	'UI:IPManagement:Action:ListIps:IPv6Subnet:FirstIP' => 'Primer IP de la lista',                                               
-	'UI:IPManagement:Action:ListIps:IPv6Subnet:LastIP' => 'Última IP de la lista',                                               
-	
+	'UI:IPManagement:Action:ListIps:IPv6Subnet:Title_Class_Object' => 'Lista de IPs contenidas en %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv6Subnet:Subtitle_ListRange' => 'Subred es demasiado grande para listar todas las IPs. Por favor seleccione un rango para desplegar:',
+	'UI:IPManagement:Action:ListIps:IPv6Subnet:FirstIP' => 'Primer IP de la lista',
+	'UI:IPManagement:Action:ListIps:IPv6Subnet:LastIP' => 'Última IP de la lista',
+
 	// Do list IPs action on subnet
-	'UI:IPManagement:Action:DoListIps:IPv6Subnet' => 'Listar & Seleccionar IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv6Subnet' => 'Listar & Seleccionar IPs',
 	'UI:IPManagement:Action:DoListIps:IPv6Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv6Subnet:Title_Class_Object' => 'Lista parcial de IPs contenidas en %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoListIps:IPv6Subnet:CannotBeListed' => 'IPs no pueden ser listadas: %1$s',
+	'UI:IPManagement:Action:DoListIps:IPv6Subnet:Title_Class_Object' => 'Lista parcial de IPs contenidas en %1$s: %2$s',
+	'UI:IPManagement:Action:DoListIps:IPv6Subnet:CannotBeListed' => 'IPs no pueden ser listadas: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv6Subnet:FirstIPOutOfSubnet' => 'Primer IP está fuera de la subred',
 	'UI:IPManagement:Action:DoListIps:IPv6Subnet:LastIPOutOfSubnet' => 'Última IP está fuera de la subred',
 	'UI:IPManagement:Action:DoListIps:IPv6Subnet:FirstIpBiggerThanLastIp' => 'First IP of range is higher than last IP!',
@@ -333,16 +312,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// CSV Export action on subnets
 	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet' => 'Exportar IPs a CSV',
 	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:PageTitle_Object_Class' => '%1$s - %2$s CSV exportar IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:Title_Class_Object' => 'Exportación CSV IPs de %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:Subtitle_ListRange' => 'Subred es demasidao grande para exportar todas las IPs. Por favor seeccione un rango a desplegar:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:FirstIP' => 'Primer IP de la lista',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:LastIP' => 'Última IP de la lista',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:Title_Class_Object' => 'Exportación CSV IPs de %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:Subtitle_ListRange' => 'Subred es demasidao grande para exportar todas las IPs. Por favor seeccione un rango a desplegar:',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:FirstIP' => 'Primer IP de la lista',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Subnet:LastIP' => 'Última IP de la lista',
+
 	// Do CSV export IPs action on subnet
-	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet' => 'Exportar IPs a CSV',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet' => 'Exportar IPs a CSV',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:PageTitle_Object_Class' => '%1$s - %2$s CSV exportar IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:Title_Class_Object' => 'Exportación CSV parcial de IPs contenidas en %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:CannotBeListed' => 'IPs no pueden ser listadas: %1$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:Title_Class_Object' => 'Exportación CSV parcial de IPs contenidas en %1$s: %2$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:CannotBeListed' => 'IPs no pueden ser listadas: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:FirstIPOutOfSubnet' => 'Primer IP está fuera de la subred',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:LastIPOutOfSubnet' => 'Última IP está fuera de la subred',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Subnet:FirstIpBiggerThanLastIp' => 'Primer IP del rango es mayor a última IP!',
@@ -381,17 +360,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Details:IPv6Range+' => '',
 
 	// List IPs action on IP Ranges 
-	'UI:IPManagement:Action:ListIps:IPv6Range' => 'Listar & Seleccionar IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv6Range' => 'Listar & Seleccionar IPs',
 	'UI:IPManagement:Action:ListIps:IPv6Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv6Range:Title_Class_Object' => 'IPs contenidas en %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv6Range:Subtitle_ListRange' => 'Rango demasiado grande para listar todas las IPs. Por favor, seleccione un subrango para deplegar:',                                               
-	'UI:IPManagement:Action:ListIps:IPv6Range:FirstIP' => 'Primer IP de la lista',                                               
-	'UI:IPManagement:Action:ListIps:IPv6Range:LastIP' => 'Última IP de la lista',                                               
-	
+	'UI:IPManagement:Action:ListIps:IPv6Range:Title_Class_Object' => 'IPs contenidas en %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv6Range:Subtitle_ListRange' => 'Rango demasiado grande para listar todas las IPs. Por favor, seleccione un subrango para deplegar:',
+	'UI:IPManagement:Action:ListIps:IPv6Range:FirstIP' => 'Primer IP de la lista',
+	'UI:IPManagement:Action:ListIps:IPv6Range:LastIP' => 'Última IP de la lista',
+
 	// Do list IPs action on IP Ranges 
-	'UI:IPManagement:Action:DoListIps:IPv6Range' => 'Listar & Seleccionar IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv6Range' => 'Listar & Seleccionar IPs',
 	'UI:IPManagement:Action:DoListIps:IPv6Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv6Range:Title_Class_Object' => 'Lista Parcial de IPs contenidas en %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoListIps:IPv6Range:Title_Class_Object' => 'Lista Parcial de IPs contenidas en %1$s: %2$s',
 	'UI:IPManagement:Action:DoListIps:IPv6Range:CannotBeListed' => 'Rango no puede ser listado: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv6Range:FirstIPOutOfRange' => 'Primer IP está fuera de rango',
 	'UI:IPManagement:Action:DoListIps:IPv6Range:LastIPOutOfRange' => 'Última IP está fuera de rango',
@@ -400,15 +379,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// CSV Export action on IP Ranges
 	'UI:IPManagement:Action:CsvExportIps:IPv6Range' => 'Exportación CSV de IPs',
 	'UI:IPManagement:Action:CsvExportIps:IPv6Range:PageTitle_Object_Class' => '%1$s - %2$s exportación CSV de IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv6Range:Title_Class_Object' => 'Exportación CSV de IPs de %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv6Range:Subtitle_ListRange' => 'Rango demasiado grande para exportar todas las IPs. Por favor, seleccione un subrango para exportar:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv6Range:FirstIP' => 'First IP of the list',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv6Range:LastIP' => 'Last IP of the list',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv6Range:Title_Class_Object' => 'Exportación CSV de IPs de %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Range:Subtitle_ListRange' => 'Rango demasiado grande para exportar todas las IPs. Por favor, seleccione un subrango para exportar:',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Range:FirstIP' => 'First IP of the list',
+	'UI:IPManagement:Action:CsvExportIps:IPv6Range:LastIP' => 'Last IP of the list',
+
 	// Do CSV Export IPs action on IP Ranges
-	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range' => 'Exportación CSV de IPs',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range' => 'Exportación CSV de IPs',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:PageTitle_Object_Class' => '%1$s - %2$s exportación CSV de IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:Title_Class_Object' => 'Exportación CSV Parcial de IPs de %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:Title_Class_Object' => 'Exportación CSV Parcial de IPs de %1$s: %2$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:CannotBeListed' => 'Rango no puede ser exportado: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:FirstIPOutOfRange' => 'Primer IP está fuera de rango',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv6Range:LastIPOutOfRange' => 'Última IP está fuera de rango',
@@ -419,9 +398,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 	// Allocation to CI / Unallocation from CI
 	'UI:IPManagement:Action:Allocate:IPv6Address:PageTitle_Object_Class' => 'Allocate IP',
-	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Allocate %1$s <span class="hilite">%2$s</span> to CI',
+	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Allocate %1$s %2$s to CI',
 	'UI:IPManagement:Action:Allocate:IPv6Address:CannotAllocateCI' => 'Cannot allocate CI to IP: %1$s',
-	'UI:IPManagement:Action:Allocate:IPv6Address:Done' => '%1$s <span class="hilite">%2$s</span> has been allocated.',
+	'UI:IPManagement:Action:Allocate:IPv6Address:Done' => '%1$s %2$s has been allocated.',
+	'UI:IPManagement:Action:Allocate:IPv6Address:IPAlreadyAllocated' => 'Address is already allocated!',
 	'UI:IPManagement:Action:Unallocate:IPv6Address:PageTitle_Object_Class' => 'Un-allocate IP',
-	'UI:IPManagement:Action:Unallocate:IPv6Address:Done' => '%1$s <span class="hilite">%2$s</span> has been unallocated.',
+	'UI:IPManagement:Action:Unallocate:IPv6Address:Done' => '%1$s %2$s has been unallocated.',
+	'UI:IPManagement:Action:UnAllocate:IPv6Address:IPNotAllocated' => 'Address is not allocated!',
 ));
