@@ -23,7 +23,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-virtualization-mgmt-adaptor/2.7.0',
+	'teemip-virtualization-mgmt-adaptor/3.0.0',
 	array(
 		// Identification
 		//
@@ -35,8 +35,8 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'itop-config-mgmt/2.7.0',
 			'itop-virtualization-mgmt/2.7.0',
-			'teemip-ip-mgmt/2.7.0',
-			'teemip-config-mgmt-adaptor/2.7.0'
+			'teemip-ip-mgmt/3.0.0',
+			'teemip-config-mgmt-adaptor/3.0.0',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard

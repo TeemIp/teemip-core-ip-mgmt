@@ -203,7 +203,6 @@
             <attribute id="vlan_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -293,7 +292,6 @@
             <attribute id="vrf_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
