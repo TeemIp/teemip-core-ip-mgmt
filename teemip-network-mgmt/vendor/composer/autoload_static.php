@@ -20,8 +20,9 @@ class ComposerStaticInit1e3d7afeae82c7ba9567c7cfb5c5b152
         ),
     );
 
-    public static $classMap = array(
-	    'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_Domain' => __DIR__.'/../..'.'/src/Model/_Domain.php',
+    public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'TeemIp\\TeemIp\\Extension\\NetworkManagement\\Model\\_Domain' => __DIR__ . '/../..' . '/src/Model/_Domain.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
