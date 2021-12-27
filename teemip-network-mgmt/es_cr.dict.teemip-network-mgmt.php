@@ -35,8 +35,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Domain+' => 'Dominio DNS',
 	'Class:Domain:baseinfo' => 'Información General',
 	'Class:Domain:admininfo' => 'Información Administrativa',
-	'Class:Domain:DelegatedToChild' => '<font color=#ff0000>Delegado a organización : </font>%1$s',
-	'Class:Domain:DelegatedFromParent' => '<font color=#ff0000>DDelegado de organización : </font>%1$s',
+	'Class:Domain:DelegatedToChild' => '<delegation_highlight>Delegado a organización : </delegation_highlight>%1$s',
+	'Class:Domain:DelegatedFromParent' => '<delegation_highlight>Delegado de organización : </delegation_highlight>1$s',
 	'Class:Domain/Attribute:name' => 'Nombre',
 	'Class:Domain/Attribute:name+' => '',
 	'Class:Domain/Attribute:parent_org_id' => 'Delegado de',
@@ -204,6 +204,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Interfaces físicas de red',
 	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list' => 'Interfaces virtuales de dispositivos de red ',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list+' => '',
 	'Class:VRF/Tab:ipaddresses_list' => 'IP de interfaces',
 	'Class:VRF/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas por todas las interfaces IP conectadas al CI',
 ));
@@ -340,7 +342,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'Dominios DNS',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'Dominios DNS',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Desplegar Árbol',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
@@ -351,7 +353,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Delegate action on domains
 	'UI:IPManagement:Action:Delegate:Domain' => 'Delegar',
 	'UI:IPManagement:Action:Delegate:Domain:PageTitle_Object_Class' => '%1$s - Delegar',
-	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegar %1$s <span class="hilite">%2$s</span> a una organizacion',
+	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegar %1$s %2$s a una organizacion',
 	'UI:IPManagement:Action:Delegate:Domain:ChildDomain' => 'Organización para delegar el dominio a:',
 	'UI:IPManagement:Action:Delegate:Domain:NoChildOrg' => 'La organización de la que depende el patrimonio no tiene una hija. El dominio no puede ser delegado!',
 	'UI:IPManagement:Action:Delegate:Domain:NoOtherOrg' => 'No hay otra organización a la que pertenece el dominio!',
@@ -361,7 +363,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Delegate:Domain:HasHosts' => 'El dominio tiene hosts!',
 	'UI:IPManagement:Action:Delegate:Domain:HasSubDomains' => 'El dominio tiene subdominios!',
 	'UI:IPManagement:Action:Delegate:Domain:HasZones' => 'Las zonas se refieren a esta área!',
-	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> ha sido delegado.',
+	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s %2$s ha sido delegado.',
 
 	// Undelegate action on domains
 	'UI:IPManagement:Action:Undelegate:Domain' => 'Retirar la delegación',
@@ -371,7 +373,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasHosts' => 'El dominio tiene hosts!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasSubDomains' => 'El dominio tiene subdominios!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Las zonas se refieren a esta área!',
-	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> tenía su delegación retirada.',
+	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s tenía su delegación retirada.',
 
+	// Look for domain when exploding FQDN
+	'UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain' => 'No se puede encontrar el dominio registrado en FQDN!',
 ));
 	

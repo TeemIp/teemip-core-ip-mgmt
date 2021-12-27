@@ -35,8 +35,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Domain+' => 'DNS Domain',
 	'Class:Domain:baseinfo' => 'Allgemeine Informationen',
 	'Class:Domain:admininfo' => 'Administrative Informationen',
-	'Class:Domain:DelegatedToChild' => '<font color=#ff0000>Delegated to organization : </font>%1$s',
-	'Class:Domain:DelegatedFromParent' => '<font color=#ff0000>Delegated from organization : </font>%1$s',
+	'Class:Domain:DelegatedToChild' => '<delegation_highlight>Delegated to organization : </delegation_highlight>%1$s',
+	'Class:Domain:DelegatedFromParent' => '<delegation_highlight>Delegated from organization : </delegation_highlight>%1$s',
 	'Class:Domain/Attribute:name' => 'Name',
 	'Class:Domain/Attribute:name+' => '',
 	'Class:Domain/Attribute:parent_org_id' => 'Delegiert von',
@@ -342,7 +342,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'DNS Domains',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'DNS Domains',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Baumansicht',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
@@ -353,7 +353,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Delegate action on domains
 	'UI:IPManagement:Action:Delegate:Domain' => 'Delegieren',
 	'UI:IPManagement:Action:Delegate:Domain:PageTitle_Object_Class' => '%1$s - Delegieren',
-	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => '%1$s <span class="hilite">%2$s</span> an Organisation delegieren',
+	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => '%1$s %2$s an Organisation delegieren',
 	'UI:IPManagement:Action:Delegate:Domain:ChildDomain' => 'Organisation, an die die Domain delegiert werden soll:',
 	'UI:IPManagement:Action:Delegate:Domain:NoChildOrg' => 'Die Organisation des Domains hat keine Children!',
 	'UI:IPManagement:Action:Delegate:Domain:NoOtherOrg' => 'Keine andere Organisation!',
@@ -363,7 +363,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Delegate:Domain:HasHosts' => 'Die Domain hat Hosts!',
 	'UI:IPManagement:Action:Delegate:Domain:HasSubDomains' => 'Die Domain hat Children Domänen!',
 	'UI:IPManagement:Action:Delegate:Domain:HasZones' => 'Zonen beziehen sich auf die Domain!',
-	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> wurde delegiert.',
+	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s %2$s wurde delegiert.',
 
 	// Undelegate action on domains
 	'UI:IPManagement:Action:Undelegate:Domain' => 'Delegierung aufheben',
@@ -373,7 +373,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasHosts' => 'Die Domain hat Hosts!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasSubDomains' => 'Die Domain hat Children Domänen!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Zonen beziehen sich auf die Domain!',
-	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> Delegierung entfernt.',
+	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s Delegierung entfernt.',
 
+	// Look for domain when exploding FQDN
+	'UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain' => 'Kann registrierte Domain im FQDN nicht finden!',
 ));
 	

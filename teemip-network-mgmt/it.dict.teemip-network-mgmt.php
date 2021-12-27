@@ -35,8 +35,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Domain+' => 'Dominio DNS',
 	'Class:Domain:baseinfo' => 'Informazioni Generali',
 	'Class:Domain:admininfo' => 'Informazioni Amministrative',
-	'Class:Domain:DelegatedToChild' => '<font color=#ff0000>Delegato all\'organizzazione: </font>%1$s',
-	'Class:Domain:DelegatedFromParent' => '<font color=#ff0000>Delegato dell\'organizzazione: </font>%1$s',
+	'Class:Domain:DelegatedToChild' => '<delegation_highlight>Delegato all\'organizzazione: </delegation_highlight>%1$s',
+	'Class:Domain:DelegatedFromParent' => '<delegation_highlight>Delegato dell\'organizzazione: </delegation_highlight>%1$s',
 	'Class:Domain/Attribute:name' => 'Nome',
 	'Class:Domain/Attribute:name+' => '',
 	'Class:Domain/Attribute:parent_org_id' => 'Delegato da',
@@ -204,6 +204,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VRF/Attribute:subnets_list+' => '',
 	'Class:VRF/Attribute:physicalinterfaces_list' => 'Interfacce di rete fisiche',
 	'Class:VRF/Attribute:physicalinterfaces_list+' => '',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list' => 'Interfacce virtuali dei dispositivi di rete',
+	'Class:VRF/Attribute:networkdevicevirtualinterfaces_list+' => '',
 	'Class:VRF/Tab:ipaddresses_list' => 'Interfacce IP',
 	'Class:VRF/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce IP collegate all\'elemento della configurazione',
 ));
@@ -340,7 +342,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'Domini DNS',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'Domini DNS',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Alberto di visualizzazione',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
@@ -351,7 +353,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	// Delegate action on domains
 	'UI:IPManagement:Action:Delegate:Domain' => 'Delegato',
 	'UI:IPManagement:Action:Delegate:Domain:PageTitle_Object_Class' => '%1$s - Delegato',
-	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegato %1$s <span class="hilite">%2$s</span> all\'organizzazione',
+	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Delegato %1$s %2$s all\'organizzazione',
 	'UI:IPManagement:Action:Delegate:Domain:ChildDomain' => 'Organizzazione per delegare il dominio a:',
 	'UI:IPManagement:Action:Delegate:Domain:NoChildOrg' => 'L\'organizzazione del domonio non ha figli e, quindi, il domnio non può essere delegato!',
 	'UI:IPManagement:Action:Delegate:Domain:NoOtherOrg' => 'Non ci sono altre organizzazioni oltre all\'organizzazione del dominio!',
@@ -361,7 +363,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Delegate:Domain:HasHosts' => 'Il dominio ha host!',
 	'UI:IPManagement:Action:Delegate:Domain:HasSubDomains' => 'Il dominio ha sottodomini!',
 	'UI:IPManagement:Action:Delegate:Domain:HasZones' => 'Le zone si riferiscono a quest\'area!',
-	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> è stato delegato.',
+	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s %2$s è stato delegato.',
 
 	// Undelegate action on domains
 	'UI:IPManagement:Action:Undelegate:Domain' => 'Non-delegato',
@@ -371,7 +373,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasHosts' => 'Il dominio ha host!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasSubDomains' => 'Il dominio ha sottodomini!',
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Le zone si riferiscono a quest\'area!',
-	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> è stato non-delegato.',
+	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s è stato non-delegato.',
 
+	// Look for domain when exploding FQDN
+	'UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain' => 'Impossibile trovare il dominio registrato in FQDN !',
 ));
 	

@@ -35,8 +35,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Domain+' => 'Domaine DNS',
 	'Class:Domain:baseinfo' => 'Informations Générales',
 	'Class:Domain:admininfo' => 'Informations Administratives',
-	'Class:Domain:DelegatedToChild' => '<font color=#ff0000>Délégué à l\'organisation : </font>%1$s',
-	'Class:Domain:DelegatedFromParent' => '<font color=#ff0000>Délégué de l\'organisation : </font>%1$s',
+	'Class:Domain:DelegatedToChild' => '<delegation_highlight>Délégué à l\'organisation : </delegation_highlight>%1$s',
+	'Class:Domain:DelegatedFromParent' => '<delegation_highlight>Délégué de l\'organisation : </delegation_highlight>%1$s',
 	'Class:Domain/Attribute:name' => 'Nom',
 	'Class:Domain/Attribute:name+' => '',
 	'Class:Domain/Attribute:parent_org_id' => 'Délégué de',
@@ -342,7 +342,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'Domaines DNS',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'Domaines DNS',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Afficher l\'Arbre',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
@@ -353,7 +353,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Delegate action on domains
 	'UI:IPManagement:Action:Delegate:Domain' => 'Déléguer',
 	'UI:IPManagement:Action:Delegate:Domain:PageTitle_Object_Class' => '%1$s - Déléguer',
-	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Délègue %1$s <span class="hilite">%2$s</span> à l\' organisation',
+	'UI:IPManagement:Action:Delegate:Domain:Title_Class_Object' => 'Délègue %1$s %2$s à l\' organisation',
 	'UI:IPManagement:Action:Delegate:Domain:ChildDomain' => 'Organisation à qui déléguer le domaine :',
 	'UI:IPManagement:Action:Delegate:Domain:NoChildOrg' => 'L\'organisation dont dépend le domaine n\'a pas de fille. Le domaine ne peut donc être délégué !',
 	'UI:IPManagement:Action:Delegate:Domain:NoOtherOrg' => 'Il n\'existe aucune autre organisation que celle à laquelle le domaine appartient !',
@@ -363,7 +363,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Delegate:Domain:HasHosts' => 'Le domaine a des hosts !',
 	'UI:IPManagement:Action:Delegate:Domain:HasSubDomains' => 'Le domaine a des sous-domaines !',
 	'UI:IPManagement:Action:Delegate:Domain:HasZones' => 'Des zones font référence à ce domaine !',
-	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> a été délégué.',
+	'UI:IPManagement:Action:Delegate:Domain:Done' => '%1$s %2$s a été délégué.',
 
 	// Undelegate action on domains
 	'UI:IPManagement:Action:Undelegate:Domain' => 'Retirer la délégation',
@@ -373,6 +373,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Undelegate:Domain:HasHosts' => 'Le domaine a des hosts !',
 	'UI:IPManagement:Action:Undelegate:Domain:HasSubDomains' => 'Le domaine a des sous-domaines !',
 	'UI:IPManagement:Action:Undelegate:Domain:HasZones' => 'Des zones font référence à ce domaine !',
-	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s <span class="hilite">%2$s</span> a eu sa délégation retirée.',
+	'UI:IPManagement:Action:Undelegate:Domain:Done' => '%1$s %2$s a eu sa délégation retirée.',
 
+	// Look for domain when exploding FQDN
+	'UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain' => 'Aucun domaine enregistré n\'a été trouvé dans le FQDN!',
 ));
