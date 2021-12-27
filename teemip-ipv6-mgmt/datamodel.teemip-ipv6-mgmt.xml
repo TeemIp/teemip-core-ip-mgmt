@@ -21,7 +21,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipv6block.png</icon>
         <reconciliation>
           <attributes>
@@ -330,7 +329,6 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipv6subnet.png</icon>
         <reconciliation>
           <attributes>
@@ -745,7 +743,6 @@
             <attribute id="range"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipv6range.png</icon>
         <reconciliation>
           <attributes>
@@ -947,7 +944,6 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipv6address.png</icon>
         <reconciliation>
           <attributes>
