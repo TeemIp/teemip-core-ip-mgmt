@@ -813,18 +813,6 @@ EOF
 	}
 
 	/**
-	 * Display main attributes for associated operation
-	 *
-	 * @param \WebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $sPrefix
-	 * @param $aDefault
-	 */
-	function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
