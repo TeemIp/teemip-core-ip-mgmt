@@ -10,23 +10,14 @@
 //
 
 //
-// TeemIp specific attributes
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Core:AttributeIPPercentage' => 'Pourcentage IP',
-	'Core:AttributeIPPercentage+' => 'Affichage graphique d\'un pourcentage d\'utilisation',
-	'Core:AttributeMacAddress' => 'Adresse MAC',
-	'Core:AttributeMacAddress+' => 'Chaîne correspondant à une adresse MAC',
-));
-
-//
 // Class: IPObject
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPObject' => 'Objet IP',
 	'Class:IPObject+' => '',
+	'IPObect:GlobalParams' => 'Paramètres globaux',
+	'Class:IPObject:GeneralConfigParameters' => 'Paramètres de l\'organisation',
 	'Class:IPObject/Attribute:org_id' => 'Organisation',
 	'Class:IPObject/Attribute:org_id+' => '',
 	'Class:IPObject/Attribute:org_name' => 'Nom de l\'organisation',
@@ -51,6 +42,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPObject/Attribute:allocation_date+' => 'Date à laquelle l\'objet a été alloué.',
 	'Class:IPObject/Attribute:release_date' => 'Date de libération',
 	'Class:IPObject/Attribute:release_date+' => 'Date à laquelle l\'objet a été libéré et n\'est plus utilisé.',
+	'Class:IPObject/Attribute:ipconfig_id' => 'Paramètres globaux IP',
+	'Class:IPObject/Attribute:ipconfig_id+' => '',
 	'Class:IPObject/Attribute:contact_list' => 'Contacts',
 	'Class:IPObject/Attribute:contact_list+' => 'Contacts liés à l\'objet IP',
 	'Class:IPObject/Attribute:document_list' => 'Documents',
@@ -116,12 +109,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlock:baseinfo' => 'Informations Générales',
 	'Class:IPBlock:delegationinfo' => 'Informations de Délégation',
 	'Class:IPBlock:ipinfo' => 'Informations IP',
-	'Class:IPBlock:DelegatedToChild' => '<font color=#ff0000>Délégué à : </font>%1$s',
-	'Class:IPBlock:DelegatedFromParent' => '<font color=#ff0000>Délégué de : </font>%1$s',
+	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Délégué à : </delegation_highlight>%1$s',
+	'Class:IPBlock:DelegatedFromParent' => '<delegation_highlight>Délégué de : </delegation_highlight>%1$s',
+	'Class:IPBlock:localconfigparameters' => 'Paramètres du bloc',
 	'Class:IPBlock/Attribute:name' => 'Nom',
 	'Class:IPBlock/Attribute:name+' => '',
-	'Class:IPBlock/Attribute:type' => 'Type',
-	'Class:IPBlock/Attribute:type+' => 'Type du Bloc de Sous-réseaux',
+	'Class:IPBlock/Attribute:ipblocktype_id' => 'Type',
+	'Class:IPBlock/Attribute:ipblocktype_id+' => 'Type du Bloc de Sous-réseaux',
+	'Class:IPBlock/Attribute:ipblocktype_name' => 'Nom Type',
+	'Class:IPBlock/Attribute:ipblocktype_name+' => '',
 	'Class:IPBlock/Attribute:allocation_date' => 'Date d\'allocation',
 	'Class:IPBlock/Attribute:allocation_date+' => 'Date à laquelle le Bloc a été alloué.',
 	'Class:IPBlock/Attribute:parent_org_id' => 'Délégué de',
@@ -207,6 +203,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv4Block/Attribute:firstip+' => 'Première IP du Bloc de Sous-réseaux',
 	'Class:IPv4Block/Attribute:lastip' => 'Dernière IP du Bloc',
 	'Class:IPv4Block/Attribute:lastip+' => 'Dernière IP du Bloc de Sous-réseaux',
+	'Class:IPv4Block/Attribute:ipconfig_ipv4_block_min_size' => 'Taille Minimum des Blocs IPv4',
+	'Class:IPv4Block/Attribute:ipconfig_ipv4_block_min_size+' => '',
+	'Class:IPv4Block/Attribute:ipconfig_ipv4_block_cidr_aligned' => 'Alignement des Blocs IPv4 sur les blocs CIDR',
+	'Class:IPv4Block/Attribute:ipconfig_ipv4_block_cidr_aligned+' => '',
+	'Class:IPv4Block/Attribute:ipv4_block_min_size' => 'Taille Minimum',
+	'Class:IPv4Block/Attribute:ipv4_block_min_size+' => '',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned' => 'Aligne le bloc sur les blocs CIDR',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned+' => '',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:default' => 'Aligné avec les paramètres globaux IP',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_no' => 'Forcé à Non',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_yes' => 'Forcé à Oui',
 ));
 
 //
@@ -219,6 +226,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet:baseinfo' => 'Informations Générales',
 	'Class:IPSubnet:ipinfo' => 'Informations IP',
 	'Class:IPSubnet:automation' => 'Automatisation',
+	'Class:IPSubnet:localconfigparameters' => 'Paramètres du sous-réseau',
 	'Class:IPSubnet/Attribute:name' => 'Nom',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',
@@ -230,17 +238,21 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPSubnet/Attribute:ip_occupancy' => 'IPs enregistrées',
 	'Class:IPSubnet/Attribute:ip_occupancy+' => '',
 	'Class:IPSubnet/Attribute:range_occupancy' => 'Plages d\'IPs enregistrées',
-	'Class:IPSubnet/Attribute:range_occupancy+' => '',                         
+	'Class:IPSubnet/Attribute:range_occupancy+' => '',
 	'Class:IPSubnet/Attribute:alarm_water_mark' => 'Etat de l\'alarme de seuil',
-	'Class:IPSubnet/Attribute:alarm_water_mark+' => '',                              
+	'Class:IPSubnet/Attribute:alarm_water_mark+' => '',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:no_alarm' => 'Aucune alarme n\'a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:low_sent' => 'Une alarme de Seuil Bas a été envoyée',
 	'Class:IPSubnet/Attribute:alarm_water_mark/Value:high_sent' => 'Une alarme de Seuil Haut a été envoyée',
+	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips' => 'Réserve les IPs de Sous-réseau, de passerelle et de Broadcast à la création',
+	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips+' => '',
+	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips/Value:reserve_no' => 'Non',
+	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips/Value:reserve_yes' => 'Oui',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips' => 'Réserve les IPs de sous-réseau, de passerelle et de broadcast',
-	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Défini la politique de réservation des IPs de Sous-réseau, de passerelle et de Broadcast à la création',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Défini la politique de réservation des IPs de Sous-réseau, de passerelle et de Broadcast',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:default' => 'Aligné avec les paramètres globaux',
-	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Force à non',
-	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Force à oui',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Non',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Oui',
 	'Class:IPSubnet/Attribute:subnets_list' => 'Sous-réseaux NATés',
 	'Class:IPSubnet/Attribute:subnets_list+' => 'Liste de tous les sous-réseaux NATés',
 	'Class:IPSubnet/Attribute:vlans_list' => 'VLANs',
@@ -401,6 +413,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv4Subnet/Attribute:broadcastip' => 'IP de broadcast',
 	'Class:IPv4Subnet/Attribute:broadcastip+' => '',
 	'Class:IPv4Subnet/Attribute:summary' => 'Résumé',
+	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format' => 'IP de la passerelle IPv4',
+	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format+' => '',
+	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'IP de sous-réseau + 1',
+	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:broadcastip_minus_1' => 'IP de Broadcast - 1',
+	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:free_setup' => 'Allocation libre',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => 'IP de la passerelle',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format+' => '',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:default' => 'Aligné avec les paramètres globaux',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'Forcé à l\'IP de sous-réseau + 1',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:broadcastip_minus_1' => 'Forcé à l\'IP de broadcast - 1',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:free_setup' => 'Force l\'allocation libre',
 ));
 
 //
@@ -504,6 +527,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPAddress:baseinfo' => 'Informations Générales',
 	'Class:IPAddress:dnsinfo' => 'Informations DNS',
 	'Class:IPAddress:ipinfo' => 'Informations IP',
+	'Class:IPAddress:localconfigparameters' => 'Paramètres de l\'IP',
 	'Class:IPAddress/Attribute:short_name' => 'Nom Court',
 	'Class:IPAddress/Attribute:short_name+' => 'Nom de gauche du FQDN',
 	'Class:IPAddress/Attribute:domain_id' => 'Nom de Domaine',
@@ -530,6 +554,36 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPAddress/Attribute:ip_list+' => 'Liste des IPs NATées',
 	'Class:IPAddress/Attribute:finalclass' => 'Classe',
 	'Class:IPAddress/Attribute:finalclass+' => '',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name' => 'Autorise les noms dupliqués',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name+' => '',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_no' => 'Non',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_no+' => '',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_yes' => 'Oui',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_yes+' => '',
+	'Class:IPAddress/Attribute:ipconfig_:ip_allow_duplicate_name/Value:ipdup_dualstack' => 'Dual stack',
+	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_dualstack+' => 'Les doublons sont autorisés entre 2 uniques IPv4 et IPv6',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name' => 'Autorise les noms dupliqués',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name+' => '',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:default' => 'Aligné avec les paramètres globaux IP',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_no' => 'Forcé à Non',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_no+' => '',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_yes' => 'Forcé à Oui',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_yes+' => '',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_dualstack' => 'Dual stack',
+	'Class:IPAddress/Attribute:ip_allow_duplicate_name/Value:ipdup_dualstack+' => 'Les doublons sont autorisés entre 2 uniques IPv4 et IPv6',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign' => 'Ping l\'IP avant de l\'assigner',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign+' => '',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign/Value:ping_no' => 'Non',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign/Value:ping_no+' => '',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign/Value:ping_yes' => 'Oui',
+	'Class:IPAddress/Attribute:ipconfig_ping_before_assign/Value:ping_yes+' => '',
+	'Class:IPAddress/Attribute:ping_before_assign' => 'Ping l\'IP avant de l\'assigner',
+	'Class:IPAddress/Attribute:ping_before_assign+' => '',
+	'Class:IPAddress/Attribute:ping_before_assign/Value:default' => 'Aligné avec les paramètres globaux IP',
+	'Class:IPAddress/Attribute:ping_before_assign/Value:ping_no' => 'Forcé à Non',
+	'Class:IPAddress/Attribute:ping_before_assign/Value:ping_no+' => '',
+	'Class:IPAddress/Attribute:ping_before_assign/Value:ping_yes' => 'Forcé à Yes',
+	'Class:IPAddress/Attribute:ping_before_assign/Value:ping_yes+' => '',
 ));
 
 //
@@ -625,144 +679,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: IPConfig
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:IPConfig' => 'Paramètres Globaux',
-	'Class:IPConfig+' => '',
-	'Class:IPConfig:baseinfo' => 'Informations Générales',
-	'Class:IPConfig:blockinfo' => 'Paramètres par défaut des Blocs de Sous-réseaux',
-	'Class:IPConfig:subnetinfo' => 'Paramètres par défaut des Sous-réseaux',
-	'Class:IPConfig:iprangeinfo' => 'Paramètres par défaut des Plages d\'IPs',
-	'Class:IPConfig:ipinfo' => 'Paramètres par défaut des IPs',
-	'Class:IPConfig:domaininfo' => 'Paramètres par défaut des Domaines',
-	'Class:IPConfig:otherinfo' => 'Autres informations',
-	'Class:IPConfig/Attribute:org_id' => 'Organisation',
-	'Class:IPConfig/Attribute:org_id+' => '',
-	'Class:IPConfig/Attribute:org_name' => 'Nom Organisation',
-	'Class:IPConfig/Attribute:org_name+' => '',
-	'Class:IPConfig/Attribute:name' => 'Nom',
-	'Class:IPConfig/Attribute:name+' => '',
-	'Class:IPConfig/Attribute:requestor_id' => 'Demandeur',
-	'Class:IPConfig/Attribute:requestor_id+' => '',
-	'Class:IPConfig/Attribute:requestor_name' => 'Nom Demandeur',
-	'Class:IPConfig/Attribute:requestor_name+' => '',
-	'Class:IPConfig/Attribute:ipv4_block_min_size' => 'Taille Minimum des Blocs de Sous-réseaux IPv4',
-	'Class:IPConfig/Attribute:ipv4_block_min_size+' => '',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned' => 'Alignement des Blocs de Sous-réseaux IPv4 sur les blocs CIDR',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned+' => '',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned/Value:bca_no' => 'Non',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned/Value:bca_no+' => '',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned/Value:bca_yes' => 'Oui',
-	'Class:IPConfig/Attribute:ipv4_block_cidr_aligned/Value:bca_yes+' => '',
-	'Class:IPConfig/Attribute:delegate_to_children_only' => 'Délégation des blocs aux organisations filles seulement',
-	'Class:IPConfig/Attribute:delegate_to_children_only+' => '',
-	'Class:IPConfig/Attribute:delegate_to_children_only/Value:dtc_no' => 'Non',
-	'Class:IPConfig/Attribute:delegate_to_children_only/Value:dtc_no+' => '',
-	'Class:IPConfig/Attribute:delegate_to_children_only/Value:dtc_yes' => 'Oui',
-	'Class:IPConfig/Attribute:delegate_to_children_only/Value:dtc_yes+' => '',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs' => 'Réserve les IPs de Sous-réseau, de passerelle et de Broadcast à la création',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs+' => '',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs/Value:reserve_no' => 'Non',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs/Value:reserve_no+' => '',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs/Value:reserve_yes' => 'Oui',
-	'Class:IPConfig/Attribute:reserve_subnet_IPs/Value:reserve_yes+' => '',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format' => 'IP de la passerelle IPv4',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format+' => '',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'IP de sous-réseau + 1',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1+' => '',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:broadcastip_minus_1' => 'IP de Broadcast - 1',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:broadcastip_minus_1+' => '',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:free_setup' => 'Allocation libre',
-	'Class:IPConfig/Attribute:ipv4_gateway_ip_format/Value:free_setup+' => '',
-	'Class:IPConfig/Attribute:subnet_low_watermark' => 'Seuil Bas des Sous-réseaux (%)',
-	'Class:IPConfig/Attribute:subnet_low_watermark+' => '',
-	'Class:IPConfig/Attribute:subnet_high_watermark' => 'Seuil Haut des Sous-réseaux (%)',
-	'Class:IPConfig/Attribute:subnet_high_watermark+' => '',
-	'Class:IPConfig/Attribute:iprange_low_watermark' => 'Seuil Bas des Plages d\'IPs (%)',
-	'Class:IPConfig/Attribute:iprange_low_watermark+' => '',
-	'Class:IPConfig/Attribute:iprange_high_watermark' => 'Seuil Haut des Plages d\'IPs (%)',
-	'Class:IPConfig/Attribute:iprange_high_watermark+' => '',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name' => 'Autorise les noms dupliqués',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name+' => '',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_no' => 'Non',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_no+' => '',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_allow_duplicate_name/Value:ipdup_yes+' => '',
-	'Class:IPConfig/Attribute:mac_address_format' => 'Format des adresses MAC',
-	'Class:IPConfig/Attribute:mac_address_format+' => '',
-	'Class:IPConfig/Attribute:mac_address_format/Value:colons' => '01:23:45:67:89:ab',
-	'Class:IPConfig/Attribute:mac_address_format/Value:colons+' => '',
-	'Class:IPConfig/Attribute:mac_address_format/Value:hyphens' => '01-23-45-67-89-ab',
-	'Class:IPConfig/Attribute:mac_address_format/Value:hyphens+' => '',
-	'Class:IPConfig/Attribute:mac_address_format/Value:dots' => '0123.4567.89ab',
-	'Class:IPConfig/Attribute:mac_address_format/Value:dots+' => '',
-	'Class:IPConfig/Attribute:mac_address_format/Value:any' => 'Tous',
-	'Class:IPConfig/Attribute:mac_address_format/Value:any+' => '',                                 
-	'Class:IPConfig/Attribute:ping_before_assign' => 'Ping l\'IP avant de l\'assigner ?',
-	'Class:IPConfig/Attribute:ping_before_assign+' => '',
-	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_no' => 'Non',
-	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_no+' => '',
-	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_yes' => 'Oui',
-	'Class:IPConfig/Attribute:ping_before_assign/Value:ping_yes+' => '',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname' => 'Copie le nom du CI dans le nom court de l\'IP',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname+' => '',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'Calcule le FQDN quand le nom court est vide',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no+' => '',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete' => 'Libère les IPs des CIs qui deviennent obsolètes',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:no+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_release_on_ci_obsolete/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production' => 'Alloue les IPs attachées à des CIs en production',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production+' => '',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production/Value:no+' => '',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_allocate_on_ci_production/Value:yes+' => '',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only' => 'Délégation des domaines aux organisations filles seulement',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only+' => '',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_no' => 'Non',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_no+' => '',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_yes' => 'Oui',
-	'Class:IPConfig/Attribute:delegate_domain_to_children_only/Value:dtc_yes+' => '',
-	'Class:IPConfig/Attribute:ip_symetrical_nat' => 'NAT symétrique des IPs',
-	'Class:IPConfig/Attribute:ip_symetrical_nat+' => '',
-	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_symetrical_nat/Value:no+' => '',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat' => 'NAT symétrique des sous-réseaux',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat+' => '',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:yes+' => '',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:subnet_symetrical_nat/Value:no+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release' => 'Libère les IPs des sous-réseaux libérés',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_release_on_subnet_release/Value:no+' => '',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci' => 'Désalloue les IPs non attachées à un CI',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci+' => '',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes' => 'Oui',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'Non',
-	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
-));
-
-//
 // Class: IPRangeUsage
 //
 
@@ -782,22 +698,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: IPUsage
+// Class: IPBlockType
 //
 
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:IPUsage' => 'Types d\'utilisation d\'une adresse IP',
-	'Class:IPUsage+' => 'Ce à quoi une adresse IP est utilisée',
-	'Class:IPUsage/Attribute:org_id' => 'Organisation',
-	'Class:IPUsage/Attribute:org_id+' => '',
-	'Class:IPUsage/Attribute:org_name' => 'Nom Organisation',
-	'Class:IPUsage/Attribute:org_name+' => '',
-	'Class:IPUsage/Attribute:name' => 'Nom',
-	'Class:IPUsage/Attribute:name+' => '',
-	'Class:IPUsage/Attribute:description' => 'Description',
-	'Class:IPUsage/Attribute:description+' => '',
-	'Class:IPUsage/Attribute:ips_list' => 'IPs',
-	'Class:IPUsage/Attribute:ips_list+' => '',
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:IPBlockType' => 'Type de bloc',
+	'Class:IPBlockType+' => 'Type of bloc de sous-réseau',
+	'Class:IPBlockType/Attribute:name' => 'Nom',
+	'Class:IPBlockType/Attribute:name+' => '',
+	'Class:IPBlockType/Attribute:description' => 'Description',
+	'Class:IPBlockType/Attribute:description+' => '',
+	'Class:IPBlockType/Attribute:blocks_list' => 'Blocs',
+	'Class:IPBlockType/Attribute:blocks_list+' => 'Blocs de sous-réseau de ce type',
 ));
 
 //
@@ -841,25 +753,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Class: IPApplication
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:IPApplication/Name' => '%1$s',
-	'Class:IPApplication/Attribute:uuid' => 'UUID',
-	'Class:IPApplication/Attribute:uuid+' => '',
-	'Class:IPApplication/Attribute:status' => 'Etat',
-	'Class:IPApplication/Attribute:status+' => '',
-	'Class:IPApplication/Attribute:status/Value:obsolete' => 'Obsolète',
-	'Class:IPApplication/Attribute:status/Value:production' => 'Production',
-	'Class:IPApplication/Attribute:status/Value:implementation' => 'Implémentation',
-	'Class:IPApplication/Attribute:location_id' => 'Lieu',
-	'Class:IPApplication/Attribute:location_id+' => '',
-	'Class:IPApplication/Attribute:location_name' => 'Nom Lieu',
-	'Class:IPApplication/Attribute:location_name+' => '',
-));
-
-//
 // Application Menu
 //
 
@@ -896,32 +789,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:SubnetCalculator' => 'Calculateur de Sous-réseaux',
 	'Menu:SubnetCalculator+' => 'Outil pour calculer les parametres d\'un sous réseau à partir d\'une IP et d\'un masque',
 	'Menu:Options' => 'Paramètres',
-	'Menu:Options+' => 'Paramètres',  
-	'Menu:IPConfig' => 'Paramètres Globaux IP',
-	'Menu:IPConfig+' => 'Paramètres Globaux pour les objets IP',
-	'Menu:IPRangeUsage' => 'Types de plages d\'IPs',
-	'Menu:IPRangeUsage+' => 'Types d\'utilisation des plages d\'adresses IP',
-	'Menu:IPUsage' => 'Types d\'IPs',
-	'Menu:IPUsage+' => 'Types d\'utilisation des adresses',
+	'Menu:Options+' => 'Paramètres',
 	'Menu:Domain' => 'Domaines',
 	'Menu:Domain+' => 'Noms de Domaines',
 	'Menu:IPTemplate' => 'Templates IP',
 	'Menu:IPTemplate+' => '',
-	
+
 	'UI:IPMgmtWelcomeOverview:Title' => 'Mon tableau de bord',
-	
+
 	// Menu separator in Action menus
-	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',	
+	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',
 	'UI:IPManagement:Action:Error::WrongActionForClass' => 'Cette action ne peut être appliquèe à cette classe d\'objet !',
-//
-// Management of IP global settings
-//
-	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Un seul ensemble de Paramètres Globaux peut exister par organisation !',	
-	'UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall' => 'La taille minimum d\'un Bloc de Sous-réseaux IPv4 ne peut être inférieure à %1$s !',
-	'UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall' => 'La taille minimum d\'un Bloc de Sous-réseaux IPv6 ne peut être inférieure à %1$s !',
-	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Les Seuils sont des pourcentages. Merci d\'utiliser des nombres entre 0 et 100 !',
-	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Le Seuil Bas doit être inférieur au Seuil Haut !',
-	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Ces paramètres IP globaux peuvent être redéfinis pour cette action.',	
 
 //
 // Management of IPBlocks
@@ -929,36 +807,36 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Creation Management	
 	'UI:IPManagement:Action:New:IPBlock:Reverted' => 'La première IP du Bloc est plus grande que la dernière !',
 	'UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize' => 'La taile d\'un Bloc ne peut être inférieure à %1$s pour l\'organisation %2$s !',
-	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Le Bloc n\'est pas aligné CIDR !',	
-	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Le Bloc de Sous-réseaux n\'est pas strictement contenu dans le bloc parent sélectionné !',	
-	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Le nom du Bloc de Sous-réseaux existe déjà !',	
-	'UI:IPManagement:Action:New:IPBlock:Collision0' => 'Le Bloc de Sous-réseaux existe déjà !',	
-	'UI:IPManagement:Action:New:IPBlock:Collision1' => 'Collision : la première IP appartient à un bloc déjà existant !',	
-	'UI:IPManagement:Action:New:IPBlock:Collision2' => 'Collision : la dernière IP appartient à un bloc déjà existant !',	
-	'UI:IPManagement:Action:Modify:IPBlock:ParentIdNull' => 'Les Sous-réseaux du Bloc %1$s ne peuvent être attachés à un parent non existant !',	
-	
+	'UI:IPManagement:Action:New:IPBlock:NotCIDRAligned' => 'Le Bloc n\'est pas aligné CIDR !',
+	'UI:IPManagement:Action:New:IPBlock:NotInParent' => 'Le Bloc de Sous-réseaux n\'est pas strictement contenu dans le bloc parent sélectionné !',
+	'UI:IPManagement:Action:New:IPBlock:NameExist' => 'Le nom du Bloc de Sous-réseaux existe déjà !',
+	'UI:IPManagement:Action:New:IPBlock:Collision0' => 'Le Bloc de Sous-réseaux existe déjà !',
+	'UI:IPManagement:Action:New:IPBlock:Collision1' => 'Collision : la première IP appartient à un bloc déjà existant !',
+	'UI:IPManagement:Action:New:IPBlock:Collision2' => 'Collision : la dernière IP appartient à un bloc déjà existant !',
+	'UI:IPManagement:Action:Modify:IPBlock:ParentIdNull' => 'Les Sous-réseaux du Bloc %1$s ne peuvent être attachés à un parent non existant !',
+
 	// Shrink action on subnet blocks
-	'UI:IPManagement:Action:Shrink:IPBlock:Reverted' =>  'La nouvelle première IP du Bloc est plus grande que la nouvelle dernière !',
+	'UI:IPManagement:Action:Shrink:IPBlock:Reverted' => 'La nouvelle première IP du Bloc est plus grande que la nouvelle dernière !',
 	'UI:IPManagement:Action:Shrink:IPBlock:IPOutOfBlock' => 'Les nouvelles IPs ne sont pas toutes dans le Bloc !',
 	'UI:IPManagement:Action:Shrink:IPBlock:NoChange' => 'Aucun changement n\'a été demandé !',
 	'UI:IPManagement:Action:Shrink:IPBlock:NotCIDRAligned' => 'Le Bloc n\'est pas aligné CIDR !',
 	'UI:IPManagement:Action:Shrink:IPBlock:BlockAccrossBorder' => 'Un bloc fils est à cheval sur les nouvelles limites !',
 	'UI:IPManagement:Action:Shrink:IPBlock:SubnetAccrossBorder' => 'Un sous-réseau attaché au bloc est à cheval sur les nouvelles limites !',
-	'UI:IPManagement:Action:Shrink:IPBlock:SubnetBecomesOrhpean' => 'Des Sous-réseaux fils n\'auront plus de parent après la réduction !',	
-	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> a été réduit.',
-	
+	'UI:IPManagement:Action:Shrink:IPBlock:SubnetBecomesOrhpean' => 'Des Sous-réseaux fils n\'auront plus de parent après la réduction !',
+	'UI:IPManagement:Action:Shrink:IPBlock:Done' => '%1$s %2$s a été réduit.',
+
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPBlock:IPOutOfBlock' => 'L\'IP de coupure est en dehors du bloc !',
 	'UI:IPManagement:Action:Split:IPBlock:SmallerThanMinSize' => 'La taille du bloc ne peut être inférieure à %1$s!',
-	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Les blocs ne sont pas alignés sur des blocs CIDR !',	
+	'UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned' => 'Les blocs ne sont pas alignés sur des blocs CIDR !',
 	'UI:IPManagement:Action:Split:IPBlock:BlockAccrossBorder' => 'Un bloc de sous-réseaux fils est à cheval sur la nouvelle frontière !',
 	'UI:IPManagement:Action:Split:IPBlock:SubnetAccrossBorder' => 'Un sous-réseau appartenant au bloc est à cheval sur la nouvelle frontière !',
 	'UI:IPManagement:Action:Split:IPBlock:EmptyNewName' => 'Le nom du nouveau Bloc de Sous-réseaux est vide !',
 	'UI:IPManagement:Action:Split:IPBlock:NameExist' => 'Le nom du nouveau Bloc de Sous-réseaux existe déjà !',
-	'UI:IPManagement:Action:Split:IPBlock:Done' => '%1$s: <span class="hilite">%2$s</span> a été coupé.',	
-	
+	'UI:IPManagement:Action:Split:IPBlock:Done' => '%1$s: %2$s a été coupé.',
+
 	// Expand action on subnet blocks
-	'UI:IPManagement:Action:Expand:IPBlock:Reverted' =>  'La nouvelle première IP du Bloc est plus grande que la nouvelle dernière !',
+	'UI:IPManagement:Action:Expand:IPBlock:Reverted' => 'La nouvelle première IP du Bloc est plus grande que la nouvelle dernière !',
 	'UI:IPManagement:Action:Expand:IPBlock:IPOutOfBlock' => 'Les nouvelles IPs ne sont pas toutes en dehors du Bloc !',
 	'UI:IPManagement:Action:Expand:IPBlock:NoChange' => 'Aucun changement n\'a été demandé !',
 	'UI:IPManagement:Action:Expand:IPBlock:NotCIDRAligned' => 'Le Bloc n\'est pas aligné CIDR !',
@@ -966,7 +844,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Expand:IPBlock:DelegatedBlockAccrossBorder' => 'le bloc ne peut englober un bloc délégué !',
 	'UI:IPManagement:Action:Expand:IPBlock:BlockAccrossBorder' => 'Un bloc frère est à cheval sur les nouvelles limites !',
 	'UI:IPManagement:Action:Expand:IPBlock:SubnetAccrossBorder' => 'Un sous-réseau attaché au bloc parent est à cheval les nouvelles limites !',
-	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s <span class="hilite">%2$s</span> a été étendu.',
+	'UI:IPManagement:Action:Expand:IPBlock:Done' => '%1$s %2$s a été étendu.',
 
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:DoFindSpace:IPBlock:RequestedSpaceBiggerThanBlockSize' => 'IP address to look space from belongs to subnet block %1$s and the requested space is larger than the size of that block!',
@@ -1012,66 +890,67 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:PageTitle_Class' => 'Blocs de sous-réseaux IPv4',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:Title_Class' => 'Blocs de sous-réseaux IPv4',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block:OrgName' => 'Organisation %1$s',
-	
+
 	// Shrink action on subnet blocks
 	'UI:IPManagement:Action:Shrink:IPv4Block' => 'Réduire',
 	'UI:IPManagement:Action:Shrink:IPv4Block+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Shrink:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Block:PageTitle_Object_Class' => 'Réduire %1$s - %2$s',
-	'UI:IPManagement:Action:Shrink:IPv4Block:Title_Class_Object' => 'Réduire %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Shrink:IPv4Block:Title_Class_Object' => 'Réduire %1$s: %2$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:NewFirstIP' => 'Nouvelle première IP du Bloc :',
-	'UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP' => 'Nouvelle dernière IP du Bloc :',            
+	'UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP' => 'Nouvelle dernière IP du Bloc :',
 	'UI:IPManagement:Action:Shrink:IPv4Block:IsDelegated' => 'Ce bloc est délégué et ne peut donc être réduit !',
-	'UI:IPManagement:Action:Shrink:IPv4Block:CannotBeShrunk' =>  'Le bloc ne peut être réduit: %1$s',
+	'UI:IPManagement:Action:Shrink:IPv4Block:CannotBeShrunk' => 'Le bloc ne peut être réduit: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Block:SmallerThanMinSize' => 'La taille du Bloc ne peut être plus petite que %1$s !',
-	'UI:IPManagement:Action:Shrink:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a été réduit.',
-	
+	'UI:IPManagement:Action:Shrink:IPv4Block:Done' => '%1$s %2$s a été réduit.',
+
 	// Split action on subnet blocks
 	'UI:IPManagement:Action:Split:IPv4Block' => 'Couper',
 	'UI:IPManagement:Action:Split:IPv4Block+' => '',
 	'UI:IPManagement:Action:Split:IPv4Block:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Split:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv4Block:PageTitle_Object_Class' => 'Couper %1$s - %2$s',
-	'UI:IPManagement:Action:Split:IPv4Block:Title_Class_Object' => 'Couper %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Split:IPv4Block:Title_Class_Object' => 'Couper %1$s: %2$s',
 	'UI:IPManagement:Action:Split:IPv4Block:At' => 'Première IP du nouveau Bloc de Sous-réseaux :',
 	'UI:IPManagement:Action:Split:IPv4Block:NameNewBlock' => 'Nom du nouveau Bloc de Sous-réseaux :',
 	'UI:IPManagement:Action:Split:IPv4Block:IsDelegated' => 'Ce bloc est délégué et ne peut donc être coupé !',
-	'UI:IPManagement:Action:Split:IPv4Block:CannotBeSplit' =>  'Le Bloc ne peut être coupé: %1$s',
+	'UI:IPManagement:Action:Split:IPv4Block:CannotBeSplit' => 'Le Bloc ne peut être coupé: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Block:SmallerThanMinSize' => 'La taille du bloc ne peut être inférieure à %1$s !',
-	'UI:IPManagement:Action:Split:IPv4Block:Done' => '%1$s: <span class="hilite">%2$s</span> a été coupé.',	
-	
+	'UI:IPManagement:Action:Split:IPv4Block:Done' => '%1$s: %2$s a été coupé.',
+
 	// Expand action on subnet blocks
 	'UI:IPManagement:Action:Expand:IPv4Block' => 'Etendre',
 	'UI:IPManagement:Action:Expand:IPv4Block+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Block:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Expand:IPv4Block:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Block:PageTitle_Object_Class' => 'Etendre %1$s - %2$s',
-	'UI:IPManagement:Action:Expand:IPv4Block:Title_Class_Object' => 'Etendre %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:Expand:IPv4Block:Title_Class_Object' => 'Etendre %1$s: %2$s',
 	'UI:IPManagement:Action:Expand:IPv4Block:NewFirstIP' => 'Nouvelle première IP du Bloc :',
 	'UI:IPManagement:Action:Expand:IPv4Block:NewLastIP' => 'Nouvelle dernière IP du Bloc :',
 	'UI:IPManagement:Action:Expand:IPv4Block:IsDelegated' => 'Ce bloc est délégué et ne peut donc être étendu !',
 	'UI:IPManagement:Action:Expand:IPv4Block:CannotBeExpanded' => 'Le bloc ne peut être étendu: %1$s',
 	'UI:IPManagement:Action:Expand:IPv4Block:SmallerThanMinSize' => 'La taille du Bloc ne peut être plus petite que %1$s !',
-	'UI:IPManagement:Action:Expand:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a été étendu.',
+	'UI:IPManagement:Action:Expand:IPv4Block:Done' => '%1$s %2$s a été étendu.',
 
 	// List space action on subnet blocks 
-	'UI:IPManagement:Action:ListSpace:IPv4Block' => 'Lister l\'espace',                                               
+	'UI:IPManagement:Action:ListSpace:IPv4Block' => 'Lister l\'espace',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Espace',
-	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Espace dans %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:ListSpace:IPv4Block:Title_Class_Object' => 'Espace dans %1$s: %2$s',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace' => 'Libre [%1$s - %2$s] - %3$s IPs - %4$.2f %%',
 	'UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent' => 'Libre [%1$s - %2$s] - %3$s IPs',
 
 	// Find Space action on subnet blocks
 	'UI:IPManagement:Action:FindSpace:IPv4Block' => 'Rechercher de l\'espace',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Recherche d\'espace',
-	'UI:IPManagement:Action:FindSpace:IPv4Block:Title_Class_Object' => 'Recherche d\'espace IP dans %1$s : <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv4Block:Title_Class_Object' => 'Recherche d\'espace IP dans %1$s : %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:SizeOfSpace' => 'Taille de l\'espace à rechercher :',
 	'UI:IPManagement:Action:FindSpace:IPv4Block:MaxNumberOfOffers' => 'Nombre maximum d\'offres :',
-	
+
 	// Do find Space action on subnet blocks
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block' => 'Espace trouvé',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:PageTitle_Object_Class' => '%1$s - Rechercher de l\'espace',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Espace dans %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Title_Class_Object' => 'Espace dans %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:Summary' => '%1$s premiers /%2$s dans le bloc',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsBlock' => 'Créer en tant que bloc fils',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Block:CreateAsSubnet' => 'Créer en tant que sous-réseau',
@@ -1079,32 +958,32 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Delegate action on subnet blocks
 	'UI:IPManagement:Action:Delegate:IPv4Block' => 'Déléguer',
 	'UI:IPManagement:Action:Delegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Déléguer',
-	'UI:IPManagement:Action:Delegate:IPv4Block:Title_Class_Object' => 'Délègue %1$s <span class="hilite">%2$s</span> à une organisation',
+	'UI:IPManagement:Action:Delegate:IPv4Block:Title_Class_Object' => 'Délègue %1$s %2$s à une organisation',
 	'UI:IPManagement:Action:Delegate:IPv4Block:ChildBlock' => 'Organisation à qui déléguer le bloc :',
 	'UI:IPManagement:Action:Delegate:IPv4Block:NoChildOrg' => 'L\'organization dont dépend le bloc n\'a pas de fille. Le bloc ne peut donc être délégué !',
 	'UI:IPManagement:Action:Delegate:IPv4Block:NoOtherOrg' => 'Il n\'existe aucune autre organisation que celle à laquelle le bloc appartient !',
 	'UI:IPManagement:Action:Delegate:IPv4Block:IsDelegated' => 'Le bloc est déjà délégué !',
 	'UI:IPManagement:Action:Delegate:IPv4Block:CannotBeDelegated' => 'Le bloc ne peut être délégué : %1$s',
-	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a été délégué.',
+	'UI:IPManagement:Action:Delegate:IPv4Block:Done' => '%1$s %2$s a été délégué.',
 
 	// Undelegate action on subnet blocks
 	'UI:IPManagement:Action:Undelegate:IPv4Block:CannotBeUndelegated' => 'La délégation ne peut pas être retirée : %1$s',
 	'UI:IPManagement:Action:Undelegate:IPv4Block' => 'Retirer la délégation',
 	'UI:IPManagement:Action:Undelegate:IPv4Block:PageTitle_Object_Class' => '%1$s - Retirer',
-	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s <span class="hilite">%2$s</span> a eu sa délégation retirée.',
-	
+	'UI:IPManagement:Action:Undelegate:IPv4Block:Done' => '%1$s %2$s a eu sa délégation retirée.',
+
 //
 // Management of Subnets
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:IPSubnet:IpCannotChange' => 'L\'IP du Sous-réseau ne peut être modifiée !',	
-	'UI:IPManagement:Action:New:IPSubnet:MaskCannotChange' => 'Le masque de Sous-réseau ne peut être modifié !',	
-	'UI:IPManagement:Action:New:IPSubnet:IpIncorrect' => 'L\'IP du Sous-réseau n\'est pas cohérente avec le masque !',	
-	'UI:IPManagement:Action:New:IPSubnet:NotInBlock' => 'Le Sous-réseau n\'est pas contenu dans le Bloc de Sous-réseaux !',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision0' => 'Le Sous-réseau existe déjà !',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision1' => 'Collision : l\'IP du Sous-réseau appartient à un Sous-réseau existant !',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Collision : l\'IP de Broadcast appartient à un Sous-réseau existant !',	
-	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Collision : le nouveau Sous-réseau contient un Sous-réseau existant !!',	
+	'UI:IPManagement:Action:New:IPSubnet:IpCannotChange' => 'L\'IP du Sous-réseau ne peut être modifiée !',
+	'UI:IPManagement:Action:New:IPSubnet:MaskCannotChange' => 'Le masque de Sous-réseau ne peut être modifié !',
+	'UI:IPManagement:Action:New:IPSubnet:IpIncorrect' => 'L\'IP du Sous-réseau n\'est pas cohérente avec le masque !',
+	'UI:IPManagement:Action:New:IPSubnet:NotInBlock' => 'Le Sous-réseau n\'est pas contenu dans le Bloc de Sous-réseaux !',
+	'UI:IPManagement:Action:New:IPSubnet:Collision0' => 'Le Sous-réseau existe déjà !',
+	'UI:IPManagement:Action:New:IPSubnet:Collision1' => 'Collision : l\'IP du Sous-réseau appartient à un Sous-réseau existant !',
+	'UI:IPManagement:Action:New:IPSubnet:Collision2' => 'Collision : l\'IP de Broadcast appartient à un Sous-réseau existant !',
+	'UI:IPManagement:Action:New:IPSubnet:Collision3' => 'Collision : le nouveau Sous-réseau contient un Sous-réseau existant !!',
 	'UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet' => 'L\'IP de la passerelle n\'est pas dans les limites du Sous-réseau !',
 
 	// Subnet calculator
@@ -1128,42 +1007,44 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet:PageTitle_Class' => 'Sous-Réseaux IPv4',
 	'UI:IPManagement:Action:DisplayList:IPv4Subnet:Title_Class' => 'Sous-Réseaux IPv4',
-	
+
 	// Display tree of subnets
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet' => 'Afficher l\'Arbre',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:PageTitle_Class' => 'Sous-Réseaux IPv4',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:Title_Class' => 'Sous-Réseaux IPv4',
 	'UI:IPManagement:Action:DisplayTree:IPv4Subnet:OrgName' => 'Organisation %1$s',
-	
+
 	// Find space action on subnets 
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet' => 'Recherche d\'Espace',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Recherche d\'espace',
-	'UI:IPManagement:Action:FindSpace:IPv4Subnet:Title_Class_Object' => 'Recherche d\'espace IP dans %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:FindSpace:IPv4Subnet:Title_Class_Object' => 'Recherche d\'espace IP dans %1$s: %2$s',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeTooSmall' => 'Le Sous-Réseau est trop petit pour y rechercher un espace !',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:SizeOfRange' => 'Taille de l\'espace à rechercher :',
 	'UI:IPManagement:Action:FindSpace:IPv4Subnet:MaxNumberOfOffers' => 'Nombre maximum d\'offres :',
-	
+
 	// Do find Space action on subnet
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet' => 'Espace trouvé',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:PageTitle_Object_Class' => '%1$s - Recherche d\'espace',
-	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Title_Class_Object' => 'Espace dans %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Title_Class_Object' => 'Espace dans %1$s: %2$s',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:Summary' => '%1$s premières %2$s Plages d\'IPs libres dans le sous-réseau',
+	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeEmpty' => 'L\'espace demandé est vide ! Veuillez spécifier une taille plus grande.',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:RangeTooBig' => 'L\'espace demandé ne tient pas dans le sous-réseau. Veuillez choisir une taille plus petite.',
 	'UI:IPManagement:Action:DoFindSpace:IPv4Subnet:CreateAsRange' => 'Créer en tant que Plage d\'IPs',
 
 	// List IPs action on subnets 
-	'UI:IPManagement:Action:ListIps:IPv4Subnet' => 'Lister et allouer IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv4Subnet' => 'Lister et allouer IPs',
 	'UI:IPManagement:Action:ListIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:Title_Class_Object' => 'IPs contenues dans le %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:Subtitle_ListRange' => 'Le Sous-réseau est trop grand pour lister toutes les IPs en une seule page. Merci de sélectionner une plage à afficher:',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:FirstIP' => 'Première IP de la plage',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Subnet:LastIP' => 'Dernière IP de la plage',                                               
-	
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:Title_Class_Object' => 'IPs contenues dans le %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:Subtitle_ListRange' => 'Le Sous-réseau est trop grand pour lister toutes les IPs en une seule page. Merci de sélectionner une plage à afficher:',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:FirstIP' => 'Première IP de la plage',
+	'UI:IPManagement:Action:ListIps:IPv4Subnet:LastIP' => 'Dernière IP de la plage',
+
 	// Do list IPs action on subnet
-	'UI:IPManagement:Action:DoListIps:IPv4Subnet' => 'Lister et allouer IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet' => 'Lister et allouer IPs',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv4Subnet:Title_Class_Object' => 'Liste partielle des IPs contenues dans le %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:CannotBeListed' => 'Les IPs ne peuvent être listées: %1$s',
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet:Title_Class_Object' => 'Liste partielle des IPs contenues dans le %1$s: %2$s',
+	'UI:IPManagement:Action:DoListIps:IPv4Subnet:CannotBeListed' => 'Les IPs ne peuvent être listées: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:FirstIPOutOfSubnet' => 'La première IP est hors du sous-réseau !',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:LastIPOutOfSubnet' => 'La dernière IP est hors du sous-réseau !',
 	'UI:IPManagement:Action:DoListIps:IPv4Subnet:FirstIpBiggerThanLastIp' => 'La première IP de la plage est plus grande que la dernière !',
@@ -1174,56 +1055,56 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:PageTitle_Object_Class' => 'Réduire %1$s - %2$s',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:Title_Class_Object' => 'Réduire %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:CannotBeShrunk' =>  'Le Sous-réseau ne peut pas être réduit: %1$s',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:Title_Class_Object' => 'Réduire %1$s: %2$s',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:CannotBeShrunk' => 'Le Sous-réseau ne peut pas être réduit: %1$s',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:SizeTooSmall' => 'Le Sous-réseau est trop petit pour être réduit !',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:SizeTooSmallBy' => 'Le Sous-réseau est trop petit pour être réduit par %1$s !',
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'La Plage d\'Ips : <b>%1$s [%2$s - %3$s]</b> est à cheval sur la frontière du nouveau Sous-réseau. La réduction ne peut avoir lieu !',	
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Erreur: la Plage d\'Ips: <b>%1$s [%2$s - %3$s]</b> sort du Sous-réseau. La réduction ne peut avoir lieu !',	
-	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s: <span class="hilite">%2$s</span> a été réduit par %3$s.',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeInTheMiddle' => 'La Plage d\'Ips : <b>%1$s [%2$s - %3$s]</b> est à cheval sur la frontière du nouveau Sous-réseau. La réduction ne peut avoir lieu !',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:IPRangeDropped' => 'Erreur: la Plage d\'Ips: <b>%1$s [%2$s - %3$s]</b> sort du Sous-réseau. La réduction ne peut avoir lieu !',
+	'UI:IPManagement:Action:Shrink:IPv4Subnet:Done' => '%1$s: %2$s a été réduit par %3$s.',
 	'UI:IPManagement:Action:Shrink:IPv4Subnet:By' => 'Réduire par :',
-	
+
 	// Split action on subnets
 	'UI:IPManagement:Action:Split:IPv4Subnet' => 'Couper',
 	'UI:IPManagement:Action:Split:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:Split:IPv4Subnet:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Split:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Split:IPv4Subnet:PageTitle_Object_Class' => 'Couper %1$s - %2$s',
-	'UI:IPManagement:Action:Split:IPv4Subnet:Title_Class_Object' => 'Couper %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Split:IPv4Subnet:CannotBeSplit' =>  'Le Sous-réseau ne peut pas être coupé: %1$s',
+	'UI:IPManagement:Action:Split:IPv4Subnet:Title_Class_Object' => 'Couper %1$s: %2$s',
+	'UI:IPManagement:Action:Split:IPv4Subnet:CannotBeSplit' => 'Le Sous-réseau ne peut pas être coupé: %1$s',
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmall' => 'Le Sous-réseau est trop petit pour être coupé !',
 	'UI:IPManagement:Action:Split:IPv4Subnet:SizeTooSmallBy' => 'Le Sous-réseau est trop petit pour être coupé en %1$s !',
-	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'La Plage d\'Ips : <b>%1$s [%2$s - %3$s]</b> est à cheval sur la frontière des nouveaux Sous-réseaux. La coupure ne peut avoir lieu !',	
-	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s: <span class="hilite">%2$s</span> a été coupé en %3$s.',
+	'UI:IPManagement:Action:Split:IPv4Subnet:IPRangeInTheMiddle' => 'La Plage d\'Ips : <b>%1$s [%2$s - %3$s]</b> est à cheval sur la frontière des nouveaux Sous-réseaux. La coupure ne peut avoir lieu !',
+	'UI:IPManagement:Action:Split:IPv4Subnet:Done' => '%1$s: %2$s a été coupé en %3$s.',
 	'UI:IPManagement:Action:Split:IPv4Subnet:In' => 'Couper en :',
-	
+
 	// Expand action on subnets
 	'UI:IPManagement:Action:Expand:IPv4Subnet' => 'Etendre',
 	'UI:IPManagement:Action:Expand:IPv4Subnet+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:Summary' => 'Résumé',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:Summary+' => '',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:PageTitle_Object_Class' => 'Etendre %1$s - %2$s',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:Title_Class_Object' => 'Etendre %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:CannotBeExpanded' =>  'Le Sous-réseau ne peut pas être étendu: %1$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:Title_Class_Object' => 'Etendre %1$s: %2$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:CannotBeExpanded' => 'Le Sous-réseau ne peut pas être étendu: %1$s',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBig' => 'Le Sous-réseau est trop grand pour être étendu !',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBigBy' => 'Le Sous-réseau est trop grand pour être étendu par %1$s !',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:NotInIPBlock' => 'Le bloc contenant le sous-réseau est trop petit pour contenir le nouveau sous-réseau étendu !',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s: <span class="hilite">%2$s</span> a été étendu par %3$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s: %2$s a été étendu par %3$s',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:By' => 'Etendre par :',
 
 	// CSV Export action on subnets
 	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet' => 'Export CSV des IPs',
 	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s Export CSV des IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Title_Class_Object' => 'Export CSV des IPs pour %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Subtitle_ListRange' => 'Le Sous-réseau est trop grand pour exporter toutes les IPs en une seule page. Merci de sélectionner une plage à exporter:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:FirstIP' => 'Première IP de la plage',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:LastIP' => 'Dernière IP de la plage',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Title_Class_Object' => 'Export CSV des IPs pour %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:Subtitle_ListRange' => 'Le Sous-réseau est trop grand pour exporter toutes les IPs en une seule page. Merci de sélectionner une plage à exporter:',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:FirstIP' => 'Première IP de la plage',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Subnet:LastIP' => 'Dernière IP de la plage',
+
 	// Do CSV export IPs action on subnet
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet' => 'Export CSV des IPs',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet' => 'Export CSV des IPs',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:PageTitle_Object_Class' => '%1$s - %2$s Export CSV des IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:Title_Class_Object' => 'Export CSV partiel des IPs pour %1$s: <span class="hilite">%2$s</span>',
- 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:CannotBeListed' => 'Les IPs ne peuvent être listées: %1$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:Title_Class_Object' => 'Export CSV partiel des IPs pour %1$s: %2$s',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:CannotBeListed' => 'Les IPs ne peuvent être listées: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:FirstIPOutOfSubnet' => 'La première IP est hors du sous-réseau !',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:LastIPOutOfSubnet' => 'La dernière IP est hors du sous-réseau !',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Subnet:FirstIpBiggerThanLastIp' => 'La première IP de la plage est plus grande que la dernière !',
@@ -1257,16 +1138,21 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DoCalculator:IPv4Subnet:WrongMask' => 'Le masque est invalide !',
 	'UI:IPManagement:Action:DoCalculator:IPv4Subnet:WrongCIDR' => 'Le CIDR est invalide !',
 
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:CannotBeExploded' => 'Le FQDN ne peut être converti en un nom court et un nom de domaine',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:PageTitle_Object_Class' => 'Converti le FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Subnet:Done' => 'Le FQDN a été converti en %1$s %2$s',
+
 //
 // Management of IP ranges
 //
 	// Creation and Update Management
-	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Le nom de la Plage existe déjà dans le Sous-réseau !',	
-	'UI:IPManagement:Action:New:IPRange:Reverted' => 'La première IP de la Plage est plus grande que la dernière !',	
-	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'La Plage d\'IPs n\'est pas contenue dans le Sous-réseau sélectionné !',	
-	'UI:IPManagement:Action:New:IPRange:Collision0' => 'La Plage d\'IPs existe déjà !',	
-	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Collision : la première IP appartient à une plage existante !',	
-	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collision : la dernière IP appartient à une plage existante !',	
+	'UI:IPManagement:Action:New:IPRange:NameExist' => 'Le nom de la Plage existe déjà dans le Sous-réseau !',
+	'UI:IPManagement:Action:New:IPRange:Reverted' => 'La première IP de la Plage est plus grande que la dernière !',
+	'UI:IPManagement:Action:New:IPRange:NotInSubnet' => 'La Plage d\'IPs n\'est pas contenue dans le Sous-réseau sélectionné !',
+	'UI:IPManagement:Action:New:IPRange:Collision0' => 'La Plage d\'IPs existe déjà !',
+	'UI:IPManagement:Action:New:IPRange:Collision1' => 'Collision : la première IP appartient à une plage existante !',
+	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collision : la dernière IP appartient à une plage existante !',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collision : la nouvelle plage inclut une plage existante !',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs DHCP !',
 	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un serveur DHCP ne peut être que de classe Serveur ou Machine Virtuelle !',
@@ -1279,17 +1165,17 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Details:IPv4Range+' => '',
 
 	// List IPs action on IP Ranges 
-	'UI:IPManagement:Action:ListIps:IPv4Range' => 'Lister et allouer IPs',                                               
+	'UI:IPManagement:Action:ListIps:IPv4Range' => 'Lister et allouer IPs',
 	'UI:IPManagement:Action:ListIps:IPv4Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:ListIps:IPv4Range:Title_Class_Object' => 'IPs contenues dans %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:ListIps:IPv4Range:Subtitle_ListRange' => 'La plage d\'IPs est trop grande pour lister toutes les IPs en une seule page. Merci de sélectionner une sous plage à afficher:',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Range:FirstIP' => 'Première IP de la plage',                                               
-	'UI:IPManagement:Action:ListIps:IPv4Range:LastIP' => 'Dernière IP de la plage',                                               
-		
+	'UI:IPManagement:Action:ListIps:IPv4Range:Title_Class_Object' => 'IPs contenues dans %1$s: %2$s',
+	'UI:IPManagement:Action:ListIps:IPv4Range:Subtitle_ListRange' => 'La plage d\'IPs est trop grande pour lister toutes les IPs en une seule page. Merci de sélectionner une sous plage à afficher:',
+	'UI:IPManagement:Action:ListIps:IPv4Range:FirstIP' => 'Première IP de la plage',
+	'UI:IPManagement:Action:ListIps:IPv4Range:LastIP' => 'Dernière IP de la plage',
+
 	// Do list IPs action on IP Ranges 
-	'UI:IPManagement:Action:DoListIps:IPv4Range' => 'Lister et allouer IPs',                                               
+	'UI:IPManagement:Action:DoListIps:IPv4Range' => 'Lister et allouer IPs',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:PageTitle_Object_Class' => '%1$s - IPs',
-	'UI:IPManagement:Action:DoListIps:IPv4Range:Title_Class_Object' => 'Liste partielle des IPs contenues dans la %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoListIps:IPv4Range:Title_Class_Object' => 'Liste partielle des IPs contenues dans la %1$s: %2$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:CannotBeListed' => 'La plage d\'IPs ne peut être listée: %1$s',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:FirstIPOutOfRange' => 'La première IP est hors de la plage !',
 	'UI:IPManagement:Action:DoListIps:IPv4Range:LastIPOutOfRange' => 'La dernière IP est hors de la plage !',
@@ -1298,30 +1184,35 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// CSV Export action on IP Ranges
 	'UI:IPManagement:Action:CsvExportIps:IPv4Range' => 'Export CSV des IPs',
 	'UI:IPManagement:Action:CsvExportIps:IPv4Range:PageTitle_Object_Class' => '%1$s - %2$s export CSV des IPs',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Title_Class_Object' => 'Export CSV des IPs pour %1$s: <span class="hilite">%2$s</span>',
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Subtitle_ListRange' => 'La plage d\'IPs est trop grande pour exporter toutes les IPs en une seule fois. Merci de sélectionner une sous plage à exporter:',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:FirstIP' => 'Première IP de la plage',                                               
-	'UI:IPManagement:Action:CsvExportIps:IPv4Range:LastIP' => 'Dernière IP de la plage',                                               
-	
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Title_Class_Object' => 'Export CSV des IPs pour %1$s: %2$s',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:Subtitle_ListRange' => 'La plage d\'IPs est trop grande pour exporter toutes les IPs en une seule fois. Merci de sélectionner une sous plage à exporter:',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:FirstIP' => 'Première IP de la plage',
+	'UI:IPManagement:Action:CsvExportIps:IPv4Range:LastIP' => 'Dernière IP de la plage',
+
 	// Do CSV Export IPs action on IP Ranges
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range' => 'Export CSV des IPs',                                               
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range' => 'Export CSV des IPs',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:PageTitle_Object_Class' => '%1$s - %2$s export CSV des IPs',
-	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:Title_Class_Object' => 'Export CSV partiel des IPs pour %1$s: <span class="hilite">%2$s</span>',
+	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:Title_Class_Object' => 'Export CSV partiel des IPs pour %1$s: %2$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:CannotBeListed' => 'La plage ne peut être exportée: %1$s',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:FirstIPOutOfRange' => 'La première IP est hors de la plage !',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:LastIPOutOfRange' => 'La dernière IP est hors de la plage !',
 	'UI:IPManagement:Action:DoCsvExportIps:IPv4Range:FirstIpBiggerThanLastIp' => 'La première IP de la plage est plus grande que la dernière !',
 
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:CannotBeExploded' => 'Le FQDN ne peut être converti en un nom court et un nom de domaine',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:PageTitle_Object_Class' => 'Converti FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Range:Done' => 'Le FQDN a été converti en %1$s %2$s',
+
 //
 // Management of IP Addresses
 //
 	// Creation Management	
-	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'le nom court existe déjà dans le domaine !',	
+	'UI:IPManagement:Action:New:IPAddress:IPNameCollision' => 'le nom court existe déjà dans le domaine !',
 
-	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'L\'adresse IP existe déjà !',	
-	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'L\'adresse IP n\'appartient pas à la plage d\'IPs !',	
-	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'L\'adresse IP n\'appartient pas au sous-réseau !',	
-	'UI:IPManagement:Action:New:IPAddress:IPPings' => 'L\'IP répond au ping !',	
+	'UI:IPManagement:Action:New:IPAddress:IPCollision' => 'L\'adresse IP existe déjà !',
+	'UI:IPManagement:Action:New:IPAddress:NotInRange' => 'L\'adresse IP n\'appartient pas à la plage d\'IPs !',
+	'UI:IPManagement:Action:New:IPAddress:NotInSubnet' => 'L\'adresse IP n\'appartient pas au sous-réseau !',
+	'UI:IPManagement:Action:New:IPAddress:IPPings' => 'L\'IP répond au ping !',
 	'UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame' => 'L\'IP ne peut être NATée avec elle même !',
 
 	// Allocation to CI / Unallocation from CI
@@ -1335,27 +1226,41 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI fonctionnel n\'existe pas !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'L\'attribut est en lecture seule !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut est synchronisé depuis une source externe !',
+	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'Le nouveau FQDN sera en conflit avec la régle de duplication définie dans la configuration',
+	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'L\'address est déjà allouée !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'L\'adresse ne peut pas être désallouée: %1$s',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'L\'adresse n\'est pas allouée !',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'L\'adresse est attachée à l\'attribut d\'un CI qui est en lecture seule !',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'L\'adresse est attachée à l\'attribut d\'un CI qui est esclave d\'une synchronisation !',
 
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist' => 'L\'attribut %1$s n\'est pas celui d\'une adresse IP !',
+
 //
 // Management of IPv4 Addresses
 //
 	// Allocation to CI / Unallocation from CI
+	'UI:IPManagement:Action:Allocate:IPv4Address' => 'Allocate address to CI',
 	'UI:IPManagement:Action:Allocate:IPv4Address:PageTitle_Object_Class' => 'Alloue l\'IP',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Alloue %1$s <span class="hilite">%2$s</span> au CI',
-	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> a été allouée.',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Title_Class_Object' => 'Alloue %1$s %2$s au CI',
+	'UI:IPManagement:Action:Allocate:IPv4Address:Done' => '%1$s %2$s a été allouée.',
+	'UI:IPManagement:Action:Allocate:IPv4Address:IPAlreadyAllocated' => 'L\'adresse est déjà allouée !',
+	'UI:IPManagement:Action:UnAllocate:IPv4Address' => 'Désalloue l\'adresse de tous les CIs',
 	'UI:IPManagement:Action:Unallocate:IPv4Address:PageTitle_Object_Class' => 'Désalloue l\'IP',
-	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s <span class="hilite">%2$s</span> a été désallouée.',
+	'UI:IPManagement:Action:Unallocate:IPv4Address:Done' => '%1$s %2$s a été désallouée.',
+	'UI:IPManagement:Action:UnAllocate:IPv4Address:IPNotAllocated' => 'L\'adresse n\'est pas allouée !',
+
+	// Explode FQDN to fill shortname and domain_id attributes
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:CannotBeExploded' => 'Le FQDN ne peut être converti en un nom court et un nom de domaine',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:PageTitle_Object_Class' => 'Converti FQDN',
+	'UI:IPManagement:Action:ExplodeFQDN:IPv4Address:Done' => 'Le FQDN a été converti en %1$s %2$s',
 
 //
 // Management of Domains
 //
 	// Creation Management	
 	'UI:IPManagement:Action:New:Domain:NameCollision' => 'Le nom de domain existe déjà !',
-		
+
 	// Display list of domains
 	'UI:IPManagement:Action:DisplayList:Domain' => 'Afficher la Liste',
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',

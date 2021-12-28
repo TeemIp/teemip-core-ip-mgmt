@@ -212,8 +212,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned' => 'Align block to CIDR',
 	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned+' => '',
 	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:default' => 'Aligned with global IP settings',
-	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_no' => 'No',
-	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_yes' => 'Yes',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_no' => 'Force to No',
+	'Class:IPv4Block/Attribute:ipv4_block_cidr_aligned/Value:bca_yes' => 'Force to Yes',
 ));
 
 //
@@ -226,7 +226,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet:baseinfo' => 'General Information',
 	'Class:IPSubnet:ipinfo' => 'IP Information',
 	'Class:IPSubnet:automation' => 'Automation',
-	'Class:IPSubnet:localconfigparameters' => 'Subnet block settings',
+	'Class:IPSubnet:localconfigparameters' => 'Subnet settings',
 	'Class:IPSubnet/Attribute:name' => 'Name',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',
@@ -249,7 +249,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips/Value:reserve_no' => 'No',
 	'Class:IPSubnet/Attribute:ipconfig_reserve_subnet_ips/Value:reserve_yes' => 'Yes',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips' => 'Reserve subnet, gateway and broadcast IPs',
-	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Define the policy for the subnet, gateway and broadcast IPs reservation at creation',
+	'Class:IPSubnet/Attribute:reserve_subnet_ips+' => 'Define the policy for the subnet, gateway and broadcast IPs reservation',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:default' => 'Aligned with global IP settings',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_no' => 'Force to no',
 	'Class:IPSubnet/Attribute:reserve_subnet_ips/Value:reserve_yes' => 'Force to yes',
@@ -527,7 +527,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPAddress:baseinfo' => 'General Information',
 	'Class:IPAddress:dnsinfo' => 'DNS Information',
 	'Class:IPAddress:ipinfo' => 'IP Information',
-	'Class:IPAddress:localconfigparameters' => 'Subnet block settings',
+	'Class:IPAddress:localconfigparameters' => 'IP settings',
 	'Class:IPAddress/Attribute:short_name' => 'Short Name',
 	'Class:IPAddress/Attribute:short_name+' => 'Left label of the FQDN',
 	'Class:IPAddress/Attribute:domain_id' => 'DNS Domain',
@@ -560,7 +560,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_no+' => '',
 	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_yes' => 'Yes',
 	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_yes+' => '',
-	'Class:IPAddress/Attributeipconfig_:ip_allow_duplicate_name/Value:ipdup_dualstack' => 'Dual stack',
+	'Class:IPAddress/Attribute:ipconfig_:ip_allow_duplicate_name/Value:ipdup_dualstack' => 'Dual stack',
 	'Class:IPAddress/Attribute:ipconfig_ip_allow_duplicate_name/Value:ipdup_dualstack+' => 'Duplicate are authorized between unique IPv4 and IPv6',
 	'Class:IPAddress/Attribute:ip_allow_duplicate_name' => 'Allow Duplicate Names',
 	'Class:IPAddress/Attribute:ip_allow_duplicate_name+' => '',
@@ -800,6 +800,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	// Menu separator in Action menus
 	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',
 	'UI:IPManagement:Action:Error::WrongActionForClass' => 'This action cannot be applied on that class of object!',
+
 //
 // Management of IPBlocks
 //
@@ -1088,7 +1089,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBig' => 'Subnet is too big to be expanded!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:SizeTooBigBy' => 'Subnet is too big to be expanded by %1$s!',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:NotInIPBlock' => 'The block hosting the subnet is too small to contain the new expanded subnet!',
-	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s %2$s< has been expanded by %3$s',
+	'UI:IPManagement:Action:Expand:IPv4Subnet:Done' => '%1$s %2$s has been expanded by %3$s',
 	'UI:IPManagement:Action:Expand:IPv4Subnet:By' => 'Expand by:',
 
 	// CSV Export action on subnets
