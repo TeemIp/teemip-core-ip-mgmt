@@ -17,6 +17,7 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayTree;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
 
 /*******************************************************************
@@ -408,7 +409,7 @@ try {
 							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -529,7 +530,7 @@ try {
 							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -800,7 +801,7 @@ HTML
 					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':CannotBeDelegated', $sErrorString);
 					DisplayMessage::Warning($oP, $sMessage);
 
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				} else {
 					$oObj->DisplayOperationForm($oP, $oAppContext, $operation);
 				}
@@ -854,7 +855,7 @@ HTML
 						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -894,7 +895,7 @@ HTML
 					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':CannotBeUndelegated', $sErrorString);
 					DisplayMessage::Warning($oP, $sMessage);
 
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				} else {
 					// Undelegate block
 					$oObj->DoUndelegate();
@@ -908,7 +909,7 @@ HTML
 						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				}
 			}
 			break; // End case undelegate
@@ -990,7 +991,7 @@ HTML
 						$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 
 					// Close transaction
 					utils::RemoveTransaction($sTransactionId);
@@ -1030,7 +1031,7 @@ HTML
 					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated', $sErrorString);
 					DisplayMessage::Warning($oP, $sMessage);
 
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				} else {
 					// Unallocate IP
 					$oObj->DoUnallocate();
@@ -1044,7 +1045,7 @@ HTML
 						$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				}
 			}
 			break; // End case unallocateip
@@ -1083,7 +1084,7 @@ HTML
 					$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':CannotBeExploded', $sErrorString);
 					DisplayMessage::Warning($oP, $sMessage);
 
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				} else {
 					// Unallocate IP
 					$oObj->DoExplodeFQDN($sFqdnAttr);
@@ -1097,7 +1098,7 @@ HTML
 						$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					}
 					DisplayMessage::Success($oP, $sMessage);
-					$oObj->DisplayDetails($oP);
+					IPUtils::DisplayDetails($oP, $oObj);
 				}
 			}
 			break; // End case explodefqdn
@@ -1212,5 +1213,4 @@ class TeemIpUI {
 			));
 		}
 	}
-
 }
