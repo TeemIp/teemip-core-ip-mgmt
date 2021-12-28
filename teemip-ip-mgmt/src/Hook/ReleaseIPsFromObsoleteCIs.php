@@ -135,7 +135,7 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 			// Retrieve and release IPs attached to obsolete CIs
 			foreach($aClassesWithIPs as $sClass => $sKey)
 			{
-				$aIPAttributes = array_merge($aClassesWithIPs[$sClass]['IPAddress'], $aClassesWithIPs[$sClass]['IPv4Address'], $aClassesWithIPs[$sClass]['IPv6Address']);
+				$aIPAttributes = array_merge($sKey['IPAddress'], $sKey['IPv4Address'], $sKey['IPv6Address']);
 				$sOQL = "";
 				$i = 0;
 				foreach($aIPAttributes as $sAttribute)

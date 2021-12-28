@@ -126,19 +126,16 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 			$j = 0;
 			foreach($aClassesWithIPs as $sClass => $sKey)
 			{
-				$aIPAttributes = array_merge($aClassesWithIPs[$sClass]['IPAddress'],
-					$aClassesWithIPs[$sClass]['IPv4Address'],
-					$aClassesWithIPs[$sClass]['IPv6Address']);
+				$aIPAttributes = array_merge($sKey['IPAddress'],
+					$sKey['IPv4Address'],
+					$sKey['IPv6Address']);
 				$sOQLj = "";
 				$i = 0;
-				foreach($aIPAttributes as $sAttribute)
-				{
+				foreach ($aIPAttributes as $sAttribute) {
 					$sOQLi = "SELECT IPAddress AS ip JOIN $sClass AS ci ON ci.$sAttribute = ip.id WHERE ci.org_id IN $sOrgToCleanList";
-					if ($i++ == 0)
-					{
+					if ($i++ == 0) {
 						$sOQLj = $sOQLi;
-					}
-					else
+					} else
 					{
 						$sOQLj .= " UNION ".$sOQLi;
 					}
