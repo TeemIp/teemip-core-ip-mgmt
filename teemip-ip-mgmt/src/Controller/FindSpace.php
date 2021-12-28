@@ -23,6 +23,7 @@ use DBObjectSearch;
 use Dict;
 use IPv4Block;
 use IPv6Block;
+use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
@@ -68,7 +69,7 @@ class FindSpace {
 	 * Define parameters that will be used for lookup
 	 *  1. Ask to select organization and space type
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oAppContext
 	 * @param $aDefault
 	 *
@@ -76,7 +77,7 @@ class FindSpace {
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	static public function DisplayOperationForm(WebPage $oP, $oAppContext, $aDefault) {
+	static public function DisplayOperationForm(iTopWebPage $oP, $oAppContext, $aDefault) {
 		if (empty($aDefault['spacetype'])) {
 			FindSpace::FindSpaceProcessStep1($oP, $oAppContext);
 		} else {
@@ -121,7 +122,7 @@ HTML
 			$iTransactionId = utils::GetNewTransactionId();
 			$oP->SetTransactionId($iTransactionId);
 			$sFormAction = utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-			$oP->add("<form action=\"$sFormAction\" id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$iFormId}');\">\n");
+			$oP->add("<form action=\"$sFormAction\" id=\"form_$iFormId\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_$iFormId');\">\n");
 			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
 
 			$oP->add("<table>");
@@ -232,8 +233,16 @@ HTML
 	 * @param $aDefault
 	 *
 	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 * @throws \Twig\Error\LoaderError
+	 * @throws \Twig\Error\RuntimeError
+	 * @throws \Twig\Error\SyntaxError
 	 */
 	static private function FindSpaceProcessStep2(WebPage $oP, $oAppContext, $aDefault) {
 		$sSpaceType = $aDefault['spacetype'];
@@ -482,7 +491,7 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $aParameter
 	 *
 	 * @throws \ArchivedObjectException
@@ -493,7 +502,7 @@ HTML
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	static public function DoDisplayAvailableSpace(WebPage $oP, $aParameter) {
+	static public function DoDisplayAvailableSpace(iTopWebPage $oP, $aParameter) {
 		$sClass = ($aParameter['spacetype'] == 'ipv4space') ? 'IPv4Block' : 'IPv6Block';
 		$iOrgId = $aParameter['org_id'];
 		$sIp = $aParameter['ip'];
