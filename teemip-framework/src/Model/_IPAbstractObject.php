@@ -332,13 +332,15 @@ EOF
 	/**
 	 * Remind main block attributes to user when performing resizing actions
 	 *
-	 * @param $oP
+	 * @param \iTopWebPage $oP
 	 * @param $sOperation
-	 * @param $m_iFormId
+	 * @param $iFormId
 	 * @param $sPrefix
 	 * @param $aDefault
+	 *
+	 * @return void
 	 */
-	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $m_iFormId, $sPrefix, $aDefault) {
+	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 	}
 
 	/**
