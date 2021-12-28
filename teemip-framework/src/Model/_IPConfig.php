@@ -148,6 +148,32 @@ class _IPConfig extends cmdbAbstractObject {
 
 		return null;
 	}
-	
-	
+
+	/**
+	 * Look for IPConfig corresponding to given org_id
+	 *
+	 * @param $iOrgId
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public static function GetFromOrg($iOrgId): int {
+		$iIpConfigId = 0;
+		if (is_int($iOrgId)) {
+			$sOQL = 'SELECT IPConfig AS c WHERE c.org_id = :org_id';
+			$oIPConfigSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
+			if ($oIPConfigSet->CountExceeds(0)) {
+				$iIpConfigId = $oIPConfigSet->Fetch()->GetKey();
+			}
+		}
+
+		return $iIpConfigId;
+	}
+
+
 }
