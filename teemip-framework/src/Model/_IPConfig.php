@@ -25,17 +25,17 @@ class _IPConfig extends cmdbAbstractObject {
 		// Only one IPConfig object can exist within an organization
 		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
-		$oConfigSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPConfig AS conf WHERE conf.org_id = $iOrgId"));
-		while ($oConfig = $oConfigSet->Fetch())
-		{
+		$sOQL = 'SELECT IPConfig AS conf WHERE conf.org_id = :org_id';
+		$oConfigSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId));
+		while ($oConfig = $oConfigSet->Fetch()) {
 			// If it's a modification (keys are the same), we can proceed, otherwise, we deny the creation 
-			if ($oConfig->GetKey() != $iKey)
-			{
+			if ($oConfig->GetKey() != $iKey) {
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPConfig:AlreadyExists');
+
 				return;
 			}
 		}
-		
+
 		// Check validity of block_min_size
 		$iBlock4MinSize = $this->Get('ipv4_block_min_size');
 		if ($iBlock4MinSize < IPV4_BLOCK_MIN_SIZE)
@@ -115,7 +115,7 @@ class _IPConfig extends cmdbAbstractObject {
 	{
 		// Create Global Config of $iOrgId if it doesn't exist
 		// Save it only if $iOrgId != 0 and create basic IP usages at the same time
-		$oIpConfig = MetaModel::GetObjectFromOQL("SELECT IPConfig AS conf WHERE conf.org_id = $iOrgId", null, false);
+		$oIpConfig = MetaModel::GetObjectFromOQL("SELECT IPConfig AS conf WHERE conf.org_id = :org_id", array('org_id' => $iOrgId), false);
 		if ($oIpConfig == null)
 		{
 			$oIpConfig = MetaModel::NewObject('IPConfig');

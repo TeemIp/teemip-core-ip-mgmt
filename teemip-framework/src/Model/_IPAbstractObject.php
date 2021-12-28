@@ -19,11 +19,11 @@ use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSearch;
 use Dict;
+use iTopWebPage;
 use MenuBlock;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
-use WebPage;
 
 class _IPAbstractObject extends cmdbAbstractObject {
 	/**
@@ -76,18 +76,20 @@ class _IPAbstractObject extends cmdbAbstractObject {
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 
-	/**
+	/*
 	 * Displays choices related to operation.
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oAppContext
 	 * @param $sOperation
-	 * @param array $aDefault
+	 * @param $aDefault
 	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function DisplayOperationForm(WebPage $oP, $oAppContext, $sOperation, $aDefault = array()) {
+	public function DisplayOperationForm(iTopWebPage $oP, $oAppContext, $sOperation, $aDefault = array()) {
 		$id = $this->GetKey();
 		$sClass = get_class($this);
 		$sClassLabel = MetaModel::GetName($sClass);
@@ -160,7 +162,6 @@ EOF
 			);
 		} else {
 			// Prepare form
-			/** @var \iTopWebPage $oP */
 			$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel));
 
 			$iTransactionId = utils::GetNewTransactionId();
@@ -295,7 +296,7 @@ EOF
 	/**
 	 * Set page titles.
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $sUIPath
 	 * @param bool $bIcon
 	 *
@@ -303,7 +304,7 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function SetPageTitles(WebPage $oP, $sUIPath, $bIcon = true) {
+	public function SetPageTitles(iTopWebPage $oP, $sUIPath, $bIcon = true) {
 		$sClassLabel = MetaModel::GetName(get_class($this));
 		$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel));
 		$oP->add("<div class=\"page_header teemip_page_header\">\n");
@@ -337,13 +338,13 @@ EOF
 	 * @param $sPrefix
 	 * @param $aDefault
 	 */
-	protected function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $m_iFormId, $sPrefix, $aDefault) {
+	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $m_iFormId, $sPrefix, $aDefault) {
 	}
 
 	/**
 	 * Remind main block attributes to user when performing resizing actions - V >= 3.0
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oColumn
 	 *
 	 * @return void
@@ -353,7 +354,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function DisplayMainAttributesForOperationV3(WebPage $oP, $oColumn) {
+	protected function DisplayMainAttributesForOperationV3(iTopWebPage $oP, $oColumn) {
 		$sClass = get_class($this);
 
 		// Requestor - Allow change
@@ -386,7 +387,7 @@ EOF
 	/**
 	 * Display attributes associated to an operation
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $sOperation
 	 * @param $iFormId
 	 * @param $aDefault
@@ -395,24 +396,24 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
 	}
 
 	/**
 	 * Display attributes associated to operation - V >= 3.0
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oClassForm
 	 * @param $sOperation
 	 * @param $aDefault
 	 *
 	 * @return void
 	 */
-	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param string $sTitle
 	 *
 	 * @throws \ApplicationException
@@ -423,7 +424,7 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayBareTab(WebPage $oP, $sTitle = '') {
+	public function DisplayBareTab(iTopWebPage $oP, $sTitle = '') {
 		$sClass = get_class($this);
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			// Display action menu
@@ -436,7 +437,6 @@ EOF
 			$this->SetPageTitles($oP, $sTitle.$sClass);
 		} else {
 			// The object can be read - Process request now
-			/** @var \iTopWebPage $oP */
 			$sClassLabel = MetaModel::GetName($sClass);
 
 			$oP->set_title(Dict::Format('UI:DetailsPageTitle', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -461,7 +461,7 @@ EOF
 	/**
 	 * Create form content for a field that is an attribute in a class of object
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $sPrefix
 	 * @param $sClass
 	 * @param $sAttCode
@@ -482,7 +482,7 @@ EOF
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	protected function GetClassFieldForForm(WebPage $oP, $sPrefix, $sClass, $sAttCode, $sLabel, $sDisplayValue, $iFlags) {
+	protected function GetClassFieldForForm(iTopWebPage $oP, $sPrefix, $sClass, $sAttCode, $sLabel, $sDisplayValue, $iFlags) {
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sAttDefClass = get_class($oAttDef);
 		$sAttLabel = ($sLabel == '') ? MetaModel::GetLabel($sClass, $sAttCode) : $sLabel;

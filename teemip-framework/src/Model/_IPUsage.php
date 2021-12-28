@@ -26,20 +26,16 @@ class _IPUsage extends Typology
 		if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE))
 		{
 			$sOrgId = $this->Get('org_id');
-			if ($this->IsNew())
-			{
+			if ($this->IsNew()) {
 				$iKey = -1;
-			}
-			else
-			{
+			} else {
 				$iKey = $this->GetKey();
 			}
-			$oIpUsageSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPUsage AS u WHERE u.name = '$sName' AND u.org_id = $sOrgId AND u.id != $iKey"));
-			if ($oIpUsageSet->Count() != 0)
-			{
+			$sOQL = 'SELECT IPUsage AS u WHERE u.name = :name AND u.org_id = :org_id AND u.id != :key';
+			$oIpUsageSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'org_id' => $sOrgId, 'id' => $iKey));
+			if ($oIpUsageSet->CountExceeds(0)) {
 				// It's NOT a modification (keys are not the same), we deny the creation
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPUsage:AlreadyExists');
-				return;
 			}
 		}
 	}

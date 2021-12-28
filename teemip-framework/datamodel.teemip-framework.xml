@@ -670,11 +670,11 @@
           <static>true</static>
           <access>public</access>
           <type>custom</type>
-          <code><![CDATA[ public static function CreateBasicIpUsages($sOrgId)
+          <code><![CDATA[ public static function CreateBasicIpUsages($iOrgId)
 	{
-		IPUsage::GetIpUsageId($sOrgId, NETWORK_IP_CODE);
-		IPUsage::GetIpUsageId($sOrgId, GATEWAY_IP_CODE);
-		IPUsage::GetIpUsageId($sOrgId, BROADCAST_IP_CODE);
+		IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+		IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+		IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
 	}]]></code>
         </method>
         <method id="GetIpUsageId">
@@ -682,13 +682,13 @@
           <static>true</static>
           <access>public</access>
           <type>custom</type>
-          <code><![CDATA[ public static function GetIpUsageId($sOrgId, $sCode)
+          <code><![CDATA[ public static function GetIpUsageId($iOrgId, $sCode)
 	{
-		$oIpUsage = MetaModel::GetObjectFromOQL("SELECT IPUsage AS i WHERE i.name = '$sCode' AND i.org_id = $sOrgId", null, false);
+		$oIpUsage = MetaModel::GetObjectFromOQL("SELECT IPUsage AS i WHERE i.name = :code AND i.org_id = :org_id", array('code' => $sCode, 'org_id' => $iOrgId), false);
 		if ($oIpUsage == null)
 		{
 			$oIpUsage = MetaModel::NewObject('IPUsage');
-			$oIpUsage->Set('org_id', $sOrgId);
+			$oIpUsage->Set('org_id', $iOrgId);
 			$oIpUsage->Set('name', $sCode);
 			switch ($sCode)
 			{

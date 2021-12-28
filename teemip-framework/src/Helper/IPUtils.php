@@ -420,5 +420,4 @@ class IPUtils {
 		$oObj->DisplayDetails($oP);
 	}
 
-
 }

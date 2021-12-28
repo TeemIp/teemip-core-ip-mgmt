@@ -88,7 +88,7 @@ class DisplayTree {
 		if ($iCurrentOrganization == '') {
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
 		} else {
-			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = :org_id"), array(), array('org_id' => $iCurrentOrganization));
 		}
 		$sObjectsCount = Dict::Format('UI:Pagination:HeaderNoSelection', $oSet->Count());
 
@@ -123,7 +123,7 @@ class DisplayTree {
 		if ($iCurrentOrganization == '') {
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass"));
 		} else {
-			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = $iCurrentOrganization"));
+			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass AS c WHERE c.org_id = :org_id"), array(), array('org_id' => $iCurrentOrganization));
 		}
 		$iSetCount = $oSet->Count();
 
@@ -178,6 +178,7 @@ class DisplayTree {
 	 * @param $iOrgId
 	 * @param $sClass
 	 *
+	 * @return string
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
@@ -211,6 +212,7 @@ class DisplayTree {
 	 * @param $iContainerId
 	 * @param $sLeafClass
 	 *
+	 * @return string
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException

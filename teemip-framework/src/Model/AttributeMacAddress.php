@@ -83,7 +83,7 @@ class AttributeMacAddress extends AttributeString {
 	public function GetAsCSV($sValue, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false) {
 		$sFrom = array("\r\n", $sTextQualifier);
 		$sTo = array("\n", $sTextQualifier.$sTextQualifier);
-		$sEscaped = str_replace($sFrom, $sTo, (string)$this->GetMacAtFormat($sValue, $oHostObject));
+		$sEscaped = str_replace($sFrom, $sTo, $this->GetMacAtFormat($sValue, $oHostObject));
 
 		return $sTextQualifier.$sEscaped.$sTextQualifier;
 	}
@@ -92,7 +92,7 @@ class AttributeMacAddress extends AttributeString {
 	 * @inheritdoc
 	 */
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true) {
-		return Str::pure2html((string)$this->GetMacAtFormat($sValue, $oHostObject));
+		return Str::pure2html($this->GetMacAtFormat($sValue, $oHostObject));
 	}
 
 	/**
@@ -103,8 +103,8 @@ class AttributeMacAddress extends AttributeString {
 		return Str::pure2xml((string)$sValue);
 	}
 
-	public function GetEditValue($sAttCode, $oHostObject = null) {
-		return (string)$this->GetMacAtFormat($sAttCode, $oHostObject);
+	public function GetEditValue($sValue, $oHostObj = null) {
+		return $this->GetMacAtFormat($sValue, $oHostObj);
 	}
 
 	public function GetValidationPattern() {

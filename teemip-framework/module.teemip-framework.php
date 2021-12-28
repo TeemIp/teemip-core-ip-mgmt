@@ -54,6 +54,3 @@ SetupWebPage::AddModule(
 		),
 	)
 );
-
-
-?>
