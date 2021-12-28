@@ -4,6 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+//
+// Class: Rack
+//
+
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Rack/Attribute:macaddress' => 'MAC Addresse',
 	'Class:Rack/Attribute:macaddress+' => '',
