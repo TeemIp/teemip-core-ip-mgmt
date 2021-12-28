@@ -111,31 +111,28 @@ if (!class_exists('IPManagementInstaller'))
 		{
 			$sDBSubname = $oConfiguration->Get('db_subname');
 			if (($sPreviousVersion == '2.5.0') || ($sPreviousVersion == '2.5.1')) {
-				SetupPage::log_info("Module teemip-ip-mgmt: reset next_run_date of ReleaseIPsFromObsoleteCIs backgorund task");
+				SetupLog::Info("Module teemip-ip-mgmt: reset next_run_date of ReleaseIPsFromObsoleteCIs backgorund task");
 
 				$sUpdate = "UPDATE ".$sDBSubname."priv_backgroundtask SET next_run_date= '2020-01-01 00:00:00' WHERE class_name = 'ReleaseIPsFromObsoleteCIs'";
 				CMDBSource::Query($sUpdate);
 
-				SetupPage::log_info("Module teemip-zone-mgmt: reset done");
+				SetupLog::Info("Module teemip-zone-mgmt: reset done");
 			}
 			if ($sPreviousVersion == '2.7.0') {
-				SetupPage::log_info("Module teemip-ip-mgmt: move IP Range DHCP servers from obsolete lnkServerToIPRange to new lnkFunctionalCIToIPRange");
+				SetupLog::Info("Module teemip-ip-mgmt: move IP Range DHCP servers from obsolete lnkServerToIPRange to new lnkFunctionalCIToIPRange");
 
 				$sCopy = "INSERT INTO ".$sDBSubname."lnkfunctionalcitoiprange (functionalci_id, iprange_id, role) SELECT server_id, iprange_id, role FROM ".$sDBSubname."lnkiprangetoserver";
 				CMDBSource::Query($sCopy);
 
-				SetupPage::log_info("Module teemip-ip-mgmt: migration done");
+				SetupLog::Info("Module teemip-ip-mgmt: migration done");
 			}
 //			if ($sPreviousVersion[0] == '2') {
-			SetupPage::log_info("Module teemip-ip-mgmt: compute new IPObjects attributes linked with IPConfig parameters ");
+			SetupLog::Info("Module teemip-ip-mgmt: compute new IPObjects attributes linked with IPConfig parameters ");
 
 			$sCopy = "UPDATE ".$sDBSubname."ipobject AS o JOIN ipconfig AS c ON c.org_id = o.org_id SET o.ipconfig_id = c.id";
 			CMDBSource::Query($sCopy);
 
-			//$sCopy = "UPDATE ipblockv4 AS b JOIN ipobject AS o ON o.id = b.id JOIN ipconfig AS c ON c.org_id = o.org_id SET b.ipv4_block_min_size = c.ipv4_block_min_size, b.ipv4_block_cidr_aligned = c.'default'";
-			//CMDBSource::Query($sCopy);
-
-			SetupPage::log_info("Module teemip-ip-mgmt: computation done");
+			SetupLog::Info("Module teemip-ip-mgmt: computation done");
 //			}
 		}
 	}

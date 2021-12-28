@@ -18,7 +18,6 @@
           <format>IPObject</format>
           <attributes/>
         </naming>
-        <display_template/>
         <icon>asset/img/ipobject.png</icon>
         <reconciliation>
           <attributes>
@@ -130,6 +129,39 @@
 		}
  }]]></code>
         </method>
+        <method id="OnInsert">
+          <comment/>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[ public function OnInsert()
+ {
+		parent::OnInsert();
+
+		if ($this->Get('status') == 'allocated') {
+			$this->Set('allocation_date', time());
+		}
+ }]]></code>
+        </method>
+        <method id="OnUpdate">
+          <comment/>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[ public function OnUpdate()
+ {
+		parent::OnUpdate();
+
+		// Set allocation and released date as required
+		$sStatus = $this->Get('status');
+		$soriginalStatus = $this->GetOriginal('status');
+		if (($sStatus == 'allocated') && ($soriginalStatus != 'allocated')) {
+			$this->Set('allocation_date', time());
+		} elseif (($sStatus== 'released') && ($soriginalStatus != 'released')) {
+			$this->Set('release_date', time());
+		}
+ }]]></code>
+        </method>
       </methods>
       <presentation>
         <default_search>
@@ -158,7 +190,6 @@
             <attribute id="contact_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -238,7 +269,6 @@
             <attribute id="document_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -318,7 +348,6 @@
             <attribute id="ticket_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -400,7 +429,6 @@
           <format>IPBlock</format>
           <attributes/>
         </naming>
-        <display_template/>
         <icon>asset/img/ipblock.png</icon>
         <reconciliation>
           <attributes>
@@ -575,7 +603,6 @@
             <attribute id="ipblock_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -661,7 +688,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipblock.png</icon>
         <reconciliation>
           <attributes>
@@ -944,7 +970,6 @@
           <format>IPSubnet</format>
           <attributes/>
         </naming>
-        <display_template/>
         <icon>asset/img/ipsubnet.png</icon>
         <reconciliation>
           <attributes>
@@ -1125,7 +1150,6 @@
             <attribute id="ipsubnet1_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1293,7 +1317,6 @@
             <attribute id="vlan_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1378,7 +1401,6 @@
             <attribute id="vrf_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1459,7 +1481,6 @@
             <attribute id="ipsubnet_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -1545,7 +1566,6 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipsubnet.png</icon>
         <reconciliation>
           <attributes>
@@ -1916,7 +1936,6 @@
           <format>IPRange</format>
           <attributes/>
         </naming>
-        <display_template/>
         <icon>asset/img/iprange.png</icon>
         <reconciliation>
           <attributes>
@@ -2066,7 +2085,6 @@
           <attribute id="iprange_id"/>
         </attributes>
       </naming>
-      <display_template/>
       <icon/>
       <reconciliation>
         <attributes>
@@ -2195,7 +2213,6 @@
             <attribute id="range"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/iprange.png</icon>
         <reconciliation>
           <attributes>
@@ -2394,7 +2411,6 @@
           <format>IPAddress</format>
           <attributes/>
         </naming>
-        <display_template/>
         <icon>asset/img/ipaddress.png</icon>
         <reconciliation>
           <attributes>
@@ -2573,7 +2589,6 @@
             <attribute id="ip1_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2790,7 +2805,6 @@
             <attribute id="ipaddress_id"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -2936,7 +2950,6 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon>asset/img/ipaddress.png</icon>
         <reconciliation>
           <attributes>
@@ -3231,7 +3244,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -3333,7 +3345,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
