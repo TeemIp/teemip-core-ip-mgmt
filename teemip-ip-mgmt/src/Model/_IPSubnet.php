@@ -8,6 +8,7 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
 use IPConfig;
 use IPObject;
+use iTopWebPage;
 use utils;
 use WebPage;
 
@@ -291,13 +292,18 @@ class _IPSubnet extends IPObject {
 	/**
 	 * Display result of IPvi calculator
 	 *
-	 * @param \WebPage $oP
-	 * @param $oAppContext
+	 * @param \iTopWebPage $oP
 	 * @param $aParam
 	 *
-	 * @throws \Exception
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	public function DisplayCalculatorOutput(WebPage $oP, $aParam) {
+	public function DisplayCalculatorOutput(iTopWebPage $oP, $aParam) {
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoCalculator:');
 		$oP->add($this->GetCalculatorOutput($oP, $aParam));
 	}
@@ -317,10 +323,18 @@ class _IPSubnet extends IPObject {
 	/**
 	 * Display all IPs in CSV format
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $aParam
+	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
 	 */
-	public function DisplayIPsAsCSV(WebPage $oP, $aParam) {
+	public function DisplayIPsAsCSV(iTopWebPage $oP, $aParam) {
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 		$sHtml = $this->GetIPsAsCSV($aParam);
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
@@ -343,7 +357,8 @@ HTML
 	}
 
 	/**
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
+	 * @param $aParam
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -353,7 +368,7 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DoListIps(WebPage $oP, $aParam) {
+	public function DoListIps(iTopWebPage $oP, $aParam) {
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:ListIps:');
 		$oP->add($this->GetListIps($oP, $aParam));
 	}
@@ -381,7 +396,7 @@ HTML
 	/**
 	 * Displays available space
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $iChangeId
 	 * @param $aParameter
 	 *
@@ -393,7 +408,7 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DoDisplayAvailableSpace(WebPage $oP, $iChangeId, $aParameter) {
+	public function DoDisplayAvailableSpace(iTopWebPage $oP, $iChangeId, $aParameter) {
 		$sHtml = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
 		$oP->add($sHtml);

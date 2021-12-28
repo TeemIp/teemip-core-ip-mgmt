@@ -20,6 +20,7 @@ use DBObjectSearch;
 use Dict;
 use IPBlock;
 use IPConfig;
+use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
@@ -150,7 +151,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeSpace($iSize, $iMaxOffer, $iOffsetIp) {
+	public function GetFreeSpace($iSize, $iMaxOffer, $iOffsetIp = 0) {
 		$bitMask = IPUtils::SizeToMask($iSize);
 		$iOrgId = $this->Get('org_id');
 		$iKey = ($this->GetKey() > 0) ? $this->GetKey() : 0;
@@ -237,7 +238,7 @@ class _IPv4Block extends IPBlock implements iTree {
 				$iLastFreeIp = $aFreeList[$j]['lastip'];
 				$iLastIp = $iAnIp + $iSize - 1;
 				while (($iLastIp <= $iLastFreeIp) && ($n < $iMaxOffer)) {
-					// Skip space if it not beyond offset
+					// Skip space if not beyond offset
 					if ($iOffsetIp <= $iAnIp) {
 						$aFreeSpace[$n] = array();
 						$aFreeSpace[$n]['firstip'] = IPUtils::mylong2ip($iAnIp);
@@ -887,11 +888,12 @@ EOF
 		//	Create new block
 		$oNewBlock = MetaModel::NewObject('IPv4Block');
 		$oNewBlock->Set('org_id', $iOrgId);
+		$oNewBlock->Set('ipconfig_id', $this->Get('ipconfig_id'));
 		$oNewBlock->Set('name', $sNewName);
 		$oNewBlock->Set('parent_id', $this->Get('parent_id'));
 		$oNewBlock->Set('firstip', $sSplitIp);
 		$oNewBlock->Set('lastip', $sLastIpCurrentBlock);
-		$oNewBlock->Set('iptype_id', $this->Get('iptype_id'));
+		$oNewBlock->Set('ipblocktype_id', $this->Get('ipblocktype_id'));
 		$oNewBlock->Set('comment', $this->Get('comment'));
 		if (!is_null($sRequestor_id)) {
 			$oNewBlock->Set('requestor_id', $sRequestor_id);
@@ -1244,82 +1246,9 @@ EOF
 	}
 
 	/**
-	 * Display main block attributes
-	 *
-	 * @param \WebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $sPrefix
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
+	 * @inheritdoc
 	 */
-	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
-		$oP->SetCurrentTab($sLabelOfAction);
-
-		$oP->add('<table style="vertical-align:top"><tr>');
-		$oP->add('<td style="vertical-align:top">');
-		$aDetails = array();
-
-		// Parent ID
-		$sDisplayValue = $this->GetAsHTML('parent_id');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription('IPv4Block', 'parent_id').'">'.MetaModel::GetLabel('IPv4Block', 'parent_id').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// First IP
-		$sDisplayValue = $this->GetAsHTML('firstip');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription('IPv4Block', 'firstip').'">'.MetaModel::GetLabel('IPv4Block', 'firstip').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// Last IP
-		$sDisplayValue = $this->GetAsHTML('lastip');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription('IPv4Block', 'lastip').'">'.MetaModel::GetLabel('IPv4Block', 'lastip').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// Requestor ID - Can be modified
-		$sInputId = $iFormId.'_'.'requestor_id';
-		$oAttDef = MetaModel::GetAttributeDef('IPObject', 'requestor_id');
-		$sValue = (array_key_exists('requestor_id', $aDefault)) ? $aDefault['requestor_id'] : $this->Get('requestor_id');
-		$iFlags = $this->GetAttributeFlags('requestor_id');
-		$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-		$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetFormElementForField($oP, 'IPObject', 'requestor_id', $oAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>';
-		$aDetails[] = array(
-			'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
-			'value' => $sHTMLValue,
-		);
-
-		$oP->Details($aDetails);
-		$oP->add('</td>');
-		$oP->add('</tr></table>');
-	}
-
-	/**
-	 * Display fields required for action
-	 *
-	 * @param \WebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \Exception
-	 */
-	public function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -1477,26 +1406,9 @@ EOF
 	}
 
 	/**
-	 * Display attributes and action buttons associated operation
-	 *
-	 * @param \WebPage $oP
-	 * @param $oClassForm
-	 * @param $sOperation
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
+	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -1547,6 +1459,10 @@ EOF
 				break;
 
 			case 'shrinkblock':
+				// Remind main attributes to user first
+				$this->DisplayMainAttributesForOperationV3($oP, $oColumn1);
+
+				// Request parameters
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Shrink:IPv4Block:NewFirstIP');
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Shrink:IPv4Block:NewLastIP');
 
@@ -1560,6 +1476,9 @@ EOF
 				break;
 
 			case 'splitblock':
+				// Remind main attributes to user first
+				$this->DisplayMainAttributesForOperationV3($oP, $oColumn1);
+
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Split:IPv4Block:At');
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Split:IPv4Block:NameNewBlock');
 
@@ -1575,6 +1494,9 @@ EOF
 				break;
 
 			case 'expandblock':
+				// Remind main attributes to user first
+				$this->DisplayMainAttributesForOperationV3($oP, $oColumn1);
+
 				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Expand:IPv4Block:NewFirstIP');
 				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Expand:IPv4Block:NewLastIP');
 
@@ -2037,6 +1959,7 @@ EOF
 			if ($iSize <= IPV4_SUBNET_MAX_SIZE) {
 				$aValues = array(
 					'org_id' => $iOrgId,
+					'ipconfig_id' => $this->Get('ipconfig_id'),
 					'requestor_id' => $this->Get('requestor_id'),
 					'block_id' => $iKey,
 					'ip' => $sFirstIp,

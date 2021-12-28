@@ -6,13 +6,16 @@
 
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
+use AttributeEnum;
+use AttributeExternalField;
+use AttributeExternalKey;
 use DBObject;
 use MetaModel;
 use Trigger;
 use utils;
+use ValueSetEnum;
 
-class IPTriggerOnWaterMark extends Trigger
-{
+class IPTriggerOnWaterMark extends Trigger {
 	public static function Init() {
 		$aParams = array
 		(
@@ -24,7 +27,6 @@ class IPTriggerOnWaterMark extends Trigger
 			"db_table" => "priv_trigger_onwatermark",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"icon" => utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipbell.png',
 		);
 		MetaModel::Init_Params($aParams);

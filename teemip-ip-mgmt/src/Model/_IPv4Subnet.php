@@ -11,8 +11,6 @@ use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
@@ -20,6 +18,7 @@ use Dict;
 use IPConfig;
 use IPSubnet;
 use IPUsage;
+use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
@@ -1237,6 +1236,7 @@ EOF
 		for ($i = 1; $i < $iSplit; $i++) {
 			$oNewObj[$i] = MetaModel::NewObject('IPv4Subnet');
 			$oNewObj[$i]->Set('org_id', $iOrgId);
+			$oNewObj[$i]->Set('ipconfig_id', $this->Get('ipconfig_id'));
 			$oNewObj[$i]->Set('ip', IPUtils::mylong2ip($iIpNew));
 			$oNewObj[$i]->Set('mask', $sMaskNewSubnet);
 			$oNewObj[$i]->Set('broadcastip', IPUtils::mylong2ip($iIpNew + $iSizeNewSubnet - 1));
@@ -1579,7 +1579,7 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DisplayMainAttributesForOperation(WebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
+	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
@@ -1629,9 +1629,28 @@ EOF
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	protected function DisplayMainAttributesForOperationV3(iTopWebPage $oP, $oColumn) {
+		// Parent block
+		$val = $this->GetClassFieldForDisplay('IPv4Subnet', 'block_id', '');
+		$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+		// First IP
+		$val = $this->GetClassFieldForDisplay('IPv4Subnet', 'ip', '');
+		$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+		//  Last IP
+		$val = $this->GetClassFieldForDisplay('IPv4Subnet', 'mask', '');
+		$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
+
+		parent::DisplayMainAttributesForOperationV3($oP, $oColumn);
+	}
+
+	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperation(WebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -1812,7 +1831,7 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(WebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -1864,6 +1883,9 @@ EOF
 			case 'shrinksubnet':
 			case 'splitsubnet':
 			case 'expandsubnet':
+				// Remind main attributes to user first
+				$this->DisplayMainAttributesForOperationV3($oP, $oColumn1);
+
 				$oColumn2 = new Column();
 				$oMultiColumn->AddColumn($oColumn2);
 
@@ -1876,19 +1898,22 @@ EOF
 				}
 
 				// Scale of action
-				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
-				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-				$oSelect = SelectUIBlockFactory::MakeForSelect('scale');
-				$oColumn2->AddSubBlock($oSelect);
+				$sInputId = $this->m_iFormId.'_'.'scale';
+				$sHTML = "<td><select id=\"$sInputId\" name=\"scale\">\n";
 				$jDefault = (array_key_exists('scale', $aDefault)) ? $aDefault['scale'] : 1;
 				$j = 1;
 				$iScaleMax = $this->GetScaleOfOperation($sOperation);
 				for ($i = 1; $i <= $iScaleMax; $i++) {
 					$j = $j * 2;
-					$bSelected = ($j == $jDefault) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($j, $j, $bSelected));
+					if ($j == $jDefault) {
+						$sHTML .= "<option selected='' value=\"$j\">$j</option>\n";
+					} else {
+						$sHTML .= "<option value=\"$j\">$j</option>\n";
+					}
 				}
-				$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
+				$sHTML .= "</select></td><td>";
+				$val = $this->GetSimpleFieldForForm('AttributeInteger', 'scale', $sLabelOfAction1, $sHTML);
+				$oColumn1->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
 				break;
 
 			case 'calculator':
@@ -2376,6 +2401,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sSubnetIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -2398,6 +2424,7 @@ EOF
 						$oIp->Set('subnet_id', $iId);
 						$oIp->Set('ip', $sGatewayIp);
 						$oIp->Set('org_id', $iOrgId);
+						$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 						$oIp->Set('status', 'reserved');
 						$oIp->Set('usage_id', $sUsageGatewayIpId);
 						$oIp->DBInsert();
@@ -2419,6 +2446,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sIpBroadcast);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageBroadcastIpId);
 					$oIp->DBInsert();
@@ -2470,6 +2498,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sSubnetIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageNetworkIpId);
 					$oIp->DBInsert();
@@ -2490,6 +2519,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sGatewayIp);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageGatewayIpId);
 					$oIp->DBInsert();
@@ -2510,6 +2540,7 @@ EOF
 					$oIp->Set('subnet_id', $iId);
 					$oIp->Set('ip', $sIpBroadcast);
 					$oIp->Set('org_id', $iOrgId);
+					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 					$oIp->Set('status', 'reserved');
 					$oIp->Set('usage_id', $sUsageBroadcastIpId);
 					$oIp->DBInsert();
