@@ -794,7 +794,7 @@
               <rank>30</rank>
             </item>
             <item id="col:col1">
-              <rank>30</rank>
+              <rank>40</rank>
               <items>
                 <item id="fieldset:Class:IPRange:baseinfo">
                   <rank>10</rank>
@@ -822,7 +822,7 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>40</rank>
+              <rank>50</rank>
               <items>
                 <item id="fieldset:Class:IPRange:ipinfo">
                   <rank>10</rank>
@@ -839,6 +839,33 @@
 		            <item id="lastip">
 		              <rank>40</rank>
 		            </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="tab:IPObect:GlobalParams">
+              <rank>60</rank>
+              <items>
+                <item id="col:col1">
+                  <rank>10</rank>
+                  <items>
+                    <item id="fieldset:Class:IPObject:GeneralConfigParameters">
+                      <rank>10</rank>
+                      <items>
+                        <item id="ipconfig_id">
+                          <rank>10</rank>
+                        </item>
+                     </items>
+                    </item>
+                  </items>
+                </item>
+                <item id="col:col2">
+                  <rank>20</rank>
+                  <items>
+                    <item id="fieldset:Class:IPRange:localconfigparameters">
+                      <rank>20</rank>
+                      <items/>
+                     </item>
                   </items>
                 </item>
               </items>
