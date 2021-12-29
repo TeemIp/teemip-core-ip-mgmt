@@ -72,7 +72,7 @@ if (!class_exists('NetworkMgmtExtendedInstaller'))
 			// If you want to migrate data from one format to another, do it here
 			if ($sPreviousVersion == '1.0.0')
 			{
-				SetupPage::log_info("Module teemip-network-mgmt-extended: copy VLAN tags to name and reset them as they become integers only");
+				SetupLog::Info("Module teemip-network-mgmt-extended: copy VLAN tags to name and reset them as they become integers only");
 
 				$sDBSubname = $oConfiguration->Get('db_subname');
 				$sSQL1 = "ALTER TABLE ".$sDBSubname."vlan ADD name varchar(255)";
@@ -82,7 +82,7 @@ if (!class_exists('NetworkMgmtExtendedInstaller'))
 				CMDBSource::Query($sSQL2);
 				CMDBSource::Query($sSQL3);
 
-				SetupPage::log_info("Module teemip-network-mgmt-extended: VLAN tag migration done");
+				SetupLog::Info("Module teemip-network-mgmt-extended: VLAN tag migration done");
 			}
 		}
 
