@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<IPBlockType alias="IPBlockType" id="19">
+		<name>Internet</name>
+		<description></description>
+	</IPBlockType>
+	<IPBlockType alias="IPBlockType" id="20">
+		<name>Intranet - General</name>
+		<description></description>
+	</IPBlockType>
+	<IPBlockType alias="IPBlockType" id="21">
+		<name>Data Center</name>
+		<description></description>
+	</IPBlockType>
+</Set>

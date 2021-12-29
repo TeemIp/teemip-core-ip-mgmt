@@ -39,14 +39,16 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			'data.sample.IPGlue.xml',
-			'data.sample.IPv4Block.xml',
-			'data.sample.lnkIPv4BlockToLocation.xml',
-			'data.sample.IPv4Subnet.xml',
-			'data.sample.lnkIPv4SubnetToLocation.xml',
+			'data.sample.IPConfig.xml',
+			'data.sample.IPBlockType.xml',
 			'data.sample.IPRangeUsage.xml',
-			'data.sample.IPv4Range.xml',
 			'data.sample.IPUsage.xml',
+			'data.sample.IPv4Block.xml',
+			'data.sample.IPv4Subnet.xml',
+			'data.sample.IPv4Range.xml',
 			'data.sample.IPv4Address.xml',
+			'data.sample.lnkIPv4BlockToLocation.xml',
+			'data.sample.lnkIPv4SubnetToLocation.xml',
 		),
 		
 		// Documentation

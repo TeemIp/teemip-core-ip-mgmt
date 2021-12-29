@@ -34,11 +34,11 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			'data.sample.IPv6Block.xml',
-			'data.sample.lnkIPv6BlockToLocation.xml',
 			'data.sample.IPv6Subnet.xml',
-			'data.sample.lnkIPv6SubnetToLocation.xml',
 			'data.sample.IPv6Range.xml',
 			'data.sample.IPv6Address.xml',
+			'data.sample.lnkIPv6BlockToLocation.xml',
+			'data.sample.lnkIPv6SubnetToLocation.xml',
 		),
 		
 		// Documentation

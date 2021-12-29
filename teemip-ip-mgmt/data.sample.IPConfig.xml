@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<IPConfig alias="IPConfig" id="1">
+		<org_id>2</org_id>
+		<name>IP Settings</name>
+		<requestor_id></requestor_id>
+		<subnet_low_watermark>60</subnet_low_watermark>
+		<subnet_high_watermark>80</subnet_high_watermark>
+		<iprange_low_watermark>60</iprange_low_watermark>
+		<iprange_high_watermark>80</iprange_high_watermark>
+		<ip_allow_duplicate_name>ipdup_no</ip_allow_duplicate_name>
+		<mac_address_format>colons</mac_address_format>
+		<ping_before_assign>ping_no</ping_before_assign>
+	</IPConfig>
+</Set>
