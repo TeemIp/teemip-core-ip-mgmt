@@ -701,7 +701,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Class: IPBlockType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPBlockType' => 'IP-Blocktyp ',
 	'Class:IPBlockType+' => '',
 	'Class:IPBlockType/Attribute:name' => 'Name',

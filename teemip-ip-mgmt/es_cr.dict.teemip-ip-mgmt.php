@@ -701,7 +701,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Class: IPBlockType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPBlockType' => 'Tipo de bloque de IP',
 	'Class:IPBlockType+' => '',
 	'Class:IPBlockType/Attribute:name' => 'Nombre',
@@ -1288,6 +1288,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:FindSpace:FirstIP' => 'From IP address:',
 	'UI:IPManagement:Action:FindSpace:SpaceSize' => 'Size of space to look for:',
 	'UI:IPManagement:Action:FindSpace:MaxNumberOfOffers' => 'Maximum number of offers:',
-	
+
 ));
 	

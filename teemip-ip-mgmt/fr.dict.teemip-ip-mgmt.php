@@ -701,7 +701,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: IPBlockType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlockType' => 'Type de bloc',
 	'Class:IPBlockType+' => 'Type of bloc de sous-réseau',
 	'Class:IPBlockType/Attribute:name' => 'Nom',

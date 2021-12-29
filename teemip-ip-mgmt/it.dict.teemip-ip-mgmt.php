@@ -701,7 +701,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 // Class: IPBlockType
 //
 
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPBlockType' => 'Tipo di blocco sottorete',
 	'Class:IPBlockType+' => '',
 	'Class:IPBlockType/Attribute:name' => 'Nome',
