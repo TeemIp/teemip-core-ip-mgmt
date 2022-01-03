@@ -2201,6 +2201,8 @@ EOF
 	 * @inheritdoc
 	 */
 	public function ComputeValues() {
+		parent::ComputeValues();
+
 		$sIp = $this->Get('ip');
 		$iIp = IPUtils::myip2long($sIp);
 		$sMask = $this->Get('mask');
