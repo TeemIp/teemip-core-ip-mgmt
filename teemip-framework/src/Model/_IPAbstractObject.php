@@ -162,7 +162,9 @@ EOF
 			);
 		} else {
 			// Prepare form
-			$oP->set_title(Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel));
+			$sUITitle = Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel);
+			$oP->SetBreadCrumbEntry($sUITitle, $sUITitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$oP->set_title($sUITitle);
 
 			$iTransactionId = utils::GetNewTransactionId();
 			$oP->SetTransactionId($iTransactionId);

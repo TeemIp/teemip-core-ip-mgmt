@@ -13,6 +13,7 @@ use DBObjectSearch;
 use Dict;
 use DisplayBlock;
 use iPopupMenuExtension;
+use iTopWebPage;
 use MenuBlock;
 use MetaModel;
 use utils;
@@ -129,6 +130,7 @@ class DisplayTree {
 
 		// Display block
 		$sHeaderTitle = Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':PageTitle_Class');
+		$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-sitemap', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		$sTitle = Dict::Format('UI:IPManagement:Action:DisplayTree:'.$sClass.':Title_Class', MetaModel::GetName($sClass));
 		$oP->set_title($sHeaderTitle);
 

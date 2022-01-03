@@ -177,6 +177,7 @@ HTML
 HTML
 			);
 		} else {
+			$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			$sClassIconUrl = MetaModel::GetClassIcon('IPv4Block', false);
 			$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
 				->SetIcon($sClassIconUrl);
@@ -534,9 +535,11 @@ HTML
 			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
 			$sClassLabel = MetaModel::GetName($sClass);
 			$sClassName = $oBlock->Get('name');
-			$sTitle = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':Title_Class_Object', $sClassLabel, $sClassName);
 
+			$sTitle = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':Title_Class_Object', $sClassLabel, $sClassName);
+			$oP->SetBreadCrumbEntry($sTitle, $sTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			$oP->set_title($sTitle);
+
 			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
 			$oP->AddUiBlock($oPanel);
 			$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))

@@ -666,6 +666,7 @@ HTML
 					);
 				} else {
 					$sClassIconUrl = MetaModel::GetClassIcon('IPv4Subnet', false);
+					$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
 						->SetIcon($sClassIconUrl);
 					$oP->AddUiBlock($oPanel);
