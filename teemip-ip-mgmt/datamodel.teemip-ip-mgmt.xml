@@ -124,7 +124,7 @@
 			// Make sure IPConfig exists for the organization
 			$iOrgId = $this->Get('org_id');
 			if (($iOrgId != '') && ($this->Get('ipconfig_id') == '')) {
-				IPConfig::GetGlobalIPConfig($this->Get('org_id'));
+				$this->Set('ipconfig_id', IPConfig::GetGlobalIPConfig($iOrgId)->GetKey());
 			}
 		}
  }]]></code>
