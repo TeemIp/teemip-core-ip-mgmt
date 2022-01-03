@@ -1294,6 +1294,8 @@ EOF
 	 * @throws \OQLException
 	 */
 	public function ComputeValues() {
+		parent::ComputeValues();
+
 		$oIp = $this->Get('ip');
 		$iOrgId = $this->Get('org_id');
 

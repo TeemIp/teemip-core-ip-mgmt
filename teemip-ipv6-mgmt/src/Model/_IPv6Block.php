@@ -1680,6 +1680,8 @@ EOF
 	 * @inheritdoc
 	 */
 	public function ComputeValues() {
+		parent::ComputeValues();
+
 		if ($this->IsNew()) {
 			// Preset LastIP to save the typing of too many 'f'
 			$oFirstIp = $this->Get('firstip');
