@@ -183,7 +183,7 @@ class TeemIpServices implements iRestServiceProvider
 							$sIP = $oIPSubnet->GetFreeIP($iCreationOffset);
 							if ($sIP != '') {
 								$aFields['org_id'] = $iOrgId;
-								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
+								$aFields['ipconfig_id'] = IPConfig::GetGlobalIPConfig($iOrgId)->GetKey();        // Cannot be 0 here
 								$aFields['ip'] = $sIP;
 								$oIP = RestUtils::MakeObjectFromFields($sIPClass, $aFields);
 								$oIP->DBInsert();
@@ -240,7 +240,7 @@ class TeemIpServices implements iRestServiceProvider
 							if ($sIP != '') {
 								$iOrgId = $oIPRange->Get('org_id');
 								$aFields['org_id'] = $iOrgId;
-								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
+								$aFields['ipconfig_id'] = IPConfig::GetGlobalIPConfig($iOrgId)->GetKey();        // Cannot be 0 here
 								$aFields['ip'] = $sIP;
 								$oIP = RestUtils::MakeObjectFromFields($sIPClass, $aFields);
 								$oIP->DBInsert();
@@ -304,7 +304,7 @@ class TeemIpServices implements iRestServiceProvider
 							if (sizeof($aFreeSpace) != 0) {
 								$iOrgId = $oIPBlock->Get('org_id');
 								$aFields['org_id'] = $iOrgId;
-								$aFields['ipconfig_id'] = IPConfig::GetFromOrg($iOrgId);        // Cannot be 0 here
+								$aFields['ipconfig_id'] = IPConfig::GetGlobalIPConfig($iOrgId)->GetKey();        // Cannot be 0 here
 								$aFields['block_id'] = $key;
 								if ($sSubnetClass == 'IPv4Subnet') {
 									$aFields['ip'] = $aFreeSpace[0]['firstip'];
