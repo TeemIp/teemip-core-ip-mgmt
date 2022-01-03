@@ -183,21 +183,6 @@ class _IPRange extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function ComputeValues() {
-		parent::ComputeValues();
-
-		if ($this->IsNew()) {
-			// Ugly workaround to not display the ipconfig_id parameter as it is not needed for that class !
-			$iOrgId = $this->Get('org_id');
-			if ($iOrgId != '') {
-				$this->Set('ipconfig_id', $iOrgId);
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	public function DoCheckToWrite() {
 		parent::DoCheckToWrite();
 
