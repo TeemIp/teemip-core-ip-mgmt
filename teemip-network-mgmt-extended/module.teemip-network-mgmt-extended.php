@@ -6,13 +6,13 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-network-mgmt-extended/2.0.0',
+	'teemip-network-mgmt-extended/3.0.0',
 	array(
 		// Identification
 		//
 		'label' => 'Network Management Extended',
 		'category' => 'business',
-		
+
 		// Setup
 		//
 		'dependencies' => array(
