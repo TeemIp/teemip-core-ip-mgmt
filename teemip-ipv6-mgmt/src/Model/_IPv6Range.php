@@ -408,6 +408,29 @@ EOF
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList('IPv6Address'))) {
+			// $sFqdnAttr is not a valid attribute for the class
+			return (Dict::Format('UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist', $sFqdnAttr));
+		}
+
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function DoExplodeFQDN($sFqdnAttr) {
+		$iKey = $this->GetKey();
+		$oIPsSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address WHERE $sFqdnAttr != '' AND $sFqdnAttr != fqdn AND range_id = :key"), array(), array('key' => $iKey));
+		while ($oIP = $oIPsSet->Fetch()) {
+			$oIP->DoExplodeFQDN($sFqdnAttr);
+		}
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
