@@ -33,7 +33,7 @@ class _IPUsage extends Typology
 			}
 			$sOQL = 'SELECT IPUsage AS u WHERE u.name = :name AND u.org_id = :org_id AND u.id != :key';
 			$oIpUsageSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'org_id' => $sOrgId, 'id' => $iKey));
-			if ($oIpUsageSet->CountExceeds(0)) {
+			if ($oIpUsageSet->Count() > 0) {
 				// It's NOT a modification (keys are not the same), we deny the creation
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPUsage:AlreadyExists');
 			}
