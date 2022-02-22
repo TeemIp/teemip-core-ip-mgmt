@@ -1074,11 +1074,11 @@ HTML
 				// Check now that user is allowed to modify IP addresses
 				if ((in_array($sClass, array('IPv4Subnet', 'IPv4Range', 'IPv4Address'))) && (!UserRights::IsActionAllowed('IPv4Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => 'IPv4Address', 'id' => $id));
-				} elseif ((in_array($sClass, array('IPv6Subnet', 'IPv6Range', 'IPv6Address'))) && (!UserRights::IsActionAllowed('IPv4Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
+				} elseif ((in_array($sClass, array('IPv6Subnet', 'IPv6Range', 'IPv6Address'))) && (!UserRights::IsActionAllowed('IPv6Address', UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => 'IPv6Address', 'id' => $id));
 				}
 
-				// Make sure object can be unallocated
+				// Make sure discovered address can be exploded
 				$sErrorString = $oObj->DoCheckToExplodeFQDN($sFqdnAttr);
 				if ($sErrorString != '') {
 					// Found issues: explain and display object again
