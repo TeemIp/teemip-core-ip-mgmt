@@ -102,7 +102,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/domain.png</icon>
+        <icon>asset/img/icons8-active-directory-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -326,7 +326,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/wanlink.png</icon>
+        <icon>asset/img/icons8-line-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -764,7 +764,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/asnumber.png</icon>
+        <icon>asset/img/icons8-connect-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -927,7 +927,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/vrf.png</icon>
+        <icon>asset/img/icons8-router-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1183,7 +1183,7 @@
             <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/ndvi.png</icon>
+        <icon>asset/img/icons8-globe-wire.svg</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1549,7 +1549,7 @@
               <dashlet id="teemip-001" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Network</title>
-                <icon>teemip-network-mgmt/asset/img/network.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-rj45-48.png</icon>
               </dashlet>
 			  <dashlet id="teemip-011" xsi:type="DashletBadge">
         		<rank>1</rank>
