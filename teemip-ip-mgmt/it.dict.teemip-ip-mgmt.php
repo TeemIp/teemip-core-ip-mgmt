@@ -794,6 +794,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:Domain+' => 'Nome Dominio',
 	'Menu:IPTemplate' => 'IP Modello',
 	'Menu:IPTemplate+' => 'IP Modello',
+	'Menu:IPMgmt:Typology' => 'IP space typology configuration',
+	'Menu:IPMgmt:Typology+' => '',
 
 	'UI:IPMgmtWelcomeOverview:Title' => 'Il Mio Cruscotto',
 

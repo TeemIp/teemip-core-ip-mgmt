@@ -794,6 +794,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:Domain+' => 'Domain Namen',
 	'Menu:IPTemplate' => 'IP Templates',
 	'Menu:IPTemplate+' => 'IP Templates',
+	'Menu:IPMgmt:Typology' => ' IP-Raumtypologie-Konfiguration',
+	'Menu:IPMgmt:Typology+' => '',
 
 	'UI:IPMgmtWelcomeOverview:Title' => 'My Dashboard',
 

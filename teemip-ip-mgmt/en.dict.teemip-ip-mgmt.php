@@ -794,6 +794,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:Domain+' => 'Domain Names',
 	'Menu:IPTemplate' => 'Templates IP',
 	'Menu:IPTemplate+' => 'Templates IP',
+	'Menu:IPMgmt:Typology' => 'IP space typology configuration',
+	'Menu:IPMgmt:Typology+' => '',
 
 	'UI:IPMgmtWelcomeOverview:Title' => 'My Dashboard',
 

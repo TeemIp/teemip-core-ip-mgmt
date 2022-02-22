@@ -18,7 +18,7 @@
           <format>IPObject</format>
           <attributes/>
         </naming>
-        <icon>asset/img/ipobject.png</icon>
+        <icon/>
         <reconciliation>
           <attributes>
             <attribute id=""/>
@@ -429,7 +429,7 @@
           <format>IPBlock</format>
           <attributes/>
         </naming>
-        <icon>asset/img/ipblock.png</icon>
+        <icon>asset/img/icons8-module-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -688,7 +688,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/ipblock.png</icon>
+        <icon>asset/img/icons8-module-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -970,7 +970,7 @@
           <format>IPSubnet</format>
           <attributes/>
         </naming>
-        <icon>asset/img/ipsubnet.png</icon>
+        <icon>asset/img/icons8-subnet-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1566,7 +1566,7 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/ipsubnet.png</icon>
+        <icon>asset/img/icons8-subnet-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="ip"/>
@@ -1679,7 +1679,7 @@
                   <dashlet id="01" xsi:type="DashletHeaderDynamic">
                     <rank>0</rank>
                     <title>Class:IPSubnet/Attribute:summary/cell0</title>
-                    <icon>teemip-ip-mgmt/asset/img/ipaddress.png</icon>
+                    <icon>teemip-ip-mgmt/asset/img/icons8-rj45-48.png</icon>
                     <subtitle>Class:IPSubnet/Attribute:summary/cell0+</subtitle>
                     <query>SELECT IPv4Address WHERE subnet_id = :this->id</query>
                     <group_by>status</group_by>
@@ -1936,7 +1936,7 @@
           <format>IPRange</format>
           <attributes/>
         </naming>
-        <icon>asset/img/iprange.png</icon>
+        <icon>asset/img/icons8-slice-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="range"/>
@@ -2143,7 +2143,7 @@
     $oCI = MetaModel::GetObject('FunctionalCI', $iCI, false);
 	if (!is_null($oCI))
 	{
-		if (!in_array($oCI->Get('finalclass'), array('Server', 'VirtualMachine')))
+		if (!in_array($oCI->Get('finalclass'), array('Server', 'NAS', 'NetworkDevice', 'VirtualMachine')))
 		{
 			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass');
 		}
@@ -2213,7 +2213,7 @@
             <attribute id="range"/>
           </attributes>
         </naming>
-        <icon>asset/img/iprange.png</icon>
+        <icon>asset/img/icons8-slice-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="subnet_ip"/>
@@ -2438,7 +2438,7 @@
           <format>IPAddress</format>
           <attributes/>
         </naming>
-        <icon>asset/img/ipaddress.png</icon>
+        <icon>asset/img/icons8-rj45-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -2977,7 +2977,7 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/ipaddress.png</icon>
+        <icon>asset/img/icons8-rj45-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -3454,7 +3454,7 @@
               <dashlet id="teemip-101" xsi:type="DashletHeaderStatic">
                 <rank>1</rank>
                 <title>Menu:IPSpace:IPv4Objects</title>
-                <icon>teemip-ip-mgmt/asset/img/ipobject.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-internet-folder-48.png</icon>
               </dashlet>
               <dashlet id="teemip-111" xsi:type="DashletBadge">
                 <rank>2</rank>
@@ -3480,7 +3480,7 @@
               <dashlet id="teemip-301" xsi:type="DashletHeaderStatic">
                 <rank>1</rank>
                 <title>Menu:IPSpace:Options</title>
-                <icon>teemip-ip-mgmt/asset/img/ipconfig.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
               </dashlet>
               <dashlet id="teemip-311" xsi:type="DashletBadge">
                 <rank>2</rank>
@@ -3563,23 +3563,29 @@
     </menu>
 	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
 	  <definition>
-	     <cells>
-	      <cell id="0">
-	        <dashlets>
-	          <dashlet id="teemip-1004" xsi:type="DashletBadge" _delta="define">
-	            <rank>10.4</rank>
-	            <class>IPBlockType</class>
-	          </dashlet>
-	          <dashlet id="teemip-1001" xsi:type="DashletBadge" _delta="define">
-	            <rank>10.5</rank>
-	            <class>IPRangeUsage</class>
-	          </dashlet>
-	          <dashlet id="teemip-1002" xsi:type="DashletBadge" _delta="define">
-	            <rank>10.6</rank>
-	            <class>IPUsage</class>
-	          </dashlet>
-	        </dashlets>
-	      </cell>
+      <cells>
+        <cell id="IPMgmt" _delta="define">
+          <rank>8</rank>
+          <dashlets>
+            <dashlet id="teemip-1001" xsi:type="DashletHeaderStatic">
+              <rank>0</rank>
+              <title>Menu:IPMgmt:Typology</title>
+                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
+              </dashlet>
+              <dashlet id="teemip-1004" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>IPBlockType</class>
+              </dashlet>
+              <dashlet id="teemip-1001" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>IPRangeUsage</class>
+              </dashlet>
+              <dashlet id="teemip-1002" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>IPUsage</class>
+              </dashlet>
+            </dashlets>
+          </cell>
 	    </cells>
 	  </definition>
     </menu>

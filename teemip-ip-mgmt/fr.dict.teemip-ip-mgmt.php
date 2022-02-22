@@ -794,6 +794,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Domain+' => 'Noms de Domaines',
 	'Menu:IPTemplate' => 'Templates IP',
 	'Menu:IPTemplate+' => '',
+	'Menu:IPMgmt:Typology' => 'Configuration des typologies de l\'espace IP',
+	'Menu:IPMgmt:Typology+' => '',
 
 	'UI:IPMgmtWelcomeOverview:Title' => 'Mon tableau de bord',
 

@@ -794,11 +794,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:Domain+' => 'Nombre de Dominios',
 	'Menu:IPTemplate' => 'Plantilla IP',
 	'Menu:IPTemplate+' => 'Plantillas IP',
+	'Menu:IPMgmt:Typology' => 'Configuración de Tipos de espacios IP',
+	'Menu:IPMgmt:Typology+' => '',
 
 	'UI:IPMgmtWelcomeOverview:Title' => 'Mi Dashboard',
-	
+
 	// Menu separator in Action menus
-	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',	
+	'UI:IPManagement:Action:MenuSeparator' => '<hr class="menu-separator"/>',
 	'UI:IPManagement:Action:Error::WrongActionForClass' => 'Esta acción no puede se aplicada a esa clase de objeto!',
 
 //
