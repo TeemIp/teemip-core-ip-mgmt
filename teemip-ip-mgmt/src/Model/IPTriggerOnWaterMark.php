@@ -12,14 +12,13 @@ use AttributeExternalKey;
 use DBObject;
 use MetaModel;
 use Trigger;
-use utils;
 use ValueSetEnum;
 
 class IPTriggerOnWaterMark extends Trigger {
 	public static function Init() {
 		$aParams = array
 		(
-			"category" => "bizmodel",
+			"category" => "core/cmdb,application,grant_by_profile",
 			"key_type" => "autoincrement",
 			"name_attcode" => "description",
 			"state_attcode" => "",
@@ -27,7 +26,6 @@ class IPTriggerOnWaterMark extends Trigger {
 			"db_table" => "priv_trigger_onwatermark",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"icon" => utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipbell.png',
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
