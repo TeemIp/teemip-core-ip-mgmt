@@ -40,7 +40,7 @@ class _IPv4Block extends IPBlock implements iTree {
 	 */
 	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipblock-xs.png';
+			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/icons8-module-16.png';
 
 			return ("<img src=\"$sIcon\" alt=\"IP Block\" style=\"vertical-align:middle;\"/>");
 		}

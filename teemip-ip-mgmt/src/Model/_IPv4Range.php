@@ -34,7 +34,7 @@ class _IPv4Range extends IPRange {
 	 */
 	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/iprange-xs.png';
+			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/icons8-slice-16.png';
 
 			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}

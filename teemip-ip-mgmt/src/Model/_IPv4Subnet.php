@@ -39,7 +39,7 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 */
 	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
 		if ($bXsIcon) {
-			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/ipsubnet-xs.png';
+			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/icons8-subnet-16.png';
 
 			return ("<img src=\"$sIcon\" alt=\"\" style=\"vertical-align:middle;\"/>");
 		}
