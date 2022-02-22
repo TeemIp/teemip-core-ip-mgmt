@@ -81,19 +81,20 @@ class _Domain extends DNSObject implements iTree {
 	static function GetDomainFromFqdn($sFqdn, $iOrgId) {
 		$sError = '';
 		if ((strlen($sFqdn) == 0) || ($iOrgId == 0)) {
-			return array(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain'), 0);
+			return array(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain'), 0, '');
 		}
 		$sOQL = "SELECT Domain WHERE org_id = :org_id AND name = :name";
 		$oDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('org_id' => $iOrgId, 'name' => $sFqdn));
 		if ($oDomain = $oDomainSet->Fetch()) {
-			$iZoneId = $oDomain->GetKey();
+			$iDomainId = $oDomain->GetKey();
+			$sDomainName = $oDomain->Get('name');
 		} else {
 			$i = strpos($sFqdn, '.');
 			$sNextFqdn = substr($sFqdn, $i + 1);
-			list($sError, $iZoneId) = static::GetDomainFromFqdn($sNextFqdn, $iOrgId);
+			list($sError, $iDomainId, $sDomainName) = static::GetDomainFromFqdn($sNextFqdn, $iOrgId);
 		}
 
-		return array($sError, $iZoneId);
+		return array($sError, $iDomainId, $sDomainName);
 	}
 
 	/**
