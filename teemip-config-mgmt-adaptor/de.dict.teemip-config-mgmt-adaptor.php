@@ -7,16 +7,16 @@
 //
 // Class: ConnectableCI
 //
- 
+
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ConnectableCI/Tab:ipaddresses_list' => 'IPs-Interfaces',
-	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen Physisches Interface',
+	'Class:ConnectableCI/Tab:ipaddresses_list' => 'IPs-Schnittstellen',
+	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen physischen Schnittstellen',
 ));
 
 //
 // Class: DatacenterDevice
 //
- 
+
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DatacenterDevice/Attribute:managementip_id' => 'Management IP',
 	'Class:DatacenterDevice/Attribute:managementip_id+' => '',
@@ -29,8 +29,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:NetworkInterface:baseinfo' => 'General Information',
-	'Class:NetworkInterface:moreinfo' => 'More Information',
+	'Class:NetworkInterface:baseinfo' => 'Allgemeine Informationen',
+	'Class:NetworkInterface:moreinfo' => 'Weitere Informationen',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Betriebsstatus',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Berechnet aus dem Status der untergeordneten Klassen',
 	'Class:NetworkInterface/Attribute:operational_status/Value:active' => 'Aktiv',
@@ -47,7 +47,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPInterface/Attribute:ipaddress_id' => 'IP Adresse',
 	'Class:IPInterface/Attribute:ipaddress_id+' => '',
 ));
-			   
+
 //
 // Class: PhysicalInterface
 //
@@ -72,6 +72,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:VLAN/Tab:ipaddresses_list' => 'IPs-Interfaces',
+	'Class:VLAN/Tab:ipaddresses_list' => 'IPs-Schnittstellen',
 	'Class:VLAN/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen Schnittstellen',
 ));
