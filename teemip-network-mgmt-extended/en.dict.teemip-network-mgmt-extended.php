@@ -246,6 +246,6 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:NetworkMgmtExtended:Typology' => 'Network Typology Configuration',
+	'Menu:NetworkMgmtExtended:Typology' => 'Network typology configuration',
 ));
 
