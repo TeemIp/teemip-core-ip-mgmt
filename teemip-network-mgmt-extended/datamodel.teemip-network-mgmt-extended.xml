@@ -455,7 +455,7 @@
             <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/networkdevicecomponent.png</icon>
+        <icon>asset/img/icons8-slave-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -649,7 +649,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/clusternetwork.png</icon>
+        <icon>asset/img/icons8-stack.svg</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1131,7 +1131,7 @@
             <attribute id="connectableci_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/aggregatelink.png</icon>
+        <icon>asset/img/icons8-bursts-48.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1632,7 +1632,7 @@
               <dashlet id="teemip-1101" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:NetworkMgmtExtended:Typology</title>
-                <icon>teemip-network-mgmt-extended/asset/img/typologynetwork.png</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
               </dashlet>
               <dashlet id="teemip-1102" xsi:type="DashletBadge">
                 <rank>1</rank>
