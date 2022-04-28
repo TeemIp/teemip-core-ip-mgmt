@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-network-mgmt-extended/3.0.0',
+	'teemip-network-mgmt-extended/3.0.1',
 	array(
 		// Identification
 		//
@@ -70,19 +70,23 @@ if (!class_exists('NetworkMgmtExtendedInstaller'))
 		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
 			// If you want to migrate data from one format to another, do it here
-			if ($sPreviousVersion == '1.0.0')
-			{
-				SetupLog::Info("Module teemip-network-mgmt-extended: copy VLAN tags to name and reset them as they become integers only");
-
+			if ($sPreviousVersion == '1.0.0') {
 				$sDBSubname = $oConfiguration->Get('db_subname');
-				$sSQL1 = "ALTER TABLE ".$sDBSubname."vlan ADD name varchar(255)";
-				$sSQL2 = "UPDATE ".$sDBSubname."vlan SET name = vlan_tag";
-				$sSQL3 = "UPDATE ".$sDBSubname."vlan SET vlan_tag = 0";
-				CMDBSource::Query($sSQL1);
-				CMDBSource::Query($sSQL2);
-				CMDBSource::Query($sSQL3);
+				if (CMDBSource::IsField($sDBSubname.'vlan', 'name')) {
+					SetupLog::Info("Module teemip-network-mgmt-extended: name column already exists in vlan table -> skip vlan_tag to name migration");
+				} else {
+					SetupLog::Info("Module teemip-network-mgmt-extended: copy VLAN tags to name and reset them as they become integers only");
 
-				SetupLog::Info("Module teemip-network-mgmt-extended: VLAN tag migration done");
+					$sSQL1 = "ALTER TABLE ".$sDBSubname."vlan ADD name varchar(255)";
+					$sSQL2 = "UPDATE ".$sDBSubname."vlan SET name = vlan_tag";
+					$sSQL3 = "UPDATE ".$sDBSubname."vlan SET vlan_tag = 0";
+					CMDBSource::Query($sSQL1);
+					CMDBSource::Query($sSQL2);
+					CMDBSource::Query($sSQL3);
+
+					SetupLog::Info("Module teemip-network-mgmt-extended: VLAN tag migration done");
+				}
+
 			}
 		}
 
