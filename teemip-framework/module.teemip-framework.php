@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-framework/3.0.0',
+	'teemip-framework/3.0.1',
 	array(
 		// Identification
 		//
@@ -30,6 +30,7 @@ SetupWebPage::AddModule(
 			'src/Model/AttributeHostName.php',
 			'src/Model/AttributeIPPercentage.php',
 			'src/Model/AttributeMacAddress.php',
+			'src/Model/DashletBadgeFiltered.php',
 			'model.teemip-framework.php',
 		),
 		'webservice' => array(
