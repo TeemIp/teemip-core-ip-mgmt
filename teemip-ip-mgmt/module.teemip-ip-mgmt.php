@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-mgmt/3.0.0',
+	'teemip-ip-mgmt/3.0.1',
 	array(
 		// Identification
 		//
@@ -32,6 +32,7 @@ SetupWebPage::AddModule(
 			'src/Hook/AllocateIPsToProductionCIs.php',
 			'src/Hook/ReleaseIPsFromObsoleteCIs.php',
 			'src/Hook/UnassignIPsWithNoCI.php',
+			'src/Hook/HandleIPWaterMarks.php',
 			'src/Model/IPTriggerOnWaterMark.php',
 			'model.teemip-ip-mgmt.php',
 		),
@@ -71,6 +72,18 @@ SetupWebPage::AddModule(
 				'debug' => false,
 				'periodicity' => 3600,
 				'status_list' => array('implementation', 'production'),
+			),
+			'ip_unassign_on_no_ci' => array(
+				'enabled' => false,
+				'debug' => false,
+				'periodicity' => 3600,
+				'target_status' => 'unassigned',
+			),
+			'handle_ip_watermarks' => array(
+				'enabled' => false,
+				'debug' => false,
+				'periodicity' => 86400,
+				'target_classes' => array('IPv4Subnet', 'IPv4Range'),
 			),
 		),
 	)
