@@ -249,6 +249,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 ));
 
 //
+// Class: DashletBadgeFiltered
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'UI:DashletBadgeFiltered:Label' => 'Etiqueta con filtro',
+	'UI:DashletBadgeFiltered:Description' => 'Etiqueta filtrada por un OQL',
+));
+
+//
 // Menus
 //
 

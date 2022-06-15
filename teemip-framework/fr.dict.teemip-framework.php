@@ -249,6 +249,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: DashletBadgeFiltered
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'UI:DashletBadgeFiltered:Label' => 'Badge avec filtre',
+	'UI:DashletBadgeFiltered:Description' => 'Badge filtré par un OQL',
+));
+
+//
 // Menus
 //
 

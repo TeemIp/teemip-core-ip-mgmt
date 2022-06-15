@@ -249,6 +249,15 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
+// Class: DashletBadgeFiltered
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:DashletBadgeFiltered:Label' => 'Badge with filter',
+	'UI:DashletBadgeFiltered:Description' => 'Badge filtered by an OQL',
+));
+
+//
 // Menus
 //
 
