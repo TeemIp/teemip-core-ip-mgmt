@@ -85,7 +85,7 @@ class DashletBadgeFiltered extends Dashlet
 	{
 		return array(
 			'label' => Dict::S('UI:DashletBadgeFiltered:Label'),
-			'icon' => 'images/dashlets/icons8-badge-48.png',
+			'icon' => 'env-'.utils::GetCurrentEnvironment().'/teemip-framework/asset/img/icons8-badge-filtered-48.png',
 			'description' => Dict::S('UI:DashletBadgeFiltered:Description'),
 		);
 	}
