@@ -125,6 +125,10 @@ if (!class_exists('IPManagementInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
+			if ($sPreviousVersion === '') {
+				return;
+			}
+
 			$sDBSubname = $oConfiguration->Get('db_subname');
 			if (($sPreviousVersion == '2.5.0') || ($sPreviousVersion == '2.5.1')) {
 				SetupLog::Info("Module teemip-ip-mgmt: reset next_run_date of ReleaseIPsFromObsoleteCIs backgorund task");
