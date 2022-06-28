@@ -42,7 +42,7 @@
         <field id="physicalinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>interfaceconnector_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -132,7 +132,7 @@
         <field id="ipinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>IPInterface</linked_class>
           <ext_key_to_me>layer2protocol_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -222,7 +222,7 @@
         <field id="ipinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>IPInterface</linked_class>
           <ext_key_to_me>interfacespeed_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>none</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -695,7 +695,7 @@
         <field id="networkdevices_list" xsi:type="AttributeLinkedSet">
           <linked_class>NetworkDevice</linked_class>
           <ext_key_to_me>clusternetwork_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -1046,7 +1046,7 @@
         <field id="networkdevicecomponents_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>NetworkDeviceComponent</linked_class>
           <ext_key_to_me>networkdevice_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -1054,7 +1054,7 @@
         <field id="aggregatelinks_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>AggregateLink</linked_class>
           <ext_key_to_me>connectableci_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
@@ -1199,7 +1199,7 @@
         <field id="physicalinterfaces_list" xsi:type="AttributeLinkedSet">
           <linked_class>PhysicalInterface</linked_class>
           <ext_key_to_me>aggregatelink_id</ext_key_to_me>
-          <edit_mode>add_only</edit_mode>
+          <edit_mode>add_remove</edit_mode>
           <count_min>0</count_min>
           <count_max>0</count_max>
           <duplicates/>
