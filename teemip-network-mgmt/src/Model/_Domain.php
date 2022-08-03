@@ -233,7 +233,7 @@ class _Domain extends DNSObject implements iTree {
 		$sDomain = $this->Get('name');
 
 		// If organization is changing, make sure domain has no host, no child domain and no associated zone.
-		if ($sOrgId != $sOriginalOrgId) {
+		if (!is_null($sOriginalOrgId) && ($sOrgId != $sOriginalOrgId)) {
 			$sOQL = "SELECT Domain AS d WHERE d.parent_id = :key";
 			$oChildDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('key' => $iKey));
 			if ($oChildDomainSet->CountExceeds(0)) {
