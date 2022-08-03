@@ -407,13 +407,13 @@ EOF
 	 * Display attributes associated to operation - V >= 3.0
 	 *
 	 * @param \iTopWebPage $oP
-	 * @param $oClassForm
+	 * @param $oObjectDetails
 	 * @param $sOperation
 	 * @param $aDefault
 	 *
 	 * @return void
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
 	}
 
 	/**

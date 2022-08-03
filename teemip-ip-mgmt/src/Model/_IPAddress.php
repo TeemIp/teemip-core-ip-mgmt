@@ -1015,7 +1015,7 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -1037,7 +1037,7 @@ EOF
 				$aCIClassesWithIp = IPAddress::GetListOfClassesWIthIP('leaf');
 
 				// Target Class
-				$iFormId = $oClassForm->GetId();
+				$iFormId = $oObjectDetails->GetId();
 				$sClassInputId = 'field_'.$iFormId.'_ciclass';
 				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph($sLabelOfAction1));
 				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));

@@ -531,18 +531,7 @@ class _Domain extends DNSObject implements iTree {
 	}
 
 	/**
-	 * Display attributes associated to an operation for V < 3.0
-	 *
-	 * @param \WebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
+	 * @inheritdoc
 	 */
 	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
 		$oP->add("<table>");
@@ -600,26 +589,9 @@ class _Domain extends DNSObject implements iTree {
 	}
 
 	/**
-	 * Display attributes associated to an operation for V >= 3.0
-	 *
-	 * @param \WebPage $oP
-	 * @param $oClassForm
-	 * @param $sOperation
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
+	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oClassForm, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
