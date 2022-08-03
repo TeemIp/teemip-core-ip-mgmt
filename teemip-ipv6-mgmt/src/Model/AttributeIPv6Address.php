@@ -134,9 +134,9 @@ class AttributeIPv6Address extends AttributeString
 	public function GetFilterDefinitions()
 	{
 		return array(
-			$this->GetCode() => new FilterFromAttribute($this),
-			$this->GetCode().'_text' => new FilterFromAttribute($this, '_text'),
-			$this->GetCode().'_comp' => new FilterFromAttribute($this, '_comp'),
+			$this->GetCode() => $this->GetCode(),
+			$this->GetCode().'_text' => $this->GetCode(),
+			$this->GetCode().'_comp' => $this->GetCode(),
 		);
 	}
 
