@@ -272,16 +272,18 @@ class _IPv4Address extends IPAddress {
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
 		switch ($sAttCode) {
 			case 'ip':
 			case 'subnet_id':
 			case 'range_id':
-				return OPT_ATT_READONLY;
+				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			default:
 				break;
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 }

@@ -2036,12 +2036,14 @@ EOF
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
+
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 }

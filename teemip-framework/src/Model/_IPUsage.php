@@ -45,15 +45,16 @@ class _IPUsage extends Typology
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-		if ((!$this->IsNew()) && (($sAttCode == 'name')))
-		{
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
+		if ((!$this->IsNew()) && (($sAttCode == 'name'))) {
 			$sName = $this->Get('name');
-			if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE)) 
-			{
-				return OPT_ATT_READONLY;
+			if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE)) {
+				return (OPT_ATT_READONLY | $sFlagsFromParent);
 			}
 		}
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
+		return $sFlagsFromParent;
 	}
 
 }

@@ -2013,22 +2013,17 @@ EOF
 	}
 
 	/**
-	 * Change default flag of attribute.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritDoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv4_block_min_size', 'ipv4_block_cidr_aligned');
+
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 }

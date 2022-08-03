@@ -221,11 +221,14 @@ class _IPv6Address extends IPAddress
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && ($sAttCode == 'ip' || $sAttCode == 'subnet_id' || $sAttCode == 'range_id')) {
-			return OPT_ATT_READONLY;
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		$aReadOnlyAttributes = array('ip', 'subnet_id', 'range_id');
+
+		if (!$this->IsNew() && in_array($sAttCode, $aReadOnlyAttributes)) {
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/**

@@ -69,11 +69,14 @@ class _IPRange extends IPObject {
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if (($sAttCode == 'org_id') || ($sAttCode == 'occupancy')) {
-			return OPT_ATT_READONLY;
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		$aReadOnlyAttributes = array('org_id', 'occupancy');
+
+		if (in_array($sAttCode, $aReadOnlyAttributes)) {
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/**

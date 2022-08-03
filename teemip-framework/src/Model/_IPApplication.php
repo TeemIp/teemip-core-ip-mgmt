@@ -45,22 +45,26 @@ class _IPApplication extends FunctionalCI {
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
 		if ($sAttCode == 'uuid') {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+
 		if ($sAttCode == 'uuid') {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $sFlagsFromParent;
 
 	}
 

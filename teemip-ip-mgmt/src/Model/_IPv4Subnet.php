@@ -2610,6 +2610,8 @@ EOF
 	 * @inheritDoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+
 		switch ($sAttCode) {
 			case 'gatewayip':
 				$iOrgId = $this->Get('org_id');
@@ -2618,7 +2620,7 @@ EOF
 					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 				}
 				if ($sGatewayIPFormat != 'free_setup') {
-					return OPT_ATT_READONLY;
+					return (OPT_ATT_READONLY | $sFlagsFromParent);
 				}
 				break;
 
@@ -2626,13 +2628,15 @@ EOF
 				break;
 		}
 
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $sFlagsFromParent;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
 		switch ($sAttCode) {
 			case 'block_id':
 			case 'ip':
@@ -2641,7 +2645,7 @@ EOF
 			case 'ip_occupancy':
 			case 'range_occupancy':
 			case 'ipv4_gateway_ip_format':
-				return OPT_ATT_READONLY;
+				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			case 'gatewayip':
 				$iOrgId = $this->Get('org_id');
@@ -2650,7 +2654,7 @@ EOF
 					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 				}
 				if ($sGatewayIPFormat != 'free_setup') {
-					return OPT_ATT_READONLY;
+					return (OPT_ATT_READONLY | $sFlagsFromParent);
 				}
 				break;
 
@@ -2658,7 +2662,7 @@ EOF
 				break;
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 }

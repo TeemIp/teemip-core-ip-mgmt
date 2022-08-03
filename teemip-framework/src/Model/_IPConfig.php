@@ -90,11 +90,13 @@ class _IPConfig extends cmdbAbstractObject {
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id')))
-		{
-			return OPT_ATT_READONLY;
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
+		if ((!$this->IsNew()) && (($sAttCode == 'org_id'))) {
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
+		return $sFlagsFromParent;
 	}
 
 	/**

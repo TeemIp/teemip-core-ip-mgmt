@@ -446,38 +446,31 @@ class _Domain extends DNSObject implements iTree {
 	}
 
 	/**
-	 * Change default flag of attribute.
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return bool|int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
+
 		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes)) {
-			return OPT_ATT_HIDDEN || OPT_ATT_READONLY;
+			return (OPT_ATT_HIDDEN | OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $sFlagsFromParent;
 	}
 
 	/**
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		$aReadOnlyAttributes = array('parent_org_id', 'parent_id');
+
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/**

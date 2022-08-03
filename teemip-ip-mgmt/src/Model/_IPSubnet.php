@@ -245,6 +245,8 @@ class _IPSubnet extends IPObject {
 	 * @inheritDoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+
 		switch ($sAttCode) {
 			case 'org_id':
 			case 'last_discovery_date':
@@ -255,19 +257,21 @@ class _IPSubnet extends IPObject {
 			case 'scan_duration':
 			case 'scan_discovered':
 			case 'reserve_subnet_ips':
-				return OPT_ATT_READONLY;
+				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			default:
 				break;
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/**
 	 * @inheritDoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+
 		switch ($sAttCode) {
 			case 'last_discovery_date':
 			case 'ping_duration':
@@ -277,16 +281,16 @@ class _IPSubnet extends IPObject {
 			case 'scan_duration':
 			case 'scan_discovered':
 				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					return OPT_ATT_READONLY;
+					return (OPT_ATT_READONLY | $sFlagsFromParent);
 				} else {
-					return OPT_ATT_HIDDEN;
+					return (OPT_ATT_HIDDEN | $sFlagsFromParent);
 				}
 
 			default:
 				break;
 		}
 
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $sFlagsFromParent;
 	}
 
 	/**

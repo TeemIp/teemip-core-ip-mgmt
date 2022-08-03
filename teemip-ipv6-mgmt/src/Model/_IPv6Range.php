@@ -730,10 +730,13 @@ EOF
 	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		if ((!$this->IsNew()) && ($sAttCode == 'subnet_id')) {
-			return OPT_ATT_READONLY;
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		$aReadOnlyAttributes = array('subnet_id');
+
+		if (!$this->IsNew() && in_array($sAttCode, $aReadOnlyAttributes)) {
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 }

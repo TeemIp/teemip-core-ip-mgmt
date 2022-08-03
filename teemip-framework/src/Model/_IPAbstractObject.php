@@ -58,22 +58,17 @@ class _IPAbstractObject extends cmdbAbstractObject {
 	}
 
 	/**
-	 * Change default flag of attribute.
-	 *
-	 * @param string $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		$aReadOnlyAttributes = array('ipconfig_id');
+
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 	/*

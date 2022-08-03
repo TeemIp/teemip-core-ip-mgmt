@@ -483,46 +483,36 @@ class _IPBlock extends IPObject {
 	}
 
 	/**
-	 * Change default flag of attribute at creation
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 *
-	 * @return bool
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
+
 		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes)) {
 			if ($this->Get('origin') == 'lir') {
 				// If block origin is LIR at creation, it implies that delegation is in progress from a RIR block.
-				return OPT_ATT_NORMAL;
+				return (OPT_ATT_NORMAL | $sFlagsFromParent);
 			}
 
-			return OPT_ATT_HIDDEN || OPT_ATT_READONLY;
+			return (OPT_ATT_HIDDEN | OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+		return $sFlagsFromParent;
 	}
 
 	/**
-	 * Change default flag of attribute
-	 *
-	 * @param $sAttCode
-	 * @param array $aReasons
-	 * @param string $sTargetState
-	 *
-	 * @return int
-	 * @throws \CoreException
+	 * @inheritdoc
 	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$aReadOnlyAttributes = array('org_id', 'parent_org_id', 'parent_id', 'occupancy', 'children_occupancy', 'subnet_occupancy');
+		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		$aReadOnlyAttributes = array('org_id', 'parent_org_id', 'parent_id', 'occupancy', 'children;_occupancy', 'subnet_occupancy');
+
 		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return OPT_ATT_READONLY;
+			return (OPT_ATT_READONLY | $sFlagsFromParent);
 		}
 
-		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+		return $sFlagsFromParent;
 	}
 
 }
