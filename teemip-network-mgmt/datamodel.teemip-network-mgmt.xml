@@ -467,7 +467,7 @@
       <methods/>
       <presentation>
         <details>
-		  <items>
+          <items>
             <item id="col:col1">
               <rank>10</rank>
               <items>
@@ -1183,7 +1183,7 @@
             <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-globe-wire.svg</icon>
+        <icon>asset/img/icons8-globe-cable.svg</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
