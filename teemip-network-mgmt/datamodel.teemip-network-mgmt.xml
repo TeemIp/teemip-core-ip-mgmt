@@ -574,9 +574,6 @@
             <item id="applicationsolution_list">
               <rank>60</rank>
             </item>
-		    <item id="providercontracts_list">
-		      <rank>70</rank>
-			</item>
           </items>
         </details>
         <default_search>
@@ -863,9 +860,6 @@
 		    </item>
 		    <item id="documents_list">
 		      <rank>40</rank>
-		    </item>
-		    <item id="providercontracts_list">
-		      <rank>50</rank>
 		    </item>
           </items>
         </details>
