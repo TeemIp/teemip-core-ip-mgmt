@@ -491,9 +491,6 @@
             <item id="documents_list">
               <rank>20</rank>
             </item>
-            <item id="providercontracts_list">
-              <rank>30</rank>
-            </item>
             <item id="col:col1">
               <rank>40</rank>
               <items>
@@ -770,12 +767,6 @@
             </item>
             <item id="ips_list">
               <rank>60</rank>
-            </item>
-            <item id="providercontracts_list">
-              <rank>70</rank>
-            </item>
-            <item id="services_list">
-              <rank>80</rank>
             </item>
             <item id="col:col1">
               <rank>90</rank>
