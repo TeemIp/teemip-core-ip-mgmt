@@ -646,7 +646,7 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-stack.svg</icon>
+        <icon>asset/img/icons8-stack.png</icon>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
