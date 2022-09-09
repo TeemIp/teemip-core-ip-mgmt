@@ -19,8 +19,13 @@ class DashletBadgeFiltered extends Dashlet
 		parent::__construct($oModelReflection, $sId);
 		$this->aProperties['title'] = 'Contacts';
 		$this->aProperties['query'] = 'SELECT Contact';
-		$this->aCSSClasses[] = 'ibo-dashlet--is-inline';
-		$this->aCSSClasses[] = 'ibo-dashlet-badge';
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$this->aCSSClasses[] = 'dashlet-inline';
+			$this->aCSSClasses[] = 'dashlet-badge';
+		} else {
+			$this->aCSSClasses[] = 'ibo-dashlet--is-inline';
+			$this->aCSSClasses[] = 'ibo-dashlet-badge';
+		}
 	}
 
 	public function GetDBSearch($aExtraParams = array())
@@ -43,22 +48,34 @@ class DashletBadgeFiltered extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$oFilter = $this->GetDBSearch($aExtraParams);
-		$sHyperlink = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&filter=".$sFilter = rawurlencode($oFilter->serialize());
 		$sClass = $oFilter->GetClass();
-		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-		$oSet = new CMDBObjectSet($oFilter);
-		$iCount = $oSet->Count();
-		$sTitle = Dict::S($this->aProperties['title']);
-		$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sTitle, null, null, array());
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
+			$oPage->add('<div class="dashlet-content">');
 
-		$sId = 'block_'.$this->sId.($bEditMode ? '_edit' : '');
-		$oHtml = new UIContentBlock($sId);
-		$oHtml->AddCSSClass("display_block");
-		$oHtml->AddSubBlock($oBlock);
+			$oBlock = new DisplayBlock($oFilter, 'actions');
+			$aExtraParams['context_filter'] = 1;
+			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : '');
+			$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 
-		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
-		$oDashletContainer->AddSubBlock($oHtml);
-		return $oDashletContainer;
+			$oPage->add('</div>');
+		} else {
+			$sHyperlink = utils::GetAbsoluteUrlAppRoot()."pages/UI.php?operation=search&filter=".$sFilter = rawurlencode($oFilter->serialize());
+			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+			$oSet = new CMDBObjectSet($oFilter);
+			$iCount = $oSet->Count();
+			$sTitle = Dict::S($this->aProperties['title']);
+			$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sTitle, null, null, array());
+
+			$sId = 'block_'.$this->sId.($bEditMode ? '_edit' : '');
+			$oHtml = new UIContentBlock($sId);
+			$oHtml->AddCSSClass("display_block");
+			$oHtml->AddSubBlock($oBlock);
+
+			$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
+			$oDashletContainer->AddSubBlock($oHtml);
+
+			return $oDashletContainer;
+		}
 	}
 
 	/**
@@ -69,6 +86,7 @@ class DashletBadgeFiltered extends Dashlet
 	public function GetPropertiesFields(DesignerForm $oForm)
 	{
 		$oField = new DesignerTextField('title', Dict::S('UI:DashletObjectList:Prop-Title'), $this->aProperties['title']);
+
 		$oForm->AddField($oField);
 
 		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $this->aProperties['query']);
