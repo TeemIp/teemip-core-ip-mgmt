@@ -16,7 +16,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-framework/3.0.0',
+			'teemip-framework/3.0.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
