@@ -3486,7 +3486,7 @@
               <dashlet id="teemip-301" xsi:type="DashletHeaderStatic">
                 <rank>1</rank>
                 <title>Menu:IPSpace:Options</title>
-                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-new-item-48.png</icon>
               </dashlet>
               <dashlet id="teemip-311" xsi:type="DashletBadge">
                 <rank>2</rank>
@@ -3576,7 +3576,7 @@
             <dashlet id="teemip-1001" xsi:type="DashletHeaderStatic">
               <rank>0</rank>
               <title>Menu:IPMgmt:Typology</title>
-                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
+                <icon>teemip-ip-mgmt/asset/img/icons8-new-item-48.png</icon>
               </dashlet>
               <dashlet id="teemip-1004" xsi:type="DashletBadge">
                 <rank>1</rank>
