@@ -2,7 +2,6 @@
 <Set>
 	<IPv6Range alias="IPv6Range" id="32">
 		<org_id>2</org_id>
-		<ipconfig_id>1</ipconfig_id>
 		<subnet_id>29</subnet_id>
 		<range>DC Consoles</range>
 		<firstip>FC01:0:1964:0A05::F:0</firstip>
@@ -14,7 +13,6 @@
 	</IPv6Range>
 	<IPv6Range alias="IPv6Range" id="33">
 		<org_id>2</org_id>
-		<ipconfig_id>1</ipconfig_id>
 		<subnet_id>31</subnet_id>
 		<range>HQ Printers</range>
 		<firstip>FC01:0:1964:0404:A::</firstip>
