@@ -13,9 +13,8 @@ With TeemIp Network Management Extended:
 
 ## Documentation
 
-Comprehensive documentation can be found on TeemIp’s [wiki][1], namely in the chapter dedicated to the extension:
-
-[Network Management Extended][2]
+Comprehensive documentation can be found on TeemIp’s [wiki][1], namely in the chapter dedicated to the extension: [Network Management
+Extended][2]
 
 [1]: https://wiki.teemip.net
 
