@@ -32,15 +32,15 @@ SetupWebPage::AddModule(
 			//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
-			'data.sample.InterfaceConnector.xml',
-			'data.sample.InterfaceSpeed.xml',
-			'data.sample.Layer2Protocol.xml',
+			'data/data.sample.InterfaceConnector.xml',
+			'data/data.sample.InterfaceSpeed.xml',
+			'data/data.sample.Layer2Protocol.xml',
 		),
 		
 		// Documentation
 		//
 		'doc.manual_setup' => '',
-		'doc.more_information' => 'https://wiki.teemip.net/doku.php?id=extensions:teemip-network-mgmt-extended',
+		'doc.more_information' => '',
 		
 		// Default settings
 		//

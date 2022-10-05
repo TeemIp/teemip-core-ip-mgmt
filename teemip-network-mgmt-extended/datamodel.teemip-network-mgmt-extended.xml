@@ -455,7 +455,9 @@
             <attribute id="networkdevice_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-slave-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-slave-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -646,7 +648,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-stack.png</icon>
+        <style>
+          <icon>asset/img/icons8-stack.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1122,7 +1126,9 @@
             <attribute id="connectableci_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-bursts-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-bursts-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
