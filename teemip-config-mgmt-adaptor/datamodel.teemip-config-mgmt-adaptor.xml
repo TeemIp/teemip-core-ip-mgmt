@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="FunctionalCI" _delta="must_exist">
       <methods>
@@ -78,8 +78,8 @@
       <presentation>
         <default_search _delta="must_exist">
           <items>
-            <item id="managementip"  _delta="delete"/>
-            <item id="managementip_id"  _delta="define">
+            <item id="managementip" _delta="delete"/>
+            <item id="managementip_id" _delta="define">
               <rank>20</rank>
             </item>
           </items>
@@ -169,8 +169,22 @@
       <fields>
         <field id="operational_status" xsi:type="AttributeMetaEnum" _delta="define">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+							<style>
+								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+							<style>
+								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
           </values>
           <sql>operational_status</sql>
           <default_value>active</default_value>
@@ -340,10 +354,38 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value id="stock">stock</value>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
-            <value id="obsolete">obsolete</value>
+            <value id="stock">
+              <code>stock</code>
+              <style>
+                <main_color>hsla(207, 72.6%, 57.1%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="active">
+              <code>active</code>
+							<style>
+								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+							<style>
+								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+              <style>
+                <main_color>hsla(0, 60.8%, 48%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>

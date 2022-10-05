@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="VirtualMachine" _delta="must_exist">
       <fields>
@@ -75,8 +75,22 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+							<style>
+								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+							<style>
+								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>

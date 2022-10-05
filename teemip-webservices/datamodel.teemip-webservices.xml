@@ -1,9 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ @copyright   Copyright (C) 2021 TeemIp
-  ~ @license     http://opensource.org/licenses/AGPL-3.0
-  -->
-
-<itop_design version="1.7">
+<itop_design version="3.0">
   <classes/>
 </itop_design>

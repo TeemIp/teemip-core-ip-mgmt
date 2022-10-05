@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="IPApplication" _delta="define">
       <parent>FunctionalCI</parent>
@@ -33,9 +33,30 @@
         <field id="status" xsi:type="AttributeEnum">
           <sql>status</sql>
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
-            <value id="obsolete">obsolete</value>
+            <value id="production">
+              <code>production</code>
+              <style>
+                <main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+              <style>
+                <main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+              <style>
+                <main_color>hsla(0, 60.8%, 48%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
@@ -141,7 +162,7 @@
       </properties>
       <fields>
         <!--  General information -->
-        <field id="org_id" xsi:type="AttributeExternalKey">
+	      <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
@@ -172,31 +193,65 @@
           <extkey_attcode>requestor_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-        <!-- Settings for subnet blocks -->
-        <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
+	      <!-- Settings for subnet blocks -->
+	      <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
           <sql>ipv4_block_min_size</sql>
           <default_value>256</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="ipv6_block_min_prefix" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value>48</value>
-            <value>49</value>
-            <value>50</value>
-            <value>51</value>
-            <value>52</value>
-            <value>53</value>
-            <value>54</value>
-            <value>55</value>
-            <value>56</value>
-            <value>57</value>
-            <value>58</value>
-            <value>59</value>
-            <value>60</value>
-            <value>61</value>
-            <value>62</value>
-            <value>63</value>
-            <value>64</value>
+            <value id="48">
+              <code>48</code>
+            </value>
+            <value id="49">
+              <code>49</code>
+            </value>
+            <value id="50">
+              <code>50</code>
+            </value>
+            <value id="51">
+              <code>51</code>
+            </value>
+            <value id="52">
+              <code>52</code>
+            </value>
+            <value id="53">
+              <code>53</code>
+            </value>
+            <value id="54">
+              <code>54</code>
+            </value>
+            <value id="55">
+              <code>55</code>
+            </value>
+            <value id="56">
+              <code>56</code>
+            </value>
+            <value id="57">
+              <code>57</code>
+            </value>
+            <value id="58">
+              <code>58</code>
+            </value>
+            <value id="59">
+              <code>59</code>
+            </value>
+            <value id="60">
+              <code>60</code>
+            </value>
+            <value id="61">
+              <code>61</code>
+            </value>
+            <value id="62">
+              <code>62</code>
+            </value>
+            <value id="63">
+              <code>63</code>
+            </value>
+            <value id="64">
+              <code>64</code>
+            </value>
           </values>
           <sql>ipv6_block_min_prefix</sql>
           <default_value>64</default_value>
@@ -204,8 +259,12 @@
         </field>
         <field id="ipv4_block_cidr_aligned" xsi:type="AttributeEnum">
           <values>
-            <value>bca_yes</value>
-            <value>bca_no</value>
+            <value id="bca_yes">
+              <code>bca_yes</code>
+            </value>
+            <value id="bca_no">
+              <code>bca_no</code>
+            </value>
           </values>
           <sql>ipv4_block_cidr_aligned</sql>
           <default_value>bca_yes</default_value>
@@ -214,8 +273,12 @@
         </field>
         <field id="ipv6_block_cidr_aligned" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value>bca_yes</value>
-            <value>bca_no</value>
+            <value id="bca_yes">
+              <code>bca_yes</code>
+            </value>
+            <value id="bca_no">
+              <code>bca_no</code>
+            </value>
           </values>
           <sql>ipv6_block_cidr_aligned</sql>
           <default_value>bca_yes</default_value>
@@ -223,19 +286,27 @@
         </field>
         <field id="delegate_to_children_only" xsi:type="AttributeEnum">
           <values>
-            <value>dtc_yes</value>
-            <value>dtc_no</value>
+            <value id="dtc_yes">
+              <code>dtc_yes</code>
+            </value>
+            <value id="dtc_no">
+              <code>dtc_no</code>
+            </value>
           </values>
           <sql>delegate_to_children_only</sql>
           <default_value>dtc_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <!-- Settings for subnets -->
-        <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
+	      <!-- Settings for subnets -->
+	      <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
           <values>
-            <value>reserve_no</value>
-            <value>reserve_yes</value>
+            <value id="reserve_no">
+              <code>reserve_no</code>
+            </value>
+            <value id="reserve_yes">
+              <code>reserve_yes</code>
+            </value>
           </values>
           <sql>reserve_subnet_IPs</sql>
           <default_value>reserve_no</default_value>
@@ -244,9 +315,15 @@
         </field>
         <field id="ipv4_gateway_ip_format" xsi:type="AttributeEnum">
           <values>
-            <value>subnetip_plus_1</value>
-            <value>broadcastip_minus_1</value>
-            <value>free_setup</value>
+            <value id="subnetip_plus_1">
+              <code>subnetip_plus_1</code>
+            </value>
+            <value id="broadcastip_minus_1">
+              <code>broadcastip_minus_1</code>
+            </value>
+            <value id="free_setup">
+              <code>free_setup</code>
+            </value>
           </values>
           <sql>ipv4_gateway_ip_format</sql>
           <default_value>subnetip_plus_1</default_value>
@@ -254,9 +331,15 @@
         </field>
         <field id="ipv6_gateway_ip_format" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value>subnetip_plus_1</value>
-            <value>lastip</value>
-            <value>free_setup</value>
+            <value id="subnetip_plus_1">
+              <code>subnetip_plus_1</code>
+            </value>
+            <value id="lastip">
+              <code>lastip</code>
+            </value>
+            <value id="free_setup">
+              <code>free_setup</code>
+            </value>
           </values>
           <sql>ipv6_gateway_ip_format</sql>
           <default_value>subnetip_plus_1</default_value>
@@ -264,8 +347,12 @@
         </field>
         <field id="subnet_symetrical_nat" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>subnet_symetrical_nat</sql>
           <default_value>no</default_value>
@@ -282,8 +369,8 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <!-- Settings for IP ranges -->
-        <field id="iprange_low_watermark" xsi:type="AttributeInteger">
+	      <!-- Settings for IP ranges -->
+	      <field id="iprange_low_watermark" xsi:type="AttributeInteger">
           <sql>iprange_low_watermark</sql>
           <default_value>60</default_value>
           <is_null_allowed>false</is_null_allowed>
@@ -293,12 +380,18 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <!-- Settings for IP addresses -->
-        <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
+	      <!-- Settings for IP addresses -->
+	      <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
           <values>
-            <value>ipdup_no</value>
-            <value>ipdup_yes</value>
-            <value>ipdup_dualstack</value>
+            <value id="ipdup_no">
+              <code>ipdup_no</code>
+            </value>
+            <value id="ipdup_yes">
+              <code>ipdup_yes</code>
+            </value>
+            <value id="ipdup_dualstack">
+              <code>ipdup_dualstack</code>
+            </value>
           </values>
           <sql>ip_allow_duplicate_name</sql>
           <default_value>ipdup_no</default_value>
@@ -307,8 +400,12 @@
         </field>
         <field id="ping_before_assign" xsi:type="AttributeEnum">
           <values>
-            <value>ping_no</value>
-            <value>ping_yes</value>
+            <value id="ping_no">
+              <code>ping_no</code>
+            </value>
+            <value id="ping_yes">
+              <code>ping_yes</code>
+            </value>
           </values>
           <sql>ping_before_assign</sql>
           <default_value>ping_no</default_value>
@@ -317,8 +414,12 @@
         </field>
         <field id="ip_copy_ci_name_to_shortname" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_copy_ci_name_to_shortname</sql>
           <default_value>no</default_value>
@@ -327,8 +428,12 @@
         </field>
         <field id="compute_fqdn_with_empty_shortname" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>allow_fqdn_with_empty_shortname</sql>
           <default_value>no</default_value>
@@ -337,8 +442,12 @@
         </field>
         <field id="ip_symetrical_nat" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_symetrical_nat</sql>
           <default_value>no</default_value>
@@ -347,8 +456,12 @@
         </field>
         <field id="ip_allocate_on_ci_production" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_allocate_on_ci_production</sql>
           <default_value>yes</default_value>
@@ -357,8 +470,12 @@
         </field>
         <field id="ip_release_on_ci_obsolete" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_release_on_ci_obsolete</sql>
           <default_value>no</default_value>
@@ -367,8 +484,12 @@
         </field>
         <field id="ip_unassign_on_no_ci" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_unassign_on_no_ci</sql>
           <default_value>no</default_value>
@@ -377,30 +498,44 @@
         </field>
         <field id="ip_release_on_subnet_release" xsi:type="AttributeEnum">
           <values>
-            <value>no</value>
-            <value>yes</value>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
           </values>
           <sql>ip_release_on_subnet_release</sql>
           <default_value>yes</default_value>
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <!-- Settings for Domains -->
-        <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
+	      <!-- Settings for Domains -->
+	      <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
           <values>
-            <value>dtc_yes</value>
-            <value>dtc_no</value>
+            <value id="dtc_yes">
+              <code>dtc_yes</code>
+            </value>
+            <value id="dtc_no">
+              <code>dtc_no</code>
+            </value>
           </values>
           <sql>delegate_domain_to_children_only</sql>
           <default_value>dtc_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-        <!-- Other settings -->
-        <field id="mac_address_format" xsi:type="AttributeEnum">
+	      <!-- Other settings -->
+	      <field id="mac_address_format" xsi:type="AttributeEnum">
           <values>
-            <value>colons</value>
-            <value>hyphens</value>
-            <value>dots</value>
+            <value id="colons">
+              <code>colons</code>
+            </value>
+            <value id="hyphens">
+              <code>hyphens</code>
+            </value>
+            <value id="dots">
+              <code>dots</code>
+            </value>
           </values>
           <sql>mac_address_format</sql>
           <default_value>colons</default_value>

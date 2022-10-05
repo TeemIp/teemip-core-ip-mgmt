@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
 <classes>
     <class id="IPObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -39,11 +39,44 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value>reserved</value>
-            <value>allocated</value>
-            <value>released</value>
-            <value>unassigned</value>
+            <value id="reserved">
+              <code>reserved</code>
+              <style>
+                <main_color>hsla(0, 60.8%, 48%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="allocated">
+              <code>allocated</code>
+              <style>
+                <main_color>hsla(207, 72.6%, 57.1%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="released">
+              <code>released</code>
+              <style>
+                <main_color>hsla(209, 23.7%, 74.3%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="unassigned">
+              <code>unassigned</code>
+              <style>
+                <main_color>hsla(88, 50.2%, 52.7%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
+          <default_style>
+            <main_color>hsla(88, 50.2%, 52.7%, 1)</main_color>
+            <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+            <decoration_classes/>
+          </default_style>
           <sql>status</sql>
           <default_value>allocated</default_value>
           <is_null_allowed>false</is_null_allowed>
@@ -429,7 +462,9 @@
           <format>IPBlock</format>
           <attributes/>
         </naming>
-        <icon>asset/img/icons8-module-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-module-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -474,12 +509,24 @@
         </field>
         <field id="write_reason" xsi:type="AttributeEnum">
           <values>
-            <value>none</value>
-            <value>shrink</value>
-            <value>split</value>
-            <value>expand</value>
-            <value>is_delete</value>
-            <value>parent_is_delete</value>
+            <value id="none">
+              <code>none</code>
+            </value>
+            <value id="shrink">
+              <code>shrink</code>
+            </value>
+            <value id="split">
+              <code>split</code>
+            </value>
+            <value id="expand">
+              <code>expand</code>
+            </value>
+            <value id="is_delete">
+              <code>is_delete</code>
+            </value>
+            <value id="parent_is_delete">
+              <code>parent_is_delete</code>
+            </value>
           </values>
           <sql>write_reason</sql>
           <default_value>none</default_value>
@@ -511,9 +558,15 @@
         </field>
         <field id="origin" xsi:type="AttributeEnum">
           <values>
-            <value>rir</value>
-            <value>lir</value>
-            <value>other</value>
+            <value id="rir">
+              <code>rir</code>
+            </value>
+            <value id="lir">
+              <code>lir</code>
+            </value>
+            <value id="other">
+              <code>other</code>
+            </value>
           </values>
           <sql>origin</sql>
           <default_value>other</default_value>
@@ -688,7 +741,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-module-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-module-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -749,9 +804,15 @@
         </field>
         <field id="ipv4_block_cidr_aligned" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>bca_yes</value>
-            <value>bca_no</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="bca_yes">
+              <code>bca_yes</code>
+            </value>
+            <value id="bca_no">
+              <code>bca_no</code>
+            </value>
           </values>
           <sql>ipv4_block_cidr_aligned</sql>
           <default_value>default</default_value>
@@ -970,7 +1031,12 @@
           <format>IPSubnet</format>
           <attributes/>
         </naming>
-        <icon>asset/img/icons8-subnet-48.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>asset/img/icons8-subnet-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -992,11 +1058,22 @@
         </field>
         <field id="write_reason" xsi:type="AttributeEnum"> 
           <values>
-		    <value>none</value>
-			<value>shrink</value>
-			<value>split</value>
-			<value>expand</value>
-			<value>is_delete</value></values>
+            <value id="none">
+              <code>none</code>
+            </value>
+            <value id="shrink">
+              <code>shrink</code>
+            </value>
+            <value id="split">
+              <code>split</code>
+            </value>
+            <value id="expand">
+              <code>expand</code>
+            </value>
+            <value id="is_delete">
+              <code>is_delete</code>
+            </value>
+          </values>
           <sql>write_reason</sql>
           <default_value>none</default_value>
           <is_null_allowed>false</is_null_allowed>
@@ -1014,9 +1091,15 @@
         </field>
         <field id="alarm_water_mark" xsi:type="AttributeEnum">
           <values>
-            <value>no_alarm</value>
-            <value>high_sent</value>
-            <value>low_sent</value>
+            <value id="no_alarm">
+              <code>no_alarm</code>
+            </value>
+            <value id="high_sent">
+              <code>high_sent</code>
+            </value>
+            <value id="low_sent">
+              <code>low_sent</code>
+            </value>
           </values>
           <sql>alarm_water_mark</sql>
           <default_value>no_alarm</default_value>
@@ -1028,9 +1111,15 @@
         </field>
         <field id="reserve_subnet_ips" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>reserve_no</value>
-            <value>reserve_yes</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="reserve_no">
+              <code>reserve_no</code>
+            </value>
+            <value id="reserve_yes">
+              <code>reserve_yes</code>
+            </value>
           </values>
           <sql>reserve_subnet_ips</sql>
           <default_value>default</default_value>
@@ -1566,7 +1655,9 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-subnet-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-subnet-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="ip"/>
@@ -1606,23 +1697,57 @@
         </field>
         <field id="mask" xsi:type="AttributeEnum">
           <values>
-            <value>255.255.0.0</value>
-            <value>255.255.128.0</value>
-            <value>255.255.192.0</value>
-            <value>255.255.224.0</value>
-            <value>255.255.240.0</value>
-            <value>255.255.248.0</value>
-            <value>255.255.252.0</value>
-            <value>255.255.254.0</value>
-            <value>255.255.255.0</value>
-            <value>255.255.255.128</value>
-            <value>255.255.255.192</value>
-            <value>255.255.255.224</value>
-            <value>255.255.255.240</value>
-            <value>255.255.255.248</value>
-            <value>255.255.255.252</value>
-            <value>255.255.255.254</value>
-            <value>255.255.255.255</value>
+            <value id="255.255.0.0">
+              <code>255.255.0.0</code>
+            </value>
+            <value id="255.255.128.0">
+              <code>255.255.128.0</code>
+            </value>
+            <value id="255.255.192.0">
+              <code>255.255.192.0</code>
+            </value>
+            <value id="255.255.224.0">
+              <code>255.255.224.0</code>
+            </value>
+            <value id="255.255.240.0">
+              <code>255.255.240.0</code>
+            </value>
+            <value id="255.255.248.0">
+              <code>255.255.248.0</code>
+            </value>
+            <value id="255.255.252.0">
+              <code>255.255.252.0</code>
+            </value>
+            <value id="255.255.254.0">
+              <code>255.255.254.0</code>
+            </value>
+            <value id="255.255.255.0">
+              <code>255.255.255.0</code>
+            </value>
+            <value id="255.255.255.128">
+              <code>255.255.255.128</code>
+            </value>
+            <value id="255.255.255.192">
+              <code>255.255.255.192</code>
+            </value>
+            <value id="255.255.255.224">
+              <code>255.255.255.224</code>
+            </value>
+            <value id="255.255.255.240">
+              <code>255.255.255.240</code>
+            </value>
+            <value id="255.255.255.248">
+              <code>255.255.255.248</code>
+            </value>
+            <value id="255.255.255.252">
+              <code>255.255.255.252</code>
+            </value>
+            <value id="255.255.255.254">
+              <code>255.255.255.254</code>
+            </value>
+            <value id="255.255.255.255">
+              <code>255.255.255.255</code>
+            </value>
           </values>
           <sql>mask</sql>
           <default_value/>
@@ -1654,10 +1779,18 @@
         </field>
         <field id="ipv4_gateway_ip_format" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>subnetip_plus_1</value>
-            <value>broadcastip_minus_1</value>
-            <value>free_setup</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="subnetip_plus_1">
+              <code>subnetip_plus_1</code>
+            </value>
+            <value id="broadcastip_minus_1">
+              <code>broadcastip_minus_1</code>
+            </value>
+            <value id="free_setup">
+              <code>free_setup</code>
+            </value>
           </values>
           <sql>ipv4_gateway_ip_format</sql>
           <default_value>default</default_value>
@@ -1936,7 +2069,9 @@
           <format>IPRange</format>
           <attributes/>
         </naming>
-        <icon>asset/img/icons8-slice-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-slice-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="range"/>
@@ -1968,8 +2103,12 @@
         </field>
         <field id="dhcp" xsi:type="AttributeEnum">
           <values>
-            <value>dhcp_no</value>
-            <value>dhcp_yes</value>
+            <value id="dhcp_no">
+              <code>dhcp_no</code>
+            </value>
+            <value id="dhcp_yes">
+              <code>dhcp_yes</code>
+            </value>
           </values>
           <sql>dhcp</sql>
           <default_value>dhcp_no</default_value>
@@ -1978,11 +2117,21 @@
         </field>
         <field id="write_reason" xsi:type="AttributeEnum">
           <values>
-            <value>none</value>
-            <value>shrink</value>
-            <value>split</value>
-            <value>expand</value>
-            <value>is_delete</value>
+            <value id="none">
+              <code>none</code>
+            </value>
+            <value id="shrink">
+              <code>shrink</code>
+            </value>
+            <value id="split">
+              <code>split</code>
+            </value>
+            <value id="expand">
+              <code>expand</code>
+            </value>
+            <value id="is_delete">
+              <code>is_delete</code>
+            </value>
           </values>
           <sql>write_reason</sql>
           <default_value>none</default_value>
@@ -1996,9 +2145,15 @@
         </field>
         <field id="alarm_water_mark" xsi:type="AttributeEnum">
           <values>
-            <value>no_alarm</value>
-            <value>high_sent</value>
-            <value>low_sent</value>
+            <value id="no_alarm">
+              <code>no_alarm</code>
+            </value>
+            <value id="high_sent">
+              <code>high_sent</code>
+            </value>
+            <value id="low_sent">
+              <code>low_sent</code>
+            </value>
           </values>
           <sql>alarm_water_mark</sql>
           <default_value>no_alarm</default_value>
@@ -2118,11 +2273,21 @@
       </field>
       <field id="role" xsi:type="AttributeEnum">
         <values>
-          <value>single</value>
-          <value>split_scope</value>
-          <value>primary</value>
-          <value>secondary</value>
-          <value>active</value>
+          <value id="single">
+            <code>single</code>
+          </value>
+          <value id="split_scope">
+            <code>split_scope</code>
+          </value>
+          <value id="primary">
+            <code>primary</code>
+          </value>
+          <value id="secondary">
+            <code>secondary</code>
+          </value>
+          <value id="active">
+            <code>active</code>
+          </value>
         </values>
         <sql>role</sql>
         <default_value>primary</default_value>
@@ -2219,7 +2384,9 @@
             <attribute id="range"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-slice-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-slice-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="subnet_ip"/>
@@ -2444,7 +2611,12 @@
           <format>IPAddress</format>
           <attributes/>
         </naming>
-        <icon>asset/img/icons8-rj45-48.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>asset/img/icons8-rj45-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -2513,10 +2685,18 @@
         </field>
         <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>ipdup_no</value>
-            <value>ipdup_yes</value>
-            <value>ipdup_dualstack</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="ipdup_no">
+              <code>ipdup_no</code>
+            </value>
+            <value id="ipdup_yes">
+              <code>ipdup_yes</code>
+            </value>
+            <value id="ipdup_dualstack">
+              <code>ipdup_dualstack</code>
+            </value>
           </values>
           <sql>ip_allow_duplicate_name</sql>
           <default_value>default</default_value>
@@ -2524,9 +2704,15 @@
         </field>
         <field id="ping_before_assign" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>ping_no</value>
-            <value>ping_yes</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="ping_no">
+              <code>ping_no</code>
+            </value>
+            <value id="ping_yes">
+              <code>ping_yes</code>
+            </value>
           </values>
           <sql>ping_before_assign</sql>
           <default_value>default</default_value>
@@ -2665,11 +2851,21 @@
         </field>
         <field id="protocol" xsi:type="AttributeEnum">
           <values>
-            <value>tcp</value>
-            <value>udp</value>
-            <value>both</value>
-            <value>sctp</value>
-            <value>icmp</value>
+            <value id="tcp">
+              <code>tcp</code>
+            </value>
+            <value id="udp">
+              <code>udp</code>
+            </value>
+            <value id="both">
+              <code>both</code>
+            </value>
+            <value id="sctp">
+              <code>sctp</code>
+            </value>
+            <value id="icmp">
+              <code>icmp</code>
+            </value>
           </values>
           <sql>protocol</sql>
           <default_value/>
@@ -2983,7 +3179,9 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-rj45-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-rj45-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
@@ -3557,12 +3755,12 @@
       <parent>IPManagement</parent>
       <template_file/>
     </menu>
-    <menu id="FindSpace" xsi:type="WebPageMenuNode" _delta="define">>
+    <menu id="FindSpace" xsi:type="WebPageMenuNode" _delta="define">
       <rank>10</rank>
       <parent>IPTools</parent>
       <url>$pages/exec.php?exec_module=teemip-ip-mgmt&amp;exec_page=ui.teemip-ip-mgmt.php&amp;c[menu]=FindSpace&amp;operation=findspace</url>
     </menu>
-    <menu id="SubnetCalculator" xsi:type="WebPageMenuNode" _delta="define">>
+    <menu id="SubnetCalculator" xsi:type="WebPageMenuNode" _delta="define">
       <rank>20</rank>
       <parent>IPTools</parent>
       <url>$pages/exec.php?exec_module=teemip-ip-mgmt&amp;exec_page=ui.teemip-ip-mgmt.php&amp;c[menu]=SubnetCalculator&amp;operation=calculator</url>
