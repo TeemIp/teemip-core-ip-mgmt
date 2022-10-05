@@ -31,7 +31,7 @@ SetupWebPage::AddModule(
 			//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
-			'data.sample.Domain.xml',
+			'data/data.sample.Domain.xml',
 		),
 		
 		// Documentation

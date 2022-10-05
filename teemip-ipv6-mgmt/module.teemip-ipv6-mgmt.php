@@ -33,12 +33,12 @@ SetupWebPage::AddModule(
 			//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
-			'data.sample.IPv6Block.xml',
-			'data.sample.IPv6Subnet.xml',
-			'data.sample.IPv6Range.xml',
-			'data.sample.IPv6Address.xml',
-			'data.sample.lnkIPv6BlockToLocation.xml',
-			'data.sample.lnkIPv6SubnetToLocation.xml',
+			'data/data.sample.IPv6Block.xml',
+			'data/data.sample.IPv6Subnet.xml',
+			'data/data.sample.IPv6Range.xml',
+			'data/data.sample.IPv6Address.xml',
+			'data/data.sample.lnkIPv6BlockToLocation.xml',
+			'data/data.sample.lnkIPv6SubnetToLocation.xml',
 		),
 		
 		// Documentation
