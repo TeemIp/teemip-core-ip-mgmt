@@ -300,7 +300,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="logicalinterface_id"/>
             <attribute id="vrf_id"/>

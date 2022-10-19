@@ -15,7 +15,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field>finalclass</db_final_class_field>
         <naming>
-          <format>IPObject</format>
           <attributes/>
         </naming>
         <icon/>
@@ -217,7 +216,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipobject_id"/>
             <attribute id="contact_id"/>
@@ -296,7 +294,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipobject_id"/>
             <attribute id="document_id"/>
@@ -375,7 +372,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipobject_id"/>
             <attribute id="ticket_id"/>
@@ -459,7 +455,6 @@
         <db_table>ipblock</db_table>
         <db_key_field>id</db_key_field>
         <naming>
-          <format>IPBlock</format>
           <attributes/>
         </naming>
         <style>
@@ -650,7 +645,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="location_id"/>
             <attribute id="ipblock_id"/>
@@ -736,7 +730,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -1028,7 +1021,6 @@
         <db_table>ipsubnet</db_table>
         <db_key_field>id</db_key_field>
         <naming>
-          <format>IPSubnet</format>
           <attributes/>
         </naming>
         <fields_semantic>
@@ -1233,7 +1225,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipsubnet2_id"/>
             <attribute id="ipsubnet1_id"/>
@@ -1400,7 +1391,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipsubnet_id"/>
             <attribute id="vlan_id"/>
@@ -1484,7 +1474,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipsubnet_id"/>
             <attribute id="vrf_id"/>
@@ -1564,7 +1553,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="location_id"/>
             <attribute id="ipsubnet_id"/>
@@ -1650,7 +1638,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ip"/>
           </attributes>
@@ -2066,8 +2053,7 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>IPRange</format>
-          <attributes/>
+           <attributes/>
         </naming>
         <style>
           <icon>asset/img/icons8-slice-48.png</icon>
@@ -2234,7 +2220,6 @@
       <db_key_field>id</db_key_field>
       <db_final_class_field/>
       <naming>
-        <format>%1$s %2$s</format>
         <attributes>
           <attribute id="functionalci_id"/>
           <attribute id="iprange_id"/>
@@ -2379,7 +2364,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="range"/>
           </attributes>
@@ -2608,7 +2592,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>IPAddress</format>
           <attributes/>
         </naming>
         <fields_semantic>
@@ -2802,7 +2785,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ip2_id"/>
             <attribute id="ip1_id"/>
@@ -3028,7 +3010,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s %2$s</format>
           <attributes>
             <attribute id="ipinterface_id"/>
             <attribute id="ipaddress_id"/>
@@ -3174,7 +3155,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="ip"/>
           </attributes>
@@ -3470,7 +3450,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
@@ -3571,7 +3550,6 @@
         <db_key_field>id</db_key_field>
         <db_final_class_field/>
         <naming>
-          <format>%1$s</format>
           <attributes>
             <attribute id="name"/>
           </attributes>
