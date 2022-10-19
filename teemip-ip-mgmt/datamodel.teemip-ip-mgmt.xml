@@ -196,10 +196,44 @@
         </method>
       </methods>
       <presentation>
-        <default_search>
+         <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>40</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>50</rank>
+            </item>
+            <item id="release_date">
+              <rank>60</rank>
+            </item>
+          </items>
+        </list>
+       <default_search>
           <items>
             <item id="org_id">
               <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="requestor_id">
+              <rank>30</rank>
+            </item>
+            <item id="allocation_date">
+              <rank>40</rank>
+            </item>
+            <item id="release_date">
+              <rank>50</rank>
             </item>
           </items>
         </default_search>

@@ -18,6 +18,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPObject+' => '',
 	'IPObect:GlobalParams' => 'Paramètres globaux',
 	'Class:IPObject:GeneralConfigParameters' => 'Paramètres de l\'organisation',
+	'Class:IPObject/Attribute:finalclass' => 'Sous-classe',
+	'Class:IPObject/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:IPObject/Attribute:org_id' => 'Organisation',
 	'Class:IPObject/Attribute:org_id+' => '',
 	'Class:IPObject/Attribute:org_name' => 'Nom de l\'organisation',

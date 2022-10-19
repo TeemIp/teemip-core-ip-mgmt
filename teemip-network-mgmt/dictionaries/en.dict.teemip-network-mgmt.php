@@ -16,6 +16,8 @@
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DNSObject' => 'DNS object',
 	'Class:DNSObject+' => '',
+	'Class:DNSObject/Attribute:finalclass' => 'Sub-class',
+	'Class:DNSObject/Attribute:finalclass+' => 'Name of the final class',
 	'Class:DNSObject/Attribute:org_id' => 'Organization',
 	'Class:DNSObject/Attribute:org_id+' => '',
 	'Class:DNSObject/Attribute:org_name' => 'Organization name',

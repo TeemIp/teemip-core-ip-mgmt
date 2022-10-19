@@ -16,6 +16,8 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:DNSObject' => 'Object DNS',
 	'Class:DNSObject+' => '',
+	'Class:DNSObject/Attribute:finalclass' => 'Sous-classe',
+	'Class:DNSObject/Attribute:finalclass+' => 'Nom de la classe instanciable',
 	'Class:DNSObject/Attribute:org_id' => 'Organisation',
 	'Class:DNSObject/Attribute:org_id+' => '',
 	'Class:DNSObject/Attribute:org_name' => 'Nom Organisation',

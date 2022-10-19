@@ -70,6 +70,19 @@
         </method>
       </methods>
       <presentation>
+        <list>
+          <items>
+            <item id="finalclass">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="org_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
         <default_search>
           <items>
             <item id="name">

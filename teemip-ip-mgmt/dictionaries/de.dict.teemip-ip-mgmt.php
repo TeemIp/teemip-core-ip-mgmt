@@ -18,6 +18,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPObject+' => '',
 	'IPObect:GlobalParams' => 'Globale Einstellungen',
 	'Class:IPObject:GeneralConfigParameters' => 'Organisationseinstellungen',
+	'Class:IPObject/Attribute:finalclass' => 'Typ',
+	'Class:IPObject/Attribute:finalclass+' => '',
 	'Class:IPObject/Attribute:org_id' => 'Organisation',
 	'Class:IPObject/Attribute:org_id+' => '',
 	'Class:IPObject/Attribute:org_name' => 'Organisationsname',
