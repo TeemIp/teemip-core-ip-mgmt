@@ -149,7 +149,7 @@ if (!class_exists('IPManagementInstaller'))
 			if ($sPreviousVersion[0] == '2') {
 				SetupLog::Info("Module teemip-ip-mgmt: compute new IPObjects attributes linked with IPConfig parameters ");
 
-				$sCopy = "UPDATE ".$sDBSubname."ipobject AS o JOIN ipconfig AS c ON c.org_id = o.org_id SET o.ipconfig_id = c.id";
+				$sCopy = "UPDATE ".$sDBSubname."ipobject AS o JOIN ".$sDBSubname."ipconfig AS c ON c.org_id = o.org_id SET o.ipconfig_id = c.id";
 				CMDBSource::Query($sCopy);
 
 				SetupLog::Info("Module teemip-ip-mgmt: computation done");
