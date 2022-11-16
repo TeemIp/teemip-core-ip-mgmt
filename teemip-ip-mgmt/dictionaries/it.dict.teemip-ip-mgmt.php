@@ -41,7 +41,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPObject/Attribute:requestor_name' => 'Nome del richiedente',
 	'Class:IPObject/Attribute:requestor_name+' => '',
 	'Class:IPObject/Attribute:allocation_date' => 'Data di Allocazione',
-	'Class:IPObject/Attribute:allocation_date+' => 'Data di quanto lindirizzo IP è stato allocato',
+	'Class:IPObject/Attribute:allocation_date+' => 'Data di quanto l\'indirizzo IP è stato allocato',
 	'Class:IPObject/Attribute:release_date' => 'Data di Rilascio',
 	'Class:IPObject/Attribute:release_date+' => 'Data di quando l\'indirizzo IP è stato rilasciato e non è piu usato.',
 	'Class:IPObject/Attribute:ipconfig_id' => 'Settaggi Globali IP',
@@ -1239,6 +1239,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 	// Explode FQDN to fill shortname and domain_id attributes
 	'UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist' => 'L\'attributo %1$s non è un attributo dell\'indirizzo IP!',
+
+	// Display pointers to previous and next IPs
+	'UI:IPManagement:Action:DisplayPrevious:IPAddress' => 'Precedente',
+	'UI:IPManagement:Action:DisplayNext:IPAddress' => 'Prossimo',
 
 //
 // Management of IPv4 Addresses

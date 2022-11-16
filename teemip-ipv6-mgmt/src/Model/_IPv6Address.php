@@ -11,6 +11,8 @@ use CMDBObjectSet;
 use CMDBSource;
 use ContextTag;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use IPAddress;
 use IPConfig;
@@ -305,5 +307,71 @@ class _IPv6Address extends IPAddress
 			}
 		}
 		SetupLog::Info("Module teemip-ipv6-mgmt: compression migration done");
+	}
+
+	/**
+	 * Get the previous IP if it exists
+	 *
+	 * @param bool $bInSubnet if lookup should be done in IP's subnet only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousIp($bInSubnet)
+	{
+		$oIp = $this->Get('ip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInSubnet
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv6Address AS ip WHERE ip.subnet_id = :subnet_id AND ip.ip_text < :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Address AS ip WHERE ip.org_id = :org_id AND ip.ip_text < :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oIpSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => false], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $sIp], null, 1);
+		$oIpSet->OptimizeColumnLoad(['IPv6Address' => ['id', 'ip']]);
+		if ($oPreviousIp = $oIpSet->Fetch()) {
+			return $oPreviousIp;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the next IP if it exists
+	 *
+	 * @param $bInSubnet true if lookup should be done in IP's subnet only
+	 *
+	 * @return null
+	 */
+	public function GetNextIp($bInSubnet)
+	{
+		$oIp = $this->Get('ip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInSubnet
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv6Address AS ip WHERE ip.subnet_id = :subnet_id AND ip.ip_text > :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Address AS ip WHERE ip.ip_text > :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oIpSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => true], ['subnet_id' => $iSubnet, 'ip' => $sIp], null, 1);
+		$oIpSet->OptimizeColumnLoad(['IPv6Address' => ['id', 'ip']]);
+		if ($oNextIp = $oIpSet->Fetch()) {
+			return $oNextIp;
+		}
+
+		return null;
 	}
 }

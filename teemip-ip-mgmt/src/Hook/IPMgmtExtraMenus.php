@@ -16,12 +16,23 @@ use IPRange;
 use IPSubnet;
 use IPv4Subnet;
 use IPv6Subnet;
+use MetaModel;
 use SeparatorPopupMenuItem;
+use URLButtonItem;
 use URLPopupMenuItem;
 use UserRights;
 use utils;
 
-class IPMgmtExtraMenus implements iPopupMenuExtension {
+class IPMgmtExtraMenus implements iPopupMenuExtension
+{
+	const MODULE_CODE = 'teemip-ip-mgmt';
+	const FUNCTION_CODE = 'ip_navigation';
+	const FUNCTION_SETTING_ENABLED = 'enabled';
+	const FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+
+	const DEFAULT_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+
 	/**
 	 * @inheritdoc
 	 */
@@ -686,8 +697,38 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 							break;
 					}
 				} elseif ($oObj instanceof IPAddress) {
-					// Additional actions for IPAddress
 					$sClass = get_class($oObj);
+
+					// Display pointers to previous and next IPs according to configuration parameters
+					$aDefaultSettings = array(
+						static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
+						static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY => static::DEFAULT_FUNCTION_SETTING_WITHIN_SUBNET_ONLY,
+					);
+					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $aDefaultSettings);
+					$bEnabled = (bool)$aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
+					if ($bEnabled) {
+						$bWithinSubnetOnly = (bool)$aFunctionSettings[static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
+						$oPreviousIPAddress = $oObj->GetPreviousIp($bWithinSubnetOnly);
+						if (!is_null($oPreviousIPAddress)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPAddress');
+							$id = $oPreviousIPAddress->GetKey();
+							$oItem = new URLButtonItem('previous_ipaddress', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-left');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+						$oNextIPAddress = $oObj->GetNextIp($bWithinSubnetOnly);
+						if (!is_null($oNextIPAddress)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayNext:IPAddress');
+							$id = $oNextIPAddress->GetKey();
+							$oItem = new URLButtonItem('next_ipaddress', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-right');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+					}
+
+					// Additional actions for IPAddress
 					if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES) {
 						$oAppContext = new ApplicationContext();
 						$id = $oObj->GetKey();

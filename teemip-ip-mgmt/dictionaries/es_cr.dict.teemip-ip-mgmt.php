@@ -1240,6 +1240,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Explode FQDN to fill shortname and domain_id attributes
 	'UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist' => 'Attribute %1$s is not an attribute of IP address!',
 
+	// Display pointers to previous and next IPs
+	'UI:IPManagement:Action:DisplayPrevious:IPAddress' => 'Previa',
+	'UI:IPManagement:Action:DisplayNext:IPAddress' => 'Próxima',
+
 //
 // Management of IPv4 Addresses
 //

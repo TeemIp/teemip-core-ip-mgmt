@@ -1177,4 +1177,16 @@ EOF
 		}
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function GetShortcutActions($sFinalClass)
+	{
+		// Prepend the shortcut actions with the navigation menu
+		$aNavigationActions = ['previous_ipaddress', 'next_ipaddress'];
+		$aConfiguredActions = parent::GetShortcutActions($sFinalClass);
+		$aShortcutActions = array_merge($aNavigationActions, $aConfiguredActions);
+
+		return $aShortcutActions;
+	}
 }

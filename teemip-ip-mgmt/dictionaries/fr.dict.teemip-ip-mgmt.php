@@ -1240,6 +1240,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Explode FQDN to fill shortname and domain_id attributes
 	'UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist' => 'L\'attribut %1$s n\'est pas celui d\'une adresse IP !',
 
+	// Display pointers to previous and next IPs
+	'UI:IPManagement:Action:DisplayPrevious:IPAddress' => 'Précédente',
+	'UI:IPManagement:Action:DisplayNext:IPAddress' => 'Suivante',
+
 //
 // Management of IPv4 Addresses
 //
