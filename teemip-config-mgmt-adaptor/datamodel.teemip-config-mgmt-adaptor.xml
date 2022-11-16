@@ -297,24 +297,24 @@
           <type>Overload-DBObject</type>
           <code><![CDATA[	public function GetAttributeParams($sAttCode) {
         if ($sAttCode == 'macaddress') {
-	        $oObject = null;
-			$sClass = get_class($this);
-			if (MetaModel::IsValidAttCode($sClass, 'connectableci_id')) {
-				$iConnectableCIId = $this->Get('connectableci_id');
-				$oObject = MetaModel::GetObject('ConnectableCI', $iConnectableCIId, false /* MustBeFound */);
-			} elseif (MetaModel::IsValidAttCode($sClass, 'virtualmachine_id')) {
-				$iVirtualMachineId = $this->Get('virtualmachine_id');
-				$oObject = MetaModel::GetObject('VirtualMachine', $iVirtualMachineId, false /* MustBeFound */);
-			}
-			if ($oObject != null) {
-				$iOrgId = $oObject->Get('org_id');
-				if ($iOrgId != null) {
-					return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $iOrgId));
-				}
-			}
-			return('colons');
-	    }
-	    return '';
+            $oObject = null;
+            $sClass = get_class($this);
+            if (MetaModel::IsValidAttCode($sClass, 'connectableci_id')) {
+                $iConnectableCIId = $this->Get('connectableci_id');
+                $oObject = MetaModel::GetObject('ConnectableCI', $iConnectableCIId, false /* MustBeFound */);
+            } elseif (MetaModel::IsValidAttCode($sClass, 'virtualmachine_id')) {
+                $iVirtualMachineId = $this->Get('virtualmachine_id');
+                $oObject = MetaModel::GetObject('VirtualMachine', $iVirtualMachineId, false /* MustBeFound */);
+            }
+            if ($oObject != null) {
+                $iOrgId = $oObject->Get('org_id');
+                if ($iOrgId != null) {
+                    return(IPConfig::GetFromGlobalIPConfig('mac_address_format', $iOrgId));
+                }
+            }
+            return('colons');
+        }
+        return '';
 	}]]></code>
         </method>
       </methods>

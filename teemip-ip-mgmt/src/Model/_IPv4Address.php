@@ -14,7 +14,8 @@ use IPAddress;
 use IPConfig;
 use MetaModel;
 
-class _IPv4Address extends IPAddress {
+class _IPv4Address extends IPAddress
+{
 	/**
 	 * Get the subnet mask of the subnet that the IP belongs to, if any.
 	 *
@@ -27,7 +28,8 @@ class _IPv4Address extends IPAddress {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function GetSubnetMaskFromIp() {
+	function GetSubnetMaskFromIp()
+	{
 		$sIp = $this->Get('ip');
 		$iOrgId = $this->Get('org_id');
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(s.broadcastip) AND s.org_id = :org_id"), array(), array(
@@ -55,7 +57,8 @@ class _IPv4Address extends IPAddress {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function GetSubnetGatewayFromIp() {
+	function GetSubnetGatewayFromIp()
+	{
 		$sIp = $this->Get('ip');
 		$iOrgId = $this->Get('org_id');
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE INET_ATON(s.ip) <= INET_ATON(:ip) AND INET_ATON(:ip) <= INET_ATON(s.broadcastip) AND s.org_id = :org_id"), array(), array(
@@ -75,7 +78,8 @@ class _IPv4Address extends IPAddress {
 	/**
 	 * @inheritdoc
 	 */
-	public function ComputeValues() {
+	public function ComputeValues()
+	{
 		parent::ComputeValues();
 
 		$iOrgId = $this->Get('org_id');
@@ -99,7 +103,8 @@ class _IPv4Address extends IPAddress {
 	/**
 	 * @inheritdoc
 	 */
-	public function DoCheckToWrite() {
+	public function DoCheckToWrite()
+	{
 		parent::DoCheckToWrite();
 
 		// For new IPs only
@@ -173,7 +178,8 @@ class _IPv4Address extends IPAddress {
 	 *
 	 * @return array|mixed
 	 */
-	static function DoCheckIpPings($sIp, $iTimeToWait) {
+	static function DoCheckIpPings($sIp, $iTimeToWait)
+	{
 		// Disable ping if IP is created from a synchro... which may be the result of a discovery operation.
 		if (!ContextTag::Check('Synchro')) {
 			$sSystemType = strtoupper(php_uname($mode = "s"));
@@ -208,7 +214,8 @@ class _IPv4Address extends IPAddress {
 	/**
 	 * @inheritdoc
 	 */
-	public function AfterDelete() {
+	public function AfterDelete()
+	{
 		parent::AfterDelete();
 
 		$iOrgId = $this->Get('org_id');
@@ -271,7 +278,8 @@ class _IPv4Address extends IPAddress {
 	/**
 	 * @inheritdoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 
 		switch ($sAttCode) {

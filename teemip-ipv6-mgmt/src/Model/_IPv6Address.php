@@ -35,10 +35,11 @@ class _IPv6Address extends IPAddress
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function GetSubnetMaskFromIp() {
+	function GetSubnetMaskFromIp()
+	{
 		$sIp = $this->Get('ip')->GetAsCannonical();
 		$iOrgId = $this->Get('org_id');
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip AND s.org_id = :org_id",  array('ip' => $sIp, 'org_id' => $iOrgId)));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip AND s.org_id = :org_id", array('ip' => $sIp, 'org_id' => $iOrgId)));
 		if ($oSubnetSet->Count() != 0) {
 			$oSubnet = $oSubnetSet->Fetch();
 
@@ -60,10 +61,11 @@ class _IPv6Address extends IPAddress
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function GetSubnetGatewayFromIp() {
+	function GetSubnetGatewayFromIp()
+	{
 		$sIp = $this->Get('ip')->GetAsCannonical();
 		$iOrgId = $this->Get('org_id');
-		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip AND s.org_id = :org_id",  array('ip' => $sIp, 'org_id' => $iOrgId)));
+		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip AND s.org_id = :org_id", array('ip' => $sIp, 'org_id' => $iOrgId)));
 		if ($oSubnetSet->Count() != 0) {
 			$oSubnet = $oSubnetSet->Fetch();
 			$oGatewayIp = $oSubnet->Get('gatewayip');
@@ -82,7 +84,8 @@ class _IPv6Address extends IPAddress
 	 *
 	 * @return array
 	 */
-	static function DoCheckIpPings($sIp, $iTimeToWait) {
+	static function DoCheckIpPings($sIp, $iTimeToWait)
+	{
 		// Disable ping if IP is created from a synchro... which may be the result of a discovery operation.
 		if (!ContextTag::Check('Synchro')) {
 			$sSystemType = strtoupper(php_uname($mode = "s"));
@@ -117,7 +120,8 @@ class _IPv6Address extends IPAddress
 	/**
 	 * @inheritdoc
 	 */
-	public function ComputeValues() {
+	public function ComputeValues()
+	{
 		parent::ComputeValues();
 
 		$iOrgId = $this->Get('org_id');
@@ -128,7 +132,7 @@ class _IPv6Address extends IPAddress
 		if ($iSubnetId == 0) {
 			// No subnet parent set yet. Look for the only one that IP may belong to.
 			// If none -> orphean IP
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip_text AND s.org_id = :org_id",  array('ip' => $sIp, 'org_id' => $iOrgId)));
+			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.ip_text <= :ip AND :ip <= s.lastip_text AND s.org_id = :org_id", array('ip' => $sIp, 'org_id' => $iOrgId)));
 			if ($oSubnetSet->Count() != 0) {
 				$oSubnet = $oSubnetSet->Fetch();
 				$this->Set('subnet_id', $oSubnet->GetKey());
@@ -153,7 +157,8 @@ class _IPv6Address extends IPAddress
 	/**
 	 * @inheritdoc
 	 */
-	public function DoCheckToWrite() {
+	public function DoCheckToWrite()
+	{
 		parent::DoCheckToWrite();
 
 		// For new IPs only: 
@@ -163,7 +168,7 @@ class _IPv6Address extends IPAddress
 			$sIp = $oIp->GetAsCannonical();
 
 			// Make sure IP doesn't already exist for creation
-			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :ip AND i.org_id = :org_id",  array('ip' => $sIp, 'org_id' => $iOrgId)));
+			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :ip AND i.org_id = :org_id", array('ip' => $sIp, 'org_id' => $iOrgId)));
 			while ($oIpAdd = $oIpSet->Fetch()) {
 				// It's a creation -> deny it
 				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision');
@@ -205,7 +210,7 @@ class _IPv6Address extends IPAddress
 			if (empty($sPingBeforeAssign)) {
 				$sPingBeforeAssign = IPConfig::GetFromGlobalIPConfig('ping_before_assign', $iOrgId);
 			}
-			if ($sPingBeforeAssign =='ping_yes') {
+			if ($sPingBeforeAssign == 'ping_yes') {
 				$aOutput = $this->DoCheckIpPings($this->Get('ip')->ToString(), TIME_TO_WAIT_FOR_PING_LONG);
 				if (!empty($aOutput)) {
 					$sOutput = '<br>'.implode('<br>', $aOutput);
@@ -220,7 +225,8 @@ class _IPv6Address extends IPAddress
 	/**
 	 * @inheritdoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 		$aReadOnlyAttributes = array('ip', 'subnet_id', 'range_id');
 
@@ -240,7 +246,8 @@ class _IPv6Address extends IPAddress
 	 * @throws \MySQLQueryHasNoResultException
 	 * @throws \OQLException
 	 */
-	static public function IPv6CompressionMigration() {
+	static public function IPv6CompressionMigration()
+	{
 		SetupLog::Info("Module teemip-ipv6-mgmt: for all IPv6Attribute, fill new _comp (compressed) column with compressed value of IP");
 
 		// Get list of all non abstract classes under cmdbAbstractObject that have at least one IPv6Attribute and list these attributes
@@ -254,12 +261,12 @@ class _IPv6Address extends IPAddress
 			$aAttCodes = MetaModel::GetAttributesList($sClass);
 			$aIPv6Attributes = array();
 			foreach ($aAttCodes as $sAttCode) {
-				$oAttDef = MetaModel::GetAttributeDef($sClass,	$sAttCode);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if ($oAttDef instanceof AttributeIPv6Address) {
 					$aIPv6Attributes[] = $sAttCode;
 				}
 			}
-			if (sizeof ($aIPv6Attributes) != 0) {
+			if (sizeof($aIPv6Attributes) != 0) {
 				$aIPv6Classes[$sClass] = $aIPv6Attributes;
 			}
 		}
@@ -282,7 +289,7 @@ class _IPv6Address extends IPAddress
 
 			if ($bToBeMigrated) {
 				// Migrate all instances of $sClass
-				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass",  array()));
+				$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT $sClass", array()));
 				while ($oObject = $oSet->Fetch()) {
 					$iKey = $oObject->getKey();
 					foreach ($aIPv6Attributes as $sAttCode) {

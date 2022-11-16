@@ -25,7 +25,8 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 	/**
 	 * @inheritdoc
 	 */
-	public static function EnumItems($iMenuId, $param) {
+	public static function EnumItems($iMenuId, $param)
+	{
 		$aResult = array();
 		switch ($iMenuId) {
 			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:    // $param is a DBObjectSet
@@ -139,7 +140,7 @@ class IPMgmtExtraMenus implements iPopupMenuExtension {
 									$sMenu = 'UI:IPManagement:Action:ListSpace:'.$sClass;
 									$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 								}
-							break;
+								break;
 						}
 					} elseif (($sClass == 'IPv4Subnet') || ($sClass == 'IPv6Subnet')) {
 						// Additional actions for IPSubnets

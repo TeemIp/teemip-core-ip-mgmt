@@ -22,7 +22,8 @@ use WebPage;
 /**
  * Displays TeemIp's hierarchical objects in tree mode
  */
-class DisplayTree {
+class DisplayTree
+{
 
 	/**
 	 * Display tree
@@ -42,7 +43,8 @@ class DisplayTree {
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	static public function Display(WebPage $oP, $oAppContext, $sClass) {
+	static public function Display(WebPage $oP, $oAppContext, $sClass)
+	{
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
 			DisplayTree::DisplayV2($oP, $oAppContext, $sClass);
 		} else {
@@ -68,7 +70,8 @@ class DisplayTree {
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	static private function DisplayV2(WebPage $oP, $oAppContext, $sClass) {
+	static private function DisplayV2(WebPage $oP, $oAppContext, $sClass)
+	{
 		// Display search bar
 		$oSearch = new DBObjectSearch($sClass);
 		$aParams = array('open' => true, 'table_id' => 'displaytree_search');
@@ -100,7 +103,7 @@ class DisplayTree {
 
 		// Get toolkit menu
 		// Remove "Add To Dashboard" submenu
-		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../images/toolkit_menu.png" alt=\"\"><ul>';
+		$sHtml = '<div class="itop_popup toolkit_menu" id="tk_'.$iListId.'"><ul><li><img src="../img/toolkit_menu.png" alt=\"\"><ul>';
 		$aActions = array();
 		utils::GetPopupMenuItems($oP, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $oSet, $aActions);
 		unset($aActions['UI:Menu:AddToDashboard']);
@@ -118,7 +121,8 @@ class DisplayTree {
 		$oP->add_ready_script("\$('#tree ul').treeview();");
 	}
 
-	static private function DisplayV3(WebPage $oP, $oAppContext, $sClass) {
+	static private function DisplayV3(WebPage $oP, $oAppContext, $sClass)
+	{
 		// Get number of records
 		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');
 		if ($iCurrentOrganization == '') {
@@ -153,7 +157,8 @@ class DisplayTree {
 
 	}
 
-	static private function GetTree($sClass, $iOrganization) {
+	static private function GetTree($sClass, $iOrganization)
+	{
 		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
 		$sHtml .= '<div style="vertical-align:top;" id="tree">';
 		if ($iOrganization == '') {
@@ -186,7 +191,8 @@ class DisplayTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	static private function DeployTree($iOrgId, $sClass) {
+	static private function DeployTree($iOrgId, $sClass)
+	{
 		switch ($sClass) {
 			case 'IPv4Block':
 			case 'IPv6Block':
@@ -220,7 +226,8 @@ class DisplayTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	static private function GetNode($iOrgId, $sContainerClass, $iContainerId, $sLeafClass) {
+	static private function GetNode($iOrgId, $sContainerClass, $iContainerId, $sLeafClass)
+	{
 		// Get list of Containers contained within current container defined by key $iContainerId
 		//    . Blocks that belong to organization
 		$sOQL = "SELECT $sContainerClass AS cc WHERE cc.org_id = :org_id AND cc.parent_id = :parent_id";

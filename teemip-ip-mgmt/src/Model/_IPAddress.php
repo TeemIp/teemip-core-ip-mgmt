@@ -28,7 +28,8 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
 use WebPage;
 
-class _IPAddress extends IPObject {
+class _IPAddress extends IPObject
+{
 	/**
 	 * Manage status of IP when attached to a device
 	 *
@@ -40,7 +41,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetStatusOnAttachment($iIpId = null, $iPreviousIpId = null) {
+	public static function SetStatusOnAttachment($iIpId = null, $iPreviousIpId = null)
+	{
 		if ($iIpId != $iPreviousIpId) {
 			if ($iIpId != null) {
 				$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
@@ -74,7 +76,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetStatusOnDetachment($iIpId = null) {
+	public static function SetStatusOnDetachment($iIpId = null)
+	{
 		if ($iIpId != null) {
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if ($oIP != null) {
@@ -100,7 +103,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null, $iPreviousIpId = null) {
+	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null, $iPreviousIpId = null)
+	{
 		if ($iOrgId != null) {
 			$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 			if ($sCopyCINameToShortName == 'yes') {
@@ -136,7 +140,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetShortNameOnDetachment($iIpId = null) {
+	public static function SetShortNameOnDetachment($iIpId = null)
+	{
 		if ($iIpId != null) {
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if ($oIP != null) {
@@ -158,7 +163,8 @@ class _IPAddress extends IPObject {
 	 * @return array
 	 * @throws \CoreException
 	 */
-	public static function GetListOfIPAttributes($sClass) {
+	public static function GetListOfIPAttributes($sClass)
+	{
 		$aIpsOfClass = array();
 		if (MetaModel::IsAbstract($sClass)) {
 			return $aIpsOfClass;
@@ -191,21 +197,24 @@ class _IPAddress extends IPObject {
 	 *
 	 * @return string
 	 */
-	public function GetSubnetMaskFromIp() {
+	public function GetSubnetMaskFromIp()
+	{
 		return "";
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetSubnetGatewayFromIp() {
+	public function GetSubnetGatewayFromIp()
+	{
 		return "";
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function ComputeValues() {
+	public function ComputeValues()
+	{
 		parent::ComputeValues();
 
 		// Set FQDN
@@ -213,12 +222,9 @@ class _IPAddress extends IPObject {
 			$this->Set('fqdn', DNSObject::ComputeFqdn($this->Get('short_name'), $this->Get('domain_name')));
 		} else {
 			$sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $this->Get('org_id'));
-			if ($sComputeFqdnWithEmptyShortname == 'yes')
-			{
+			if ($sComputeFqdnWithEmptyShortname == 'yes') {
 				$this->Set('fqdn', $this->Get('domain_name'));
-			}
-			else
-			{
+			} else {
 				$this->Reset('fqdn');
 			}
 		}
@@ -227,7 +233,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	{
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -359,7 +366,8 @@ class _IPAddress extends IPObject {
 	 * @return array
 	 * @throws \CoreException
 	 */
-	public static function GetListOfClassesWIthIP($sMode = 'leaf') {
+	public static function GetListOfClassesWIthIP($sMode = 'leaf')
+	{
 		$aFunctionalCIChildClasses = MetaModel::EnumChildClasses('FunctionalCI', ENUM_CHILD_CLASSES_EXCLUDETOP);
 		$aIPClasses = array();
 		switch ($sMode) {
@@ -384,7 +392,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function DoCheckToWrite() {
+	public function DoCheckToWrite()
+	{
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -406,7 +415,8 @@ class _IPAddress extends IPObject {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function IsFqdnUnique() {
+	public function IsFqdnUnique()
+	{
 		$iOrgId = $this->Get('org_id');
 		if ($this->IsNew()) {
 			$iKey = -1;
@@ -460,7 +470,8 @@ class _IPAddress extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckOperation($sOperation) {
+	public function DoCheckOperation($sOperation)
+	{
 		switch ($sOperation) {
 			case 'allocateip':
 				if ($this->Get('status') == 'allocated') {
@@ -477,6 +488,7 @@ class _IPAddress extends IPObject {
 			default:
 				return ('OperationNotAllowed');
 		}
+
 		return '';
 	}
 
@@ -487,7 +499,8 @@ class _IPAddress extends IPObject {
 	 *
 	 * @return array
 	 */
-	public function GetPostedParam($sOperation) {
+	public function GetPostedParam($sOperation)
+	{
 		$aParam = array();
 		switch ($sOperation) {
 			case 'doallocateip':
@@ -511,7 +524,8 @@ class _IPAddress extends IPObject {
 	 *
 	 * @return string
 	 */
-	public function GetNextOperation($sOperation) {
+	public function GetNextOperation($sOperation)
+	{
 		switch ($sOperation) {
 			case 'allocateip':
 				return 'doallocateip';
@@ -531,7 +545,8 @@ class _IPAddress extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToAllocate($aParam) {
+	public function DoCheckToAllocate($aParam)
+	{
 		$sClass = $aParam['ciclass'];
 		$id = $aParam['ci_id'];
 		$sIPAttribute = $aParam['ipattribute'];
@@ -577,7 +592,8 @@ class _IPAddress extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToUnallocate() {
+	public function DoCheckToUnallocate()
+	{
 		// Make sure IP is allocated
 		if ($this->Get('status') != 'allocated') {
 			return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated'));
@@ -620,7 +636,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoAllocate($aParam) {
+	public function DoAllocate($aParam)
+	{
 		$sClass = $aParam['ciclass'];
 		$id = $aParam['ci_id'];
 		$sIPAttribute = $aParam['ipattribute'];
@@ -645,7 +662,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoUnallocate() {
+	public function DoUnallocate()
+	{
 		// Remove from CIs & interfaces
 		$this->RemoveFromCIs();
 		$this->RemoveFromInterfaces();
@@ -664,7 +682,8 @@ class _IPAddress extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+	public function DoCheckToExplodeFQDN($sFqdnAttr)
+	{
 		$sClass = get_class($this);
 		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList($sClass))) {
 			// $sFqdnAttr is not a valid attribute for the class
@@ -704,7 +723,8 @@ class _IPAddress extends IPObject {
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoExplodeFQDN($sFqdnAttr) {
+	public function DoExplodeFQDN($sFqdnAttr)
+	{
 		$sFqdn = $this->Get($sFqdnAttr);
 		// If discovered FQDN is empty or equal to current FQDN, do nothing
 		if (($sFqdn != '') && (strcmp($sFqdn, $this->Get('fqdn')) !== 0)) {
@@ -731,7 +751,8 @@ class _IPAddress extends IPObject {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function RemoveFromCIs() {
+	public function RemoveFromCIs()
+	{
 		$sCLass = get_class($this);
 		$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
 		$iKey = $this->GetKey();
@@ -760,7 +781,8 @@ class _IPAddress extends IPObject {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function RemoveFromInterfaces() {
+	public function RemoveFromInterfaces()
+	{
 		$iKey = $this->GetKey();
 		$oLnkSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress WHERE ipaddress_id = $iKey");
 		$oLnkSet = new CMDBObjectSet($oLnkSearch);
@@ -772,7 +794,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 
 		switch ($sAttCode) {
@@ -795,7 +818,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
 		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 
 		switch ($sAttCode) {
@@ -818,27 +842,31 @@ class _IPAddress extends IPObject {
 	 * Prototype for DNS management
 	 *
 	 */
-	public function DoCheckUpdateRRs() {
+	public function DoCheckUpdateRRs()
+	{
 	}
 
 	/**
 	 * Prototype for DNS management
 	 *
 	 */
-	public function UpdateRRs() {
+	public function UpdateRRs()
+	{
 	}
 
 	/**
 	 * Prototype for DNS management
 	 *
 	 */
-	public function CleanRRs() {
+	public function CleanRRs()
+	{
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function OnUpdate() {
+	public function OnUpdate()
+	{
 		parent::OnUpdate();
 
 		$sStatus = $this->Get('status');
@@ -856,7 +884,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function AfterUpdate() {
+	public function AfterUpdate()
+	{
 		parent::AfterUpdate();
 
 		// Remove IP from CIs & interfaces when it is released
@@ -873,7 +902,8 @@ class _IPAddress extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault)
+	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -1020,7 +1050,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault)
+	{
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
