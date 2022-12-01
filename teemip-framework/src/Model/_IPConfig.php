@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2022 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -184,6 +184,62 @@ class _IPConfig extends cmdbAbstractObject
 	}
 
 	/**
+	 * @return array
+	 */
+	public static function GetDefaultParameters(): array
+	{
+		$aCoreIpParameters = [
+			static::FUNCTION_IPV4_BLOCK_MIN_SIZE => static::DEFAULT_FUNCTION_IPV4_BLOCK_MIN_SIZE,
+			static::FUNCTION_IPV6_BLOCK_MIN_PREFIX => static::DEFAULT_FUNCTION_IPV6_BLOCK_MIN_PREFIX,
+			static::FUNCTION_IPV4_BLOCK_CIDR_ALIGNED => static::DEFAULT_FUNCTION_IPV4_BLOCK_CIDR_ALIGNED,
+			static::FUNCTION_IPV6_BLOCK_CIDR_ALIGNED => static::DEFAULT_FUNCTION_IPV6_BLOCK_CIDR_ALIGNED,
+			static::FUNCTION_DELEGATE_TO_CHILDREN_ONLY => static::DEFAULT_FUNCTION_DELEGATE_TO_CHILDREN_ONLY,
+			static::FUNCTION_RESERVE_SUBNET_IPS => static::DEFAULT_FUNCTION_RESERVE_SUBNET_IPS,
+			static::FUNCTION_IPV4_GATEWAY_IP_FORMAT => static::DEFAULT_FUNCTION_IPV4_GATEWAY_IP_FORMAT,
+			static::FUNCTION_IPV6_GATEWAY_IP_FORMAT => static::DEFAULT_FUNCTION_IPV6_GATEWAY_IP_FORMAT,
+			static::FUNCTION_SUBNET_SYMETRICAL_NAT => static::DEFAULT_FUNCTION_SUBNET_SYMETRICAL_NAT,
+			static::FUNCTION_SUBNET_LOW_WATERMARK => static::DEFAULT_FUNCTION_SUBNET_LOW_WATERMARK,
+			static::FUNCTION_SUBNET_HIGH_WATERMARK => static::DEFAULT_FUNCTION_SUBNET_HIGH_WATERMARK,
+			static::FUNCTION_IPRANGE_LOW_WATERMARK => static::DEFAULT_FUNCTION_IPRANGE_LOW_WATERMARK,
+			static::FUNCTION_IPRANGE_HIGH_WATERMARK => static::DEFAULT_FUNCTION_IPRANGE_HIGH_WATERMARK,
+			static::FUNCTION_IP_ALLOW_DUPLICATE_NAME => static::DEFAULT_FUNCTION_IP_ALLOW_DUPLICATE_NAME,
+			static::FUNCTION_PING_BEFORE_ASSIGN => static::DEFAULT_FUNCTION_PING_BEFORE_ASSIGN,
+			static::FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME => static::DEFAULT_FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME,
+			static::FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME => static::DEFAULT_FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME,
+			static::FUNCTION_IP_SYMETRICAL_NAT => static::DEFAULT_FUNCTION_IP_SYMETRICAL_NAT,
+			static::FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION => static::DEFAULT_FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION,
+			static::FUNCTION_IP_RELEASE_ON_CI_OBSOLETE => static::DEFAULT_FUNCTION_IP_RELEASE_ON_CI_OBSOLETE,
+			static::FUNCTION_IP_UNASSIGN_ON_NO_CI => static::DEFAULT_FUNCTION_IP_UNASSIGN_ON_NO_CI,
+			static::FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE => static::DEFAULT_FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE,
+			static::FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY => static::DEFAULT_FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY,
+			static::FUNCTION_MAC_ADDRESS_FORMAT => static::DEFAULT_FUNCTION_MAC_ADDRESS_FORMAT,
+		];
+		if (class_exists('IPRequest')) {
+			$aIpRequestParameters = [
+				static::FUNCTION_REQUEST_CREATION_IPV4_OFFSET => static::DEFAULT_FUNCTION_REQUEST_CREATION_IPV4_OFFSET,
+				static::FUNCTION_REQUEST_CREATION_IPV6_OFFSET => static::DEFAULT_FUNCTION_REQUEST_CREATION_IPV6_OFFSET,
+			];
+		} else {
+			$aIpRequestParameters = [];
+		}
+		if (class_exists('Zone')) {
+			$aZoneParameters = [
+				static::FUNCTION_IP_UPDATE_DNS_RECORDS => static::DEFAULT_FUNCTION_IP_UPDATE_DNS_RECORDS,
+			];
+		} else {
+			$aZoneParameters = [];
+		}
+		$aDefaultSettings = [
+			static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
+			static::FUNCTION_SETTING_CORE_PARAMETERS => $aCoreIpParameters,
+			static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS => $aIpRequestParameters,
+			static::FUNCTION_SETTING_ZONE_PARAMETERS => $aZoneParameters,
+		];
+
+		return $aDefaultSettings;
+	}
+
+	/**
 	 * Retrieve global config for given organization
 	 *
 	 * @param $iOrgId
@@ -197,73 +253,27 @@ class _IPConfig extends cmdbAbstractObject
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public static function GetGlobalIPConfig($iOrgId)
+	public static function GetGlobalIPConfig($iOrgId): IPConfig
 	{
 		// Create Global Config of $iOrgId if it doesn't exist
-		// Save it only if $iOrgId != 0 and create basic IP usages at the same time
 		$sOQL = 'SELECT IPConfig AS c WHERE c.org_id = :org_id';
 		$oIpConfig = MetaModel::GetObjectFromOQL($sOQL, array('org_id' => $iOrgId), false);
 		if (($oIpConfig == null) && ($iOrgId != 0)) {
-			// Get default parameters from the configuration
-			$aCoreIpParameters = array(
-				static::FUNCTION_IPV4_BLOCK_MIN_SIZE => static::DEFAULT_FUNCTION_IPV4_BLOCK_MIN_SIZE,
-				static::FUNCTION_IPV6_BLOCK_MIN_PREFIX => static::DEFAULT_FUNCTION_IPV6_BLOCK_MIN_PREFIX,
-				static::FUNCTION_IPV4_BLOCK_CIDR_ALIGNED => static::DEFAULT_FUNCTION_IPV4_BLOCK_CIDR_ALIGNED,
-				static::FUNCTION_IPV6_BLOCK_CIDR_ALIGNED => static::DEFAULT_FUNCTION_IPV6_BLOCK_CIDR_ALIGNED,
-				static::FUNCTION_DELEGATE_TO_CHILDREN_ONLY => static::DEFAULT_FUNCTION_DELEGATE_TO_CHILDREN_ONLY,
-				static::FUNCTION_RESERVE_SUBNET_IPS => static::DEFAULT_FUNCTION_RESERVE_SUBNET_IPS,
-				static::FUNCTION_IPV4_GATEWAY_IP_FORMAT => static::DEFAULT_FUNCTION_IPV4_GATEWAY_IP_FORMAT,
-				static::FUNCTION_IPV6_GATEWAY_IP_FORMAT => static::DEFAULT_FUNCTION_IPV6_GATEWAY_IP_FORMAT,
-				static::FUNCTION_SUBNET_SYMETRICAL_NAT => static::DEFAULT_FUNCTION_SUBNET_SYMETRICAL_NAT,
-				static::FUNCTION_SUBNET_LOW_WATERMARK => static::DEFAULT_FUNCTION_SUBNET_LOW_WATERMARK,
-				static::FUNCTION_SUBNET_HIGH_WATERMARK => static::DEFAULT_FUNCTION_SUBNET_HIGH_WATERMARK,
-				static::FUNCTION_IPRANGE_LOW_WATERMARK => static::DEFAULT_FUNCTION_IPRANGE_LOW_WATERMARK,
-				static::FUNCTION_IPRANGE_HIGH_WATERMARK => static::DEFAULT_FUNCTION_IPRANGE_HIGH_WATERMARK,
-				static::FUNCTION_IP_ALLOW_DUPLICATE_NAME => static::DEFAULT_FUNCTION_IP_ALLOW_DUPLICATE_NAME,
-				static::FUNCTION_PING_BEFORE_ASSIGN => static::DEFAULT_FUNCTION_PING_BEFORE_ASSIGN,
-				static::FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME => static::DEFAULT_FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME,
-				static::FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME => static::DEFAULT_FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME,
-				static::FUNCTION_IP_SYMETRICAL_NAT => static::DEFAULT_FUNCTION_IP_SYMETRICAL_NAT,
-				static::FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION => static::DEFAULT_FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION,
-				static::FUNCTION_IP_RELEASE_ON_CI_OBSOLETE => static::DEFAULT_FUNCTION_IP_RELEASE_ON_CI_OBSOLETE,
-				static::FUNCTION_IP_UNASSIGN_ON_NO_CI => static::DEFAULT_FUNCTION_IP_UNASSIGN_ON_NO_CI,
-				static::FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE => static::DEFAULT_FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE,
-				static::FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY => static::DEFAULT_FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY,
-				static::FUNCTION_MAC_ADDRESS_FORMAT => static::DEFAULT_FUNCTION_MAC_ADDRESS_FORMAT,
-			);
-			if (class_exists('IPRequest')) {
-				$aIpRequestParameters = array(
-					static::FUNCTION_REQUEST_CREATION_IPV4_OFFSET => static::DEFAULT_FUNCTION_REQUEST_CREATION_IPV4_OFFSET,
-					static::FUNCTION_REQUEST_CREATION_IPV6_OFFSET => static::DEFAULT_FUNCTION_REQUEST_CREATION_IPV6_OFFSET,
-				);
-			} else {
-				$aIpRequestParameters = array();
-			}
-			if (class_exists('Zone')) {
-				$aZoneParameters = array(
-					static::FUNCTION_IP_UPDATE_DNS_RECORDS => static::DEFAULT_FUNCTION_IP_UPDATE_DNS_RECORDS,
-				);
-			} else {
-				$aZoneParameters = array();
-			}
-			$aDefaultSettings = array(
-				static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
-				static::FUNCTION_SETTING_CORE_PARAMETERS => $aCoreIpParameters,
-				static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS => $aIpRequestParameters,
-				static::FUNCTION_SETTING_ZONE_PARAMETERS => $aZoneParameters,
-			);
+			// Get module parameters
+			$aDefaultSettings = IPConfig::GetDefaultParameters();
 			$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $aDefaultSettings);
 			$bEnabled = (bool)$aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
 
+			// Create and initialize IPConfig object
 			$oIpConfig = MetaModel::NewObject('IPConfig');
 			$oIpConfig->Set('org_id', $iOrgId);
 			if ($bEnabled) {
 				// Set parameters according to what the configuration file contains
 				// Set core parameters
 				if (!array_key_exists(static::FUNCTION_SETTING_CORE_PARAMETERS, $aFunctionSettings)) {
-					$aFunctionSettings[static::FUNCTION_SETTING_CORE_PARAMETERS] = $aCoreIpParameters;
+					$aFunctionSettings[static::FUNCTION_SETTING_CORE_PARAMETERS] = $aDefaultSettings[static::FUNCTION_SETTING_CORE_PARAMETERS];
 				}
-				foreach ($aCoreIpParameters as $sParameter => $sValueParameter) {
+				foreach ($aDefaultSettings[static::FUNCTION_SETTING_CORE_PARAMETERS] as $sParameter => $sValueParameter) {
 					if (array_key_exists($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_CORE_PARAMETERS])) {
 						$oIpConfig->Set($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_CORE_PARAMETERS][$sParameter]);
 					}
@@ -271,9 +281,9 @@ class _IPConfig extends cmdbAbstractObject
 
 				// Set IP Request parameters
 				if (!array_key_exists(static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS, $aFunctionSettings)) {
-					$aFunctionSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS] = $aIpRequestParameters;
+					$aFunctionSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS] = $aDefaultSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS];
 				}
-				foreach ($aIpRequestParameters as $sParameter => $sValueParameter) {
+				foreach ($aDefaultSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS] as $sParameter => $sValueParameter) {
 					if (array_key_exists($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS])) {
 						$oIpConfig->Set($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS][$sParameter]);
 					}
@@ -281,9 +291,9 @@ class _IPConfig extends cmdbAbstractObject
 
 				// Set Zone parameters
 				if (!array_key_exists(static::FUNCTION_SETTING_ZONE_PARAMETERS, $aFunctionSettings)) {
-					$aFunctionSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS] = $aZoneParameters;
+					$aFunctionSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS] = $aDefaultSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS];
 				}
-				foreach ($aZoneParameters as $sParameter => $sValueParameter) {
+				foreach ($aDefaultSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS] as $sParameter => $sValueParameter) {
 					if (array_key_exists($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS])) {
 						$oIpConfig->Set($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS][$sParameter]);
 					}
@@ -298,6 +308,8 @@ class _IPConfig extends cmdbAbstractObject
 	}
 
 	/**
+	 * Read parameter from config of given organization
+	 *
 	 * @param $sParameter
 	 * @param $iOrgId
 	 *
@@ -305,8 +317,7 @@ class _IPConfig extends cmdbAbstractObject
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public
-	static function GetFromGlobalIPConfig($sParameter, $iOrgId)
+	public static function GetFromGlobalIPConfig($sParameter, $iOrgId)
 	{
 		// Reads $sParameter from Global Config
 		if ($iOrgId != null) {
