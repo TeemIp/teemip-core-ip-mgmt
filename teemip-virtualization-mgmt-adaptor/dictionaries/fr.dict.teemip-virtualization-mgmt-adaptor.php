@@ -82,5 +82,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode' => 'Mode',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode+' => 'Mode tagged ou untagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 ));
 

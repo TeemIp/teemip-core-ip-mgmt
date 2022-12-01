@@ -75,3 +75,16 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:VLAN/Tab:ipaddresses_list' => 'Interfacce IP',
 	'Class:VLAN/Tab:ipaddresses_list+' => 'Elenco di tutti gli indirizzi IP ospitati da tutte le interfacce IP collegate all\'elemento della configurazione',
 ));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode' => 'Modalità ',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode+' => 'Mode tagged o untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));

@@ -286,6 +286,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_tag' => 'Tag',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:vlan_tag+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode' => 'Modus',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode+' => 'Modus tagged oder untagged',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
 ));
 
 //

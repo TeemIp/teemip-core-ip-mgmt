@@ -75,3 +75,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VLAN/Tab:ipaddresses_list' => 'IPs-Schnittstellen',
 	'Class:VLAN/Tab:ipaddresses_list+' => 'Liste aller IP-Adressen aller an das CI angeschlossenen Schnittstellen',
 ));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode' => 'Modus',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode+' => 'Modus tagged oder untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));

@@ -80,4 +80,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_id+' => 'vLAN',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag' => 'Etiqueta VLAN',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag+' => 'Etiqueta VLAN',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode' => 'Modo',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode+' => 'Modo tagged o untagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
 ));

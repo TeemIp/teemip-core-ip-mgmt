@@ -254,6 +254,30 @@
           <extkey_attcode>vlan_id</extkey_attcode>
           <target_attcode>vlan_tag</target_attcode>
         </field>
+        <field id="mode" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="tagged">
+              <code>tagged</code>
+              <style>
+                <main_color>hsla(207, 72.6%, 57.1%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="untagged">
+              <code>untagged</code>
+							<style>
+                <main_color>hsla(209, 23.7%, 74.3%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+          </values>
+          <sql>mode</sql>
+          <default_value>untagged</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -265,6 +289,9 @@
             <item id="vlan_id">
               <rank>20</rank>
             </item>
+						<item id="mode">
+							<rank>30</rank>
+						</item>
           </items>
         </details>
         <search>
@@ -275,15 +302,21 @@
             <item id="vlan_id">
               <rank>20</rank>
             </item>
+						<item id="mode">
+							<rank>30</rank>
+						</item>
           </items>
         </search>
         <list>
           <items>
+						<item id="mode">
+							<rank>10</rank>
+						</item>
             <item id="logicalinterface_id">
-              <rank>10</rank>
+              <rank>20</rank>
             </item>
             <item id="vlan_id">
-              <rank>20</rank>
+              <rank>30</rank>
             </item>
           </items>
         </list>

@@ -75,3 +75,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VLAN/Tab:ipaddresses_list' => 'IP de interfaces',
 	'Class:VLAN/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas por todas las interfaces IP conectadas al CI',
 ));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode' => 'Modo',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode+' => 'Modo tagged o untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));

@@ -82,4 +82,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_id+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:vlan_tag+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode' => 'Modus',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode+' => 'Modus tagged oder untagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
 ));

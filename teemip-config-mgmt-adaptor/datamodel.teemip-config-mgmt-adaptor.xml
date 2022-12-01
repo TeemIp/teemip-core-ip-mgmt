@@ -488,7 +488,59 @@
         </list>
       </presentation>
     </class>
-  </classes>
+		<class id="lnkPhysicalInterfaceToVLAN" _delta="must_exist">
+			<fields>
+        <field id="mode" xsi:type="AttributeEnum" _delta="define">
+          <values>
+            <value id="tagged">
+              <code>tagged</code>
+              <style>
+                <main_color>hsla(207, 72.6%, 57.1%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="untagged">
+              <code>untagged</code>
+							<style>
+                <main_color>hsla(209, 23.7%, 74.3%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+								<decoration_classes/>
+							</style>
+            </value>
+          </values>
+          <sql>mode</sql>
+          <default_value>untagged</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style/>
+        </field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="mode" _delta="define">
+							<rank>30</rank>
+						</item>
+					</items>
+				</details>
+				<search>
+					<items>
+						<item id="mode" _delta="define">
+							<rank>30</rank>
+						</item>
+					</items>
+				</search>
+				<list>
+					<items>
+						<item id="mode" _delta="define">
+							<rank>5</rank>
+						</item>
+					</items>
+				</list>
+			</presentation>
+		</class>
+	  </classes>
   <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
       <definition>
@@ -527,44 +579,44 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		if (!$bEditMode) {
 			if ($oObject instanceof ConnectableCI) {
 				$sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
-	            $sDisplayClass = 'ConnectableCI';
-	            if ($oObject->Get('finalclass') == 'NetworkDevice') {
-	                $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";
-	                $sDisplayClass = 'NetworkDevice';
-	            }
-	            $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $oObject->GetKey()));
-	            if ($oLnkSet->CountExceeds(0)) {
-	                $iIPs = $oLnkSet->Count();
-	                $oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
-	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
-	                $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-	                $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	            } else {
-	                $oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
-	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	            }
+				$sDisplayClass = 'ConnectableCI';
+				if ($oObject->Get('finalclass') == 'NetworkDevice') {
+					$sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";
+					$sDisplayClass = 'NetworkDevice';
+				}
+				$oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $oObject->GetKey()));
+				if ($oLnkSet->CountExceeds(0)) {
+					$iIPs = $oLnkSet->Count();
+					$oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
+					$oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
+					$oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+					$oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+				} else {
+					$oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
+					$oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+				}
 	        } elseif ($oObject instanceof VLAN) {
 	            $iVLANId = $oObject->GetKey();
 
-		        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
 	            if (class_exists('LogicalInterface')) {
 		            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
 	            }
-		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
-				$iLnkSet = $oLnkSet->Count();
+	            $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
+	            $iLnkSet = $oLnkSet->Count();
 
-			    if ($iLnkSet > 0) {
-			        $iIPs = $oLnkSet->Count();
-			        $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
-			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
-			        $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-			        $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-		        } else {
-			        $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list'));
-			        $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-		        }
+	            if ($iLnkSet > 0) {
+	                $iIPs = $oLnkSet->Count();
+	                $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
+	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
+	                $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
+	                $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
+	            } else {
+	                $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list'));
+	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
+	            }
 	        }
-		}
+	    }
 	}
 
 	/**

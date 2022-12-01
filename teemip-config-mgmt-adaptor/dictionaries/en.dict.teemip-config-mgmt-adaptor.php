@@ -75,3 +75,17 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VLAN/Tab:ipaddresses_list' => 'Interfaces\' IPs',
 	'Class:VLAN/Tab:ipaddresses_list+' => 'List of all IP addresses hosted by all IP interfaces attached to the CI',
 ));
+
+//
+// Class: lnkPhysicalInterfaceToVLAN
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode' => 'Mode',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode+' => 'Mode tagged or untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));
+
