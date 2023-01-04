@@ -2,33 +2,59 @@
     width: 120px;
     display: inline-block;
 }
+
 li .ip_status {
-    width: 71px;
+    width: 120px;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    vertical-align: text-bottom; 
+    vertical-align: middle;
 }
+
 li .ip_fqdn {
     width: 250px;
     display: inline-block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    vertical-align: text-bottom; 
+    vertical-align: text-bottom;
 }
+
 li .ip_ping_img {
     width: 50px;
     display: inline-block;
 }
+
 li .ip_scan_img {
     width: 54px;
     display: inline-block;
 }
+
 li .ip_lookup_img {
     width: 82px;
     display: inline-block;
+}
+
+li .ip_ping {
+    --ibo-main-color: #429ae1;
+    --ibo-complementary-color: white;
+    display: inline-block;
+    width: 60px;
+}
+
+li .ip_scan {
+    --ibo-main-color: #ff0000;
+    --ibo-complementary-color: white;
+    display: inline-block;
+    width: 65px;
+}
+
+li .ip_lookup {
+    --ibo-main-color: #7cb342;
+    --ibo-complementary-color: white;
+    display: inline-block;
+    width: 105px;
 }
 
 .teemip_page_header {
