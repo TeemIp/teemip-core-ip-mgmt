@@ -765,21 +765,21 @@ EOF
 				$sHtml .= "<span class=\"ip_status\">".$oIpRegistered->GetAsHTML('status')."</span>";
 				$sHtml .= "<span class=\"ip_fqdn\" title=\"".$oIpRegistered->Get('fqdn')."\">".$oIpRegistered->Get('fqdn')."</span>";
 				if (class_exists('IPDiscovery')) {
-					$sHtml .= "<span class=\"ip_ping_img\">";
-					if ($oIpRegistered->Get('responds_to_ping') == 'yes') {
-						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-ping-xs.png\" style=\"vertical-align:middle\"/>";
-					}
-					$sHtml .= "</span><span class=\"ip_scan_img\">";
-					if ($oIpRegistered->Get('responds_to_scan') == 'yes') {
-						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-scan-xs.png\" style=\"vertical-align:middle\"/>";
-					}
-					$sHtml .= "</span><span class=\"ip_lookup_img\">";
-					if ($oIpRegistered->Get('responds_to_iplookup') == 'yes') {
-						$sHtml .= "<img src=\"".utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-discovery/asset/img/ipmini-lookup-xs.png\" alt=\"\" style=\"vertical-align:middle\"/></span>";
-						$sHtml .= "<span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup')."</span>";
-					}
-					$sHtml .= "</span>";
-				}
+                    $sHtml .= "<span class=\"ip_ping\">";
+                    if ($oIpRegistered->Get('responds_to_ping')=='yes') {
+                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Ping')."</span>";
+                    }
+                    $sHtml .= "</span><span class=\"ip_scan\">";
+                    if ($oIpRegistered->Get('responds_to_scan')=='yes') {
+                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Scan')."</span>";
+                    }
+                    $sHtml .= "</span><span class=\"ip_lookup\">";
+                    if ($oIpRegistered->Get('responds_to_iplookup')=='yes') {
+                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Nslookup')."</span>";
+                        $sHtml .= "</span><span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup');
+                    }
+                    $sHtml .= "</span>";
+                }
 				$sHtml .= "</li>";
 			} else {
 				// If user has rights to create IPs
