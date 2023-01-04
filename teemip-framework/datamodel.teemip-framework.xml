@@ -150,7 +150,9 @@
             <attribute id="org_name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-maintenance-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-maintenance-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
