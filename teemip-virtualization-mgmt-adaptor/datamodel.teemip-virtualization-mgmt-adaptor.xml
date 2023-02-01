@@ -113,7 +113,11 @@
           <ext_key_to_remote>vrf_id</ext_key_to_remote>
           <duplicates/>
         </field>
-      </fields>
+        <field id="org_id" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>virtualmachine_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
+       </fields>
       <presentation>
         <details _delta="redefine">
           <items>
@@ -140,6 +144,9 @@
                     </item>
                     <item id="virtualmachine_id">
                       <rank>30</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>32</rank>
                     </item>
                     <item id="comment">
                       <rank>40</rank>
@@ -187,7 +194,10 @@
             <item id="virtualmachine_id">
               <rank>40</rank>
             </item>
-          </items>
+            <item id="org_id">
+              <rank>42</rank>
+            </item>
+      </items>
         </default_search>
         <list>
           <items>
@@ -197,6 +207,9 @@
             <item id="ipaddress" _delta="delete"/>
             <item id="ipgateway" _delta="delete"/>
             <item id="ipmask" _delta="delete"/>
+            <item id="org_id" _delta="define">
+              <rank>42</rank>
+            </item>
           </items>
         </list>
       </presentation>

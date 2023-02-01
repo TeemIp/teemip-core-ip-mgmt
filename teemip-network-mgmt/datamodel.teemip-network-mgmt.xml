@@ -24,7 +24,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="org_name"/>
-         </attributes>
+          </attributes>
         </reconciliation>
       </properties>
       <fields>
@@ -55,7 +55,9 @@
           <static>true</static>
           <access>public</access>
           <type>Internal</type>
-          <code><![CDATA[ public static function ComputeFqdn($sName, $sZoneName)
+          <code><![CDATA[
+
+                         public static function ComputeFqdn($sName, $sZoneName)
 	{
 		// Note: $sZoneName attribute must be fully qualified
 
@@ -66,7 +68,9 @@
 		$sName .= substr_compare($sName, $sZoneName, -$l, $l) != 0 ? $sZoneName : null;
 
 		return $sName;
-	}]]></code>
+	}
+
+            ]]></code>
         </method>
       </methods>
       <presentation>
@@ -219,27 +223,27 @@
                 <item id="fieldset:Class:Domain:baseinfo">
                   <rank>10</rank>
                   <items>
-		            <item id="org_id">
-        		      <rank>10</rank>
-		            </item>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
                     <item id="parent_org_id">
                       <rank>15</rank>
                     </item>
-        		    <item id="parent_id">
-		              <rank>20</rank>
-        		    </item>
-		            <item id="name">
-		              <rank>30</rank>
-		            </item>
-		            <item id="comment">
-		              <rank>40</rank>
-		            </item>
-		            <item id="requestor_id">
-		              <rank>50</rank>
-		            </item>
-		            <item id="release_date">
-		              <rank>60</rank>
-		            </item>
+                    <item id="parent_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="name">
+                      <rank>30</rank>
+                    </item>
+                    <item id="comment">
+                      <rank>40</rank>
+                    </item>
+                    <item id="requestor_id">
+                      <rank>50</rank>
+                    </item>
+                    <item id="release_date">
+                      <rank>60</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -250,18 +254,18 @@
                 <item id="fieldset:Class:Domain:admininfo">
                   <rank>10</rank>
                   <items>
-		            <item id="registrar_id">
-		              <rank>10</rank>
-		            </item>
-		            <item id="validity_start">
-		              <rank>20</rank>
-		            </item>
-		            <item id="validity_end">
-		              <rank>30</rank>
-		            </item>
-		            <item id="renewal">
-		              <rank>40</rank>
-		            </item>
+                    <item id="registrar_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="validity_start">
+                      <rank>20</rank>
+                    </item>
+                    <item id="validity_end">
+                      <rank>30</rank>
+                    </item>
+                    <item id="renewal">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -275,7 +279,7 @@
             </item>
             <item id="registrar_id">
               <rank>20</rank>
-             </item>
+            </item>
             <item id="org_id">
               <rank>30</rank>
             </item>
@@ -352,7 +356,7 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
-         </attributes>
+          </attributes>
         </reconciliation>
         <obsolescence>
           <condition><![CDATA[status='obsolete']]></condition>
@@ -371,19 +375,19 @@
             </value>
             <value id="production">
               <code>production</code>
-							<style>
-								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="implementation">
               <code>implementation</code>
-							<style>
-								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
@@ -399,7 +403,8 @@
           <is_null_allowed>false</is_null_allowed>
         </field>
         <field id="location_id1" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Location AS l JOIN Organization AS child ON l.org_id = child.id JOIN Organization AS root ON child.parent_id BELOW root.id WHERE (root.id=:this->org_id OR root.id=:this->carrier_id)]]></filter>
+          <filter>
+            <![CDATA[SELECT Location AS l JOIN Organization AS child ON l.org_id = child.id JOIN Organization AS root ON child.parent_id BELOW root.id WHERE (root.id=:this->org_id OR root.id=:this->carrier_id)]]></filter>
           <dependencies>
             <attribute id="org_id"/>
             <attribute id="carrier_id"/>
@@ -414,7 +419,8 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="location_id2" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Location AS l JOIN Organization AS child ON l.org_id = child.id JOIN Organization AS root ON child.parent_id BELOW root.id WHERE (root.id=:this->org_id OR root.id=:this->carrier_id)]]></filter>
+          <filter>
+            <![CDATA[SELECT Location AS l JOIN Organization AS child ON l.org_id = child.id JOIN Organization AS root ON child.parent_id BELOW root.id WHERE (root.id=:this->org_id OR root.id=:this->carrier_id)]]></filter>
           <dependencies>
             <attribute id="org_id"/>
             <attribute id="carrier_id"/>
@@ -466,8 +472,8 @@
           <extkey_attcode>networkinterface_id1</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-         <field id="networkinterface_id2" xsi:type="AttributeExternalKey">
-         <sql>networkinterface_id2</sql>
+        <field id="networkinterface_id2" xsi:type="AttributeExternalKey">
+          <sql>networkinterface_id2</sql>
           <target_class>NetworkInterface</target_class>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
@@ -501,17 +507,17 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-         <field id="renewal_date" xsi:type="AttributeDate">
+        <field id="renewal_date" xsi:type="AttributeDate">
           <sql>renewal_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-         <field id="decommissioning_date" xsi:type="AttributeDate">
+        <field id="decommissioning_date" xsi:type="AttributeDate">
           <sql>decommissioning_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-     </fields>
+      </fields>
       <methods/>
       <presentation>
         <details>
@@ -522,32 +528,32 @@
                 <item id="fieldset:Class:WANLink:baseinfo">
                   <rank>10</rank>
                   <items>
-		            <item id="name">
-		              <rank>10</rank>
-		            </item>
-		            <item id="org_id">
-        		      <rank>20</rank>
-		            </item>
-		            <item id="description">
-		              <rank>30</rank>
-		            </item>
-		            <item id="status">
-		              <rank>40</rank>
-		            </item>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="status">
+                      <rank>30</rank>
+                    </item>
+                    <item id="description">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Class:WANLink:admininfo">
                   <rank>20</rank>
                   <items>
-		            <item id="carrier_id">
-		              <rank>10</rank>
-		            </item>
-		            <item id="carrier_reference">
-		              <rank>20</rank>
-		            </item>
-		            <item id="internal_reference">
-		              <rank>30</rank>
-		            </item>
+                    <item id="carrier_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="carrier_reference">
+                      <rank>20</rank>
+                    </item>
+                    <item id="internal_reference">
+                      <rank>30</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -555,38 +561,38 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                 <item id="fieldset:Class:WANLink:locationinfo">
+                <item id="fieldset:Class:WANLink:locationinfo">
                   <rank>10</rank>
                   <items>
-		            <item id="location_id1">
-		              <rank>10</rank>
-		            </item>
-		            <item id="location_id2">
-		              <rank>20</rank>
-		            </item>
+                    <item id="location_id1">
+                      <rank>10</rank>
+                    </item>
+                    <item id="location_id2">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Class:WANLink:networkinfo">
                   <rank>20</rank>
                   <items>
-		            <item id="type_id">
-		              <rank>10</rank>
-		            </item>
-		            <item id="rate">
-		              <rank>20</rank>
-		            </item>
-		            <item id="burst_rate">
-		              <rank>30</rank>
-		            </item>
-		            <item id="underlying_rate">
-		              <rank>40</rank>
-		            </item>
-		            <item id="networkinterface_id1">
-		              <rank>50</rank>
-		            </item>
-		            <item id="networkinterface_id2">
-		              <rank>60</rank>
-		            </item>
+                    <item id="type_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="rate">
+                      <rank>20</rank>
+                    </item>
+                    <item id="burst_rate">
+                      <rank>30</rank>
+                    </item>
+                    <item id="underlying_rate">
+                      <rank>40</rank>
+                    </item>
+                    <item id="networkinterface_id1">
+                      <rank>50</rank>
+                    </item>
+                    <item id="networkinterface_id2">
+                      <rank>60</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -597,28 +603,28 @@
                 <item id="fieldset:Class:WANLink:dateinfo">
                   <rank>30</rank>
                   <items>
-		            <item id="purchase_date">
-		              <rank>30</rank>
-		            </item>
-		            <item id="move2production">
-		              <rank>40</rank>
-		            </item>
-		            <item id="renewal_date">
-		              <rank>50</rank>
-		            </item>
-		            <item id="decommissioning_date">
-		              <rank>60</rank>
-		            </item>
+                    <item id="purchase_date">
+                      <rank>30</rank>
+                    </item>
+                    <item id="move2production">
+                      <rank>40</rank>
+                    </item>
+                    <item id="renewal_date">
+                      <rank>50</rank>
+                    </item>
+                    <item id="decommissioning_date">
+                      <rank>60</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
-		    <item id="contacts_list">
-		      <rank>30</rank>
-		    </item>
-		    <item id="documents_list">
-		      <rank>40</rank>
-		    </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
             <item id="applicationsolution_list">
               <rank>60</rank>
             </item>
@@ -815,11 +821,11 @@
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
-         </attributes>
+          </attributes>
         </reconciliation>
       </properties>
       <fields>
-        <field id="number" xsi:type="AttributeDecimal">               
+        <field id="number" xsi:type="AttributeDecimal">
           <sql>number</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
@@ -846,34 +852,34 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-         <field id="renewal_date" xsi:type="AttributeDate">
+        <field id="renewal_date" xsi:type="AttributeDate">
           <sql>renewal_date</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-     </fields>
+      </fields>
       <methods/>
       <presentation>
         <details>
-		  <items>
+          <items>
             <item id="col:col1">
               <rank>10</rank>
               <items>
                 <item id="fieldset:Class:ASNumber:baseinfo">
                   <rank>10</rank>
                   <items>
-		            <item id="name">
-		              <rank>10</rank>
-		            </item>
-		            <item id="number">
-		              <rank>20</rank>
-		            </item>
-		            <item id="org_id">
-        		      <rank>30</rank>
-		            </item>
-		            <item id="description">
-		              <rank>40</rank>
-		            </item>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="number">
+                      <rank>20</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>30</rank>
+                    </item>
+                    <item id="description">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -884,31 +890,31 @@
                 <item id="fieldset:Class:ASNumber:admininfo">
                   <rank>10</rank>
                   <items>
-		            <item id="registrar_id">
-		              <rank>10</rank>
-		            </item>
-		            <item id="whois">
-		              <rank>20</rank>
-		            </item>
-		            <item id="move2production">
-		              <rank>30</rank>
-		            </item>
-		            <item id="validity_end">
-		              <rank>40</rank>
-		            </item>
-		            <item id="renewal_date">
-		              <rank>50</rank>
-		            </item>
+                    <item id="registrar_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="whois">
+                      <rank>20</rank>
+                    </item>
+                    <item id="move2production">
+                      <rank>30</rank>
+                    </item>
+                    <item id="validity_end">
+                      <rank>40</rank>
+                    </item>
+                    <item id="renewal_date">
+                      <rank>50</rank>
+                    </item>
                   </items>
                 </item>
               </items>
             </item>
-		    <item id="contacts_list">
-		      <rank>30</rank>
-		    </item>
-		    <item id="documents_list">
-		      <rank>40</rank>
-		    </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -925,7 +931,7 @@
             <item id="registrar_id">
               <rank>40</rank>
             </item>
-           <item id="move2production">
+            <item id="move2production">
               <rank>50</rank>
             </item>
             <item id="validity_end">
@@ -1017,11 +1023,13 @@
       </fields>
       <methods>
         <method id="DisplayBareRelations">
-        <comment/>
-        <static>false</static>
-        <access>public</access>
-        <type>Overload-DBObject</type>
-        <code><![CDATA[	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+
+                        	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
     {
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -1046,8 +1054,10 @@
 		        $oBlock->Display($oP, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
 	        }
         }
-	}]]></code>
-      </method>
+	}
+
+            ]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -1056,7 +1066,7 @@
               <rank>10</rank>
               <items>
                 <item id="fieldset:Class:VRF:baseinfo">
-                <rank>10</rank>
+                  <rank>10</rank>
                   <items>
                     <item id="org_id">
                       <rank>10</rank>
@@ -1250,6 +1260,10 @@
           <extkey_attcode>networkdevice_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>networkdevice_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
         <field id="vlans_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
           <linked_class>lnkNetworkDeviceVirtualInterfaceToVLAN</linked_class>
           <ext_key_to_me>networkdevicevirtualinterface_id</ext_key_to_me>
@@ -1270,19 +1284,19 @@
           <values>
             <value id="active">
               <code>active</code>
-							<style>
-								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
-							<style>
-								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>status</sql>
@@ -1319,6 +1333,9 @@
                     <item id="networkdevice_id">
                       <rank>30</rank>
                     </item>
+                    <item id="org_id">
+                      <rank>32</rank>
+                    </item>
                     <item id="comment">
                       <rank>40</rank>
                     </item>
@@ -1344,7 +1361,7 @@
             </item>
           </items>
         </details>
-         <default_search>
+        <default_search>
           <items>
             <item id="name">
               <rank>10</rank>
@@ -1357,6 +1374,9 @@
             </item>
             <item id="networkdevice_id">
               <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>42</rank>
             </item>
           </items>
         </default_search>
@@ -1373,6 +1393,9 @@
             </item>
             <item id="speed">
               <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>42</rank>
             </item>
           </items>
         </list>
@@ -1443,11 +1466,11 @@
             </value>
             <value id="untagged">
               <code>untagged</code>
-							<style>
+              <style>
                 <main_color>hsla(209, 23.7%, 74.3%, 1)</main_color>
                 <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>mode</sql>
@@ -1466,9 +1489,9 @@
             <item id="vlan_id">
               <rank>20</rank>
             </item>
-						<item id="mode">
-							<rank>30</rank>
-						</item>
+            <item id="mode">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -1479,15 +1502,15 @@
             <item id="vlan_id">
               <rank>20</rank>
             </item>
-						<item id="mode">
-							<rank>30</rank>
+            <item id="mode">
+              <rank>30</rank>
             </item>
           </items>
         </search>
         <list>
           <items>
-						<item id="mode">
-							<rank>10</rank>
+            <item id="mode">
+              <rank>10</rank>
             </item>
             <item id="networkdevicevirtualinterface_id">
               <rank>20</rank>
@@ -1640,48 +1663,48 @@
                 <title>Menu:ConfigManagement:Network</title>
                 <icon>teemip-ip-mgmt/asset/img/icons8-rj45-48.png</icon>
               </dashlet>
-			  <dashlet id="teemip-011" xsi:type="DashletBadge">
-        		<rank>1</rank>
-          		<class>NetworkInterface</class>
-        	  </dashlet>
-    		  <dashlet id="teemip-012" xsi:type="DashletBadge">
-          		<rank>2</rank>
-          		<class>VLAN</class>
-        	  </dashlet>
-    		  <dashlet id="teemip-013" xsi:type="DashletBadge">
-          		<rank>3</rank>
-          		<class>WANLink</class>
-        	  </dashlet>
+              <dashlet id="teemip-011" xsi:type="DashletBadge">
+                <rank>1</rank>
+                <class>NetworkInterface</class>
+              </dashlet>
+              <dashlet id="teemip-012" xsi:type="DashletBadge">
+                <rank>2</rank>
+                <class>VLAN</class>
+              </dashlet>
+              <dashlet id="teemip-013" xsi:type="DashletBadge">
+                <rank>3</rank>
+                <class>WANLink</class>
+              </dashlet>
               <dashlet id="teemip-014" xsi:type="DashletBadge">
-          		<rank>4</rank>
-          		<class>Domain</class>
-        	  </dashlet>
-    		  <dashlet id="teemip-015" xsi:type="DashletBadge">
-          		<rank>5</rank>
-          		<class>ASNumber</class>
-        	  </dashlet>
-    		  <dashlet id="teemip-016" xsi:type="DashletBadge">
-          		<rank>6</rank>
-          		<class>VRF</class>
-        	  </dashlet>
-		    </dashlets>
+                <rank>4</rank>
+                <class>Domain</class>
+              </dashlet>
+              <dashlet id="teemip-015" xsi:type="DashletBadge">
+                <rank>5</rank>
+                <class>ASNumber</class>
+              </dashlet>
+              <dashlet id="teemip-016" xsi:type="DashletBadge">
+                <rank>6</rank>
+                <class>VRF</class>
+              </dashlet>
+            </dashlets>
           </cell>
         </cells>
       </definition>
     </menu>
-	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
-	  <definition>
-	     <cells>
-	      <cell id="0">
-	        <dashlets>
-	          <dashlet id="teemip-1003" xsi:type="DashletBadge" _delta="define">
-	            <rank>10.7</rank>
-	            <class>WANType</class>
-	          </dashlet>
-	        </dashlets>
-	      </cell>
-	    </cells>
-	  </definition>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
+      <definition>
+        <cells>
+          <cell id="0">
+            <dashlets>
+              <dashlet id="teemip-1003" xsi:type="DashletBadge" _delta="define">
+                <rank>10.7</rank>
+                <class>WANType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
     </menu>
   </menus>
   <user_rights>
@@ -1707,9 +1730,9 @@
         <groups>
           <group id="Network" _delta="define">
             <actions>
-             <action id="action:write">allow</action>
-             <action id="action:bulk write">allow</action>
-             <action id="action:delete">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
             </actions>
           </group>
         </groups>
