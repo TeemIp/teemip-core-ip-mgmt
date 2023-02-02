@@ -156,43 +156,6 @@ class _IPAddress extends IPObject
 	}
 
 	/**
-	 * Get the list of IPAttributes (external key toward an IP(v4-6)Address class
-	 *
-	 * @param $sClass
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 */
-	public static function GetListOfIPAttributes($sClass)
-	{
-		$aIpsOfClass = array();
-		if (MetaModel::IsAbstract($sClass)) {
-			return $aIpsOfClass;
-		}
-		$aExternalKeys = MetaModel::GetExternalKeys($sClass);
-		$aIPAttributes = array();
-		$aIPv4Attributes = array();
-		$aIPv6Attributes = array();
-		foreach ($aExternalKeys as $oExternalKey) {
-			$sTargetClass = $oExternalKey->GetTargetClass();
-			if ($sTargetClass == 'IPAddress') {
-				$aIPAttributes[] = $oExternalKey->GetCode();
-			} elseif ($sTargetClass == 'IPv4Address') {
-				$aIPv4Attributes[] = $oExternalKey->GetCode();
-			} elseif ($sTargetClass == 'IPv6Address') {
-				$aIPv6Attributes[] = $oExternalKey->GetCode();
-			}
-		}
-		if ((sizeof($aIPAttributes) != 0) || (sizeof($aIPv4Attributes) != 0) || (sizeof($aIPv6Attributes) != 0)) {
-			$aIpsOfClass['IPAddress'] = $aIPAttributes;
-			$aIpsOfClass['IPv4Address'] = $aIPv4Attributes;
-			$aIpsOfClass['IPv6Address'] = $aIPv6Attributes;
-		}
-
-		return $aIpsOfClass;
-	}
-
-	/**
 	 * Get the subnet mask of the subnet that the IP belongs to, if any.
 	 *
 	 * @return string
@@ -245,7 +208,7 @@ class _IPAddress extends IPObject
 			//   Retrieve CIs first
 			//     -- FunctionalCIs with a 1:n relation to the IP
 			$sClass = get_class($this);
-			$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
+			$aCIsToList = IPUtils::GetListOfClassesWithIPs();
 			$iNbAllCIs = 0;
 			foreach ($aCIsToList as $sCI => $sKey) {
 				$sOQL = "SELECT $sCI WHERE";
@@ -354,39 +317,6 @@ class _IPAddress extends IPObject
 				IPUtils::DisplayTabContent($oP, $sName, 'ip_requests', 'IPRequestAddress', $sTitle, '', $oIpRequestSet);
 			}
 		}
-	}
-
-	/**
-	 * Get the list of classes referencing the IPAddress class
-	 * Restrict list to non abstract classes inherited from 'FunctionalCI'
-	 * For each class, we get an array of all attributes being an external key to an IPAddress object
-	 *
-	 * @param string $sMode
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 */
-	public static function GetListOfClassesWIthIP($sMode = 'leaf')
-	{
-		$aFunctionalCIChildClasses = MetaModel::EnumChildClasses('FunctionalCI', ENUM_CHILD_CLASSES_EXCLUDETOP);
-		$aIPClasses = array();
-		switch ($sMode) {
-			case 'leaf':
-				foreach ($aFunctionalCIChildClasses as $sClass) {
-					$aIpsOfClass = IPAddress::GetListOfIPAttributes($sClass);
-					if (!empty($aIpsOfClass)) {
-						$aIPClasses[$sClass] = $aIpsOfClass;
-					}
-				}
-				ksort($aIPClasses);
-				break;
-
-			case 'root':
-			default:
-				break;
-		}
-
-		return $aIPClasses;
 	}
 
 	/**
@@ -601,7 +531,7 @@ class _IPAddress extends IPObject
 
 		// Check if IP is attached to at least one CI's attribute that is R/O or Slave because of a synchro
 		$sCLass = get_class($this);
-		$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
+		$aCIsToList = IPUtils::GetListOfClassesWithIPs();
 		$iKey = $this->GetKey();
 		foreach ($aCIsToList as $sCI => $sKey) {
 			$aIPAttributes = array_merge($aCIsToList[$sCI]['IPAddress'], $aCIsToList[$sCI][$sCLass]);
@@ -754,7 +684,7 @@ class _IPAddress extends IPObject
 	public function RemoveFromCIs()
 	{
 		$sCLass = get_class($this);
-		$aCIsToList = $this->GetListOfClassesWIthIP('leaf');
+		$aCIsToList = IPUtils::GetListOfClassesWithIPs();
 		$iKey = $this->GetKey();
 		foreach ($aCIsToList as $sCI => $sKey) {
 			$aIPAttributes = array_merge($aCIsToList[$sCI]['IPAddress'], $aCIsToList[$sCI][$sCLass]);
@@ -918,7 +848,7 @@ class _IPAddress extends IPObject
 				$sLabelOfAction3 = Dict::S('UI:IPManagement:Action:Allocate:IPAddress:IPAttribute');
 
 				// Target Class
-				$aCIClassesWithIp = IPAddress::GetListOfClassesWIthIP('leaf');
+				$aCIClassesWithIp = IPUtils::GetListOfClassesWithIPs();
 				$sClassInputId = 'field_'.$iFormId.'_ciclass';
 				$sHTMLValue = "<select name=\"attr_ciclass\" id=\"$sClassInputId\" >";
 				$bIsDefaultSet = false;
@@ -1070,7 +1000,7 @@ EOF
 				$sLabelOfAction3 = Dict::S('UI:IPManagement:Action:Allocate:IPAddress:IPAttribute');
 
 				$iOrgId = $this->Get('org_id');
-				$aCIClassesWithIp = IPAddress::GetListOfClassesWIthIP('leaf');
+				$aCIClassesWithIp = IPUtils::GetListOfClassesWithIPs();
 
 				// Target Class
 				$iFormId = $oObjectDetails->GetId();

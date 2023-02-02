@@ -14,6 +14,7 @@ use Exception;
 use IPAddress;
 use iScheduledProcess;
 use MetaModel;
+use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 
 class AllocateIPsToProductionCIs implements iScheduledProcess
 {
@@ -55,17 +56,15 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 	{
 		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
 		$bEnabled = (bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
-		if (!$bEnabled)
-		{
+		if (!$bEnabled) {
 			$oRet = new DateTime();
 			$oRet->modify('+86400 seconds');
-		}
-		else
-		{
+		} else {
 			$sPeriodicity = $aFunctionSettings[static::FUNCTION_SETTING_PERIODICITY];
 			$oRet = new DateTime();
 			$oRet->modify('+'.$sPeriodicity.' seconds');
 		}
+
 		return $oRet;
 	}
 
@@ -83,22 +82,18 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 
 		// Get list of organizations for which IPs are allocated when attached to production CIs
 		$oOrgToCleanSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o JOIN IPConfig AS ic ON ic.org_id = o.id WHERE ic.ip_allocate_on_ci_production = 'yes'"));
-		if ($oOrgToCleanSet->Count() == 0)
-		{
+		if ($oOrgToCleanSet->Count() == 0) {
 			$this->Trace('No organization has activated this feature. Exiting...');
+
 			return '';
 		}
 		// Build list for OQL query
 		$sOrgToCleanList = "";
 		$i = 0;
-		while($oOrg = $oOrgToCleanSet->Fetch())
-		{
-			if ($i++ == 0)
-			{
+		while ($oOrg = $oOrgToCleanSet->Fetch()) {
+			if ($i++ == 0) {
 				$sOrgToCleanList = "(".$oOrg->GetKey();
-			}
-			else
-			{
+			} else {
 				$sOrgToCleanList .= ", ".$oOrg->GetKey();
 			}
 		}
@@ -109,58 +104,43 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 		$aStatusList = $aFunctionSettings[static::FUNCTION_SETTING_STATUS_LIST];
 		$sStatusList = "";
 		$i = 0;
-		foreach($aStatusList as $sStatus)
-		{
-			if ($i++ == 0)
-			{
+		foreach ($aStatusList as $sStatus) {
+			if ($i++ == 0) {
 				$sStatusList = "('$sStatus'";
-			}
-			else
-			{
+			} else {
 				$sStatusList .= ", '$sStatus'";
 			}
 		}
 		$sStatusList .= ")";
 
 		// 2nd step: check IPs attached to production CIs with non allocated status
-		$aClassesWithIPs = IPAddress::GetListOfClassesWIthIP('leaf');
-		if (empty($aClassesWithIPs))
-		{
+		$aClassesWithIPs = IPUtils::GetListOfClassesWithIPs();
+		if (empty($aClassesWithIPs)) {
 			$this->Trace('No CI has external keys toward IP Addresses');
-		}
-		else
-		{
+		} else {
 			// Retrieve and correct IPs attached to production CIs and that have wrong status
-			foreach($aClassesWithIPs as $sClass => $sKey)
-			{
+			foreach ($aClassesWithIPs as $sClass => $sKey) {
 				$aIPAttributes = array_merge($sKey['IPAddress'], $sKey['IPv4Address'], $sKey['IPv6Address']);
 				$sOQL = "";
 				$i = 0;
-				foreach($aIPAttributes as $sAttribute)
-				{
+				foreach ($aIPAttributes as $sAttribute) {
 					$sOQLi = "SELECT IPAddress AS ip JOIN $sClass AS ci ON ci.$sAttribute = ip.id WHERE ip.status != 'allocated' AND ci.status IN $sStatusList AND ci.org_id IN $sOrgToCleanList";
-					if ($i++ == 0)
-					{
+					if ($i++ == 0) {
 						$sOQL = $sOQLi;
-					}
-					else
-					{
+					} else {
 						$sOQL .= " UNION ".$sOQLi;
 					}
 				}
 
 				// Correct IP status
 				$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
-				while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch())
-				{
-					try
-					{
+				while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
+					try {
 						$aReport['ipchecked']++;
 
 						$oIPAddress->Set('status', 'allocated');
 						$oIPAddress->DBUpdate();
-					} catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
 					}
 				}
@@ -169,36 +149,31 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 
 		// 3rd step: check IPs attached to interfaces with non allocated status
 		$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
-		if(class_exists('LogicalInterface'))
-		{
+		if (class_exists('LogicalInterface')) {
 			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
 		}
 
 		// Correct IP status
 		$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
-		while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch())
-		{
-			try
-			{
+		while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
+			try {
 				$aReport['ipchecked']++;
 
 				$oIPAddress->Set('status', 'allocated');
 				$oIPAddress->DBUpdate();
-			}
-			catch(Exception $e)
-			{
+			} catch (Exception $e) {
 				$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
 			}
 		}
 
 		// Info to help understand why not all objects have been processed during this batch.
-		if (time() >= $iUnixTimeLimit)
-		{
+		if (time() >= $iUnixTimeLimit) {
 			$this->Trace('Stopped because time limit exceeded!');
 		}
 
 		// Report
 		$sReport = ($aReport['ipchecked'] === 0) ? "\nNo IP have been corrected\n" : "\n".$aReport['ipchecked']." IPs have been corrected.\n";
+
 		return $sReport;
 	}
 
@@ -209,8 +184,7 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 	 */
 	protected function Trace($sMessage)
 	{
-		if ($this->bDebug)
-		{
+		if ($this->bDebug) {
 			echo $sMessage."\n";
 		}
 	}

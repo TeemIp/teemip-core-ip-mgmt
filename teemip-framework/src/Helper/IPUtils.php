@@ -10,19 +10,27 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
-use Dict;
 use DisplayBlock;
 use iTopWebPage;
 use MetaModel;
+use SetupUtils;
+use utils;
 use WebPage;
 
-class IPUtils {
+class IPUtils
+{
+	const MODULE_CODE = 'teemip-ip-mgmt';
+	const DEVELOPER_MODE_FUNCTION_CODE = 'developer_mode.enabled';
+	const TEEMIP_CACHE_DIR = 'teemip';
+	const LIST_CLASSES_WITH_IPS_FILE_NAME = 'ListOfClassesWithIPs.php';
+
 	/**
 	 * @param $sIp
 	 *
 	 * @return int
 	 */
-	public static function myip2long($sIp) {
+	public static function myip2long($sIp)
+	{
 		return (ip2long($sIp));
 	}
 
@@ -31,7 +39,8 @@ class IPUtils {
 	 *
 	 * @return string
 	 */
-	public static function mylong2ip($iIp) {
+	public static function mylong2ip($iIp)
+	{
 		return (long2ip($iIp));
 	}
 
@@ -42,7 +51,8 @@ class IPUtils {
 	 *
 	 * @return int
 	 */
-	public static function MaskToSize($Mask) {
+	public static function MaskToSize($Mask)
+	{
 		switch ($Mask) {
 			case "0.0.0.0":
 				return 4294967296;
@@ -122,7 +132,8 @@ class IPUtils {
 	 *
 	 * @return string
 	 */
-	public static function BitToMask($iPrefix) {
+	public static function BitToMask($iPrefix)
+	{
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix) {
 			case 0:
@@ -203,7 +214,8 @@ class IPUtils {
 	 *
 	 * @return int
 	 */
-	public static function MaskToBit($Mask) {
+	public static function MaskToBit($Mask)
+	{
 		// Provides number of bits within a dotted string mask
 		return IPUtils::SizeToBit(IPUtils::MaskToSize($Mask));
 	}
@@ -215,7 +227,8 @@ class IPUtils {
 	 *
 	 * @return string
 	 */
-	public static function SizeToMask($Size) {
+	public static function SizeToMask($Size)
+	{
 		switch ($Size) {
 			case 4294967296:
 				return "0.0.0.0";
@@ -295,7 +308,8 @@ class IPUtils {
 	 *
 	 * @return int
 	 */
-	public static function SizeToBit($Size) {
+	public static function SizeToBit($Size)
+	{
 		switch ($Size) {
 			case 4294967296:
 				return 0;
@@ -382,28 +396,18 @@ class IPUtils {
 	 * @throws \ApplicationException
 	 * @throws \CoreException
 	 */
-	public static function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet) {
+	public static function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet)
+	{
 		$iCount = $oSet->Count();
 		$sCount = ($iCount != 0) ? " ($iCount)" : "";
 		$oP->SetCurrentTab($sName.$sCount);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.$sTitle);
-			$oP->p($sInfoPanel);
-			if ($iCount > 0) {
-				$oBlock = new DisplayBlock($oSet->GetFilter(), 'list');
-				$oBlock->Display($oP, $sCode, array('menu' => false));
-			} else {
-				$oP->p(Dict::S('UI:NoObjectToDisplay'));
-			}
-		} else {
-			$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
-			$oP->AddUiBlock($oClassIcon);
-			$oHtml = HtmlFactory::MakeRaw($sInfoPanel);
-			$oP->AddSubBlock($oHtml);
-			$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-			$oBlock->Display($oP, $sCode, array('menu' => false));
-		}
+		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
+		$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
+		$oP->AddUiBlock($oClassIcon);
+		$oHtml = HtmlFactory::MakeRaw($sInfoPanel);
+		$oP->AddSubBlock($oHtml);
+		$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
+		$oBlock->Display($oP, $sCode, array('menu' => false));
 	}
 
 	/**
@@ -413,11 +417,91 @@ class IPUtils {
 	 * @return void
 	 * @throws \CoreException
 	 */
-	public static function DisplayDetails(iTopWebPage $oP, $oObj) {
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '>=')) {
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
-		}
+	public static function DisplayDetails(iTopWebPage $oP, $oObj)
+	{
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 		$oObj->DisplayDetails($oP);
 	}
 
+	/**
+	 * Get the list of classes referencing the IPAddress class
+	 * Restrict list to non-abstract classes inherited from 'FunctionalCI'
+	 * For each class, we get an array of all attributes being an external key to an IPAddress object
+	 *
+	 * @param string $sMode
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public static function GetListOfClassesWithIPs(): array
+	{
+		$aIPClasses = [];
+
+		$biTopDevelopmentMode = utils::IsDevelopmentEnvironment();
+		$bTeemIpDevelopmentMode = MetaModel::GetModuleSetting(static::MODULE_CODE, static::DEVELOPER_MODE_FUNCTION_CODE, false);
+		if (!$biTopDevelopmentMode || !$bTeemIpDevelopmentMode) {
+			// Try to read from cache
+			$sCacheFileName = utils::GetCachePath().static::TEEMIP_CACHE_DIR."/".static::LIST_CLASSES_WITH_IPS_FILE_NAME;
+			if (is_file($sCacheFileName)) {
+				$aIPClasses = include $sCacheFileName;
+			}
+		}
+
+		if (empty($aIPClasses)) {
+			$aFunctionalCIChildClasses = MetaModel::EnumChildClasses('FunctionalCI', ENUM_CHILD_CLASSES_EXCLUDETOP);
+			foreach ($aFunctionalCIChildClasses as $sClass) {
+				$aIPsOfClass = IPUtils::GetListOfIPAttributes($sClass);
+				if (!empty($aIPsOfClass)) {
+					$aIPClasses[$sClass] = $aIPsOfClass;
+				}
+			}
+			ksort($aIPClasses);
+
+			if (!$biTopDevelopmentMode || !$bTeemIpDevelopmentMode) {
+				// Save to cache
+				$sCacheContent = "<?php\n\nreturn ".var_export($aIPClasses, true).";";
+				SetupUtils::builddir(dirname($sCacheFileName));
+				file_put_contents($sCacheFileName, $sCacheContent);
+			}
+		}
+
+		return $aIPClasses;
+	}
+
+	/**
+	 * Get the list of IPAttributes (external keys toward an IP(v4-6)Address) for a given class
+	 *
+	 * @param $sClass
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 */
+	public static function GetListOfIPAttributes($sClass)
+	{
+		$aIpsOfClass = [];
+		if (MetaModel::IsAbstract($sClass)) {
+			return $aIpsOfClass;
+		}
+		$aExternalKeys = MetaModel::GetExternalKeys($sClass);
+		$aIPAttributes = [];
+		$aIPv4Attributes = [];
+		$aIPv6Attributes = [];
+		foreach ($aExternalKeys as $oExternalKey) {
+			$sTargetClass = $oExternalKey->GetTargetClass();
+			if ($sTargetClass == 'IPAddress') {
+				$aIPAttributes[] = $oExternalKey->GetCode();
+			} elseif ($sTargetClass == 'IPv4Address') {
+				$aIPv4Attributes[] = $oExternalKey->GetCode();
+			} elseif ($sTargetClass == 'IPv6Address') {
+				$aIPv6Attributes[] = $oExternalKey->GetCode();
+			}
+		}
+		if ((sizeof($aIPAttributes) != 0) || (sizeof($aIPv4Attributes) != 0) || (sizeof($aIPv6Attributes) != 0)) {
+			$aIpsOfClass['IPAddress'] = $aIPAttributes;
+			$aIpsOfClass['IPv4Address'] = $aIPv4Attributes;
+			$aIpsOfClass['IPv6Address'] = $aIPv6Attributes;
+		}
+
+		return $aIpsOfClass;
+	}
 }
