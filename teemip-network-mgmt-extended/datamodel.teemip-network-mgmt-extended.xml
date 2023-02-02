@@ -1179,6 +1179,10 @@
           <extkey_attcode>connectableci_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="org_id" xsi:type="AttributeExternalField">
+          <extkey_attcode>connectableci_id</extkey_attcode>
+          <target_attcode>org_id</target_attcode>
+        </field>
         <field id="peer_id" xsi:type="AttributeExternalKey">
           <sql>peer_id</sql>
           <target_class>AggregateLink</target_class>
@@ -1322,6 +1326,9 @@
                   <item id="connectableci_id">
                     <rank>60</rank>
                   </item>
+                  <item id="org_id">
+                    <rank>62</rank>
+                  </item>
                   <item id="peer_id">
                     <rank>70</rank>
                   </item>
@@ -1351,6 +1358,9 @@
             <item id="peer_id">
               <rank>50</rank>
             </item>
+            <item id="org_id">
+              <rank>52</rank>
+            </item>
           </items>
         </list>
         <default_search>
@@ -1366,6 +1376,9 @@
             </item>
             <item id="status">
               <rank>40</rank>
+            </item>
+            <item id="org_id">
+              <rank>42</rank>
             </item>
           </items>
         </default_search>
