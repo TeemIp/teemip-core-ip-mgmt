@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -54,7 +54,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPInterface/Attribute:interfacespeed_id' => 'Speed',
-	'Class:IPInterface/Attribute:interfacespeed_id+' => '',
+	'Class:IPInterface/Attribute:interfacespeed_id+' => 'Maximum speed available on the interface',
 	'Class:IPInterface/Attribute:layer2protocol_id' => 'Protocol',
 	'Class:IPInterface/Attribute:layer2protocol_id+' => 'Layer 2 protocol',
 ));
@@ -206,7 +206,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PhysicalInterface/Attribute:interfaceconnector_name' => 'Connector name',
 	'Class:PhysicalInterface/Attribute:interfaceconnector_name+' => '',
 	'Class:PhysicalInterface/Attribute:aggregatelink_id' => 'Aggregate link',
-	'Class:PhysicalInterface/Attribute:aggregatelink_id+' => '',
+	'Class:PhysicalInterface/Attribute:aggregatelink_id+' => 'Aggregate link that the interface is part of',
 	'Class:PhysicalInterface/Attribute:aggregatelink_name' => 'Aggregate link name',
 	'Class:PhysicalInterface/Attribute:aggregatelink_name+' => '',
 ));

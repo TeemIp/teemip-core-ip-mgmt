@@ -1,23 +1,6 @@
 <?php
-// Copyright (C) 2020 TeemIp
-//
-//   This file is part of TeemIp.
-//
-//   TeemIp is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   TeemIp is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with TeemIp. If not, see <http://www.gnu.org/licenses/>
-
 /**
- * @copyright   Copyright (C) 2020 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -71,7 +54,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPInterface/Attribute:interfacespeed_id' => 'Vitesse',
-	'Class:IPInterface/Attribute:interfacespeed_id+' => '',
+	'Class:IPInterface/Attribute:interfacespeed_id+' => 'Vitesse maximale disponible sur l\'interface',
 	'Class:IPInterface/Attribute:layer2protocol_id' => 'Protocole',
 	'Class:IPInterface/Attribute:layer2protocol_id+' => 'Protocole de niveau 2',
 ));
@@ -223,7 +206,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface/Attribute:interfaceconnector_name' => 'Nom du connecteur',
 	'Class:PhysicalInterface/Attribute:interfaceconnector_name+' => '',
 	'Class:PhysicalInterface/Attribute:aggregatelink_id' => 'Agrégat de Liens',
-	'Class:PhysicalInterface/Attribute:aggregatelink_id+' => '',
+	'Class:PhysicalInterface/Attribute:aggregatelink_id+' => 'Agrégat de liens dont fait partie l\'interface',
 	'Class:PhysicalInterface/Attribute:aggregatelink_name' => 'Nom de l\'agrégat de liens',
 	'Class:PhysicalInterface/Attribute:aggregatelink_name+' => '',
 ));
