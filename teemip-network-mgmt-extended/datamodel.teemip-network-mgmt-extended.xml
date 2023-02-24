@@ -357,7 +357,15 @@
             </item>
             <item id="col:col2" _delta="must_exist">
               <items>
-                <item id="fieldset:Class:NetworkInterface:moreinfo" _delta="must_exist">
+                 <item id="fieldset:Class:NetworkInterface:wiringinfo" _delta="merge">
+                  <rank>5</rank>
+                  <items>
+                    <item id="interfaceconnector_id" _delta="define">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+               <item id="fieldset:Class:NetworkInterface:moreinfo" _delta="must_exist">
                   <items>
                     <item id="speed" _delta="delete"/>
                     <item id="interfacespeed_id" _delta="define">
@@ -365,9 +373,6 @@
                     </item>
                     <item id="layer2protocol_id" _delta="define">
                       <rank>30</rank>
-                    </item>
-                    <item id="interfaceconnector_id" _delta="define">
-                      <rank>40</rank>
                     </item>
                   </items>
                 </item>
