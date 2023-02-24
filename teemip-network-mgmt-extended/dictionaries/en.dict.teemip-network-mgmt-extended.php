@@ -111,6 +111,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkClusterNetworkToIPAddress' => 'Link Cluster Network / IP Address',
 	'Class:lnkClusterNetworkToIPAddress+' => '',
+	'Class:lnkClusterNetworkToIPAddress/Name' => '%1$s / %2$s',
 	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_id' => 'Cluster network',
 	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_id+' => '',
 	'Class:lnkClusterNetworkToIPAddress/Attribute:clusternetwork_name' => 'Cluster network name',

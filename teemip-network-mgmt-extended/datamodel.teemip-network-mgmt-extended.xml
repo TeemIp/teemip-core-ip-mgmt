@@ -910,8 +910,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="clusternetwork_id"/>
-            <attribute id="ipaddress_id"/>
+            <attribute id="clusternetwork_name"/>
+            <attribute id="ipaddress_fqdn"/>
           </attributes>
         </naming>
         <icon/>
@@ -921,6 +921,17 @@
             <attribute id="ipaddress_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="clusternetwork_id"/>
+              <attribute id="ipaddress_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="clusternetwork_id" xsi:type="AttributeExternalKey">
@@ -944,6 +955,10 @@
         <field id="usage_id" xsi:type="AttributeExternalField" _delta="define">
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>usage_id</target_attcode>
+        </field>
+        <field id="ipaddress_fqdn" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>ipaddress_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
       <methods>
