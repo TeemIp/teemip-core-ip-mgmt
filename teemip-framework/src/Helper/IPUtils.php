@@ -401,13 +401,22 @@ class IPUtils
 		$iCount = $oSet->Count();
 		$sCount = ($iCount != 0) ? " ($iCount)" : "";
 		$oP->SetCurrentTab($sName.$sCount);
-		$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-		$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
-		$oP->AddUiBlock($oClassIcon);
 		$oHtml = HtmlFactory::MakeRaw($sInfoPanel);
-		$oP->AddSubBlock($oHtml);
 		$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
-		$oBlock->Display($oP, $sCode, array('menu' => false));
+		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
+			$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
+			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
+			$oP->AddUiBlock($oClassIcon);
+			$oP->AddSubBlock($oHtml);
+			$oBlock->Display($oP, $sCode, array('menu' => false));
+		} else {
+			$oBlock->Display($oP, $sCode, array(
+				'menu' => false,
+				'panel_title' => MetaModel::GetName($sClass),
+				'panel_title_tooltip' => $sTitle,
+				'panel_icon' => MetaModel::GetClassIcon($sClass, false)
+			));
+		}
 	}
 
 	/**
