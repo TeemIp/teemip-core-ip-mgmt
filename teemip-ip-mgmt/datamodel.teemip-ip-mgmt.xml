@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
-<classes>
+  <classes>
     <class id="IPObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <php_parent>
@@ -252,7 +252,7 @@
         <naming>
           <attributes>
             <attribute id="ipobject_id"/>
-            <attribute id="contact_id"/>
+            <attribute id="contact_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -262,6 +262,17 @@
             <attribute id="contact_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipobject_id"/>
+              <attribute id="contact_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipobject_id" xsi:type="AttributeExternalKey">
@@ -330,7 +341,7 @@
         <naming>
           <attributes>
             <attribute id="ipobject_id"/>
-            <attribute id="document_id"/>
+            <attribute id="document_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -340,6 +351,17 @@
             <attribute id="document_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipobject_id"/>
+              <attribute id="document_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipobject_id" xsi:type="AttributeExternalKey">
@@ -408,7 +430,7 @@
         <naming>
           <attributes>
             <attribute id="ipobject_id"/>
-            <attribute id="ticket_id"/>
+            <attribute id="ticket_ref"/>
           </attributes>
         </naming>
         <icon/>
@@ -418,6 +440,17 @@
             <attribute id="ticket_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipobject_id"/>
+              <attribute id="ticket_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipobject_id" xsi:type="AttributeExternalKey">
@@ -680,8 +713,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="location_id"/>
-            <attribute id="ipblock_id"/>
+            <attribute id="location_name"/>
+            <attribute id="ipblock_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -691,6 +724,17 @@
             <attribute id="ipblock_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="location_id"/>
+              <attribute id="ipblock_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipblock_id" xsi:type="AttributeExternalKey">
@@ -1260,8 +1304,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ipsubnet2_id"/>
-            <attribute id="ipsubnet1_id"/>
+            <attribute id="ipsubnet2_name"/>
+            <attribute id="ipsubnet1_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -1271,6 +1315,17 @@
             <attribute id="ipsubnet1_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipsubnet2_id"/>
+              <attribute id="ipsubnet1_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipsubnet1_id" xsi:type="AttributeExternalKey">
@@ -1426,8 +1481,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ipsubnet_id"/>
-            <attribute id="vlan_id"/>
+            <attribute id="ipsubnet_name"/>
+            <attribute id="vlan_tag"/>
           </attributes>
         </naming>
         <icon/>
@@ -1437,6 +1492,17 @@
             <attribute id="vlan_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipsubnet_id"/>
+              <attribute id="vlan_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
@@ -1509,8 +1575,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ipsubnet_id"/>
-            <attribute id="vrf_id"/>
+            <attribute id="ipsubnet_name"/>
+            <attribute id="vrf_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -1520,6 +1586,17 @@
             <attribute id="vrf_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipsubnet_id"/>
+              <attribute id="vrf_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
@@ -1537,6 +1614,10 @@
           <target_class>VRF</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="vrf_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>vrf_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
       </fields>
       <methods/>
@@ -1588,8 +1669,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="location_id"/>
-            <attribute id="ipsubnet_id"/>
+            <attribute id="location_name"/>
+            <attribute id="ipsubnet_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -1599,6 +1680,17 @@
             <attribute id="ipsubnet_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="location_id"/>
+              <attribute id="ipsubnet_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipsubnet_id" xsi:type="AttributeExternalKey">
@@ -2244,82 +2336,93 @@
       </presentation>
     </class>
     <class id="lnkFunctionalCIToIPRange" _delta="define">
-    <parent>cmdbAbstractObject</parent>
-    <properties>
-      <is_link>1</is_link>
-      <category>bizmodel,ipmgmt</category>
-      <abstract>false</abstract>
-      <key_type>autoincrement</key_type>
-      <db_table>lnkfunctionalcitoiprange</db_table>
-      <db_key_field>id</db_key_field>
-      <db_final_class_field/>
-      <naming>
-        <attributes>
-          <attribute id="functionalci_id"/>
-          <attribute id="iprange_id"/>
-        </attributes>
-      </naming>
-      <icon/>
-      <reconciliation>
-        <attributes>
-          <attribute id="functionalci_id"/>
-          <attribute id="iprange_id"/>
-        </attributes>
-      </reconciliation>
-    </properties>
-    <fields>
-      <field id="functionalci_id" xsi:type="AttributeExternalKey">
-        <sql>functionalci_id</sql>
-        <target_class>FunctionalCI</target_class>
-        <is_null_allowed>false</is_null_allowed>
-        <on_target_delete>DEL_AUTO</on_target_delete>
-        <jointype/>
-      </field>
-      <field id="functionalci_name" xsi:type="AttributeExternalField">
-        <extkey_attcode>functionalci_id</extkey_attcode>
-        <target_attcode>name</target_attcode>
-      </field>
-      <field id="iprange_id" xsi:type="AttributeExternalKey">
-        <sql>iprange_id</sql>
-        <target_class>IPRange</target_class>
-        <is_null_allowed>false</is_null_allowed>
-        <on_target_delete>DEL_AUTO</on_target_delete>
-        <jointype/>
-      </field>
-      <field id="iprange_name" xsi:type="AttributeExternalField">
-        <extkey_attcode>iprange_id</extkey_attcode>
-        <target_attcode>friendlyname</target_attcode>
-      </field>
-      <field id="role" xsi:type="AttributeEnum">
-        <values>
-          <value id="single">
-            <code>single</code>
-          </value>
-          <value id="split_scope">
-            <code>split_scope</code>
-          </value>
-          <value id="primary">
-            <code>primary</code>
-          </value>
-          <value id="secondary">
-            <code>secondary</code>
-          </value>
-          <value id="active">
-            <code>active</code>
-          </value>
-        </values>
-        <sql>role</sql>
-        <default_value>primary</default_value>
-        <is_null_allowed>false</is_null_allowed>
-      </field>
-    </fields>
-    <methods>
-      <method id="DoCheckToWrite">
-        <comment/>
-        <static>false</static>
-        <access>protected</access>
-        <type>Overload-cmdbAbstractObject</type>
-        <code><![CDATA[ public function DoCheckToWrite()
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel,ipmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkfunctionalcitoiprange</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="functionalci_name"/>
+            <attribute id="iprange_name"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="functionalci_id"/>
+            <attribute id="iprange_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="functionalci_id"/>
+              <attribute id="iprange_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="functionalci_id" xsi:type="AttributeExternalKey">
+          <sql>functionalci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="functionalci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>functionalci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="iprange_id" xsi:type="AttributeExternalKey">
+          <sql>iprange_id</sql>
+          <target_class>IPRange</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="iprange_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>iprange_id</extkey_attcode>
+          <target_attcode>friendlyname</target_attcode>
+        </field>
+        <field id="role" xsi:type="AttributeEnum">
+          <values>
+            <value id="single">
+              <code>single</code>
+            </value>
+            <value id="split_scope">
+              <code>split_scope</code>
+            </value>
+            <value id="primary">
+              <code>primary</code>
+            </value>
+            <value id="secondary">
+              <code>secondary</code>
+            </value>
+            <value id="active">
+              <code>active</code>
+            </value>
+          </values>
+          <sql>role</sql>
+          <default_value>primary</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+      </fields>
+      <methods>
+        <method id="DoCheckToWrite">
+          <comment/>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-cmdbAbstractObject</type>
+          <code><![CDATA[ public function DoCheckToWrite()
  {
     parent::DoCheckToWrite();
 
@@ -2340,50 +2443,50 @@
 
     return;
  }]]></code>
-      </method>
-    </methods>
-    <presentation>
-      <details>
-        <items>
-          <item id="functionalci_id">
-            <rank>10</rank>
-          </item>
-          <item id="iprange_id">
-            <rank>20</rank>
-          </item>
-          <item id="role">
-            <rank>30</rank>
-          </item>
-        </items>
-      </details>
-      <search>
-        <items>
-          <item id="functionalci_id">
-            <rank>10</rank>
-          </item>
-          <item id="iprange_id">
-            <rank>20</rank>
-          </item>
-          <item id="role">
-            <rank>30</rank>
-          </item>
-        </items>
-      </search>
-      <list>
-        <items>
-          <item id="functionalci_id">
-            <rank>10</rank>
-          </item>
-          <item id="iprange_id">
-            <rank>20</rank>
-          </item>
-          <item id="role">
-            <rank>30</rank>
-          </item>
-        </items>
-      </list>
-    </presentation>
-  </class>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="functionalci_id">
+              <rank>10</rank>
+            </item>
+            <item id="iprange_id">
+              <rank>20</rank>
+            </item>
+            <item id="role">
+              <rank>30</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
     <class id="IPv4Range" _delta="define">
       <parent>IPRange</parent>
       <php_parent>
@@ -2820,8 +2923,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ip2_id"/>
-            <attribute id="ip1_id"/>
+            <attribute id="ip2_fqdn"/>
+            <attribute id="ip1_fqdn"/>
           </attributes>
         </naming>
         <icon/>
@@ -2831,6 +2934,17 @@
             <attribute id="ip1_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ip2_id"/>
+              <attribute id="ip1_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ip1_id" xsi:type="AttributeExternalKey">
@@ -3045,8 +3159,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="ipinterface_id"/>
-            <attribute id="ipaddress_id"/>
+            <attribute id="ipinterface_name"/>
+            <attribute id="ipaddress_fqdn"/>
           </attributes>
         </naming>
         <icon/>
@@ -3056,6 +3170,17 @@
             <attribute id="ipaddress_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="ipinterface_id"/>
+              <attribute id="ipaddress_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="ipinterface_id" xsi:type="AttributeExternalKey">
@@ -3083,6 +3208,10 @@
         <field id="ipaddress_org_name" xsi:type="AttributeExternalField" _delta="define">
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>org_name</target_attcode>
+        </field>
+        <field id="ipaddress_fqdn" xsi:type="AttributeExternalField" _delta="define">
+          <extkey_attcode>ipaddress_id</extkey_attcode>
+          <target_attcode>fqdn</target_attcode>
         </field>
       </fields>
       <methods>
@@ -3126,6 +3255,7 @@
 				if ($oIP->Get('status') == 'allocated')
 				{
 					// Reset status only of IP is not set on another interface
+					// TODO or another "management_ip"
 					$oIPInterfaceToIPAddressSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress AS l WHERE l.ipaddress_id = $iIpId AND l.ipinterface_id != $iIpIntId");
 					$oIPInterfaceToIPAddressSet = new CMDBObjectSet($oIPInterfaceToIPAddressSearch);
 					if (!$oIPInterfaceToIPAddressSet->CountExceeds(0))
@@ -3853,9 +3983,13 @@
           <class id="lnkDocToIPObject"/>
           <class id="lnkIPObjectToTicket"/>
           <class id="lnkIPBlockToLocation"/>
+          <class id="lnkIPSubnetToIPSubnet"/>
           <class id="lnkIPSubnetToVLAN"/>
+          <class id="lnkIPSubnetToVRF"/>
           <class id="lnkIPSubnetToLocation"/>
+          <class id="lnkFunctionalCIToIPRange"/>
           <class id="lnkIPAdressToIPAddress"/>
+          <class id="lnkIPInterfaceToIPAddress"/>
         </classes>
       </group>
       <group id="IPAddress" _delta="define">
@@ -3863,6 +3997,8 @@
           <class id="IPAddress"/>
           <class id="lnkContactToIPObject"/>
           <class id="lnkDocToIPObject"/>
+          <class id="lnkIPAdressToIPAddress"/>
+          <class id="lnkIPInterfaceToIPAddress"/>
         </classes>
       </group>
       <group id="IPSubnet" _delta="define">
@@ -3870,6 +4006,10 @@
           <class id="IPSubnet"/>
           <class id="lnkContactToIPObject"/>
           <class id="lnkDocToIPObject"/>
+          <class id="lnkIPSubnetToIPSubnet"/>
+          <class id="lnkIPSubnetToVLAN"/>
+          <class id="lnkIPSubnetToVRF"/>
+          <class id="lnkIPSubnetToLocation"/>
         </classes>
       </group>
     </groups>
