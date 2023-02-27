@@ -7,7 +7,7 @@
 //
 // Class: ConnectableCI
 //
- 
+
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ConnectableCI/Tab:ipaddresses_list' => 'Interfacce IP',
 	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'Lista di tutti gli indirizzi appartenenti alle interfacce fisiche collegate ai CI',
@@ -16,7 +16,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 // Class: DatacenterDevice
 //
- 
+
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:DatacenterDevice/Attribute:managementip_id' => 'Management IP',
 	'Class:DatacenterDevice/Attribute:managementip_id+' => '',
@@ -30,6 +30,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:NetworkInterface:baseinfo' => 'Infomazioni Generali',
+	'Class:NetworkInterface:wiringinfo' => 'Cablaggio Informaz',
 	'Class:NetworkInterface:moreinfo' => 'Più informazioni',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Stato operativo',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Calcolato dallo stato delle classi figlio',
@@ -65,6 +66,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsoleto',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organizzazione',
+	'Class:PhysicalInterface/Attribute:org_id+' => 'Organizzazione a cui appartiene il dispositivo. Definisce anche l\'organizzazione dell\'interfaccia.',
 ));
 
 //

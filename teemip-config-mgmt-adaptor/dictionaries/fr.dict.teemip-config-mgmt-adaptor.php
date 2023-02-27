@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 //
 // Class: ConnectableCI
 //
- 
+
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ConnectableCI/Tab:ipaddresses_list' => 'IPs des interfaces',
 	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'Liste de toutes les adresses IP de toutes les interfaces physiques attachées au CI',
@@ -30,6 +30,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkInterface:baseinfo' => 'Informations générales',
+	'Class:NetworkInterface:wiringinfo' => 'Informations de câblage',
 	'Class:NetworkInterface:moreinfo' => 'Informations complémentaires',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Statut opérationnel',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Calculé à partir du statut des classes filles',
@@ -65,6 +66,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolete',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => 'Organisation du matériel. Cela définit aussi l\'organisation de l\'interface.',
 ));
 
 //

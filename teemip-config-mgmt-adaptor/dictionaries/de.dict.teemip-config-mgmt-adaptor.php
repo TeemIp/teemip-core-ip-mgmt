@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -30,6 +30,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:NetworkInterface:baseinfo' => 'Allgemeine Informationen',
+	'Class:NetworkInterface:wiringinfo' => 'Verkabelung Informationen',
 	'Class:NetworkInterface:moreinfo' => 'Weitere Informationen',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Betriebsstatus',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Berechnet aus dem Status der untergeordneten Klassen',
@@ -65,6 +66,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolet',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+	'Class:PhysicalInterface/Attribute:org_id+' => 'Organisation, zu der das Gerät gehört. Es definiert auch die Organisation der Schnittstelle.',
 ));
 
 //

@@ -1,13 +1,13 @@
 <?php
 /**
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 //
 // Class: ConnectableCI
 //
- 
+
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:ConnectableCI/Tab:ipaddresses_list' => 'Interfaces\' IPs',
 	'Class:ConnectableCI/Tab:ipaddresses_list+' => 'List of all IP addresses hosted by all physical interfaces attached to the CI',
@@ -16,7 +16,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 // Class: DatacenterDevice
 //
- 
+
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:DatacenterDevice/Attribute:managementip_id' => 'Management IP',
 	'Class:DatacenterDevice/Attribute:managementip_id+' => '',
@@ -30,6 +30,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkInterface:baseinfo' => 'General Information',
+	'Class:NetworkInterface:wiringinfo' => 'Wiring Information',
 	'Class:NetworkInterface:moreinfo' => 'More Information',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Operational status',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Computed from the children classes status',
@@ -65,6 +66,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolete',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
+	'Class:PhysicalInterface/Attribute:org_id+' => 'Organization that the device belongs to. It defines as well the interface\'s organization.',
 ));
 
 //
@@ -88,4 +91,3 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
 ));
-

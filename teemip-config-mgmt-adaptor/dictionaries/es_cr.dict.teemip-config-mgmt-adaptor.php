@@ -16,7 +16,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 // Class: DatacenterDevice
 //
- 
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DatacenterDevice/Attribute:managementip_id' => 'Administración de IPs',
 	'Class:DatacenterDevice/Attribute:managementip_id+' => '',
@@ -29,8 +29,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:NetworkInterface:baseinfo' => 'General Information',
-	'Class:NetworkInterface:moreinfo' => 'More Information',
+	'Class:NetworkInterface:baseinfo' => 'Información General',
+	'Class:NetworkInterface:wiringinfo' => 'Información de cableado',
+	'Class:NetworkInterface:moreinfo' => 'Más Información',
 	'Class:NetworkInterface/Attribute:operational_status' => 'Estatus Operativo',
 	'Class:NetworkInterface/Attribute:operational_status+' => 'Calculado a partir del estado de las clases secundarias',
 	'Class:NetworkInterface/Attribute:operational_status/Value:active' => 'Activo',
@@ -65,6 +66,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsoleto',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+	'Class:PhysicalInterface/Attribute:org_id' => 'Organización',
+	'Class:PhysicalInterface/Attribute:org_id+' => 'Organización a la que pertenece el dispositivo. Define también la organización de la interfaz.',
 ));
 
 //
