@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -88,4 +88,25 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));
+
+//
+// Class: lnkLogicalInterfaceToVRF
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:lnkLogicalInterfaceToVRF' => 'Verknüpfung Logische Schnittstelle / VRF',
+	'Class:lnkLogicalInterfaceToVRF+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id' => 'Logische Schnittstelle',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name' => 'Logische Schnittstelle Name',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id' => 'Gerät',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name' => 'Gerätname',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name' => 'VRF Name',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name+' => '',
 ));

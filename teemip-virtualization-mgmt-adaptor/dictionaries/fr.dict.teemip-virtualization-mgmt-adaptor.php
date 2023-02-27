@@ -89,3 +89,24 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 ));
 
+
+//
+// Class: lnkLogicalInterfaceToVRF
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkLogicalInterfaceToVRF' => 'Lien Interface réseau / VRF',
+	'Class:lnkLogicalInterfaceToVRF+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id' => 'Interface réseau',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name' => 'Nom interface réseau',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id' => 'Equipement',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name' => 'Nom équipement',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name' => 'Nom de la VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name+' => '',
+));

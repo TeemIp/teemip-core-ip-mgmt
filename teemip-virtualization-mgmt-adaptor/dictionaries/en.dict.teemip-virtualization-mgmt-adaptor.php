@@ -7,7 +7,7 @@
 //
 // Class: VirtualMachine
 //
- 
+
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:VirtualMachine/Attribute:managementip_id' => 'IP',
 	'Class:VirtualMachine/Attribute:managementip_id+' => '',
@@ -70,6 +70,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkLogicalInterfaceToVLAN' => 'Link LogicalInterface / VLAN',
 	'Class:lnkLogicalInterfaceToVLAN+' => '',
+	'Class:lnkLogicalInterfaceToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id' => 'Logical Interface',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_name' => 'Logical Interface Name',
@@ -88,5 +89,27 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));
+
+//
+// Class: lnkLogicalInterfaceToVRF
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:lnkLogicalInterfaceToVRF' => 'Link LogicalInterface / VRF',
+	'Class:lnkLogicalInterfaceToVRF+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Name' => '%1$s / %2$s',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id' => 'Logical Interface',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name' => 'Logical Interface Name',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id' => 'Device',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name' => 'Device name',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name' => 'VRF Name',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name+' => '',
 ));
 

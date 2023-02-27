@@ -226,8 +226,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="logicalinterface_id"/>
-            <attribute id="vlan_id"/>
+            <attribute id="logicalinterface_name"/>
+            <attribute id="vlan_tag"/>
           </attributes>
         </naming>
         <icon/>
@@ -237,6 +237,17 @@
             <attribute id="vlan_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="logicalinterface_id"/>
+              <attribute id="vlan_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="logicalinterface_id" xsi:type="AttributeExternalKey">
@@ -347,8 +358,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="logicalinterface_id"/>
-            <attribute id="vrf_id"/>
+            <attribute id="logicalinterface_name"/>
+            <attribute id="vrf_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -358,6 +369,17 @@
             <attribute id="vrf_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="logicalinterface_id"/>
+              <attribute id="vrf_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="logicalinterface_id" xsi:type="AttributeExternalKey">

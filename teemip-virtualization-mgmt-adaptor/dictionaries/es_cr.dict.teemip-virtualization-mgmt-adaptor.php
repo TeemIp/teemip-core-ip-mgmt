@@ -7,7 +7,7 @@
 //
 // Class: VirtualMachine
 //
- 
+
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VirtualMachine/Attribute:managementip_id' => 'IP',
 	'Class:VirtualMachine/Attribute:managementip_id+' => '',
@@ -86,4 +86,26 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
+));
+
+//
+// Class: lnkLogicalInterfaceToVRF
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkLogicalInterfaceToVRF' => 'Relación Interfaz Logica / VRF',
+	'Class:lnkLogicalInterfaceToVRF+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Name' => '%1$s / %2$s',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id' => 'Interfaz Logica',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name' => 'Nombre Interfaz Logica',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id' => 'Dispositivo',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name' => 'Nombre de Dispositivo',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_device_name+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_id+' => '',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name' => 'Nombre de VRF',
+	'Class:lnkLogicalInterfaceToVRF/Attribute:vrf_name+' => '',
 ));
