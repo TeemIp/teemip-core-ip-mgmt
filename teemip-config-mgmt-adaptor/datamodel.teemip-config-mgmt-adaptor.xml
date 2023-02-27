@@ -699,7 +699,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		if ($oObject instanceof FunctionalCI) {
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
 			if (empty($aIPsOfClass)) {
 				return;
 			}
@@ -736,7 +736,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		if ($oObject instanceof FunctionalCI) {
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
 			if (empty($aIPsOfClass)) {
 				return;
 			}
@@ -765,7 +765,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		if ($oObject instanceof FunctionalCI) {
 			// Check if $oObject has IP Attributes
 			$sCiClass = get_class($oObject);
-			$aIPsOfClass = IPAddress::GetListOfIPAttributes($sCiClass);
+			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
 			if (empty($aIPsOfClass)) {
 				return;
 			}
