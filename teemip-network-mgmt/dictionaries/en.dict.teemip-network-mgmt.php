@@ -219,6 +219,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPhysicalInterfaceToVRF' => 'Link PhysicalInterface / VRF',
 	'Class:lnkPhysicalInterfaceToVRF+' => '',
+	'Class:lnkPhysicalInterfaceToVRF/Name' => '%1$s / %2$s',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_id' => 'Physical Interface',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_id+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_name' => 'Physical Interface Name',
@@ -229,8 +230,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_device_name+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_id+' => '',
-	'Class:lnkPhysicalInterfaceToVRF/Attribute:name' => 'Name',
-	'Class:lnkPhysicalInterfaceToVRF/Attribute:name+' => '',
+	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_name' => 'VRF Name',
+	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_name+' => '',
 ));
 
 //
@@ -274,6 +275,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN' => 'Link Network Device Virtual Interface / VLAN',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Name' => '%1$s / %2$s',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_id' => 'Network device virtual interface',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_id+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:networkdevicevirtualinterface_name' => 'Network device virtual interface name',
@@ -301,6 +303,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF' => 'Link Network Device Virtual Interface / VRF',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF+' => '',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Name' => '%1$s / %2$s',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_id' => 'Network device virtual interface',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_id+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_name' => 'Network device virtual interface name',
@@ -311,7 +314,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:networkdevicevirtualinterface_device_name+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_id' => 'VRF',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_id+' => '',
-	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_name' => 'Name',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_name' => 'VRF Name',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVRF/Attribute:vrf_name+' => '',
 ));
 

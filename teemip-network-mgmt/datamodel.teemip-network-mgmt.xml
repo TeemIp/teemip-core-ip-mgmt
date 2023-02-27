@@ -1144,8 +1144,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="physicalinterface_id"/>
-            <attribute id="vrf_id"/>
+            <attribute id="physicalinterface_name"/>
+            <attribute id="vrf_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -1155,6 +1155,17 @@
             <attribute id="vrf_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="physicalinterface_id"/>
+              <attribute id="vrf_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="physicalinterface_id" xsi:type="AttributeExternalKey">
@@ -1181,7 +1192,7 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="name" xsi:type="AttributeExternalField">
+        <field id="vrf_name" xsi:type="AttributeExternalField">
           <extkey_attcode>vrf_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
@@ -1413,8 +1424,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="networkdevicevirtualinterface_id"/>
-            <attribute id="vlan_id"/>
+            <attribute id="networkdevicevirtualinterface_name"/>
+            <attribute id="vlan_tag"/>
           </attributes>
         </naming>
         <icon/>
@@ -1424,6 +1435,17 @@
             <attribute id="vlan_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="networkdevicevirtualinterface_id"/>
+              <attribute id="vlan_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="networkdevicevirtualinterface_id" xsi:type="AttributeExternalKey">
@@ -1534,8 +1556,8 @@
         <db_final_class_field/>
         <naming>
           <attributes>
-            <attribute id="networkdevicevirtualinterface_id"/>
-            <attribute id="vrf_id"/>
+            <attribute id="networkdevicevirtualinterface_name"/>
+            <attribute id="vrf_name"/>
           </attributes>
         </naming>
         <icon/>
@@ -1545,6 +1567,17 @@
             <attribute id="vrf_id"/>
           </attributes>
         </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="networkdevicevirtualinterface_id"/>
+              <attribute id="vrf_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
       </properties>
       <fields>
         <field id="networkdevicevirtualinterface_id" xsi:type="AttributeExternalKey">
@@ -1571,7 +1604,7 @@
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
-        <field id="vfr_name" xsi:type="AttributeExternalField">
+        <field id="vrf_name" xsi:type="AttributeExternalField">
           <extkey_attcode>vrf_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>

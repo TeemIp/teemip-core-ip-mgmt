@@ -229,8 +229,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_device_name+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_id' => 'VRF',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_id+' => '',
-	'Class:lnkPhysicalInterfaceToVRF/Attribute:name' => 'Nom',
-	'Class:lnkPhysicalInterfaceToVRF/Attribute:name+' => '',
+	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_name' => 'Nom de la VRF',
+	'Class:lnkPhysicalInterfaceToVRF/Attribute:vrf_name+' => '',
 ));
 
 //
