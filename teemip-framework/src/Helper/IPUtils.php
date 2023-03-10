@@ -400,7 +400,7 @@ class IPUtils
 	{
 		$iCount = $oSet->Count();
 		$sCount = ($iCount != 0) ? " ($iCount)" : "";
-		$oP->SetCurrentTab($sName.$sCount);
+		$oP->SetCurrentTab($sCode, $sName.$sCount, $sTitle);
 		$oHtml = HtmlFactory::MakeRaw($sInfoPanel);
 		$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
@@ -408,9 +408,9 @@ class IPUtils
 			$oClassIcon->SetDescription($sTitle)->AddCSSClass('ibo-block-list--medallion');
 			$oP->AddUiBlock($oClassIcon);
 			$oP->AddSubBlock($oHtml);
-			$oBlock->Display($oP, $sCode, array('menu' => false));
+			$oBlock->Display($oP, 'blk-'.$sCode, array('menu' => false));
 		} else {
-			$oBlock->Display($oP, $sCode, array(
+			$oBlock->Display($oP, 'blk-'.$sCode, array(
 				'menu' => false,
 				'panel_title' => MetaModel::GetName($sClass),
 				'panel_title_tooltip' => $sTitle,
