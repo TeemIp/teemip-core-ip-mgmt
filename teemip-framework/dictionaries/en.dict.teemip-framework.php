@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -27,7 +27,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPApplication/Name' => '%1$s',
 	'Class:IPApplication/Attribute:uuid' => 'UUID',
-	'Class:IPApplication/Attribute:uuid+' => '',
+	'Class:IPApplication/Attribute:uuid+' => 'Universal Unique Identifier of the application',
 	'Class:IPApplication/Attribute:status' => 'Status',
 	'Class:IPApplication/Attribute:status+' => '',
 	'Class:IPApplication/Attribute:status/Value:obsolete' => 'Obsolete',
@@ -45,7 +45,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig' => 'Global IP Setting',
-	'Class:IPConfig+' => '',
+	'Class:IPConfig+' => 'Set of settings or parameters that drive the behaviour of TeemIp extensions',
 	'Class:IPConfig:baseinfo' => 'General Information',
 	'Class:IPConfig:blockinfo' => 'Default Settings for Subnet Blocks',
 	'Class:IPConfig:subnetinfo' => 'Default Settings for Subnets',
@@ -54,7 +54,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig:domaininfo' => 'Domain Information',
 	'Class:IPConfig:otherinfo' => 'Other Information',
 	'Class:IPConfig/Attribute:org_id' => 'Organization',
-	'Class:IPConfig/Attribute:org_id+' => '',
+	'Class:IPConfig/Attribute:org_id+' => 'Organization that the global IP setting is attached to. A given organization can only have one global IP setting',
 	'Class:IPConfig/Attribute:org_name' => 'Organization name',
 	'Class:IPConfig/Attribute:org_name+' => '',
 	'Class:IPConfig/Attribute:name' => 'Name',
@@ -271,10 +271,11 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Only one Global IP Settings object can exist within an organization.',
+	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Only one Global IP Settings object can exist within an organization!',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall' => 'Minimum size of IPv4 Subnet Blocks cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall' => 'Minimum size of IPv6 Subnet Blocks cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Water Marks are percentage, please, use numbers between 0 and 100!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Low Water Mark must be smaller than High one!',
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'These Global IP Settings may be over written for that action.',
+	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'An IP Address Usage already exists with the same name!',
 ));

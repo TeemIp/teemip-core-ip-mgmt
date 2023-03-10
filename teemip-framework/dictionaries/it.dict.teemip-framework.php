@@ -277,4 +277,5 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'I livelli sono percentuali,per favore, usa numeri tra 0 e 100!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Il livello basso deve essere più piccolo del livello alto!',
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Qusti settaggi globali dei IP possono essere sovrascritti per questa azione.',
+	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Esiste già un uso indirizzo IP con lo stesso nome!',
 ));

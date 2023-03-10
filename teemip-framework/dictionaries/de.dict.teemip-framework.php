@@ -277,4 +277,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Schwellwerte sind Prozentwerte, bitte nur Zahlen zwischen 0 und 100 verwenden!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Untere Schwellwerte müssen kleiner sein als obere Schwellwerte!',
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Diese Globalen Einstellungen können durch diese Aktion überschrieben werden.',
+	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Es existiert bereits eine IP Adresse Nutzung mit demselben Namen!',
 ));

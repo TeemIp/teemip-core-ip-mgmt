@@ -277,4 +277,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Umbral es un porcentaje, por favor, utilice números entre el 0 y 100!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Umbral Bajo debe ser menor a Umbral Alto!',
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Estas Configuraciones IP Globales pueder ser sobre escritas por esta acción.',
+	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Ya existe un uso de dirección IP con el mismo nombre!',
 ));

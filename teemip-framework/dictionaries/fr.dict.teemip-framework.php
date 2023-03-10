@@ -27,7 +27,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPApplication/Name' => '%1$s',
 	'Class:IPApplication/Attribute:uuid' => 'UUID',
-	'Class:IPApplication/Attribute:uuid+' => '',
+	'Class:IPApplication/Attribute:uuid+' => 'Universal Unique Identifier de l\'application',
 	'Class:IPApplication/Attribute:status' => 'Etat',
 	'Class:IPApplication/Attribute:status+' => '',
 	'Class:IPApplication/Attribute:status/Value:obsolete' => 'Obsolète',
@@ -277,4 +277,5 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Les Seuils sont des pourcentages. Merci d\'utiliser des nombres entre 0 et 100 !',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Le Seuil Bas doit être inférieur au Seuil Haut !',
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Ces paramètres IP globaux peuvent être redéfinis pour cette action.',
+	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Un type d\'utilisation d\'une adresse IP existe déjà avec le même nom !',
 ));
