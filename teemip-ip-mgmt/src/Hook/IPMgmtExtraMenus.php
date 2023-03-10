@@ -42,7 +42,7 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 		switch ($iMenuId) {
 			case iPopupMenuExtension::MENU_OBJLIST_ACTIONS:    // $param is a DBObjectSet
 				$oSet = $param;
-				if (!$oSet->CountExceeds(1)) {
+				if (!$oSet->CountExceeds(1) && ($oSet->Count() > 0)) {
 					// Menu for single objects only
 					$sClass = $oSet->GetClass();
 
@@ -705,9 +705,9 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 						static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY => static::DEFAULT_FUNCTION_SETTING_WITHIN_SUBNET_ONLY,
 					);
 					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $aDefaultSettings);
-					$bEnabled = (bool)$aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
+					$bEnabled = (bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
 					if ($bEnabled) {
-						$bWithinSubnetOnly = (bool)$aFunctionSettings[static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
+						$bWithinSubnetOnly = (bool) $aFunctionSettings[static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
 						$oPreviousIPAddress = $oObj->GetPreviousIp($bWithinSubnetOnly);
 						if (!is_null($oPreviousIPAddress)) {
 							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPAddress');
