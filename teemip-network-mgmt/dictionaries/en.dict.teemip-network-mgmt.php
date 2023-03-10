@@ -335,6 +335,9 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ConfigManagement:Network' => 'Network',
 	'Menu:ConfigManagement:Network+' => '',
+	'Menu:ConfigManagement:TeemIpNetworking' => 'Networking',
+	'Menu:TeemIpNetworking:Interfaces' => 'Interfaces',
+	'Menu:TeemIpNetworking:Connectivity' => 'Connectivity',
 
 //
 // Management of Domains
