@@ -591,7 +591,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false) {
 		if (!$bEditMode) {
 			if ($oObject instanceof ConnectableCI) {
-				$sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
+				$sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN PhysicalInterface AS int ON l1.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
 				$sDisplayClass = 'ConnectableCI';
 				if ($oObject->Get('finalclass') == 'NetworkDevice') {
 					$sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN NetworkDeviceVirtualInterface AS int ON l1.ipinterface_id = int.id JOIN NetworkDevice AS n ON int.networkdevice_id = n.id WHERE n.id = :ci_id";

@@ -58,22 +58,35 @@ class AttributeIPv6Address extends AttributeString
 		return $proposedValue;
 	}
 
-    /**
-     * @param ormIPv6 $val1
-     * @param ormIPv6 $val2
-     *
-     * @return bool
-     */
-    public function Equals($val1, $val2)
-    {
-        if (!($val1 instanceof ormIPv6)) {
-            $val1 = new ormIPv6($val1);
-        }
-        if (!($val2 instanceof ormIPv6)) {
-            $val2 = new ormIPv6($val2);
-        }
-        return $val1->Equals($val2);
-    }
+	/**
+	 * Parses a search string coming from user input
+	 *
+	 * @param ormIPv6 $sSearchString
+	 *
+	 * @return string
+	 */
+	public function ParseSearchString($sSearchString)
+	{
+		return $sSearchString->GetAsCompressed();
+	}
+
+	/**
+	 * @param ormIPv6 $val1
+	 * @param ormIPv6 $val2
+	 *
+	 * @return bool
+	 */
+	public function Equals($val1, $val2)
+	{
+		if (!($val1 instanceof ormIPv6)) {
+			$val1 = new ormIPv6($val1);
+		}
+		if (!($val2 instanceof ormIPv6)) {
+			$val2 = new ormIPv6($val2);
+		}
+
+		return $val1->Equals($val2);
+	}
 
 	/**
 	 * @param string $sPrefix
