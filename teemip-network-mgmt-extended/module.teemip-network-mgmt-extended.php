@@ -18,6 +18,7 @@ SetupWebPage::AddModule(
 		'dependencies' => array(
 			'teemip-ip-mgmt/3.0.1',
 			'teemip-config-mgmt-adaptor/3.0.1',
+			'teemip-network-mgmt/3.0.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -28,29 +29,26 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'model.teemip-network-mgmt-extended.php',
 		),
-		'data.struct' => array(
-			//'data.struct.IPAudit.xml',
+		'data.struct' => array(//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
 			'data/data.sample.InterfaceConnector.xml',
 			'data/data.sample.InterfaceSpeed.xml',
 			'data/data.sample.Layer2Protocol.xml',
 		),
-		
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '',
-		
+
 		// Default settings
 		//
-		'settings' => array(
-		),
+		'settings' => array(),
 	)
 );
 
-if (!class_exists('NetworkMgmtExtendedInstaller'))
-{
+if (!class_exists('NetworkMgmtExtendedInstaller')) {
 	// Module installation handler
 	//
 	class NetworkMgmtExtendedInstaller extends ModuleInstallerAPI
