@@ -397,6 +397,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Management of IPs
 //
 	// Allocation to CI / Unallocation from CI
+	'UI:IPManagement:Action:Allocate:IPv6Address' => 'Allocate address to CI',
 	'UI:IPManagement:Action:Allocate:IPv6Address:PageTitle_Object_Class' => 'Alloue l\'IP',
 	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Alloue %1$s %2$s au CI',
 	'UI:IPManagement:Action:Allocate:IPv6Address:CannotAllocateCI' => 'L\'adresse ne peut pas être allouée au CI: %1$s',

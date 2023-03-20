@@ -485,13 +485,13 @@ class _IPAddress extends IPObject
 			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist'));
 		}
 		$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
+		if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+			// Attribute is read only because of a synchro
+			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
+		}
 		if ($iFlags & OPT_ATT_READONLY) {
 			// Attribute is read only
 			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly'));
-		}
-		if ($iFlags & OPT_ATT_SLAVE) {
-			// Attribute is read only because of a synchro
-			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
 		}
 
 		// Chek for potential duplicate names

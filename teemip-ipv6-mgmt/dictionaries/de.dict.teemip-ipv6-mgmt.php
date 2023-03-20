@@ -397,6 +397,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 // Management of IPs
 //
 	// Allocation to CI / Unallocation from CI
+	'UI:IPManagement:Action:Allocate:IPv6Address' => 'Adresse zum CI zuweisen',
 	'UI:IPManagement:Action:Allocate:IPv6Address:PageTitle_Object_Class' => 'Zuweisen einer IP',
 	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Zuweisen von %1$s %2$s zum CI',
 	'UI:IPManagement:Action:Allocate:IPv6Address:CannotAllocateCI' => 'Kann CI nicht zu IP zuweisen: %1$s',

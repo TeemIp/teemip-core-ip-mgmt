@@ -397,12 +397,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 // Management of IPs
 //
 	// Allocation to CI / Unallocation from CI
-	'UI:IPManagement:Action:Allocate:IPv6Address:PageTitle_Object_Class' => 'Allocate IP',
-	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Allocate %1$s %2$s to CI',
-	'UI:IPManagement:Action:Allocate:IPv6Address:CannotAllocateCI' => 'Cannot allocate CI to IP: %1$s',
-	'UI:IPManagement:Action:Allocate:IPv6Address:Done' => '%1$s %2$s has been allocated.',
-	'UI:IPManagement:Action:Allocate:IPv6Address:IPAlreadyAllocated' => 'Address is already allocated!',
-	'UI:IPManagement:Action:Unallocate:IPv6Address:PageTitle_Object_Class' => 'Un-allocate IP',
-	'UI:IPManagement:Action:Unallocate:IPv6Address:Done' => '%1$s %2$s has been unallocated.',
-	'UI:IPManagement:Action:UnAllocate:IPv6Address:IPNotAllocated' => 'Address is not allocated!',
+	'UI:IPManagement:Action:Allocate:IPv6Address' => 'Asignar dirección a CI',
+	'UI:IPManagement:Action:Allocate:IPv6Address:PageTitle_Object_Class' => 'Asignar IP',
+	'UI:IPManagement:Action:Allocate:IPv6Address:Title_Class_Object' => 'Asignar %1$s %2$s al EC',
+	'UI:IPManagement:Action:Allocate:IPv6Address:Done' => '%1$s %2$s ha sido asignada.',
+	'UI:IPManagement:Action:Allocate:IPv6Address:IPAlreadyAllocated' => 'La dirección ya está asignada !',
+	'UI:IPManagement:Action:UnAllocate:IPv6Address' => 'Desasignar la dirección de todos los CI ',
+	'UI:IPManagement:Action:Unallocate:IPv6Address:PageTitle_Object_Class' => 'Desasignar IP',
+	'UI:IPManagement:Action:Unallocate:IPv6Address:Done' => '%1$s %2$s ha sido desasignada.',
+	'UI:IPManagement:Action:UnAllocate:IPv6Address:IPNotAllocated' => 'La dirección no está asignada !',
+
 ));
