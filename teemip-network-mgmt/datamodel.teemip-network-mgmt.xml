@@ -1247,7 +1247,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>asset/img/icons8-globe-cable.svg</icon>
+          <icon>asset/img/icons8-globe-ndvi.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1695,7 +1695,7 @@
             <dashlets>
               <dashlet id="10" xsi:type="DashletHeaderStatic">
                 <rank>10</rank>
-                <title>Menu:TeemIpNetworking:Interfaces</title>
+                <title>Menu:ConfigManagement:TeemIpNetworking:Interfaces</title>
                 <icon>teemip-network-mgmt/asset/img/icons8-globe-cable.svg</icon>
               </dashlet>
               <dashlet id="20" xsi:type="DashletBadge">
@@ -1725,7 +1725,7 @@
             <dashlets>
               <dashlet id="10" xsi:type="DashletHeaderStatic">
                 <rank>10</rank>
-                <title>Menu:TeemIpNetworking:Connectivity</title>
+                <title>Menu:ConfigManagement:TeemIpNetworking:Connectivity</title>
                 <icon>teemip-ip-mgmt/asset/img/icons8-rj45-48.png</icon>
               </dashlet>
               <dashlet id="20" xsi:type="DashletBadge">
@@ -1742,20 +1742,20 @@
               </dashlet>
             </dashlets>
           </cell>
-          <cell id="4">
+          <cell id="teemip_naming">
             <rank>4</rank>
             <dashlets>
-              <dashlet id="40" xsi:type="DashletHeaderStatic">
-                <rank>0</rank>
-                <title>Menu:TeemIp:Naming</title>
+              <dashlet id="10" xsi:type="DashletHeaderStatic">
+                <rank>10</rank>
+                <title>Menu:ConfigManagement:TeemIpNetworking:Naming</title>
                 <icon></icon>
               </dashlet>
-              <dashlet id="41" xsi:type="DashletBadge">
-                <rank>1</rank>
+              <dashlet id="20" xsi:type="DashletBadge">
+                <rank>20</rank>
                 <class>Domain</class>
               </dashlet>
-              <dashlet id="42" xsi:type="DashletBadge">
-                <rank>2</rank>
+              <dashlet id="30" xsi:type="DashletBadge">
+                <rank>30</rank>
                 <class>ASNumber</class>
               </dashlet>
             </dashlets>
