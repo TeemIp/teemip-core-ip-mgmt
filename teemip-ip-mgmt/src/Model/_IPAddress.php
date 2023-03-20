@@ -19,7 +19,6 @@ use Dict;
 use DisplayBlock;
 use DNSObject;
 use Domain;
-use IPAddress;
 use IPConfig;
 use IPObject;
 use iTopWebPage;

@@ -60,7 +60,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-    'Class:IPv6Subnet' => 'IPv6 Subnetz',
+	'Class:IPv6Subnet' => 'IPv6 Subnetz',
 	'Class:IPv6Subnet+' => '',
 	'Class:IPv6Subnet/Attribute:block_id' => 'Subnetzblock',
 	'Class:IPv6Subnet/Attribute:block_id+' => '',

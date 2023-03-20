@@ -142,7 +142,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:IPSpace:IPv6Objects' => 'Oggetto IPv6',
 	'Menu:IPSpace:IPv6Objects+' => 'Oggetto IPv6',
 	'Menu:Ipv6ShortCut' => 'Scorciatoia IPv6',
-	'Menu:Ipv6ShortCut+' => 'Scorciatoia IPv6',  
+	'Menu:Ipv6ShortCut+' => 'Scorciatoia IPv6',
 	'Menu:IPv6Block' => 'Blocco di sottorete',
 	'Menu:IPv6Block+' => 'Blocco di sottorete IPv6',
 	'Menu:IPv6Subnet' => 'Sottoreti',
@@ -163,13 +163,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	// Display details of subnet blocks
 	'UI:IPManagement:Action:Details:IPv6Block' => 'Dettagli',
 	'UI:IPManagement:Action:Details:IPv6Block+' => '',
-	
+
 	// Display list of subnet blocks
 	'UI:IPManagement:Action:DisplayList:IPv6Block' => 'Mostra elenco',
 	'UI:IPManagement:Action:DisplayList:IPv6Block+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:PageTitle_Class' => 'Blocco sottoreti IPv6',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:Title_Class' => 'Blocco sottoreti IPv6',
-	                                       
+
 	// Display tree of subnet blocks
 	'UI:IPManagement:Action:DisplayTree:IPv6Block' => 'Mostra alberto',
 	'UI:IPManagement:Action:DisplayTree:IPv6Block+' => '',

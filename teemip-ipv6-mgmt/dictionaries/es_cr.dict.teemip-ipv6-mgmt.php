@@ -142,7 +142,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IPSpace:IPv6Objects' => 'Objetos IPv6',
 	'Menu:IPSpace:IPv6Objects+' => 'Objetos IPv6',
 	'Menu:Ipv6ShortCut' => 'Atajos IPv6',
-	'Menu:Ipv6ShortCut+' => 'Atajos IPv6',  
+	'Menu:Ipv6ShortCut+' => 'Atajos IPv6',
 	'Menu:IPv6Block' => 'Bloques de Subred',
 	'Menu:IPv6Block+' => 'Bloques de Subred IPv6',
 	'Menu:IPv6Subnet' => 'Subredes',
@@ -163,13 +163,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Display details of subnet blocks
 	'UI:IPManagement:Action:Details:IPv6Block' => 'Detalles',
 	'UI:IPManagement:Action:Details:IPv6Block+' => '',
-	
+
 	// Display list of subnet blocks
 	'UI:IPManagement:Action:DisplayList:IPv6Block' => 'Desplegar Lista',
 	'UI:IPManagement:Action:DisplayList:IPv6Block+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:PageTitle_Class' => 'Bloques Subred IPv6',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:Title_Class' => 'Bloques Subred IPv6',
-	                                       
+
 	// Display tree of subnet blocks
 	'UI:IPManagement:Action:DisplayTree:IPv6Block' => 'Desplegar Árbol',
 	'UI:IPManagement:Action:DisplayTree:IPv6Block+' => '',

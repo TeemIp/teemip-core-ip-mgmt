@@ -3969,7 +3969,7 @@
   </constants>
   <user_rights>
     <groups>
-       <group id="IPObject" _delta="define">
+      <group id="IPObject" _delta="define">
         <classes>
           <class id="IPObject"/>
           <class id="IPConfig"/>

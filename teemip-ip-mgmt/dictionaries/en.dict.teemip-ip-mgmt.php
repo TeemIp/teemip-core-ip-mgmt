@@ -1247,6 +1247,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:UnAllocate:IPAddress:IPNotAllocated' => 'IP is not allocated!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly' => 'IP is attached to a CI\'s attribute that is R/O!',
 	'UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized' => 'IP is attached to a CI\'s attribute that is slave of a synchronization!',
+
+	// List IPs
 	'UI:IPManagement:Action:ListIPs:IPAddress:Ping' => 'PING',
 	'UI:IPManagement:Action:ListIPs:IPAddress:Scan' => 'SCAN',
 	'UI:IPManagement:Action:ListIPs:IPAddress:Nslookup' => 'NSLOOKUP',

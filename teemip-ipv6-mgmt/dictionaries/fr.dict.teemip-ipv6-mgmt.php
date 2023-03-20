@@ -54,7 +54,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_yes' => 'Oui',
 	'Class:IPv6Block/Attribute:ipv6_block_cidr_aligned/Value:bca_yes+' => '',
 ));
-	
+
 //
 // Class: IPv6Subnet
 //
@@ -101,7 +101,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPv6Subnet/Tab:ipregistered-count' => '%1$s Réservées, %2$s Allouées, %3$s Libérées et %4$s Non assignées',
 ));
-  
+
 //
 // Class: IPv6Range
 //
@@ -142,7 +142,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:IPSpace:IPv6Objects' => 'Objets IPv6',
 	'Menu:IPSpace:IPv6Objects+' => 'Objets IPv6',
 	'Menu:Ipv6ShortCut' => 'Raccourcis IPv6',
-	'Menu:Ipv6ShortCut+' => 'Raccourcis IPv6',  
+	'Menu:Ipv6ShortCut+' => 'Raccourcis IPv6',
 	'Menu:IPv6Block' => 'Blocs de Sous-réseaux',
 	'Menu:IPv6Block+' => 'Blocs de Sous-réseaux IPv6',
 	'Menu:IPv6Subnet' => 'Sous-réseaux',
@@ -163,13 +163,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Display details of subnet blocks
 	'UI:IPManagement:Action:Details:IPv6Block' => 'Détails',
 	'UI:IPManagement:Action:Details:IPv6Block+' => '',
-	
+
 	// Display list of subnet blocks
 	'UI:IPManagement:Action:DisplayList:IPv6Block' => 'Afficher la Liste',
 	'UI:IPManagement:Action:DisplayList:IPv6Block+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:PageTitle_Class' => 'Blocs de sous-réseaux IPv6',
 	'UI:IPManagement:Action:DisplayList:IPv6Block:Title_Class' => 'Blocs de sous-réseaux IPv6',
-	                                       
+
 	// Display tree of subnet blocks
 	'UI:IPManagement:Action:DisplayTree:IPv6Block' => 'Afficher l\'Arbre',
 	'UI:IPManagement:Action:DisplayTree:IPv6Block+' => '',
