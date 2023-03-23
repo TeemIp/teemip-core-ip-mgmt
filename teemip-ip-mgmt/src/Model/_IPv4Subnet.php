@@ -2273,7 +2273,9 @@ EOF
 		} else {
 			$sGatewayIp = $sIp;
 		}
-		$this->Set('gatewayip', $sGatewayIp);
+		if ($sGatewayIp != '') {
+			$this->Set('gatewayip', $sGatewayIp);
+		}
 
 		// Set parent block if not set
 		// Note: this may give incorrect result if only one block exists under the organization since, in such case, framework preset block_id to that unique block as block_id cannot be null
@@ -2456,8 +2458,7 @@ EOF
 				if ($sMask != '255.255.255.254') {
 					// Create or update gateway IP
 					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId",
-						null, false);
+					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
 					if (is_null($oIp)) {
 						$oIp = MetaModel::NewObject('IPv4Address');
 						$oIp->Set('subnet_id', $iId);
@@ -2654,15 +2655,20 @@ EOF
 
 		switch ($sAttCode) {
 			case 'gatewayip':
-				$iOrgId = $this->Get('org_id');
 				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
-				if ($sGatewayIPFormat == 'default') {
-					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+				if ($sGatewayIPFormat != '') {
+					$iOrgId = $this->Get('org_id');
+					if ($iOrgId != 0) {
+						if ($sGatewayIPFormat == 'default') {
+							$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+						}
+						if ($sGatewayIPFormat != 'free_setup') {
+							return (OPT_ATT_READONLY | $sFlagsFromParent);
+						}
+					}
 				}
-				if ($sGatewayIPFormat != 'free_setup') {
-					return (OPT_ATT_READONLY | $sFlagsFromParent);
-				}
-				break;
+
+				return $sFlagsFromParent;
 
 			default:
 				break;
@@ -2689,9 +2695,9 @@ EOF
 				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			case 'gatewayip':
-				$iOrgId = $this->Get('org_id');
 				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
 				if ($sGatewayIPFormat == 'default') {
+					$iOrgId = $this->Get('org_id');
 					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 				}
 				if ($sGatewayIPFormat != 'free_setup') {
