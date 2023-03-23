@@ -599,7 +599,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPAddress/Tab:ip_list+' => 'Liste des IPs NATées',
 	'Class:IPAddress/Tab:ci_list' => 'CIs',
 	'Class:IPAddress/Tab:ci_list+' => 'Liste des CIs utilisant cette IP:',
-	'Class:IPAddress/Tab:ci_list_class' => '%1$',
+	'Class:IPAddress/Tab:ci_list_class' => '%1$ss',
 	'Class:IPAddress/Tab:NoCi' => 'Aucun CI',
 	'Class:IPAddress/Tab:NoCi+' => 'Aucun CI utilise cette IP',
 	'Class:IPAddress/Tab:requests' => 'Demandes IP',
@@ -767,7 +767,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:IPSpace:IPv4Objects' => 'Objets IPv4',
 	'Menu:IPSpace:IPv4Objects+' => 'Objets IPv4',
 	'Menu:IPSpace:Options' => 'Paramètres',
-	'Menu:IPSpace:Options+' => 'Paramètres',  
+	'Menu:IPSpace:Options+' => 'Paramètres',
 	'Menu:NewIPObject' => 'Nouvel objet IP',
 	'Menu:NewIPObject+' => 'Création d\'un nouvel objet IP',
 	'Menu:SearchIPObject' => 'Recherche d\'un objet IP',
@@ -868,26 +868,26 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg' => 'Le bloc est en conflict avec un bloc de l\'organisation parente !',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent' => 'Le bloc a des blocs fils dans l\'organisation parent !',
 	'UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent' => 'Le bloc a des subnets fils dans l\'organisation parent !',
-		
+
 	// Undelegate action on subnet blocks
 	'UI:IPManagement:Action:Undelegate:IPBlock:CannotBeUndelegated' => 'La délégation du bloc ne peut être retirée: %1$s',
 	'UI:IPManagement:Action:Undelegate:IPBlock:IsNotDelegated' => 'Le block n\'est pas délégué !',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Le bloc a des blocs fils !',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Le bloc a des subnets fils !',
-	
+
 //
 // Management of IPv4Blocks
 //
 	// Display details of subnet blocks
 	'UI:IPManagement:Action:Details:IPv4Block' => 'Détails',
 	'UI:IPManagement:Action:Details:IPv4Block+' => '',
-	
+
 	// Display list of subnet blocks
 	'UI:IPManagement:Action:DisplayList:IPv4Block' => 'Afficher la Liste',
 	'UI:IPManagement:Action:DisplayList:IPv4Block+' => '',
 	'UI:IPManagement:Action:DisplayList:IPv4Block:PageTitle_Class' => 'Blocs de sous-réseaux IPv4',
 	'UI:IPManagement:Action:DisplayList:IPv4Block:Title_Class' => 'Blocs de sous-réseaux IPv4',
-	
+
 	// Display tree of subnet blocks
 	'UI:IPManagement:Action:DisplayTree:IPv4Block' => 'Afficher l\'Arbre',
 	'UI:IPManagement:Action:DisplayTree:IPv4Block+' => '',
@@ -1274,7 +1274,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:DisplayList:Domain+' => '',
 	'UI:IPManagement:Action:DisplayList:Domain:PageTitle_Class' => 'Domaines DNS',
 	'UI:IPManagement:Action:DisplayList:Domain:Title_Class' => 'Domaines DNS',
-	
+
 	// Display tree of domains
 	'UI:IPManagement:Action:DisplayTree:Domain' => 'Afficher l\'Arbre',
 	'UI:IPManagement:Action:DisplayTree:Domain+' => '',
