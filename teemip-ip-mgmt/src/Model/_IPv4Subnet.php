@@ -26,7 +26,8 @@ use UserRights;
 use utils;
 use WebPage;
 
-class _IPv4Subnet extends IPSubnet implements iTree {
+class _IPv4Subnet extends IPSubnet implements iTree
+{
 	/**
 	 * Return standard icon or extra small one
 	 *
@@ -37,7 +38,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false)
+	{
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/img/icons8-subnet-16.png';
 
@@ -54,7 +56,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetIndexForTree() {
+	public function GetIndexForTree()
+	{
 		return IPUtils::myip2long($this->Get('ip'));
 	}
 
@@ -65,7 +68,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetSize() {
+	public function GetSize()
+	{
 		$sMask = $this->Get('mask');
 
 		return IPUtils::MaskToSize($sMask);
@@ -85,7 +89,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function GetOccupancy($sObject) {
+	public function GetOccupancy($sObject)
+	{
 		$iOrgId = $this->Get('org_id');
 
 		switch ($sObject) {
@@ -148,7 +153,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeIP($iCreationOffset) {
+	public function GetFreeIP($iCreationOffset)
+	{
 		$sFirstIp = $this->Get('ip');
 		$iFirstIp = IPUtils::myip2long($sFirstIp) + 1;  // Skip subnet IP
 		$sLastIp = $this->Get('broadcastip');
@@ -200,7 +206,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function IPCount($sStatus) {
+	public function IPCount($sStatus)
+	{
 		switch ($sStatus) {
 			case 'allocated':
 			case 'released':
@@ -234,7 +241,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeSpace($iRangeSize, $iMaxOffer) {
+	public function GetFreeSpace($iRangeSize, $iMaxOffer)
+	{
 		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$aFreeSpace = array();
@@ -318,7 +326,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	protected function GetIPsAsCSV($aParam) {
+	protected function GetIPsAsCSV($aParam)
+	{
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$sSubnetIp = $this->Get('ip');
@@ -430,7 +439,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * Check if IP is in subnet
 	 */
-	function DoCheckIpInSubnet($sIp) {
+	function DoCheckIpInSubnet($sIp)
+	{
 		$iIp = IPUtils::myip2long($sIp);
 		$iSubnetIp = IPUtils::myip2long($this->Get('ip'));
 		$iBroadcastIp = IPUtils::myip2long($this->Get('broadcastip'));
@@ -444,7 +454,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * Checks if the subnet is aligned to CIDR borders
 	 */
-	function DoCheckCIDRAligned() {
+	function DoCheckCIDRAligned()
+	{
 		$iIp = IPUtils::myip2long($this->Get('ip'));
 		$iMask = IPUtils::myip2long($this->Get('mask'));
 
@@ -460,7 +471,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * Check if operation is feasible on current object
 	 */
-	function DoCheckOperation($sOperation) {
+	function DoCheckOperation($sOperation)
+	{
 		$sMask = $this->Get('mask');
 		switch ($sOperation) {
 			case 'findspace':
@@ -477,10 +489,10 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 
 			case 'shrinksubnet':
 			case 'splitsubnet':
-			if (IPUtils::MaskToBit($sMask) > 30) {
-				// To small to be shrunk or split. Minimum size is /30
-				return ('SizeTooSmall');
-			}
+				if (IPUtils::MaskToBit($sMask) > 30) {
+					// To small to be shrunk or split. Minimum size is /30
+					return ('SizeTooSmall');
+				}
 				break;
 
 			case 'expandsubnet':
@@ -500,7 +512,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * Define scale / limit of operation that can be applied to a subnet
 	 */
-	function GetScaleOfOperation($sOperation) {
+	function GetScaleOfOperation($sOperation)
+	{
 		$sMask = $this->Get('mask');
 		switch ($sOperation) {
 			case 'shrinksubnet':
@@ -554,7 +567,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToDisplayAvailableSpace($aParam) {
+	public function DoCheckToDisplayAvailableSpace($aParam)
+	{
 		$iSpaceSize = $aParam['spacesize'];
 
 		$iSubnetSize = $this->GetSize();
@@ -570,7 +584,8 @@ class _IPv4Subnet extends IPSubnet implements iTree {
 	/**
 	 * @inheritdoc
 	 */
-	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam)
+	{
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iRangeSize = $aParam['spacesize'];
@@ -646,7 +661,8 @@ EOF
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToListIps($aParam) {
+	public function DoCheckToListIps($aParam)
+	{
 		$sIp = $this->Get('ip');
 		$iIp = IPUtils::myip2long($sIp);
 		$sBroadcastIp = $this->Get('broadcastip');
@@ -680,7 +696,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function GetListIps(WebPage $oP, $aParam) {
+	protected function GetListIps(WebPage $oP, $aParam)
+	{
 		// Add related style sheeet
 		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
@@ -765,21 +782,21 @@ EOF
 				$sHtml .= "<span class=\"ip_status\">".$oIpRegistered->GetAsHTML('status')."</span>";
 				$sHtml .= "<span class=\"ip_fqdn\" title=\"".$oIpRegistered->Get('fqdn')."\">".$oIpRegistered->Get('fqdn')."</span>";
 				if (class_exists('IPDiscovery')) {
-                    $sHtml .= "<span class=\"ip_ping\">";
-                    if ($oIpRegistered->Get('responds_to_ping')=='yes') {
-                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Ping')."</span>";
-                    }
-                    $sHtml .= "</span><span class=\"ip_scan\">";
-                    if ($oIpRegistered->Get('responds_to_scan')=='yes') {
-                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Scan')."</span>";
-                    }
-                    $sHtml .= "</span><span class=\"ip_lookup\">";
-                    if ($oIpRegistered->Get('responds_to_iplookup')=='yes') {
-                        $sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Nslookup')."</span>";
-                        $sHtml .= "</span><span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup');
-                    }
-                    $sHtml .= "</span>";
-                }
+					$sHtml .= "<span class=\"ip_ping\">";
+					if ($oIpRegistered->Get('responds_to_ping') == 'yes') {
+						$sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Ping')."</span>";
+					}
+					$sHtml .= "</span><span class=\"ip_scan\">";
+					if ($oIpRegistered->Get('responds_to_scan') == 'yes') {
+						$sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Scan')."</span>";
+					}
+					$sHtml .= "</span><span class=\"ip_lookup\">";
+					if ($oIpRegistered->Get('responds_to_iplookup') == 'yes') {
+						$sHtml .= "<span class=\"ibo-field-badge ibo-field-badge--label\">".Dict::S('UI:IPManagement:Action:ListIPs:IPAddress:Nslookup')."</span>";
+						$sHtml .= "</span><span class=\"ip_fqdn_lookup\">".$oIpRegistered->GetAsHTML('fqdn_from_iplookup');
+					}
+					$sHtml .= "</span>";
+				}
 				$sHtml .= "</li>";
 			} else {
 				// If user has rights to create IPs
@@ -834,7 +851,8 @@ EOF
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToCsvExportIps($aParam) {
+	public function DoCheckToCsvExportIps($aParam)
+	{
 		$sIp = $this->Get('ip');
 		$iIp = IPUtils::myip2long($sIp);
 		$sBroadcastIp = $this->Get('broadcastip');
@@ -872,7 +890,8 @@ EOF
 	 *
 	 * @return string
 	 */
-	function DoCheckCalculatorInputs($aParam) {
+	function DoCheckCalculatorInputs($aParam)
+	{
 		$sMask = $aParam['mask'];
 		$iCidr = $aParam['cidr'];
 
@@ -903,7 +922,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToShrink($aParam) {
+	function DoCheckToShrink($aParam)
+	{
 		// Set working variables
 		$iSubnetKey = $this->GetKey();
 		$sIpSubnetToShrink = $this->Get('ip');
@@ -1003,7 +1023,8 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoShrink($aParam) {
+	function DoShrink($aParam)
+	{
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$sIpSubnetToShrink = $this->Get('ip');
@@ -1075,7 +1096,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToSplit($aParam) {
+	function DoCheckToSplit($aParam)
+	{
 		// Set working variables
 		$iSubnetKey = $this->GetKey();
 		$sIpSubnetToSplit = $this->Get('ip');
@@ -1175,7 +1197,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoSplit($aParam) {
+	function DoSplit($aParam)
+	{
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iSubnetKey = $this->GetKey();
@@ -1311,7 +1334,8 @@ EOF
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	function DoCheckToExpand($aParam) {
+	function DoCheckToExpand($aParam)
+	{
 		// Set working variables
 		$sIpSubnetToExpand = $this->Get('ip');
 		$iIpSubnetToExpand = IPUtils::myip2long($sIpSubnetToExpand);
@@ -1401,7 +1425,8 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DoExpand($aParam) {
+	function DoExpand($aParam)
+	{
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iNewSubnetKey = $this->GetKey();
@@ -1538,7 +1563,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+	public function DoCheckToExplodeFQDN($sFqdnAttr)
+	{
 		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList('IPv4Address'))) {
 			// $sFqdnAttr is not a valid attribute for the class
 			return (Dict::Format('UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist', $sFqdnAttr));
@@ -1550,7 +1576,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DoExplodeFQDN($sFqdnAttr) {
+	public function DoExplodeFQDN($sFqdnAttr)
+	{
 		$iKey = $this->GetKey();
 		$oIPsSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address WHERE $sFqdnAttr != '' AND $sFqdnAttr != fqdn AND subnet_id = :key"), array(), array('key' => $iKey));
 		while ($oIP = $oIPsSet->Fetch()) {
@@ -1569,7 +1596,8 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId)
+	{
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv4Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 
@@ -1579,7 +1607,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
+	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault)
+	{
 		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
 		$oP->SetCurrentTab($sLabelOfAction);
 
@@ -1631,7 +1660,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	protected function DisplayMainAttributesForOperationV3(iTopWebPage $oP, $oColumn) {
+	protected function DisplayMainAttributesForOperationV3(iTopWebPage $oP, $oColumn)
+	{
 		// Parent block
 		$val = $this->GetClassFieldForDisplay('IPv4Subnet', 'block_id', '');
 		$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
@@ -1650,7 +1680,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault)
+	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -1831,7 +1862,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault)
+	{
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -1951,7 +1983,8 @@ EOF
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetCalculatorOutput(WebPage $oP, $aParam) {
+	public function GetCalculatorOutput(WebPage $oP, $aParam)
+	{
 		$sIp = $aParam['ip'];
 		$sMask = $aParam['mask'];
 		if ($sMask != '') {
@@ -2120,7 +2153,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	{
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -2200,7 +2234,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	public function ComputeValues() {
+	public function ComputeValues()
+	{
 		parent::ComputeValues();
 
 		$sIp = $this->Get('ip');
@@ -2264,7 +2299,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	function DoCheckToWrite() {
+	function DoCheckToWrite()
+	{
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -2378,7 +2414,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function AfterInsert() {
+	protected function AfterInsert()
+	{
 		parent::AfterInsert();
 
 		$iOrgId = $this->Get('org_id');
@@ -2476,7 +2513,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function AfterUpdate() {
+	protected function AfterUpdate()
+	{
 		parent::AfterUpdate();
 
 		$iOrgId = $this->Get('org_id');
@@ -2583,7 +2621,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	protected function DoCheckToDelete(&$oDeletionPlan) {
+	protected function DoCheckToDelete(&$oDeletionPlan)
+	{
 		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip');
 		$sIpBroadcast = $this->Get('broadcastip');
@@ -2609,7 +2648,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
 		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 
 		switch ($sAttCode) {
@@ -2634,7 +2674,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 
 		switch ($sAttCode) {
