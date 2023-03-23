@@ -346,12 +346,9 @@ class _IPAddress extends IPObject
 	 */
 	public function IsFqdnUnique()
 	{
+		$iKey = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew()) {
-			$iKey = -1;
-		} else {
-			$iKey = $this->GetKey();
-		}
+		$sName = $this->Get('short_name');
 		$sFqdn = $this->Get('fqdn');
 
 		// The check takes into account the global parameters that defines if duplicate FQDNs are authorized or not
@@ -360,16 +357,20 @@ class _IPAddress extends IPObject
 			$sIpAllowDuplicateName = IPConfig::GetFromGlobalIPConfig('ip_allow_duplicate_name', $iOrgId);
 		}
 		// Check is not done on empty names
-		if ($sFqdn != "") {
+		if ($sName != "") {
 			if ($sIpAllowDuplicateName != 'ipdup_yes') {
 				// Duplicates are allowed between different organizations
 				// Duplicates don't count on released IPs
-				$sOQL = "SELECT IPAddress AS i WHERE i.fqdn = :fqdn AND i.org_id = :org_id AND i.status != 'released' AND i.id != :key";
+				if ($this->IsNew()) {
+					$sOQL = "SELECT IPAddress AS i WHERE i.fqdn = :fqdn AND i.org_id = :org_id AND i.status != 'released'";
+				} else {
+					$sOQL = "SELECT IPAddress AS i WHERE i.fqdn = :fqdn AND i.org_id = :org_id AND i.status != 'released' AND i.id != :key";
+				}
 				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('fqdn' => $sFqdn, 'org_id' => $iOrgId, 'key' => $iKey));
 				// Match for creations is verbiden. Match for modifications as well unless the current name is kept
 				$bDualStackMatchConsummed = false;
 				while ($oIp = $oIpSet->Fetch()) {
-					// In case of dual stack, the same name can be shared between an IPv4 and an IPv6
+					// In case of dual stack, the same name can be shared between a unique IPv4 and a unique IPv6
 					if ($sIpAllowDuplicateName == 'ipdup_dualstack') {
 						if ($bDualStackMatchConsummed == true) {
 							return false;
@@ -513,7 +514,7 @@ class _IPAddress extends IPObject
 	}
 
 	/**
-	 * Check if CI can be allocated
+	 * Check if IP can be unallocated
 	 *
 	 * @param $aParam
 	 *
@@ -539,13 +540,13 @@ class _IPAddress extends IPObject
 				$oCISet = new CMDBObjectSet($oCISearch);
 				while ($oCI = $oCISet->Fetch()) {
 					$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
+					if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+						// Attribute is read only because of a synchro
+						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized'));
+					}
 					if ($iFlags & OPT_ATT_READONLY) {
 						// Attribute is read only
 						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsReadOnly'));
-					}
-					if ($iFlags & OPT_ATT_SLAVE) {
-						// Attribute is read only because of a synchro
-						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized'));
 					}
 				}
 			}
