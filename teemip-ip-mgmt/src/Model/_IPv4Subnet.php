@@ -2273,9 +2273,7 @@ EOF
 		} else {
 			$sGatewayIp = $sIp;
 		}
-		if ($sGatewayIp != '') {
-			$this->Set('gatewayip', $sGatewayIp);
-		}
+		$this->Set('gatewayip', $sGatewayIp);
 
 		// Set parent block if not set
 		// Note: this may give incorrect result if only one block exists under the organization since, in such case, framework preset block_id to that unique block as block_id cannot be null
@@ -2436,7 +2434,7 @@ EOF
 			if ($sReserveSubnetIPs == 'reserve_yes') {
 				// Create or update subnet IP
 				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $iOrgId", null, false);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id", array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId), false);
 				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
@@ -2458,7 +2456,7 @@ EOF
 				if ($sMask != '255.255.255.254') {
 					// Create or update gateway IP
 					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
+					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
 					if (is_null($oIp)) {
 						$oIp = MetaModel::NewObject('IPv4Address');
 						$oIp->Set('subnet_id', $iId);
@@ -2480,7 +2478,7 @@ EOF
 
 				// Create or update broadcast IP
 				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :broadcastip AND i.org_id = :org_id", array('broadcastip' => $sIpBroadcast, 'org_id' => $iOrgId), false);
 				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv4Address');
 					$oIp->Set('subnet_id', $iId);
