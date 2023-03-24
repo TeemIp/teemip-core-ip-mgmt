@@ -30,7 +30,8 @@ use WebPage;
  * Class
  * _IPv6Subnet
  */
-class _IPv6Subnet extends IPSubnet implements iTree {
+class _IPv6Subnet extends IPSubnet implements iTree
+{
 	/**
 	 * Return standard icon or extra small one
 	 *
@@ -40,7 +41,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false) {
+	public function GetMultiSizeIcon($bImgTag = true, $bXsIcon = false)
+	{
 		if ($bXsIcon) {
 			$sIcon = utils::GetAbsoluteUrlModulesRoot().'teemip-ipv6-mgmt/asset/img/icons8-subnetv6-16.png';
 
@@ -57,7 +59,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetIndexForTree() {
+	public function GetIndexForTree()
+	{
 		return $this->Get('ip')->GetAsCannonical();
 	}
 
@@ -68,7 +71,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetSize() {
+	public function GetSize()
+	{
 		$oSubnetIp = $this->Get('ip');
 		$oLastIp = $this->Get('lastip');
 		$iSize = $oSubnetIp->GetSizeInterval($oLastIp);
@@ -87,7 +91,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetOccupancy($sObject) {
+	public function GetOccupancy($sObject)
+	{
 		$iOrgId = $this->Get('org_id');
 
 		switch ($sObject) {
@@ -127,7 +132,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeIP($iCreationOffset) {
+	public function GetFreeIP($iCreationOffset)
+	{
 		$oFirstIp = $this->Get('ip');
 		$oFirstIp = $oFirstIp->GetNextIp(); // Skip subnet IP
 		$oLastIp = $this->Get('lastip');
@@ -179,7 +185,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function IPCount($sStatus) {
+	public function IPCount($sStatus)
+	{
 		switch ($sStatus) {
 			case 'allocated':
 			case 'released':
@@ -212,7 +219,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function GetFreeSpace($iRangeSize, $iMaxOffer) {
+	public function GetFreeSpace($iRangeSize, $iMaxOffer)
+	{
 		$iOrgId = $this->Get('org_id');
 		$iKey = $this->GetKey();
 		$aFreeSpace = array();
@@ -299,7 +307,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	protected function GetIPsAsCSV($aParam) {
+	protected function GetIPsAsCSV($aParam)
+	{
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
@@ -404,7 +413,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckIpInSubnet($oIp) {
+	public function DoCheckIpInSubnet($oIp)
+	{
 		$oSubnetIp = $this->Get('ip');
 		$oLastIp = $this->Get('lastip');
 		if ($oSubnetIp->IsSmallerOrEqual($oIp) && $oIp->IsSmallerOrEqual($oLastIp)) {
@@ -421,7 +431,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckCIDRAligned() {
+	public function DoCheckCIDRAligned()
+	{
 		// Note that IPv6 subnets are /64 only
 
 		$oIp = $this->Get('ip');
@@ -446,7 +457,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckOperation($sOperation) {
+	public function DoCheckOperation($sOperation)
+	{
 		switch ($sOperation) {
 			case 'findspace':
 				if ($this->Get('mask') > 124) {
@@ -479,7 +491,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToDisplayAvailableSpace($aParam) {
+	public function DoCheckToDisplayAvailableSpace($aParam)
+	{
 		$iSpaceSize = $aParam['spacesize'];
 
 		// Get list of registered IPs & ranges in subnet
@@ -497,7 +510,8 @@ class _IPv6Subnet extends IPSubnet implements iTree {
 	/**
 	 * @inheritdoc
 	 */
-	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+	public function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam)
+	{
 		$iId = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
 		$iRangeSize = $aParam['spacesize'];
@@ -574,7 +588,8 @@ EOF
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function DoCheckToListIps($aParam) {
+	public function DoCheckToListIps($aParam)
+	{
 		$oIp = $this->Get('ip');
 		$oBroadcastIp = $this->Get('lastip');
 
@@ -606,7 +621,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	public function GetListIps(WebPage $oP, $aParam) {
+	public function GetListIps(WebPage $oP, $aParam)
+	{
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
 		$oSubnetIp = $this->Get('ip');
@@ -748,7 +764,8 @@ EOF
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function DoCheckToCsvExportIps($aParam) {
+	public function DoCheckToCsvExportIps($aParam)
+	{
 		$oIp = $this->Get('ip');
 		$oBroadcastIp = $this->Get('lastip');
 
@@ -784,7 +801,8 @@ EOF
 	 *
 	 * @return string
 	 */
-	public function DoCheckCalculatorInputs($aParam) {
+	public function DoCheckCalculatorInputs($aParam)
+	{
 		$iCidr = $aParam['cidr'];
 
 		if ($iCidr == '') {
@@ -801,7 +819,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+	public function DoCheckToExplodeFQDN($sFqdnAttr)
+	{
 		if (!in_array($sFqdnAttr, MetaModel::GetAttributesList('IPv6Address'))) {
 			// $sFqdnAttr is not a valid attribute for the class
 			return (Dict::Format('UI:IPManagement:Action:ExplodeFQDN:IPAddress:FQDNAttributeDoesNotExist', $sFqdnAttr));
@@ -813,7 +832,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DoExplodeFQDN($sFqdnAttr) {
+	public function DoExplodeFQDN($sFqdnAttr)
+	{
 		$iKey = $this->GetKey();
 		$oIPsSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address WHERE $sFqdnAttr != '' AND $sFqdnAttr != fqdn AND subnet_id = :key"), array(), array('key' => $iKey));
 		while ($oIP = $oIPsSet->Fetch()) {
@@ -829,7 +849,8 @@ EOF
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId)
+	{
 		$sHtml = $this->GetHyperlink();
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 
@@ -839,7 +860,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
+	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault)
+	{
 		$oP->add("<table>");
 		$oP->add('<tr><td style="vertical-align:top">');
 
@@ -972,7 +994,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault)
+	{
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -1056,7 +1079,8 @@ EOF
 	 *
 	 * @throws \Exception
 	 */
-	public function GetCalculatorOutput(WebPage $oP, $aParam) {
+	public function GetCalculatorOutput(WebPage $oP, $aParam)
+	{
 		$sIp = $aParam['ip'];
 		$iPrefix = $aParam['cidr'];
 
@@ -1224,7 +1248,8 @@ EOF
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	{
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
@@ -1316,7 +1341,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function ComputeValues() {
+	public function ComputeValues()
+	{
 		parent::ComputeValues();
 
 		$oIp = $this->Get('ip');
@@ -1396,7 +1422,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	function DoCheckToWrite() {
+	function DoCheckToWrite()
+	{
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -1501,7 +1528,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function AfterInsert() {
+	protected function AfterInsert()
+	{
 		parent::AfterInsert();
 
 		$iOrgId = $this->Get('org_id');
@@ -1522,10 +1550,7 @@ EOF
 			if ($sReserveSubnetIPs == 'reserve_yes') {
 				// Create or update subnet IP
 				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :subnetip AND i.org_id = :org_id", array(
-					'subnetip' => $sSubnetIp,
-					'org_id' => $iOrgId,
-				), false);
+				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :subnetip AND i.org_id = :org_id", array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId), false);
 				if (is_null($oIp)) {
 					$oIp = MetaModel::NewObject('IPv6Address');
 					$oIp->Set('subnet_id', $iId);
@@ -1547,10 +1572,7 @@ EOF
 				if ($sBitMask != '127') {
 					// Create or update gateway IP
 					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :gatewayip AND i.org_id = :org_id", array(
-						'gatewayip' => $sGatewayIp,
-						'org_id' => $iOrgId,
-					), false);
+					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
 					if (is_null($oIp)) {
 						$oIp = MetaModel::NewObject('IPv6Address');
 						$oIp->Set('subnet_id', $iId);
@@ -1596,7 +1618,8 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	protected function AfterUpdate() {
+	protected function AfterUpdate()
+	{
 		parent::AfterUpdate();
 
 		$iOrgId = $this->Get('org_id');
@@ -1694,7 +1717,8 @@ EOF
 	 *
 	 * @throws \OQLException
 	 */
-	protected function DoCheckToDelete(&$oDeletionPlan) {
+	protected function DoCheckToDelete(&$oDeletionPlan)
+	{
 		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip')->GetAsCompressed();
 		$sBitMask = $this->Get('mask');
@@ -1725,7 +1749,8 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
 		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 
 		switch ($sAttCode) {
@@ -1750,7 +1775,8 @@ EOF
 	/**
 	 * @inheritdoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 
 		switch ($sAttCode) {
@@ -1787,7 +1813,8 @@ EOF
 	 *
 	 * @return string
 	 */
-	public static function BitToMask($iPrefix) {
+	public static function BitToMask($iPrefix)
+	{
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix) {
 			case '64':

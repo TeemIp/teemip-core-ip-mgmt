@@ -1178,6 +1178,9 @@
         <field id="ipconfig_reserve_subnet_ips" xsi:type="AttributeExternalField">
           <extkey_attcode>ipconfig_id</extkey_attcode>
           <target_attcode>reserve_subnet_IPs</target_attcode>
+          <dependencies>
+            <attribute id="ipconfig_id"/>
+          </dependencies>
         </field>
         <field id="reserve_subnet_ips" xsi:type="AttributeEnum">
           <values>
@@ -1889,6 +1892,9 @@
         <field id="ipconfig_ipv4_gateway_ip_format" xsi:type="AttributeExternalField">
           <extkey_attcode>ipconfig_id</extkey_attcode>
           <target_attcode>ipv4_gateway_ip_format</target_attcode>
+          <dependencies>
+            <attribute id="ipconfig_id"/>
+          </dependencies>
         </field>
         <field id="ipv4_gateway_ip_format" xsi:type="AttributeEnum">
           <values>
@@ -3225,7 +3231,7 @@
 		parent::AfterInsert();
 
 		$iIpId = $this->Get('ipaddress_id');
-		if ($iIpId != null)
+		if ($iIpId != 0)
 		{
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if (!is_null($oIP))
@@ -3247,10 +3253,10 @@
 
 		$iIpIntId = $this->Get('ipinterface_id');
 		$iIpId = $this->Get('ipaddress_id');
-		if ($iIpId != null)
+		if ($iIpId != 0)
 		{
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if ($oIP != null)
+			if (!is_null($oIP))
 			{
 				if ($oIP->Get('status') == 'allocated')
 				{
@@ -3260,7 +3266,7 @@
 					$oIPInterfaceToIPAddressSet = new CMDBObjectSet($oIPInterfaceToIPAddressSearch);
 					if (!$oIPInterfaceToIPAddressSet->CountExceeds(0))
 					{
-						$oIP->Set('status', 'unassigned');
+						$oIP->Set('status', 'released');
 						$oIP->DBUpdate();
 					}
 				}
