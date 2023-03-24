@@ -3166,7 +3166,7 @@
         <naming>
           <attributes>
             <attribute id="ipinterface_name"/>
-            <attribute id="ipaddress_fqdn"/>
+            <attribute id="ipaddress_ip"/>
           </attributes>
         </naming>
         <icon/>
@@ -3200,6 +3200,10 @@
           <extkey_attcode>ipinterface_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
+        <field id="macaddress" xsi:type="AttributeExternalField">
+          <extkey_attcode>ipinterface_id</extkey_attcode>
+          <target_attcode>macaddress</target_attcode>
+        </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey">
           <sql>ipaddress_id</sql>
           <target_class>IPAddress</target_class>
@@ -3219,8 +3223,56 @@
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>fqdn</target_attcode>
         </field>
+        <field id="ipaddress_ip" xsi:type="AttributeString">
+          <sql>ipaddress_ip</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
+        <method id="ComputeIP" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public function ComputeIP()
+    {
+		$iIpId = $this->Get('ipaddress_id');
+		if ($iIpId != 0)
+		{
+			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+			if (!is_null($oIP))
+			{
+				return $oIP->Get('ip');
+			}
+		}
+		return $this->Get('ipaddress_fqdn');
+	}]]></code>
+        </method>
+        <method id="OnInsert" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function OnInsert()
+    {
+		parent::OnInsert();
+
+		$this->Set('ipaddress_ip', $this->ComputeIP());
+	}]]></code>
+        </method>
+        <method id="OnUpdate" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function OnUpdate()
+    {
+		parent::OnUpdate();
+
+		$this->Set('ipaddress_ip', $this->ComputeIP());
+	}]]></code>
+        </method>
         <method id="AfterInsert" _delta="define">
           <comment/>
           <static>false</static>
@@ -3281,8 +3333,14 @@
             <item id="ipinterface_id">
               <rank>10</rank>
             </item>
-            <item id="ipaddress_id">
+            <item id="macaddress">
               <rank>20</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
             </item>
           </items>
         </details>
@@ -3291,8 +3349,11 @@
             <item id="ipinterface_id">
               <rank>10</rank>
             </item>
-            <item id="ipaddress_id">
+            <item id="macaddress">
               <rank>20</rank>
+            </item>
+            <item id="ipaddress_id">
+              <rank>30</rank>
             </item>
           </items>
         </search>
@@ -3300,6 +3361,9 @@
           <items>
             <item id="ipinterface_id">
               <rank>10</rank>
+            </item>
+            <item id="macaddress">
+              <rank>15</rank>
             </item>
             <item id="ipaddress_id">
               <rank>20</rank>
