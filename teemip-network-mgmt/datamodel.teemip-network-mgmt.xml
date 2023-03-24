@@ -1748,7 +1748,7 @@
               <dashlet id="10" xsi:type="DashletHeaderStatic">
                 <rank>10</rank>
                 <title>Menu:ConfigManagement:TeemIpNetworking:Naming</title>
-                <icon></icon>
+                <icon>teemip-network-mgmt/asset/img/icons8-domain-name.svg</icon>
               </dashlet>
               <dashlet id="20" xsi:type="DashletBadge">
                 <rank>20</rank>
