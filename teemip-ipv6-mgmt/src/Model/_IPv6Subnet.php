@@ -1507,7 +1507,10 @@ EOF
 		}
 
 		// If allocation of Gateway Ip is free, make sure it is contained in subnet
-		$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+		$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+		if ($sGatewayIPFormat == 'default') {
+			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+		}
 		if ($sGatewayIPFormat == 'free_setup') {
 			$oGatewayIp = $this->Get('gatewayip');
 			if (!$this->DoCheckIpInSubnet($oGatewayIp)) {
@@ -1755,15 +1758,20 @@ EOF
 
 		switch ($sAttCode) {
 			case 'gatewayip':
-				$iOrgId = $this->Get('org_id');
 				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
-				if ($sGatewayIPFormat == 'default') {
-					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+				if ($sGatewayIPFormat != '') {
+					$iOrgId = $this->Get('org_id');
+					if ($iOrgId != 0) {
+						if ($sGatewayIPFormat == 'default') {
+							$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+						}
+						if ($sGatewayIPFormat != 'free_setup') {
+							return (OPT_ATT_READONLY | $sFlagsFromParent);
+						}
+					}
 				}
-				if ($sGatewayIPFormat != 'free_setup') {
-					return (OPT_ATT_READONLY | $sFlagsFromParent);
-				}
-				break;
+
+				return $sFlagsFromParent;
 
 			default:
 				break;
@@ -1791,9 +1799,9 @@ EOF
 				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			case 'gatewayip':
-				$iOrgId = $this->Get('org_id');
 				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
 				if ($sGatewayIPFormat == 'default') {
+					$iOrgId = $this->Get('org_id');
 					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
 				}
 				if ($sGatewayIPFormat != 'free_setup') {
