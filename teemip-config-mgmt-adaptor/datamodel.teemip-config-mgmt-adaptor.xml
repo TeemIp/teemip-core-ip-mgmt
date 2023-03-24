@@ -868,14 +868,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					}
 				}
 
-			return;
-		} elseif ($oObject instanceof IPInterface) {
-			// Release all IPs attached to interface
-			$oIPsSet = $oObject->Get('ip_list');
-			while ($oIP = $oIPsSet->Fetch()) {
-				$iIPId = $oIP->GetKey();
-				IPAddress::SetStatusOnDetachment($iIPId);
-				IPAddress::SetShortNameOnDetachment($iIPId);
+				return;
 			}
 		}
 	}
