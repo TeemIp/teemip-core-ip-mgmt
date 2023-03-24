@@ -271,6 +271,27 @@ class AttributeIPv6Address extends AttributeString
 	}
 
 	/**
+	 * @return array
+	 */
+	public function GetImportColumns()
+	{
+		$aColumns = array();
+		$aColumns[$this->GetCode()] = 'CHAR(39)';
+
+		return $aColumns;
+	}
+
+	/**
+	 * @param $aCols
+	 * @param $sPrefix
+	 * @return mixed|null
+	 */
+	public function FromImportToValue($aCols, $sPrefix = '')
+	{
+		return $aCols[$sPrefix];
+	}
+
+	/**
 	 * @return mixed|string
 	 */
 	public function GetValidationPattern()
