@@ -1,12 +1,12 @@
 <?php
-/*
- * @copyright   Copyright (C) 2021 TeemIp
+/**
+ * @copyright   Copyright (C) 2023 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-mgmt/3.0.1',
+	'teemip-ip-mgmt/3.1.0',
 	array(
 		// Identification
 		//
@@ -16,9 +16,9 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-tickets/2.7.0',
-			'teemip-framework/3.0.1',
-			'teemip-network-mgmt/3.0.1',
+			'itop-tickets/3.0.0',
+			'teemip-framework/3.1.0',
+			'teemip-network-mgmt/3.1.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -36,8 +36,7 @@ SetupWebPage::AddModule(
 			'src/Model/IPTriggerOnWaterMark.php',
 			'model.teemip-ip-mgmt.php',
 		),
-		'data.struct' => array(
-			//'data.struct.IPAudit.xml',
+		'data.struct' => array(//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
 			'data/data.sample.IPGlue.xml',
@@ -52,12 +51,12 @@ SetupWebPage::AddModule(
 			'data/data.sample.lnkIPv4BlockToLocation.xml',
 			'data/data.sample.lnkIPv4SubnetToLocation.xml',
 		),
-		
+
 		// Documentation
 		//
 		'doc.manual_setup' => '',
 		'doc.more_information' => '',
-		
+
 		// Default settings
 		//
 		'settings' => array(
@@ -89,8 +88,7 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('IPManagementInstaller'))
-{
+if (!class_exists('IPManagementInstaller')) {
 	// Module installation handler
 	//
 	class IPManagementInstaller extends ModuleInstallerAPI
