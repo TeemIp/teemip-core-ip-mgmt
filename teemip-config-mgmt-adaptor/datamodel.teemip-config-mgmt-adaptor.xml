@@ -698,16 +698,9 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					$sDisplayClass = 'NetworkDevice';
 				}
 				$oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $oObject->GetKey()));
-				if ($oLnkSet->CountExceeds(0)) {
-					$iIPs = $oLnkSet->Count();
-					$oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list').' ('.$iIPs.')');
-					$oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+'));
-					$oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-					$oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-				} else {
-					$oPage->SetCurrentTab(Dict::S('Class:'.$sDisplayClass.'/Tab:ipaddresses_list'));
-					$oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-				}
+				$sName = Dict::Format('Class:'.$sDisplayClass.'/Tab:ipaddresses_list');
+				$sTitle = Dict::Format('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+');
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
 	        } elseif ($oObject instanceof VLAN) {
 	            $iVLANId = $oObject->GetKey();
 
@@ -716,18 +709,9 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
 	            }
 	            $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
-	            $iLnkSet = $oLnkSet->Count();
-
-	            if ($iLnkSet > 0) {
-	                $iIPs = $oLnkSet->Count();
-	                $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list').' ('.$iIPs.')');
-	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('Class:VLAN/Tab:ipaddresses_list+'));
-	                $oBlock = new DisplayBlock($oLnkSet->GetFilter(), 'list', false);
-	                $oBlock->Display($oPage, 'ipint_to_ipadd', array('menu' => false, 'view_link' => false));
-	            } else {
-	                $oPage->SetCurrentTab(Dict::S('Class:VLAN/Tab:ipaddresses_list'));
-	                $oPage->p(MetaModel::GetClassIcon('IPAddress').'&nbsp;'.Dict::S('UI:NoObjectToDisplay'));
-	            }
+				$sName = Dict::Format('Class:VLAN/Tab:ipaddresses_list');
+				$sTitle = Dict::Format('Class:VLAN/Tab:ipaddresses_list+');
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
 	        }
 	    }
 	}
