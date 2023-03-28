@@ -337,6 +337,7 @@ class _IPAddress extends IPObject
 	/**
 	 * Check if IP's FQDN is unique.
 	 *
+	 * @param $sNewName
 	 * @return bool
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -344,12 +345,17 @@ class _IPAddress extends IPObject
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function IsFqdnUnique()
+	public function IsFqdnUnique($sNewName = '')
 	{
 		$iKey = $this->GetKey();
 		$iOrgId = $this->Get('org_id');
-		$sName = $this->Get('short_name');
-		$sFqdn = $this->Get('fqdn');
+		if ($sNewName == '') {
+			$sName = $this->Get('short_name');
+			$sFqdn = $this->Get('fqdn');
+		} else {
+			$sName = $sNewName;
+			$sFqdn = DNSObject::ComputeFqdn($sName, $this->Get('domain_name'));
+		}
 
 		// The check takes into account the global parameters that defines if duplicate FQDNs are authorized or not
 		$sIpAllowDuplicateName = $this->Get('ip_allow_duplicate_name');

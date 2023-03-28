@@ -170,8 +170,12 @@
  {
 		parent::OnInsert();
 
-		if ($this->Get('status') == 'allocated') {
+		// Set allocation and released date as required
+		$sStatus = $this->Get('status');
+		if ($sStatus == 'allocated') {
 			$this->Set('allocation_date', time());
+		} elseif ($sStatus== 'released') {
+			$this->Set('release_date', time());
 		}
  }]]></code>
         </method>
@@ -555,7 +559,7 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="parent_org_id" xsi:type="AttributeExternalKey">
-          <filter><![CDATA[SELECT Organization AS o JOIN IPConfig AS ipc ON ipc.org_id = o.id WHERE ipc.delegate_to_children_only = 'dtc_no' AND o.id != :this->org_id UNION SELECT Organization AS parent JOIN Organization AS child ON child.parent_id BELOW STRICT parent.id JOIN IPConfig AS ipc ON ipc.org_id = parent.id WHERE child.id = :this->org_id AND ipc.delegate_to_children_only = 'dtc_yes']]></filter>
+          <filter><![CDATA[SELECT Organization AS o JOIN IPConfig AS ipc ON ipc.org_id = o.id WHERE ipc.delegate_to_children_only = 'dtc_no' AND o.id != :this->org_id UNION SELECT Organization AS o JOIN Organization AS child ON child.parent_id BELOW STRICT o.id JOIN IPConfig AS ipc ON ipc.org_id = o.id WHERE child.id = :this->org_id AND ipc.delegate_to_children_only = 'dtc_yes']]></filter>
           <dependencies>
             <attribute id="org_id"/>
           </dependencies>
