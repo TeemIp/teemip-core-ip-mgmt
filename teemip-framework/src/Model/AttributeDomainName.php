@@ -16,11 +16,11 @@ class AttributeDomainName extends AttributeString
 
 		$sPattern = '^(\w[\w-]*(\.\w[\w-]*)*\.?)$';
 		$sAdditionalPattern = $this->GetOptional('validation_pattern', '');
-		if (($sAdditionalPattern != '') && !(@preg_match('/'.$sAdditionalPattern.'/', null) === false))
-		{
+		if (($sAdditionalPattern != '') && !(@preg_match('/'.$sAdditionalPattern.'/', '') === false)) {
 			// $sAdditionalPattern exists and is valid. Include it in validation pattern
 			$sPattern = $sAdditionalPattern.'|'.$sPattern;
 		}
+
 		return $sPattern;
 	}
 }
