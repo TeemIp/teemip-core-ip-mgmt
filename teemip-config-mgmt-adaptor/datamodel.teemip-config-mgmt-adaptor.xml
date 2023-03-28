@@ -799,7 +799,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					// Change IPs status if IP has changed
 					if (array_key_exists($sIPAttribute, $aListChanges)) {
 						$iPreviousIPId = $aListChanges[$sIPAttribute];
-						IPAddress::SetStatusOnAttachment($iIPId, $iPreviousIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId, $iPreviousIPId);
 					} else {
 						$iPreviousIPId = $iIPId;
 					}
@@ -807,7 +807,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					// Change IPs name if name has changed or IP has changed
 					if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
 						$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
-						IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId, $iPreviousIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId, $iPreviousIPId);
 					}
 				}
 
@@ -836,8 +836,8 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					$iIPId = $oObject->Get($sIPAttribute);
 					$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
 					if ($iIPId != 0) {
-						IPAddress::SetStatusOnAttachment($iIPId);
-						IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
 					}
 				}
 			}
@@ -863,8 +863,8 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 				foreach ($aIPAttributes AS $key => $sIPAttribute) {
 					$iIPId = $oObject->Get($sIPAttribute);
 					if ($iIPId != 0) {
-						IPAddress::SetStatusOnDetachment($iIPId);
-						IPAddress::SetShortNameOnDetachment($iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iIPId);
 					}
 				}
 
