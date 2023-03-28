@@ -42,6 +42,7 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetStatusOnAttachment($iIpId = null, $iPreviousIpId = null)
 	{
+		/** @var \IPAddress $oIP */
 		if ($iIpId != $iPreviousIpId) {
 			if ($iIpId != null) {
 				$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
@@ -77,6 +78,7 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetStatusOnDetachment($iIpId = null)
 	{
+		/** @var \IPAddress $oIP */
 		if ($iIpId != null) {
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if ($oIP != null) {
@@ -104,10 +106,12 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null, $iPreviousIpId = null)
 	{
+		/** @var \IPAddress $oIP */
 		if ($iOrgId != null) {
 			$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 			if ($sCopyCINameToShortName == 'yes') {
 				if (($iPreviousIpId != $iIpId) && ($iPreviousIpId != null)) {
+					// Reset short_name on previous IP
 					$oIP = MetaModel::GetObject('IPAddress', $iPreviousIpId, false /* MustBeFound */);
 					if ($oIP != null) {
 						$oIP->Set('short_name', '');
@@ -115,12 +119,17 @@ class _IPAddress extends IPObject
 					}
 				}
 				if ($iIpId != null) {
+					// Set short name on attached IP
 					$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 					if ($oIP != null) {
+						// Make sure name format is ok
 						$oAttDef = MetaModel::GetAttributeDef('IPAddress', 'short_name');
 						if ($oAttDef->CheckFormat($sShortName)) {
-							$oIP->Set('short_name', $sShortName);
-							$oIP->DBUpdate();
+							// Check for duplicates
+							if ($oIP->IsFqdnUnique($sShortName)) {
+								$oIP->Set('short_name', $sShortName);
+								$oIP->DBUpdate();
+							}
 						}
 					}
 				}
@@ -141,6 +150,7 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetShortNameOnDetachment($iIpId = null)
 	{
+		/** @var \IPAddress $oIP */
 		if ($iIpId != null) {
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if ($oIP != null) {
