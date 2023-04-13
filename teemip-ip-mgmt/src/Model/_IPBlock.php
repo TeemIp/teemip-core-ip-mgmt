@@ -368,7 +368,7 @@ class _IPBlock extends IPObject {
 				$sHtml = '<div class="teemip-space-occupation">'.$this->GetAsHTML('children_occupancy').Dict::Format('Class:IPBlock/Tab:childblock-count-percent').'</div>';
 
 				// Then, display form to select list of hosts if domain is not in edition
-				$sHtml .= '<br><div style="padding: 15px; background: #ddd;">';
+				$sHtml .= '<br><div style="padding: 15px; background: #f8f9fa;">';
 				$sHtml .= '<form>';
 				$sHtml .= '<table>';
 
@@ -395,7 +395,7 @@ class _IPBlock extends IPObject {
 				$sHtml .= "<input type=\"submit\" value=\"".Dict::S('Class:IPBlock/Tab:childblock/SelectList')."\">\n";
 
 				$sHtml .= '</form>';
-				$sHtml .= '</div>';
+				$sHtml .= '</div><br>';
 			} else {
 				$sHtml = '';
 			}
