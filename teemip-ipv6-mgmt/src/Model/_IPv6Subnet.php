@@ -1573,24 +1573,26 @@ EOF
 				}
 
 				if ($sBitMask != '127') {
-					// Create or update gateway IP
-					$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-					$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
-					if (is_null($oIp)) {
-						$oIp = MetaModel::NewObject('IPv6Address');
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('ip', $oGatewayIp);
-						$oIp->Set('org_id', $iOrgId);
-						$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageGatewayIpId);
-						$oIp->DBInsert();
-					} else {
-						if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
+					// Create or update gateway IP... if one has been chosen
+					if ($sGatewayIp !=  '') {
+						$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+						$oIp = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
+						if (is_null($oIp)) {
+							$oIp = MetaModel::NewObject('IPv6Address');
 							$oIp->Set('subnet_id', $iId);
+							$oIp->Set('ip', $oGatewayIp);
+							$oIp->Set('org_id', $iOrgId);
+							$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
 							$oIp->Set('status', 'reserved');
 							$oIp->Set('usage_id', $sUsageGatewayIpId);
-							$oIp->DBUpdate();
+							$oIp->DBInsert();
+						} else {
+							if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
+								$oIp->Set('subnet_id', $iId);
+								$oIp->Set('status', 'reserved');
+								$oIp->Set('usage_id', $sUsageGatewayIpId);
+								$oIp->DBUpdate();
+							}
 						}
 					}
 				}
