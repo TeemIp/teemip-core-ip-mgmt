@@ -410,6 +410,7 @@ class IPUtils
 			$oP->AddSubBlock($oHtml);
 			$oBlock->Display($oP, 'blk-'.$sCode, array('menu' => false));
 		} else {
+			$oP->AddSubBlock($oHtml);
 			$oBlock->Display($oP, 'blk-'.$sCode, array(
 				'menu' => false,
 				'panel_title' => MetaModel::GetName($sClass),
