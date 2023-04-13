@@ -170,7 +170,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock/Tab:subnet' => 'Subnets',
 	'Class:IPBlock/Tab:subnet+' => 'Subnets attached to this block',
 	'Class:IPBlock/Tab:subnet-count' => 'Subnets: %1$s',
-	'Class:IPBlock/Tab:subnet-count-percent' => ' space used by Subnets',
+	'Class:IPBlock/Tab:subnet-count-percent' => ' Space used by Subnets',
 	'Class:IPBlock/Tab:subnet-count-percent-remain' => 'Space used by Subnets in remaining space: %1$.1f %%',
 ));
 
