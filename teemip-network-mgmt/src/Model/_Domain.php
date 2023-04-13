@@ -152,7 +152,7 @@ class _Domain extends DNSObject implements iTree {
 			// Then, display form to select list of hosts if domain is not in edition
 			$sHtml = '';
 			if (!$bEditMode) {
-				$sHtml = '<div style="padding: 15px; background: #ddd;">';
+				$sHtml = '<div style="padding: 15px; background: #f8f9fa;">';
 				$sHtml .= "<form>";
 				$sHtml .= "<table>";
 
@@ -182,7 +182,7 @@ class _Domain extends DNSObject implements iTree {
 				$sHtml .= "<input type=\"submit\" value=\"".Dict::S('Class:Domain/Tab:hosts/SelectList')."\">\n";
 
 				$sHtml .= "</form>\n";
-				$sHtml .= "</div>";
+				$sHtml .= "</div><br>";
 			}
 			$sName = Dict::Format('Class:Domain/Tab:hosts');
 			IPUtils::DisplayTabContent($oP, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet);
