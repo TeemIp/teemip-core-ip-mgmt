@@ -109,6 +109,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPBlock' => 'Blocco Sottorete',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'Informazioni Generali',
+	'Class:IPBlock:automation' => 'Automazione',
 	'Class:IPBlock:delegationinfo' => 'Informazioni sulla delegazione',
 	'Class:IPBlock:ipinfo' => 'Informazioni IP',
 	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Delegato all\'organizzazione: </delegation_highlight>%1$s',

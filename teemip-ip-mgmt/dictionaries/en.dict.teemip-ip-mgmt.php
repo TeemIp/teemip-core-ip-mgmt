@@ -112,6 +112,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPBlock' => 'Subnet Block',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'General Information',
+	'Class:IPBlock:automation' => 'Automation',
 	'Class:IPBlock:delegationinfo' => 'Delegation Information',
 	'Class:IPBlock:ipinfo' => 'IP Information',
 	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Delegated to organization: </delegation_highlight>%1$s',

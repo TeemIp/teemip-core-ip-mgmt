@@ -109,6 +109,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPBlock' => 'Bloc de Sous-réseaux',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'Informations Générales',
+	'Class:IPBlock:automation' => 'Automatisation',
 	'Class:IPBlock:delegationinfo' => 'Informations de Délégation',
 	'Class:IPBlock:ipinfo' => 'Informations IP',
 	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Délégué à : </delegation_highlight>%1$s',

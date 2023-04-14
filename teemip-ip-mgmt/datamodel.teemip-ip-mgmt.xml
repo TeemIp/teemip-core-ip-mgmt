@@ -933,6 +933,10 @@
                     </item>
                  </items>
                 </item>
+                <item id="fieldset:Class:IPBlock:automation">
+                  <rank>20</rank>
+                  <items/>
+                </item>
               </items>
             </item>
             <item id="col:col2">

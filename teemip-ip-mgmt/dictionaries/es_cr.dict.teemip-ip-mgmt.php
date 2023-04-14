@@ -109,6 +109,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPBlock' => 'Bloque de Subred',
 	'Class:IPBlock+' => '',
 	'Class:IPBlock:baseinfo' => 'Información General',
+	'Class:IPBlock:automation' => 'Automatización',
 	'Class:IPBlock:delegationinfo' => 'Información Delegación',
 	'Class:IPBlock:ipinfo' => 'Información IP',
 	'Class:IPBlock:DelegatedToChild' => '<delegation_highlight>Delegado a organización : </delegation_highlight>%1$s',
