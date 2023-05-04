@@ -307,6 +307,22 @@
             </item>
          </items>
         </list>
+        <summary>
+          <items>
+            <item id="firstip">
+              <rank>10</rank>
+            </item>
+            <item id="lastip">
+              <rank>20</rank>
+            </item>
+            <item id="ipblocktype_id">
+              <rank>30</rank>
+            </item>
+            <item id="occupancy">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="IPv6Subnet" _delta="define">
@@ -720,6 +736,22 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="mask">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+            <item id="status">
+              <rank>30</rank>
+            </item>
+            <item id="type">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="IPv6Range" _delta="define">
@@ -947,6 +979,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="subnet_id">
+              <rank>10</rank>
+            </item>
+            <item id="firstip">
+              <rank>20</rank>
+            </item>
+            <item id="lastip">
+              <rank>30</rank>
+            </item>
+            <item id="usage_id">
+              <rank>40</rank>
+            </item>
+            <item id="occupancy">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="IPv6Address" _delta="define">
@@ -1224,6 +1275,25 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+            <item id="usage_id">
+              <rank>20</rank>
+            </item>
+            <item id="fqdn">
+              <rank>30</rank>
+            </item>
+            <item id="subnet_id">
+              <rank>40</rank>
+            </item>
+            <item id="range_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
   </classes>
