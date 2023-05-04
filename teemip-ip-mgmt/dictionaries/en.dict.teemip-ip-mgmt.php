@@ -645,7 +645,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port' => 'External service port',
 	'Class:lnkIPAdressToIPAddress/Attribute:external_service_port+' => 'External or source port to be used with port forwarding',
 	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port' => 'Map to port',
-	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'Internal or destsination port to be used with port forwarding',
+	'Class:lnkIPAdressToIPAddress/Attribute:map_to_port+' => 'Internal or destination port to be used with port forwarding',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol' => 'Protocol',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol+' => 'Authorized protocol(s). Leave empty for all',
 	'Class:lnkIPAdressToIPAddress/Attribute:protocol/Value:udp' => 'UDP',

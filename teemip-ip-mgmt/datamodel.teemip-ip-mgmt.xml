@@ -2953,6 +2953,9 @@
             <attributes>
               <attribute id="ip2_id"/>
               <attribute id="ip1_id"/>
+              <attribute id="external_service_port"/>
+              <attribute id="map_to_port"/>
+              <attribute id="protocol"/>
             </attributes>
             <filter><![CDATA[]]></filter>
             <disabled>false</disabled>
@@ -3053,15 +3056,18 @@
 			$sIPSymetricalNAT = IPConfig::GetFromGlobalIPConfig('ip_symetrical_nat', $iOrgId);
 			if ($sIPSymetricalNAT == 'yes')
 			{
-				$iIP2 = $this->Get('ip2_id');
-		        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
-		        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
-		        if (!$oLnkSet->CountExceeds(0))
-		        {
-		            $oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
-		            $oLnk->Set('ip1_id', $iIP2);
-			        $oLnk->Set('ip2_id', $iIP1);
-				    $oLnk->DBInsert();
+			    // Create symmetrical IP only if ports and protocol are not specified
+			    if (is_null($this->Get('map_to_port')) AND is_null($this->Get('external_service_port')) AND is_null($this->Get('protocol'))) {
+					$iIP2 = $this->Get('ip2_id');
+					$sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+					$oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+					if (!$oLnkSet->CountExceeds(0))
+					{
+						$oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
+						$oLnk->Set('ip1_id', $iIP2);
+						$oLnk->Set('ip2_id', $iIP1);
+						$oLnk->DBInsert();
+					}
 		        }
 	        }
         }
