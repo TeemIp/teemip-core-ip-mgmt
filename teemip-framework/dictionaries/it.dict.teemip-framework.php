@@ -52,7 +52,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPConfig:iprangeinfo' => 'Settaggi di Default per l\'intervallo IP',
 	'Class:IPConfig:ipinfo' => 'Settaggi di Default per l\'IP',
 	'Class:IPConfig:domaininfo' => 'Settaggi di Default per le Dominio',
-	'Class:IPConfig:otherinfo' => 'Altre Informationi',
+	'Class:IPConfig:otherinfo' => 'Altre Settaggi di Default',
 	'Class:IPConfig/Attribute:org_id' => 'Organizzazione',
 	'Class:IPConfig/Attribute:org_id+' => '',
 	'Class:IPConfig/Attribute:org_name' => 'Nome dell\'Organizzazione',

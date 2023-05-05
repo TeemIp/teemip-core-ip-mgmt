@@ -299,8 +299,8 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-	      <!-- Settings for subnets -->
-	      <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
+        <!-- Settings for subnets -->
+        <field id="reserve_subnet_IPs" xsi:type="AttributeEnum">
           <values>
             <value id="reserve_no">
               <code>reserve_no</code>
@@ -370,8 +370,8 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-	      <!-- Settings for IP ranges -->
-	      <field id="iprange_low_watermark" xsi:type="AttributeInteger">
+        <!-- Settings for IP ranges -->
+        <field id="iprange_low_watermark" xsi:type="AttributeInteger">
           <sql>iprange_low_watermark</sql>
           <default_value>60</default_value>
           <is_null_allowed>false</is_null_allowed>
@@ -381,8 +381,8 @@
           <default_value>80</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-	      <!-- Settings for IP addresses -->
-	      <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
+        <!-- Settings for IP addresses -->
+        <field id="ip_allow_duplicate_name" xsi:type="AttributeEnum">
           <values>
             <value id="ipdup_no">
               <code>ipdup_no</code>
@@ -511,8 +511,8 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-	      <!-- Settings for Domains -->
-	      <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
+        <!-- Settings for Domains -->
+        <field id="delegate_domain_to_children_only" xsi:type="AttributeEnum">
           <values>
             <value id="dtc_yes">
               <code>dtc_yes</code>
@@ -525,8 +525,21 @@
           <default_value>dtc_yes</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
-	      <!-- Other settings -->
-	      <field id="mac_address_format" xsi:type="AttributeEnum">
+        <!-- Other settings -->
+        <field id="attach_already_allocated_ips" xsi:type="AttributeEnum">
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <sql>attach_already_allocated_ips</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="mac_address_format" xsi:type="AttributeEnum">
           <values>
             <value id="colons">
               <code>colons</code>
@@ -671,8 +684,11 @@
                 <item id="fieldset:Class:IPConfig:otherinfo">
                   <rank>50</rank>
                   <items>
-                    <item id="mac_address_format">
+                    <item id="attach_already_allocated_ips">
                       <rank>10</rank>
+                    </item>
+                    <item id="mac_address_format">
+                      <rank>20</rank>
                     </item>
                   </items>
                 </item>

@@ -51,8 +51,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig:subnetinfo' => 'Default Settings for Subnets',
 	'Class:IPConfig:iprangeinfo' => 'Default Settings for IP Ranges',
 	'Class:IPConfig:ipinfo' => 'Default Settings for IPs',
-	'Class:IPConfig:domaininfo' => 'Domain Information',
-	'Class:IPConfig:otherinfo' => 'Other Information',
+	'Class:IPConfig:domaininfo' => 'Domain Settings',
+	'Class:IPConfig:otherinfo' => 'Other Settings',
 	'Class:IPConfig/Attribute:org_id' => 'Organization',
 	'Class:IPConfig/Attribute:org_id+' => 'Organization that the global IP setting is attached to. A given organization can only have one global IP setting',
 	'Class:IPConfig/Attribute:org_name' => 'Organization name',
@@ -227,6 +227,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Allow attachement of already allocated IPs to CIs',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //

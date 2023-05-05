@@ -161,10 +161,14 @@
       <fields>
         <field id="managementip" xsi:type="AttributeIPAddress" _delta="delete"/>
         <field id="managementip_id" xsi:type="AttributeExternalKey" _delta="define">
-          <filter><![CDATA[SELECT IPAddress AS ip WHERE ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id]]></filter>
+          <filter>
+            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'no' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
+              UNION
+              SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'yes' AND ip.status NOT IN ('reserved') AND ip.org_id = :this->org_id]]>
+          </filter>
           <dependencies>
             <attribute id="org_id"/>
-         </dependencies>
+          </dependencies>
           <sql>managementip_id</sql>
           <is_null_allowed>true</is_null_allowed>
           <target_class>IPAddress</target_class>

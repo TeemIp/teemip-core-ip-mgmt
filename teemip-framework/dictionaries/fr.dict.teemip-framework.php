@@ -52,7 +52,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig:iprangeinfo' => 'Paramètres par défaut des Plages d\'IPs',
 	'Class:IPConfig:ipinfo' => 'Paramètres par défaut des IPs',
 	'Class:IPConfig:domaininfo' => 'Paramètres par défaut des Domaines',
-	'Class:IPConfig:otherinfo' => 'Autres informations',
+	'Class:IPConfig:otherinfo' => 'Autres paramètres par défaut',
 	'Class:IPConfig/Attribute:org_id' => 'Organisation',
 	'Class:IPConfig/Attribute:org_id+' => '',
 	'Class:IPConfig/Attribute:org_name' => 'Nom Organisation',
@@ -227,6 +227,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'Non',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Autorise l\'attachement d\'IPs déjà allouées aux ECs',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //
