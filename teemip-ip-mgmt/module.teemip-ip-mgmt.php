@@ -152,6 +152,17 @@ if (!class_exists('IPManagementInstaller')) {
 
 				SetupLog::Info("Module teemip-ip-mgmt: computation done");
 			}
+			if (($sPreviousVersion[0] == '2') || ($sPreviousVersion[0] == '3' && $sPreviousVersion[2] == '0')) {
+				SetupLog::Info("Module teemip-ip-mgmt: update name of lnkIPInterfaceToIPAddress classes");
+
+				$sCopy = "UPDATE ".$sDBSubname."lnkipinterfacetoipaddress AS l JOIN ".$sDBSubname."ipaddress AS ip ON ip.id = l.ipaddress_id JOIN ".$sDBSubname."ipaddressv4 AS ipv ON ipv.id = ip.id SET l.ipaddress_ip = ipv.ip WHERE ip.finalclass = 'IPv4Address'";
+				CMDBSource::Query($sCopy);
+				$sCopy = "UPDATE ".$sDBSubname."lnkipinterfacetoipaddress AS l JOIN ".$sDBSubname."ipaddress AS ip ON ip.id = l.ipaddress_id JOIN ".$sDBSubname."ipaddressv6 AS ipv ON ipv.id = ip.id SET l.ipaddress_ip = ipv.ip_comp WHERE ip.finalclass = 'IPv6Address'";
+				CMDBSource::Query($sCopy);
+
+				SetupLog::Info("Module teemip-ip-mgmt: update done");
+
+			}
 		}
 	}
 }
