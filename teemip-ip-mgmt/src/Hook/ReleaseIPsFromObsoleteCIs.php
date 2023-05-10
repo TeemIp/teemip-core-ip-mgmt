@@ -71,6 +71,38 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 	}
 
 	/**
+	 * Check if IP can effectively be released
+	 *
+	 * @param $oIP
+	 * @return bool
+	 */
+	private function CheckToReleaseIp($oIP): bool
+	{
+		$aObsoleteStatusList = IPUtils::GetStatusThatDefineObsoleteCIs();
+
+		// Check if IP is attached to "production" CIs through main attributes
+		//   - Can only be the case if attach_already_allocated_ips is set to 'yes', but check anyway
+		$aCIs = $oIP->GetHostingCIs();
+		foreach ($aCIs as $key => $aCI) {
+			$oCI = $aCI['ci'];
+			if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
+				return false;
+			}
+		}
+
+		// Check if IP is attached to other CIs through one of their interface
+		$aCIs = $oIP->GetHostingThroughInterfacesCIs();
+		foreach ($aCIs as $key => $aCI) {
+			$oCI = $aCI['ci'];
+			if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	/**
 	 * @inheritdoc
 	 */
 	public function Process($iUnixTimeLimit)
@@ -134,40 +166,50 @@ class ReleaseIPsFromObsoleteCIs implements iScheduledProcess
 					}
 				}
 
-				// Correct IP status
-				// Note: IP will automatically be removed from CIs at that time
+				// Correct IP status if required
 				$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 				while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
-					try {
-						$aReport['ipreleased']++;
+					if ($oIPAddress->Get('status') != 'released') {
+						try {
+							if ($this->CheckToReleaseIp($oIPAddress)) {
+								// Note: IP will automatically be removed from CIs at that time
+								$oIPAddress->Set('status', 'released');    // release_date is managed at IPObject level
+								$oIPAddress->DBUpdate();
 
-						$oIPAddress->Set('status', 'released');
-						$oIPAddress->DBUpdate();
-					} catch (Exception $e) {
-						$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
+								$aReport['ipreleased']++;
+							}
+						} catch (Exception $e) {
+							$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
+						}
 					}
 				}
 			}
 		}
 
-		// 3rd step: check IPs allocated to interfaces attached to CIs
+		// 3rd step: check IPs allocated to interfaces attached to obsolete CIs
 		$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList";
+		if (class_exists('NetworkDeviceVirtualInterface')) {
+			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id WHERE n.status IN $sStatusList AND n.org_id IN $sOrgToCleanList";
+		}
 		if (class_exists('LogicalInterface')) {
 			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList";
 		}
 
-		// Correct IP status
-		// Note: IP will automatically be removed from interfaces at that time
+		// Correct IP status if required
 		$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
-			try {
-				$aReport['ipreleased']++;
+			if ($oIPAddress->Get('status') != 'released') {
+				try {
+					if ($this->CheckToReleaseIp($oIPAddress)) {
+						// Note: IP will automatically be removed from CIs at that time
+						$oIPAddress->Set('status', 'released');    // release_date is managed at IPObject level
+						$oIPAddress->DBUpdate();
 
-				// TODO check that IPs are not used in another interface as another main IP
-				$oIPAddress->Set('status', 'released');
-				$oIPAddress->DBUpdate();
-			} catch (Exception $e) {
-				$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
+						$aReport['ipreleased']++;
+					}
+				} catch (Exception $e) {
+					$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
+				}
 			}
 		}
 

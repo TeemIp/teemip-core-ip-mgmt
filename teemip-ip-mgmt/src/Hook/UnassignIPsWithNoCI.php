@@ -89,7 +89,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 			return '';
 		}
 
-		// Get list of organizations for which IPs are allocated when attached to production CIs
+		// Get list of organizations for which IPs are unassigned when not attached to a CI
 		$oOrgToCleanSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o JOIN IPConfig AS ic ON ic.org_id = o.id WHERE ic.ip_unassign_on_no_ci = 'yes'"));
 		if ($oOrgToCleanSet->Count() == 0) {
 			$this->Trace('No organization has activated this feature. Exiting...');
@@ -108,13 +108,12 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 		}
 		$sOrgToCleanList .= ")";
 
-		// 1st step: create OQL that lists the IPs attached to a CI
+		// 1st step: create OQL that lists the IPs attached to a CI belonging to listed organizations
 		$aClassesWithIPs = IPUtils::GetListOfClassesWithIPs();
 		$sOQLni = "";
 		if (empty($aClassesWithIPs)) {
 			$this->Trace('No CI has external keys toward IP Addresses');
 		} else {
-			// Retrieve and correct IPs attached to production CIs and that have wrong status
 			$j = 0;
 			foreach ($aClassesWithIPs as $sClass => $sKey) {
 				$aIPAttributes = array_merge($sKey['IPAddress'],
@@ -139,8 +138,11 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 			}
 		}
 
-		// 2nd step: add to OQL the list of IPs attached to interfaces
+		// 2nd step: add to OQL the list of IPs attached to interfaces of CIs belonging to listed organizations
 		$sOQLk = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.org_id IN $sOrgToCleanList";
+		if (class_exists('NetworkDeviceVirtualInterface')) {
+			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id WHERE n.org_id IN $sOrgToCleanList";
+		}
 		if (class_exists('LogicalInterface')) {
 			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.org_id IN $sOrgToCleanList";
 		}

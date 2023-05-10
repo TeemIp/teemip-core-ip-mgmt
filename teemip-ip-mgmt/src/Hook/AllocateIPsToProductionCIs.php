@@ -139,6 +139,7 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 						$aReport['ipchecked']++;
 
 						$oIPAddress->Set('status', 'allocated');
+						$oIPAddress->Set('allocation_date', time());
 						$oIPAddress->DBUpdate();
 					} catch (Exception $e) {
 						$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
@@ -149,6 +150,9 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 
 		// 3rd step: check IPs attached to interfaces with non allocated status
 		$sOQL = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.status IN $sStatusList AND c.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+		if (class_exists('NetworkDeviceVirtualInterface')) {
+			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id WHERE n.status IN $sStatusList AND n.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
+		}
 		if (class_exists('LogicalInterface')) {
 			$sOQL .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.status IN $sStatusList AND v.org_id IN $sOrgToCleanList AND ip.status != 'allocated'";
 		}
@@ -160,6 +164,7 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 				$aReport['ipchecked']++;
 
 				$oIPAddress->Set('status', 'allocated');
+				$oIPAddress->Set('allocation_date', time());
 				$oIPAddress->DBUpdate();
 			} catch (Exception $e) {
 				$this->Trace('Skipping IP check as there was an exception! ('.$e->getMessage().')');
