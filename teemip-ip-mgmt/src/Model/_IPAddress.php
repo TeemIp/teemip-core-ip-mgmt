@@ -30,7 +30,7 @@ use WebPage;
 class _IPAddress extends IPObject
 {
 	/**
-	 * Manage status of IP when attached to a device
+	 * Set status of IP when attached to a device
 	 *
 	 * @param null $iIpId
 	 * @param null $iPreviousIpId
@@ -40,34 +40,23 @@ class _IPAddress extends IPObject
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetStatusOnAttachment($iIpId = null, $iPreviousIpId = null)
+	public static function SetStatusOnAttachment($iIpId = null)
 	{
 		/** @var \IPAddress $oIP */
-		if ($iIpId != $iPreviousIpId) {
-			if ($iIpId != null) {
-				$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-				if ($oIP != null) {
-					if ($oIP->Get('status') != 'allocated') {
-						$oIP->Set('status', 'allocated');
-						$oIP->Set('allocation_date', time());
-						$oIP->DBUpdate();
-					}
-				}
-			}
-			if ($iPreviousIpId != null) {
-				$oIP = MetaModel::GetObject('IPAddress', $iPreviousIpId, false /* MustBeFound */);
-				if ($oIP != null) {
-					if ($oIP->Get('status') == 'allocated') {
-						$oIP->Set('status', 'released');    // release_date is managed at IPObject level
-						$oIP->DBUpdate();
-					}
+		if ($iIpId != null) {
+			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+			if ($oIP != null) {
+				if ($oIP->Get('status') != 'allocated') {
+					$oIP->Set('status', 'allocated');
+					$oIP->Set('allocation_date', time());
+					$oIP->DBUpdate();
 				}
 			}
 		}
 	}
 
 	/**
-	 * Manage status of IP when detached from a device
+	 * Set status of IP when detached from a device
 	 *
 	 * @param null $iIpId
 	 *
@@ -78,11 +67,35 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetStatusOnDetachment($iIpId = null)
 	{
+		// Set old IP to 'released' status if
+		//   - no non obsolete device is having an external key to the IP
+		//   - no non obsolete device is using the IP through one of its interface
 		/** @var \IPAddress $oIP */
 		if ($iIpId != null) {
 			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 			if ($oIP != null) {
 				if ($oIP->Get('status') == 'allocated') {
+					$aObsoleteStatusList = IPUtils::GetStatusThatDefineObsoleteCIs();
+
+					// Check if IP is attached to other CIs through main attributes
+					//   - Can only be the case if attach_already_allocated_ips is set to 'yes', but check anyway
+					$aCIs = $oIP->GetHostingCIs();
+					foreach ($aCIs as $key => $aCI) {
+						$oCI = $aCI['ci'];
+						if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
+							return;
+						}
+					}
+
+					// Check if IP is attached to other CIs through one of their interface
+					$aCIs = $oIP->GetHostingThroughInterfacesCIs();
+					foreach ($aCIs as $key => $aCI) {
+						$oCI = $aCI['ci'];
+						if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
+							return;
+						}
+					}
+
 					$oIP->Set('status', 'released');    // release_date is managed at IPObject level
 					$oIP->DBUpdate();
 				}
@@ -686,6 +699,63 @@ class _IPAddress extends IPObject
 				}
 			}
 		}
+	}
+
+	/*
+	 * Get the list of CIs pointing to the IP, together with the attributes pointing to the IP
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function GetHostingCIs(): array
+	{
+		$aCIs = [];
+		$sCLass = get_class($this);
+		$aCIsToList = IPUtils::GetListOfClassesWithIPs();
+		$iKey = $this->GetKey();
+		foreach ($aCIsToList as $sCI => $sKey) {
+			$aIPAttributes = array_merge($aCIsToList[$sCI]['IPAddress'], $aCIsToList[$sCI][$sCLass]);
+			foreach ($aIPAttributes as $key => $sIPAttribute) {
+				$sOQL = "SELECT $sCI WHERE $sIPAttribute = :key";
+				$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('key' => $iKey));
+				while ($oCI = $oCISet->Fetch()) {
+					$aCIs[] = ['ci' => $oCI, 'ip_attribute' => $sIPAttribute];
+				}
+			}
+		}
+		return $aCIs;
+	}
+
+	/**
+	 * Get the list of CIs using the IP through one of its interfaces
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public function GetHostingThroughInterfacesCIs(): array
+	{
+		$aCIs = [];
+		$iKey = $this->GetKey();
+
+		$sOQL = "SELECT ConnectableCI AS c JOIN PhysicalInterface AS pi ON pi.connectableci_id = c.id JOIN lnkIPInterfaceToIPAddress AS l ON l.ipinterface_id = pi.id WHERE l.ipaddress_id = :id";
+		if (class_exists('NetworkDeviceVirtualInterface')) {
+			$sOQL .= " UNION SELECT NetworkDevice AS n JOIN NetworkDeviceVirtualInterface AS vi ON vi.networkdevice_id = n.id JOIN lnkIPInterfaceToIPAddress AS l ON l.ipinterface_id = vi.id WHERE l.ipaddress_id = :id";
+		}
+		if (class_exists('LogicalInterface')) {
+			$sOQL .= " UNION SELECT VirtualMachine AS v JOIN LogicalInterface AS li ON li.virtualmachine_id = v.id JOIN lnkIPInterfaceToIPAddress AS l ON l.ipinterface_id = li.id WHERE l.ipaddress_id = :id";
+		}
+		$oCISet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iKey));
+		while ($oCI = $oCISet->Fetch()) {
+			$aCIs[] = ['ci' => $oCI];
+		}
+
+		return $aCIs;
 	}
 
 	/**

@@ -10,7 +10,7 @@
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter>
-            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'no' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
+            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips != 'yes' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
               UNION
               SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'yes' AND ip.status NOT IN ('reserved') AND ip.org_id = :this->org_id]]>
           </filter>
@@ -59,7 +59,7 @@
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter>
-            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'no' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
+            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips != 'yes' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
               UNION
               SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'yes' AND ip.status NOT IN ('reserved') AND ip.org_id = :this->org_id]]>
           </filter>
@@ -108,7 +108,7 @@
         </field>
         <field id="ipaddress_id" xsi:type="AttributeExternalKey" _delta="define">
           <filter>
-            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'no' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
+            <![CDATA[SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips != 'yes' AND ip.status NOT IN ('allocated', 'reserved') AND ip.org_id = :this->org_id
               UNION
               SELECT IPAddress AS ip JOIN IPConfig AS c ON ip.ipconfig_id = c.id WHERE c.attach_already_allocated_ips = 'yes' AND ip.status NOT IN ('reserved') AND ip.org_id = :this->org_id]]>
           </filter>

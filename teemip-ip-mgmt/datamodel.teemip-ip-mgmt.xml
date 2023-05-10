@@ -3350,16 +3350,8 @@
     {
 		parent::AfterInsert();
 
-		$iIpId = $this->Get('ipaddress_id');
-		if ($iIpId != 0)
-		{
-			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if (!is_null($oIP))
-			{
-				$oIP->Set('status', 'allocated');
-				$oIP->DBUpdate();
-			}
-		}
+        $iIpId = $this->Get('ipaddress_id');
+        TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIpId);
 	}]]></code>
         </method>
         <method id="AfterDelete" _delta="define">
@@ -3367,31 +3359,12 @@
           <static>false</static>
           <access>public</access>
           <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnDelete()
+          <code><![CDATA[	public function AfterDelete()
     {
 		parent::AfterDelete();
 
-		$iIpIntId = $this->Get('ipinterface_id');
 		$iIpId = $this->Get('ipaddress_id');
-		if ($iIpId != 0)
-		{
-			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if (!is_null($oIP))
-			{
-				if ($oIP->Get('status') == 'allocated')
-				{
-					// Reset status only of IP is not set on another interface
-					// TODO or another "management_ip"
-					$oIPInterfaceToIPAddressSearch = DBObjectSearch::FromOQL("SELECT lnkIPInterfaceToIPAddress AS l WHERE l.ipaddress_id = $iIpId AND l.ipinterface_id != $iIpIntId");
-					$oIPInterfaceToIPAddressSet = new CMDBObjectSet($oIPInterfaceToIPAddressSearch);
-					if (!$oIPInterfaceToIPAddressSet->CountExceeds(0))
-					{
-						$oIP->Set('status', 'released');
-						$oIP->DBUpdate();
-					}
-				}
-			}
-		}
+        TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iIpId);
 	}]]></code>
         </method>
       </methods>

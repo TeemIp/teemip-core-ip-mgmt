@@ -20,9 +20,14 @@ use WebPage;
 class IPUtils
 {
 	const MODULE_CODE = 'teemip-ip-mgmt';
+
 	const DEVELOPER_MODE_FUNCTION_CODE = 'developer_mode.enabled';
 	const TEEMIP_CACHE_DIR = 'teemip';
 	const LIST_CLASSES_WITH_IPS_FILE_NAME = 'ListOfClassesWithIPs.php';
+
+	const IP_RELEASE_ON_CI_STATUS_FUNCTION_CODE = 'ip_release_on_ci_status';
+	const IP_RELEASE_ON_CI_STATUS_FUNCTION_SETTING_STATUS_LIST = 'status_list';
+	const IP_RELEASE_ON_CI_STATUS_DEFAULT_FUNCTION_SETTING_STATUS_LIST = array('obsolete');
 
 	/**
 	 * @param $sIp
@@ -513,5 +518,18 @@ class IPUtils
 		}
 
 		return $aIpsOfClass;
+	}
+
+	/**
+	 * Get list of status that define an obsolete CI
+	 *
+	 * @return array
+	 */
+	public static function GetStatusThatDefineObsoleteCIs(): array
+	{
+		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::IP_RELEASE_ON_CI_STATUS_FUNCTION_CODE, static::IP_RELEASE_ON_CI_STATUS_DEFAULT_FUNCTION_SETTING_STATUS_LIST);
+		$aStatusList = $aFunctionSettings[static::IP_RELEASE_ON_CI_STATUS_FUNCTION_SETTING_STATUS_LIST];
+
+		return $aStatusList;
 	}
 }
