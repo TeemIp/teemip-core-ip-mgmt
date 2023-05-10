@@ -607,8 +607,11 @@ class _IPAddress extends IPObject
 		$oCI->DBUpdate();
 
 		// Update IP status
-		$this->Set('status', 'allocated');
-		$this->DBUpdate();
+		if ($this->Get('status') != 'allocated') {
+			$this->Set('status', 'allocated');
+			$this->Set('allocation_date', time());
+			$this->DBUpdate();
+		}
 	}
 
 	/**
