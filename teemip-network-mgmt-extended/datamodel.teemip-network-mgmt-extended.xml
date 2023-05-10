@@ -977,7 +977,7 @@
         // Execute parent function first
         parent::AfterInsert();
 
-		    IPAddress::SetStatusOnAttachment($this->Get('ipaddress_id'));
+        TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($this->Get('ipaddress_id'));
     }]]></code>
         </method>
         <method id="AfterDelete" _delta="define">
@@ -990,7 +990,7 @@
         // Execute parent function first
         parent::AfterDelete();
 
-		    IPAddress::SetStatusOnDetachment($this->Get('ipaddress_id'));
+        TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($this->Get('ipaddress_id'));
     }]]></code>
         </method>
       </methods>
