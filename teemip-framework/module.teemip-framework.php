@@ -26,8 +26,10 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'vendor/autoload.php',
 			'src/Model/AttributeAliasList.php',
+			'src/Model/AttributeClassWithIP.php',
 			'src/Model/AttributeDomainName.php',
 			'src/Model/AttributeHostName.php',
+			'src/Model/AttributeIPFieldInClass.php',
 			'src/Model/AttributeIPPercentage.php',
 			'src/Model/AttributeMacAddress.php',
 			'src/Model/DashletBadgeFiltered.php',
