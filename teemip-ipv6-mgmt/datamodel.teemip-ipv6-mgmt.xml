@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="IPv6Block" _delta="define">
       <parent>IPBlock</parent>
@@ -20,7 +20,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-modulev6-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-modulev6-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -75,24 +77,60 @@
         </field>
         <field id="ipv6_block_min_prefix" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>48</value>
-            <value>49</value>
-            <value>50</value>
-            <value>51</value>
-            <value>52</value>
-            <value>53</value>
-            <value>54</value>
-            <value>55</value>
-            <value>56</value>
-            <value>57</value>
-            <value>58</value>
-            <value>59</value>
-            <value>60</value>
-            <value>61</value>
-            <value>62</value>
-            <value>63</value>
-            <value>64</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="48">
+              <code>48</code>
+            </value>
+            <value id="49">
+              <code>49</code>
+            </value>
+            <value id="50">
+              <code>50</code>
+            </value>
+            <value id="51">
+              <code>51</code>
+            </value>
+            <value id="52">
+              <code>52</code>
+            </value>
+            <value id="53">
+              <code>53</code>
+            </value>
+            <value id="54">
+              <code>54</code>
+            </value>
+            <value id="55">
+              <code>55</code>
+            </value>
+            <value id="56">
+              <code>56</code>
+            </value>
+            <value id="57">
+              <code>57</code>
+            </value>
+            <value id="58">
+              <code>58</code>
+            </value>
+            <value id="59">
+              <code>59</code>
+            </value>
+            <value id="60">
+              <code>60</code>
+            </value>
+            <value id="61">
+              <code>61</code>
+            </value>
+            <value id="62">
+              <code>62</code>
+            </value>
+            <value id="63">
+              <code>63</code>
+            </value>
+            <value id="64">
+              <code>64</code>
+            </value>
           </values>
           <sql>ipv6_block_min_prefix</sql>
           <default_value>default</default_value>
@@ -104,9 +142,15 @@
         </field>
         <field id="ipv6_block_cidr_aligned" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>bca_yes</value>
-            <value>bca_no</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="bca_yes">
+              <code>bca_yes</code>
+            </value>
+            <value id="bca_no">
+              <code>bca_no</code>
+            </value>
           </values>
           <sql>ipv6_block_cidr_aligned</sql>
           <default_value>default</default_value>
@@ -343,7 +387,9 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-subnetv6-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-subnetv6-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="ip"/>
@@ -383,71 +429,201 @@
         </field>
         <field id="mask" xsi:type="AttributeEnum">
           <values>
-            <value>64</value>
-            <value>65</value>
-            <value>66</value>
-            <value>67</value>
-            <value>68</value>
-            <value>69</value>
-            <value>70</value>
-            <value>71</value>
-            <value>72</value>
-            <value>73</value>
-            <value>74</value>
-            <value>75</value>
-            <value>76</value>
-            <value>77</value>
-            <value>78</value>
-            <value>79</value>
-            <value>80</value>
-            <value>81</value>
-            <value>82</value>
-            <value>83</value>
-            <value>84</value>
-            <value>85</value>
-            <value>86</value>
-            <value>87</value>
-            <value>88</value>
-            <value>89</value>
-            <value>90</value>
-            <value>91</value>
-            <value>92</value>
-            <value>93</value>
-            <value>94</value>
-            <value>95</value>
-            <value>96</value>
-            <value>97</value>
-            <value>98</value>
-            <value>99</value>
-            <value>100</value>
-            <value>101</value>
-            <value>102</value>
-            <value>103</value>
-            <value>104</value>
-            <value>105</value>
-            <value>106</value>
-            <value>107</value>
-            <value>108</value>
-            <value>109</value>
-            <value>110</value>
-            <value>111</value>
-            <value>112</value>
-            <value>113</value>
-            <value>114</value>
-            <value>115</value>
-            <value>116</value>
-            <value>117</value>
-            <value>118</value>
-            <value>119</value>
-            <value>120</value>
-            <value>121</value>
-            <value>122</value>
-            <value>123</value>
-            <value>124</value>
-            <value>125</value>
-            <value>126</value>
-            <value>127</value>
-            <value>128</value>
+            <value id="64">
+              <code>64</code>
+            </value>
+            <value id="65">
+              <code>65</code>
+            </value>
+            <value id="66">
+              <code>66</code>
+            </value>
+            <value id="67">
+              <code>67</code>
+            </value>
+            <value id="68">
+              <code>68</code>
+            </value>
+            <value id="69">
+              <code>69</code>
+            </value>
+            <value id="70">
+              <code>70</code>
+            </value>
+            <value id="71">
+              <code>71</code>
+            </value>
+            <value id="72">
+              <code>72</code>
+            </value>
+            <value id="73">
+              <code>73</code>
+            </value>
+            <value id="74">
+              <code>74</code>
+            </value>
+            <value id="75">
+              <code>75</code>
+            </value>
+            <value id="76">
+              <code>76</code>
+            </value>
+            <value id="77">
+              <code>77</code>
+            </value>
+            <value id="78">
+              <code>78</code>
+            </value>
+            <value id="79">
+              <code>79</code>
+            </value>
+            <value id="80">
+              <code>80</code>
+            </value>
+            <value id="81">
+              <code>81</code>
+            </value>
+            <value id="82">
+              <code>82</code>
+            </value>
+            <value id="83">
+              <code>83</code>
+            </value>
+            <value id="84">
+              <code>84</code>
+            </value>
+            <value id="85">
+              <code>85</code>
+            </value>
+            <value id="86">
+              <code>86</code>
+            </value>
+            <value id="87">
+              <code>87</code>
+            </value>
+            <value id="88">
+              <code>88</code>
+            </value>
+            <value id="89">
+              <code>89</code>
+            </value>
+            <value id="90">
+              <code>90</code>
+            </value>
+            <value id="91">
+              <code>91</code>
+            </value>
+            <value id="92">
+              <code>92</code>
+            </value>
+            <value id="93">
+              <code>93</code>
+            </value>
+            <value id="94">
+              <code>94</code>
+            </value>
+            <value id="95">
+              <code>95</code>
+            </value>
+            <value id="96">
+              <code>96</code>
+            </value>
+            <value id="97">
+              <code>97</code>
+            </value>
+            <value id="98">
+              <code>98</code>
+            </value>
+            <value id="99">
+              <code>99</code>
+            </value>
+            <value id="100">
+              <code>100</code>
+            </value>
+            <value id="101">
+              <code>101</code>
+            </value>
+            <value id="102">
+              <code>102</code>
+            </value>
+            <value id="103">
+              <code>103</code>
+            </value>
+            <value id="104">
+              <code>104</code>
+            </value>
+            <value id="105">
+              <code>105</code>
+            </value>
+            <value id="106">
+              <code>106</code>
+            </value>
+            <value id="107">
+              <code>107</code>
+            </value>
+            <value id="108">
+              <code>108</code>
+            </value>
+            <value id="109">
+              <code>109</code>
+            </value>
+            <value id="110">
+              <code>110</code>
+            </value>
+            <value id="111">
+              <code>111</code>
+            </value>
+            <value id="112">
+              <code>112</code>
+            </value>
+            <value id="113">
+              <code>113</code>
+            </value>
+            <value id="114">
+              <code>114</code>
+            </value>
+            <value id="115">
+              <code>115</code>
+            </value>
+            <value id="116">
+              <code>116</code>
+            </value>
+            <value id="117">
+              <code>117</code>
+            </value>
+            <value id="118">
+              <code>118</code>
+            </value>
+            <value id="119">
+              <code>119</code>
+            </value>
+            <value id="120">
+              <code>120</code>
+            </value>
+            <value id="121">
+              <code>121</code>
+            </value>
+            <value id="122">
+              <code>122</code>
+            </value>
+            <value id="123">
+              <code>123</code>
+            </value>
+            <value id="124">
+              <code>124</code>
+            </value>
+            <value id="125">
+              <code>125</code>
+            </value>
+            <value id="126">
+              <code>126</code>
+            </value>
+            <value id="127">
+              <code>127</code>
+            </value>
+            <value id="128">
+              <code>128</code>
+            </value>
           </values>
           <sql>mask</sql>
           <default_value/>
@@ -479,10 +655,18 @@
         </field>
         <field id="ipv6_gateway_ip_format" xsi:type="AttributeEnum">
           <values>
-            <value>default</value>
-            <value>subnetip_plus_1</value>
-            <value>lastip</value>
-            <value>free_setup</value>
+            <value id="default">
+              <code>default</code>
+            </value>
+            <value id="subnetip_plus_1">
+              <code>subnetip_plus_1</code>
+            </value>
+            <value id="lastip">
+              <code>lastip</code>
+            </value>
+            <value id="free_setup">
+              <code>free_setup</code>
+            </value>
           </values>
           <sql>ipv6_gateway_ip_format</sql>
           <default_value>default</default_value>
@@ -772,7 +956,9 @@
             <attribute id="range"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-slicev6-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-slicev6-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="range"/>
@@ -1018,7 +1204,9 @@
             <attribute id="ip"/>
           </attributes>
         </naming>
-        <icon>asset/img/icons8-rj45v6-48.png</icon>
+        <style>
+          <icon>asset/img/icons8-rj45v6-48.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="fqdn"/>
