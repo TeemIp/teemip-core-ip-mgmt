@@ -1659,6 +1659,24 @@
     </class>
   </classes>
   <menus>
+    <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="0" _delta="must_exist">
+            <dashlets>
+              <dashlet id="teemip-00042" xsi:type="DashletBadge" _delta="define">
+                <rank>4.2</rank>
+               <class>NetworkDeviceComponent</class>
+             </dashlet>
+              <dashlet id="teemip-00043" xsi:type="DashletBadge" _delta="define">
+                <rank>4.3</rank>
+                <class>ClusterNetwork</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
     <menu id="ConfigManagement:TeemIpNetworking" _delta="must_exist">
       <definition>
         <cells>
