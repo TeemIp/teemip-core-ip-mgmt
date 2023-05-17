@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
   <classes>
     <class id="InterfaceConnector" _delta="define">
       <parent>Typology</parent>
@@ -667,8 +667,12 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>production</default_value>
@@ -677,9 +681,15 @@
         </field>
         <field id="type" xsi:type="AttributeEnum">
           <values>
-            <value id="loadbalancing">loadbalancing</value>
-            <value id="highavailability">highavailability</value>
-            <value id="highperformance">highperformance</value>
+            <value id="loadbalancing">
+              <code>loadbalancing</code>
+            </value>
+            <value id="highavailability">
+              <code>highavailability</code>
+            </value>
+            <value id="highperformance">
+              <code>highperformance</code>
+            </value>
           </values>
           <sql>type</sql>
           <default_value></default_value>
@@ -688,9 +698,15 @@
         </field>
         <field id="mode" xsi:type="AttributeEnum">
           <values>
-            <value id="active_standby">active_standby</value>
-            <value id="active_passive">active_passive</value>
-            <value id="active_active">active_active</value>
+            <value id="active_standby">
+              <code>active_standby</code>
+            </value>
+            <value id="active_passive">
+              <code>active_passive</code>
+            </value>
+            <value id="active_active">
+              <code>active_active</code>
+            </value>
           </values>
           <sql>mode</sql>
           <default_value></default_value>
@@ -1048,8 +1064,12 @@
         </field>
         <field id="clusternetwork_role" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value id="active">active</value>
-            <value id="standby">standby</value>
+            <value id="active">
+              <code>active</code>
+            </value>
+            <value id="standby">
+              <code>standby</code>
+            </value>
           </values>
           <sql>clusternetwork_role</sql>
           <default_value></default_value>
@@ -1124,7 +1144,9 @@
       <fields>
         <field id="type" xsi:type="AttributeEnum" _delta="must_exist">
           <values _delta="must_exist">
-            <value id="NetworkDeviceComponent" _delta="define">NetworkDeviceComponent</value>
+            <value id="NetworkDeviceComponent" _delta="define">
+              <code>NetworkDeviceComponent</code>
+            </value>
           </values>
         </field>
       </fields>
@@ -1174,8 +1196,12 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -1499,10 +1525,18 @@
         </field>
         <field id="type" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value id="port_based">port_based</value>
-            <value id="mac_based">mac_based</value>
-            <value id="network_based">network_based</value>
-            <value id="protocol_based">protocol_based</value>
+            <value id="port_based">
+              <code>port_based</code>
+            </value>
+            <value id="mac_based">
+              <code>mac_based</code>
+            </value>
+            <value id="network_based">
+              <code>network_based</code>
+            </value>
+            <value id="protocol_based">
+              <code>protocol_based</code>
+            </value>
           </values>
           <sql>type</sql>
           <default_value>network_based</default_value>
@@ -1510,9 +1544,15 @@
         </field>
         <field id="status" xsi:type="AttributeEnum" _delta="define">
           <values>
-            <value id="used">used</value>
-            <value id="unused">unused</value>
-            <value id="reserved">reserved</value>
+            <value id="used">
+              <code>used</code>
+            </value>
+            <value id="unused">
+              <code>unused</code>
+            </value>
+            <value id="reserved">
+              <code>reserved</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>used</default_value>
