@@ -21,6 +21,7 @@ class ComposerStaticInit301a4dfed3a94792bb4b0ad3a95926a7
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'TeemIp\\TeemIp\\Extension\\NewsroomProvider\\Controller\\TeemIpNewsroomProvider' => __DIR__ . '/../..' . '/src/Controller/TeemIpNewsroomProvider.php',
     );
 
