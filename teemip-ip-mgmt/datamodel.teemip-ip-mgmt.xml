@@ -703,6 +703,13 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="ipblocktype_id">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkIPBlockToLocation" _delta="define">
@@ -1317,6 +1324,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="type">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkIPSubnetToIPSubnet" _delta="define">
@@ -2382,6 +2402,13 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="usage_id">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkFunctionalCIToIPRange" _delta="define">
@@ -2977,6 +3004,19 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="fqdn">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="usage_id">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkIPAdressToIPAddress" _delta="define">
