@@ -234,6 +234,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPSubnet:ipinfo' => 'IP Information',
 	'Class:IPSubnet:automation' => 'Automation',
 	'Class:IPSubnet:localconfigparameters' => 'Subnet settings',
+	'Class:IPSubnet/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPSubnet/Attribute:name' => 'Name',
 	'Class:IPSubnet/Attribute:name+' => '',
 	'Class:IPSubnet/Attribute:type' => 'Type',
@@ -377,6 +378,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Subnet' => 'IPv4 Subnet',
 	'Class:IPv4Subnet+' => '',
+	'Class:IPv4Subnet/ComplementaryName' => '%1$s - %2$s - %3$s',
 	'Class:IPv4Subnet/Attribute:block_id' => 'Subnet Block',
 	'Class:IPv4Subnet/Attribute:block_id+' => '',
 	'Class:IPv4Subnet/Attribute:block_name' => 'Block name',
@@ -536,10 +538,10 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPAddress' => 'IP Address',
 	'Class:IPAddress+' => '',
-	'Class:IPAddress:baseinfo' => 'General Information',
 	'Class:IPAddress:dnsinfo' => 'DNS Information',
 	'Class:IPAddress:ipinfo' => 'IP Information',
 	'Class:IPAddress:localconfigparameters' => 'IP settings',
+	'Class:IPAddress/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPAddress/Attribute:short_name' => 'Short Name',
 	'Class:IPAddress/Attribute:short_name+' => 'Left label of the FQDN',
 	'Class:IPAddress/Attribute:domain_id' => 'DNS Domain',

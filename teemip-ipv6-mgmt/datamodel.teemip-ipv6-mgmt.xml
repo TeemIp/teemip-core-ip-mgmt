@@ -386,6 +386,11 @@
           <attributes>
             <attribute id="ip"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="mask"></attribute>
+            <attribute id="name"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>asset/img/icons8-subnetv6-48.png</icon>

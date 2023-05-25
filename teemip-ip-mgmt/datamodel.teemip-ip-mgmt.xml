@@ -1131,6 +1131,10 @@
         <db_key_field>id</db_key_field>
         <naming>
           <attributes/>
+          <complementary_attributes>
+            <attribute id="name"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
@@ -1814,6 +1818,11 @@
           <attributes>
             <attribute id="ip"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="mask"></attribute>
+            <attribute id="name"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>asset/img/icons8-subnet-48.png</icon>
@@ -2825,6 +2834,10 @@
         <db_final_class_field/>
         <naming>
           <attributes/>
+          <complementary_attributes>
+            <attribute id="fqdn"></attribute>
+            <attribute id="status"></attribute>
+          </complementary_attributes>
         </naming>
         <fields_semantic>
           <state_attribute>status</state_attribute>
