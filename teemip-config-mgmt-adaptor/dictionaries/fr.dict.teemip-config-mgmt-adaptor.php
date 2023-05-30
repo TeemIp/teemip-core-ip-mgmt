@@ -66,8 +66,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolete',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => 'Organisation du matériel. Cela définit aussi l\'organisation de l\'interface.',
 ));
 
 //

@@ -66,8 +66,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolet',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
-	'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
-	'Class:PhysicalInterface/Attribute:org_id+' => 'Organisation, zu der das Gerät gehört. Es definiert auch die Organisation der Schnittstelle.',
 ));
 
 //
