@@ -117,7 +117,7 @@
           <ext_key_to_remote>vrf_id</ext_key_to_remote>
           <duplicates/>
         </field>
-        <field id="org_id" xsi:type="AttributeExternalField" _delta="define">
+        <field id="org_id" xsi:type="AttributeExternalField" _delta="define_if_not_exists">
           <extkey_attcode>virtualmachine_id</extkey_attcode>
           <target_attcode>org_id</target_attcode>
         </field>
@@ -150,10 +150,10 @@
                       <rank>30</rank>
                     </item>
                     <item id="org_id">
-                      <rank>32</rank>
+                      <rank>40</rank>
                     </item>
                     <item id="comment">
-                      <rank>40</rank>
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
