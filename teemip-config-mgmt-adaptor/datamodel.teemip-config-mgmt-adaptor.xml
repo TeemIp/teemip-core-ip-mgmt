@@ -3,19 +3,14 @@
   <classes>
     <class id="FunctionalCI" _delta="must_exist">
       <event_listeners>
-        <event_listener id="OnFunctionalCICreateRequestedByConfigMgmtAdaptor" _delta="define">
-          <event>EVENT_DB_CREATE_DONE</event>
-          <callback>OnFunctionalCICreateRequestedByConfigMgmtAdaptor</callback>
+        <event_listener id="OnFunctionalCIAfterWriteRequestedByConfigMgmtAdaptor" _delta="define">
+          <event>EVENT_DB_AFTER_WRITE</event>
+          <callback>OnFunctionalCIAfterWriteRequestedByConfigMgmtAdaptor</callback>
           <rank>100</rank>
         </event_listener>
-        <event_listener id="OnFunctionalCIUpdateRequestedByConfigMgmtAdaptor" _delta="define">
-          <event>EVENT_DB_UPDATE_DONE</event>
-          <callback>OnFunctionalCIUpdateRequestedByConfigMgmtAdaptor</callback>
-          <rank>100</rank>
-        </event_listener>
-        <event_listener id="OnFunctionalCIDeleteRequestedByConfigMgmtAdaptor" _delta="define">
-          <event>EVENT_DB_DELETE_DONE</event>
-          <callback>OnFunctionalCIDeleteRequestedByConfigMgmtAdaptor</callback>
+        <event_listener id="OnFunctionalCIAfterDeleteRequestedByConfigMgmtAdaptor" _delta="define">
+          <event>EVENT_DB_AFTER_DELETE</event>
+          <callback>OnFunctionalCIAfterDeleteRequestedByConfigMgmtAdaptor</callback>
           <rank>100</rank>
         </event_listener>
       </event_listeners>
@@ -47,73 +42,71 @@
 
 	}]]></code>
         </method>
-        <method id="OnFunctionalCICreateRequestedByConfigMgmtAdaptor" _delta="define">
+        <method id="OnFunctionalCIAfterWriteRequestedByConfigMgmtAdaptor" _delta="define">
           <comment/>
           <static>false</static>
           <access>public</access>
           <type>EventListener</type>
-          <code><![CDATA[    public function OnFunctionalCICreateRequestedByConfigMgmtAdaptor(Combodo\iTop\Service\Events\EventData $oEventData)
+          <code><![CDATA[    public function OnFunctionalCIAfterWriteRequestedByConfigMgmtAdaptor(Combodo\iTop\Service\Events\EventData $oEventData)
     {
-		// Check if CI has IP Attributes
-		$sCiClass = get_class($this);
-		$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
-		if (!empty($aIPsOfClass)) {
-			// Check if these or name are set
-			$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
-			$iOrgId = $this->Get('org_id');
-			foreach ($aIPAttributes AS $key => $sIPAttribute) {
-				$iIPId = $this->Get($sIPAttribute);
-				$sName = $this->GetNameForIPAttribute($sIPAttribute);
-				if ($iIPId != 0) {
-					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
-					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
-				}
-			}
-		}
-    }]]></code>
-        </method>
-        <method id="OnFunctionalCIUpdateRequestedByConfigMgmtAdaptor" _delta="define">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>EventListener</type>
-          <code><![CDATA[    public function OnFunctionalCIUpdateRequestedByConfigMgmtAdaptor(Combodo\iTop\Service\Events\EventData $oEventData)
-    {
-		// Check if CI has IP Attributes
-		$sCiClass = get_class($this);
-		$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
-		if (!empty($aIPsOfClass)) {
-			// Check if these or name have changed
-			$aListChanges = $this->ListPreviousValuesForUpdatedAttributes();
-			$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
-			$iOrgId = $this->Get('org_id');
-			foreach ($aIPAttributes AS $key => $sIPAttribute) {
-				$iIPId = $this->Get($sIPAttribute);
-
-				// Change IPs status if IP has changed
-				if (array_key_exists($sIPAttribute, $aListChanges)) {
-					$iPreviousIPId = $aListChanges[$sIPAttribute];
-					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
-					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iPreviousIPId);
-				} else {
-					$iPreviousIPId = $iIPId;
-				}
-
-				// Change IPs name if name has changed or IP has changed
-				if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
+        $aEventData = $oEventData->GetEventData();
+        if ($aEventData['is_new']) {
+        	// We are in the AfterCreate situation
+			// Check if CI has IP Attributes
+			$sCiClass = get_class($this);
+			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
+			if (!empty($aIPsOfClass)) {
+				// Check if these or name are set
+				$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
+				$iOrgId = $this->Get('org_id');
+				foreach ($aIPAttributes AS $key => $sIPAttribute) {
+					$iIPId = $this->Get($sIPAttribute);
 					$sName = $this->GetNameForIPAttribute($sIPAttribute);
-					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId, $iPreviousIPId);
+					if ($iIPId != 0) {
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
+					}
+				}
+			}
+		} else {
+		    // We are in the AfterUpdate situation
+			// Check if CI has IP Attributes
+			$sCiClass = get_class($this);
+			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
+			if (!empty($aIPsOfClass)) {
+				// Check if these or name have changed
+				$aListChanges = $this->ListPreviousValuesForUpdatedAttributes();
+				$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
+				$iOrgId = $this->Get('org_id');
+				foreach ($aIPAttributes AS $key => $sIPAttribute) {
+					$iIPId = $this->Get($sIPAttribute);
+
+					// Change IPs status if IP has changed
+					if (array_key_exists($sIPAttribute, $aListChanges)) {
+						$iPreviousIPId = $aListChanges[$sIPAttribute];
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iPreviousIPId);
+					} else {
+						$iPreviousIPId = $iIPId;
+					}
+
+					// Change IPs name if name has changed or IP has changed
+					if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
+						$sName = $this->GetNameForIPAttribute($sIPAttribute);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iPreviousIPId);
+					}
 				}
 			}
 		}
     }]]></code>
         </method>
-        <method id="OnFunctionalCIDeleteRequestedByConfigMgmtAdaptor" _delta="define">
+        <method id="OnFunctionalCIAfterDeleteRequestedByConfigMgmtAdaptor" _delta="define">
           <comment/>
           <static>false</static>
           <access>public</access>
           <type>EventListener</type>
-          <code><![CDATA[    public function OnFunctionalCIDeleteRequestedByConfigMgmtAdaptor(Combodo\iTop\Service\Events\EventData $oEventData)
+          <code><![CDATA[    public function OnFunctionalCIAfterDeleteRequestedByConfigMgmtAdaptor(Combodo\iTop\Service\Events\EventData $oEventData)
     {
 		// Check if CI has IP Attributes
 		$sCiClass = get_class($this);
@@ -820,7 +813,8 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 					// Change IPs name if name has changed or IP has changed
 					if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
 						$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId, $iPreviousIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId);
+						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iPreviousIPId);
 					}
 				}
 
