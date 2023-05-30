@@ -51,7 +51,7 @@
     {
         $aEventData = $oEventData->GetEventData();
         if ($aEventData['is_new']) {
-        	// We are in the AfterCreate situation
+        	// We are in the AfterInsert situation
 			// Check if CI has IP Attributes
 			$sCiClass = get_class($this);
 			$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
