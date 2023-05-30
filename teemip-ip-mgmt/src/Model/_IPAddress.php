@@ -117,20 +117,12 @@ class _IPAddress extends IPObject
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 */
-	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null, $iPreviousIpId = null)
+	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null)
 	{
 		/** @var \IPAddress $oIP */
 		if ($iOrgId != null) {
 			$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 			if ($sCopyCINameToShortName == 'yes') {
-				if (($iPreviousIpId != $iIpId) && ($iPreviousIpId != null)) {
-					// Reset short_name on previous IP
-					$oIP = MetaModel::GetObject('IPAddress', $iPreviousIpId, false /* MustBeFound */);
-					if ($oIP != null) {
-						$oIP->Set('short_name', '');
-						$oIP->DBUpdate();
-					}
-				}
 				if ($iIpId != null) {
 					// Set short name on attached IP
 					$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
@@ -171,6 +163,12 @@ class _IPAddress extends IPObject
 				$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 				if ($sCopyCINameToShortName == 'yes') {
 					$oIP->Set('short_name', '');
+					$sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $iOrgId);
+					if ($sComputeFqdnWithEmptyShortname == 'yes') {
+						$oIP->Set('fqdn', $oIP->Get('domain_name'));
+					} else {
+						$oIP->Reset('fqdn');
+					}
 					$oIP->DBUpdate();
 				}
 			}
