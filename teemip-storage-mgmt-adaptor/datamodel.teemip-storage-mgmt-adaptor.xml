@@ -150,9 +150,13 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
-        <field id="org_id" xsi:type="AttributeExternalField" _delta="define">
+        <field id="org_id" xsi:type="AttributeExternalField" _delta="define_if_not_exists">
           <extkey_attcode>datacenterdevice_id</extkey_attcode>
           <target_attcode>org_id</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalField" _delta="define_if_not_exists">
+          <extkey_attcode>datacenterdevice_id</extkey_attcode>
+          <target_attcode>location_id</target_attcode>
         </field>
       </fields>
       <presentation>
@@ -173,8 +177,11 @@
                     <item id="datacenterdevice_id">
                       <rank>30</rank>
                     </item>
-                    <item id="org_id">
+                    <item id="location_id">
                       <rank>32</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>33</rank>
                     </item>
                   </items>
                 </item>
