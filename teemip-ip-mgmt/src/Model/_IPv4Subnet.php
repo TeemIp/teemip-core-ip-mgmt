@@ -722,7 +722,7 @@ EOF
 		$iFirstIp = IPUtils::myip2long($sFirstIp);
 		$iLastIp = IPUtils::myip2long($sLastIp);
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS ipv4 WHERE INET_ATON('$sFirstIp') <= INET_ATON(ipv4.ip) AND INET_ATON(ipv4.ip) <= INET_ATON('$sLastIp') AND ipv4.org_id = $iOrgId"));
-		$aRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('ip', false);
+		$aRegisteredIPs = $oIpRegisteredSet->GetColumnAsArray('ip', true);
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Range AS rangev4 WHERE rangev4.subnet_id = $iId"));
 		$aRangeIPs = $oIpRangeSet->GetColumnAsArray('firstip', false);
 		$oIpRangeSet->Rewind();
@@ -771,13 +771,10 @@ EOF
 				$sHtml .= "&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>";
 				$iLastRangeIp = IPUtils::myip2long($oIpRange->Get('lastip'));
 			}
-			if (in_array($sAnIp, $aRegisteredIPs)) {
+			$iAnIpKey = array_search($sAnIp, $aRegisteredIPs);
+			if ($iAnIpKey !== false) {
 				// Found registered IP
-				$oIpRegisteredSet->Rewind();
-				$oIpRegistered = $oIpRegisteredSet->Fetch();
-				while ($oIpRegistered->Get('ip') != $sAnIp) {
-					$oIpRegistered = $oIpRegisteredSet->Fetch();
-				}
+				$oIpRegistered = MetaModel::GetObject('IPv4Address', $iAnIpKey);
 				$sHtml .= "<li><span class=\"ipv4_address\">&nbsp;".$oIpRegistered->GetHyperlink()."</span>";
 				$sHtml .= "<span class=\"ip_status\">".$oIpRegistered->GetAsHTML('status')."</span>";
 				$sHtml .= "<span class=\"ip_fqdn\" title=\"".$oIpRegistered->Get('fqdn')."\">".$oIpRegistered->Get('fqdn')."</span>";

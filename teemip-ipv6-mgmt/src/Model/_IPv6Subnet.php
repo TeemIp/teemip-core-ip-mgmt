@@ -652,7 +652,7 @@ EOF
 			'lastip' => $sLastIp,
 			'org_id' => $iOrgId,
 		)));
-		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', false);
+		$aIpRegistered = $oIpRegisteredSet->GetColumnAsArray('ip', true);
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iId));
 		$aIpRange = $oIpRangeSet->GetColumnAsArray('firstip', false);
 
@@ -704,13 +704,9 @@ EOF
 				$sHtml .= "&nbsp;&nbsp; - ".$oIpRange->GetLabel('usage_id').': '.$oIpRange->GetAsHTML('usage_id')."<ul>";
 				$oIpRangeLastIp = $oIpRange->Get('lastip');
 			}
-			if (in_array($oAnIp, $aIpRegistered)) {
-				// Found registered IP
-				$oIpRegisteredSet->Rewind();
-				$oIpRegistered = $oIpRegisteredSet->Fetch();
-				while (!$oAnIp->IsEqual($oIpRegistered->Get('ip'))) {
-					$oIpRegistered = $oIpRegisteredSet->Fetch();
-				}
+			$iAnIpKey = array_search($oAnIp, $aIpRegistered);
+			if ($iAnIpKey !== false) {
+				$oIpRegistered = MetaModel::GetObject('IPv6Address', $iAnIpKey);
 				$sHtml .= "<li>".$oIpRegistered->GetHyperlink()."&nbsp;&nbsp; - ".$oIpRegistered->GetAsHTML('status')."&nbsp;&nbsp; - ".$oIpRegistered->Get('fqdn');
 			} else {
 				// If user has rights to create IPs
