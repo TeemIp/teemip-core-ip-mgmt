@@ -200,6 +200,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Block' => 'IPv4 Subnet Block',
 	'Class:IPv4Block+' => '',
+	'Class:IPv4Block/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPv4Block/Attribute:parent_id' => 'Parent block',
 	'Class:IPv4Block/Attribute:parent_id+' => '',
 	'Class:IPv4Block/Attribute:parent_name' => 'Parent block name',
@@ -521,6 +522,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Range' => 'IPv4 Range',
 	'Class:IPv4Range+' => '',
+	'Class:IPv4Range/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPv4Range/Attribute:subnet_id' => 'Subnet',
 	'Class:IPv4Range/Attribute:subnet_id+' => '',
 	'Class:IPv4Range/Attribute:subnet_ip' => 'Subnet IP',

@@ -822,6 +822,10 @@
           <attributes>
             <attribute id="name"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="firstip"></attribute>
+            <attribute id="lastip"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>asset/img/icons8-module-48.png</icon>
@@ -2589,6 +2593,10 @@
           <attributes>
             <attribute id="range"/>
           </attributes>
+          <complementary_attributes>
+            <attribute id="firstip"></attribute>
+            <attribute id="lastip"></attribute>
+          </complementary_attributes>
         </naming>
         <style>
           <icon>asset/img/icons8-slice-48.png</icon>

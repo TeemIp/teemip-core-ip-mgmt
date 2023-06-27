@@ -25,6 +25,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv6Block' => 'IPv6 Subnet Block',
 	'Class:IPv6Block+' => '',
+	'Class:IPv6Block/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPv6Block/Attribute:parent_id' => 'Parent block',
 	'Class:IPv6Block/Attribute:parent_id+' => '',
 	'Class:IPv6Block/Attribute:parent_name' => 'Parent block name',
@@ -130,7 +131,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv6Subnet' => 'IPv6 Subnet',
 	'Class:IPv6Subnet+' => '',
-	'Class:IPv6Subnet/ComplementaryName' => '%1$s - %2$s - %3$s',
+	'Class:IPv6Subnet/ComplementaryName' => '/%1$s - %2$s - %3$s',
 	'Class:IPv6Subnet/Attribute:block_id' => 'Subnet Block',
 	'Class:IPv6Subnet/Attribute:block_id+' => '',
 	'Class:IPv6Subnet/Attribute:block_name' => 'Block name',
@@ -308,6 +309,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv6Range' => 'IPv6 Range',
 	'Class:IPv6Range+' => '',
+	'Class:IPv6Range/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPv6Range/Attribute:subnet_id' => 'Subnet',
 	'Class:IPv6Range/Attribute:subnet_id+' => '',
 	'Class:IPv6Range/Attribute:subnet_ip' => 'Subnet IP',
