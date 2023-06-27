@@ -117,7 +117,7 @@
           </dependencies>
           <sql>ipconfig_id</sql>
           <target_class>IPConfig</target_class>
-          <is_null_allowed>false</is_null_allowed>
+          <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <jointype/>
         </field>
@@ -979,7 +979,7 @@
                 </item>
               </items>
             </item>
-            <item id="tab:IPObect:GlobalParams">
+            <item id="tab:IPObject:GlobalParams">
               <rank>60</rank>
               <items>
                 <item id="col:col1">
@@ -2096,7 +2096,7 @@
                 </item>
               </items>
             </item>
-            <item id="tab:IPObect:GlobalParams">
+            <item id="tab:IPObject:GlobalParams">
               <rank>90</rank>
               <items>
                 <item id="col:col1">
@@ -2697,7 +2697,7 @@
                 </item>
               </items>
             </item>
-            <item id="tab:IPObect:GlobalParams">
+            <item id="tab:IPObject:GlobalParams">
               <rank>60</rank>
               <items>
                 <item id="col:col1">
@@ -3621,7 +3621,7 @@
                 </item>
               </items>
             </item>
-            <item id="tab:IPObect:GlobalParams">
+            <item id="tab:IPObject:GlobalParams">
               <rank>60</rank>
               <items>
                 <item id="col:col1">

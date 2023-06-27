@@ -332,6 +332,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="WANLink" _delta="define">
@@ -736,6 +746,19 @@
           </items>
         </list>
       </presentation>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="statu">
+              <rank>20</rank>
+            </item>
+            <item id="name">
+              <rank>30</rank>
+            </item>
+          </items>
+        </summary>
     </class>
     <class id="WANType" _delta="define">
       <parent>Typology</parent>
@@ -958,6 +981,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="VRF" _delta="define">
@@ -1117,6 +1150,16 @@
             </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="name">
+              <rank>20</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkPhysicalInterfaceToVRF" _delta="define">
