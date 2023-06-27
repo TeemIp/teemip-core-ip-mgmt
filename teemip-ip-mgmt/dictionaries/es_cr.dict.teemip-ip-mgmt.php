@@ -16,7 +16,8 @@
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPObject' => 'Objeto IP',
 	'Class:IPObject+' => '',
-	'IPObect:GlobalParams' => 'Configuración Global',
+	'IPObject:GlobalParams' => 'Configuración Global',
+	'IPObject:GlobalParams' => 'Configuración global predeterminada establecida en el nivel de organización y configuración realmente utilizada para el objeto',
 	'Class:IPObject:GeneralConfigParameters' => 'Configuración Organización',
 	'Class:IPObject/Attribute:finalclass' => 'Clase',
 	'Class:IPObject/Attribute:finalclass+' => '',

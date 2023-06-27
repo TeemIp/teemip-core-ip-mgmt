@@ -16,7 +16,8 @@
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPObject' => 'Objet IP',
 	'Class:IPObject+' => '',
-	'IPObect:GlobalParams' => 'Paramètres globaux',
+	'IPObject:GlobalParams' => 'Paramètres globaux',
+	'IPObject:GlobalParams+' => 'Paramètres globaux définis au niveau de l\'organisation et paramètres réellement utilisés par l\'object',
 	'Class:IPObject:GeneralConfigParameters' => 'Paramètres de l\'organisation',
 	'Class:IPObject/Attribute:finalclass' => 'Sous-classe',
 	'Class:IPObject/Attribute:finalclass+' => 'Nom de la classe instanciable',

@@ -19,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSearch;
 use Dict;
+use IPConfig;
 use iTopWebPage;
 use MenuBlock;
 use MetaModel;
@@ -26,6 +27,26 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
 
 class _IPAbstractObject extends cmdbAbstractObject {
+	/**
+	 * @inheritdoc
+	 */
+	public function ComputeValues() {
+		parent::ComputeValues();
+
+		if ($this->IsNew()) {
+			// At creation, compute parent_id only in the case where no delegation is done.
+			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
+			$iIpConfigId = $this->Get('ipconfig_id');
+			$iOrgId = $this->Get('org_id');
+			if ($iOrgId != 0) {
+				$oIpConfig = IPConfig::GetGlobalIPConfig($iOrgId);
+				if (!is_null($oIpConfig)) {
+					$this->Set('ipconfig_id', $oIpConfig->GetKey());
+				}
+			}
+		}
+	}
+
 	/**
 	 * Provides attributes' parameters
 	 *

@@ -16,7 +16,8 @@
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPObject' => 'IP Objekt',
 	'Class:IPObject+' => '',
-	'IPObect:GlobalParams' => 'Globale Einstellungen',
+	'IPObject:GlobalParams' => 'Globale Einstellungen',
+	'IPObject:GlobalParams+' => 'Auf Organisationsebene festgelegte globale Einstellungen und tatsächlich für das Objekt verwendete Einstellungen',
 	'Class:IPObject:GeneralConfigParameters' => 'Organisationseinstellungen',
 	'Class:IPObject/Attribute:finalclass' => 'Typ',
 	'Class:IPObject/Attribute:finalclass+' => '',
