@@ -36,7 +36,6 @@ class _IPAbstractObject extends cmdbAbstractObject {
 		if ($this->IsNew()) {
 			// At creation, compute parent_id only in the case where no delegation is done.
 			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
-			$iIpConfigId = $this->Get('ipconfig_id');
 			$iOrgId = $this->Get('org_id');
 			if ($iOrgId != 0) {
 				$oIpConfig = IPConfig::GetGlobalIPConfig($iOrgId);
