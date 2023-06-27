@@ -177,7 +177,7 @@
             </item>
           </items>
         </details>
-        <search>
+        <search _delta="must_exist">
           <items>
             <item id="ipaddress" _delta="delete"/>
             <item id="ipgateway" _delta="delete"/>
@@ -203,7 +203,7 @@
             </item>
       </items>
         </default_search>
-        <list>
+        <list _delta="must_exist">
           <items>
             <item id="status" _delta="define">
               <rank>5</rank>
@@ -216,6 +216,11 @@
             </item>
           </items>
         </list>
+        <summary _delta="must_exist">
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkLogicalInterfaceToVLAN" _created_in="itop-config-mgmt" _delta="define">

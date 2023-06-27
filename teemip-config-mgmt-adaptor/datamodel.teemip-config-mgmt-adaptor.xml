@@ -604,6 +604,11 @@
             </item>
           </items>
         </list>
+        <summary _delta="must_exist">
+          <items>
+            <item id="ipaddress" _delta="delete"/>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="lnkPhysicalInterfaceToVLAN" _delta="must_exist">
