@@ -229,9 +229,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Autorise l\'attachement d\'IPs déjà allouées aux ECs',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
-	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Oui',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
-	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'Non',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 

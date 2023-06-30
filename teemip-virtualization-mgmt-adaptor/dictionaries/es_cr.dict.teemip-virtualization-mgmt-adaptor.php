@@ -13,6 +13,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:VirtualMachine/Attribute:managementip_id+' => '',
 	'Class:VirtualMachine/Attribute:managementip_name' => 'Nombre IP',
 	'Class:VirtualMachine/Attribute:managementip_name+' => '',
+	'Class:VirtualMachine/Tab:ipaddresses_list' => 'IP de interfaces',
+	'Class:VirtualMachine/Tab:ipaddresses_list+' => 'Lista de todas las direcciones IP alojadas por todas las interfaces lógicas adjuntas al CI',
 ));
 
 //
@@ -48,7 +50,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:VLAN/Attribute:logicalinterfaces_list' => 'Interfases Logicas de Red',
+	'Class:VLAN/Attribute:logicalinterfaces_list' => 'interfaces Logicas de Red',
 	'Class:VLAN/Attribute:logicalinterfaces_list+' => '',
 ));
 
@@ -57,7 +59,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Class:VRF/Attribute:logicalinterfaces_list' => 'Interfases Logicas de Red',
+	'Class:VRF/Attribute:logicalinterfaces_list' => 'interfaces Logicas de Red',
 	'Class:VRF/Attribute:logicalinterfaces_list+' => '',
 ));
 

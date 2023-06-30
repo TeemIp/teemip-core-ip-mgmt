@@ -406,5 +406,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Unallocate:IPv6Address:PageTitle_Object_Class' => 'Desasignar IP',
 	'UI:IPManagement:Action:Unallocate:IPv6Address:Done' => '%1$s %2$s ha sido desasignada.',
 	'UI:IPManagement:Action:UnAllocate:IPv6Address:IPNotAllocated' => 'La dirección no está asignada !',
-
 ));

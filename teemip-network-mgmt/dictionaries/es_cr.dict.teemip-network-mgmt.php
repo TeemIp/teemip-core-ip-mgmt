@@ -330,8 +330,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Menu:ConfigManagement:Network' => 'Red',
-	'Menu:ConfigManagement:Network+' => '',
+	'Menu:ConfigManagement:TeemIpNetworking' => 'Red',
+	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
+	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Conectividad',
+	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Denominación',
 
 //
 // Management of Domains

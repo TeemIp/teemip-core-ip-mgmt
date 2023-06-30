@@ -37,6 +37,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPApplication/Attribute:location_id+' => '',
 	'Class:IPApplication/Attribute:location_name' => 'Nombre Localidad',
 	'Class:IPApplication/Attribute:location_name+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Allow attachement of already allocated IPs to CIs',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Yes',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //
@@ -227,6 +233,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Permitir adjuntar direcciones IP ya asignadas a CIs',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Si',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //

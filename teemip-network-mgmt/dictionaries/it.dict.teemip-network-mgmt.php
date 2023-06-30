@@ -330,8 +330,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'Menu:ConfigManagement:Network' => 'Rete',
-	'Menu:ConfigManagement:Network+' => '',
+	'Menu:ConfigManagement:TeemIpNetworking' => 'rete',
+	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfacce',
+	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connettività',
+	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Denominazione',
 
 //
 // Management of Domains

@@ -227,6 +227,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'No',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Consenti l\'allegato di IP già assegnati a CIs',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Si',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //

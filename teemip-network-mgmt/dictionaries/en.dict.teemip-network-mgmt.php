@@ -333,8 +333,6 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Menu:ConfigManagement:Network' => 'Network',
-	'Menu:ConfigManagement:Network+' => '',
 	'Menu:ConfigManagement:TeemIpNetworking' => 'Networking',
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivity',

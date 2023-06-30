@@ -291,6 +291,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:tagged' => 'Tagged',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:tagged+' => '',
 	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:untagged' => 'Untagged',
+	'Class:lnkNetworkDeviceVirtualInterfaceToVLAN/Attribute:mode/Value:untagged+' => '',
 ));
 
 //
@@ -329,8 +330,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Menu:ConfigManagement:Network' => 'Réseau',
-	'Menu:ConfigManagement:Network+' => '',
+	'Menu:ConfigManagement:TeemIpNetworking' => 'Réseau',
+	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
+	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivité',
+	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Nomage',
 
 //
 // Management of Domains

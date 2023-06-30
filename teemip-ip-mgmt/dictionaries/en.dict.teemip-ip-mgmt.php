@@ -541,6 +541,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPAddress' => 'IP Address',
 	'Class:IPAddress+' => '',
+	'Class:IPAddress:baseinfo' => 'General Information',
 	'Class:IPAddress:dnsinfo' => 'DNS Information',
 	'Class:IPAddress:ipinfo' => 'IP Information',
 	'Class:IPAddress:localconfigparameters' => 'IP settings',

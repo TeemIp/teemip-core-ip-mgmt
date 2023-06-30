@@ -227,6 +227,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:yes+' => '',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no' => 'Nein',
 	'Class:IPConfig/Attribute:ip_unassign_on_no_ci/Value:no+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips' => 'Ermöglicht das Anhängen von IPs, die bereits CIs zugewiesen sind',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes' => 'Ja',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'Nein',
+	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
 ));
 
 //
