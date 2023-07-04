@@ -234,4 +234,20 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="ConfigManagement:TeemIpNetworking" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="teemip_interfaces" _delta="must_exist">
+            <dashlets>
+              <dashlet id="30" xsi:type="DashletBadge" _delta="define">
+                <rank>30</rank>
+                <class>FiberChannelInterface</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
 </itop_design>

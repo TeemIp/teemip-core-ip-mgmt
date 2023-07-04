@@ -497,6 +497,22 @@
       </presentation>
     </class>
   </classes>
+  <menus>
+    <menu id="ConfigManagement:TeemIpNetworking" _delta="must_exist">
+      <definition>
+        <cells>
+          <cell id="teemip_interfaces" _delta="must_exist">
+            <dashlets>
+              <dashlet id="50" xsi:type="DashletBadge" _delta="define">
+                <rank>50</rank>
+                <class>LogicalInterface</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
+  </menus>
   <snippets>
     <snippet id="TeemIpVirtualizationMgmtAdaptor" _delta="define">
       <placement>module</placement>

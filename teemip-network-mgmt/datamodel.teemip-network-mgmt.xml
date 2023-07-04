@@ -1739,17 +1739,9 @@
                 <rank>20</rank>
                 <class>NetworkInterface</class>
               </dashlet>
-              <dashlet id="30" xsi:type="DashletBadge">
-                <rank>30</rank>
-                <class>FiberChannelInterface</class>
-              </dashlet>
               <dashlet id="40" xsi:type="DashletBadge">
                 <rank>40</rank>
                 <class>PhysicalInterface</class>
-              </dashlet>
-              <dashlet id="50" xsi:type="DashletBadge">
-                <rank>50</rank>
-                <class>LogicalInterface</class>
               </dashlet>
               <dashlet id="60" xsi:type="DashletBadge">
                 <rank>60</rank>
