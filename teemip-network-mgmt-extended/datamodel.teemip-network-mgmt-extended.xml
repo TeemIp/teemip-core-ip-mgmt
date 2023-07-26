@@ -1701,37 +1701,17 @@
     <menu id="Typology" _delta="must_exist">
       <definition>
         <cells>
-          <cell id="0" _delta="must_exist">
+          <cell id="Network" _delta="must_exist">
             <dashlets>
-              <dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/>
-              <dashlet id="teemip-1003" xsi:type="DashletBadge" _delta="delete"/>
-            </dashlets>
-          </cell>
-          <cell id="Network" _delta="define">
-            <rank>10</rank>
-            <dashlets>
-              <dashlet id="teemip-1101" xsi:type="DashletHeaderStatic">
-                <rank>0</rank>
-                <title>Menu:NetworkMgmtExtended:Typology</title>
-                <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
-              </dashlet>
-              <dashlet id="teemip-1102" xsi:type="DashletBadge">
-                <rank>1</rank>
-                <class>NetworkDeviceType</class>
-              </dashlet>
-              <dashlet id="teemip-1103" xsi:type="DashletBadge">
-                <rank>2</rank>
-                <class>WANType</class>
-              </dashlet>
-              <dashlet id="teemip-1104" xsi:type="DashletBadge">
+              <dashlet id="teemip-1104" xsi:type="DashletBadge" _delta="define">
                 <rank>3</rank>
                 <class>InterfaceSpeed</class>
               </dashlet>
-              <dashlet id="teemip-1105" xsi:type="DashletBadge">
+              <dashlet id="teemip-1105" xsi:type="DashletBadge" _delta="define">
                 <rank>4</rank>
                 <class>Layer2Protocol</class>
               </dashlet>
-              <dashlet id="teemip-1106" xsi:type="DashletBadge">
+              <dashlet id="teemip-1106" xsi:type="DashletBadge" _delta="define">
                 <rank>5</rank>
                 <class>InterfaceConnector</class>
               </dashlet>
