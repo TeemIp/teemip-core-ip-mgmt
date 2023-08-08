@@ -181,7 +181,7 @@ class _IPv6Range extends IPRange {
 					$oIpRegistered = $oIpRegisteredSet->Fetch();
 				}
 				$sHtml .= "yes,".$oIpRegistered->GetKey().",";
-				$sHtml .= $oIpRegistered->Get('org_id').",";
+				$sHtml .= $oIpRegistered->Get('org_name').",";
 				$sHtml .= $oIpRegistered->Get('ip')->GetAsCompressed().",";
 				$sHtml .= $oIpRegistered->Get('status').",";
 				$sHtml .= $oIpRegistered->Get('fqdn').",";
