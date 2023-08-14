@@ -243,10 +243,72 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Application Menu
+// Class: NetworkFlow
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+	'Class:NetworkFlow' => 'Network Flow',
+	'Class:NetworkFlow+' => '',
+	'Class:NetworkFlow/Name' => '%1$s - %2$s / %3$s - %4$s / %5$s',
+	'Class:NetworkFlow:baseinfo' => 'General Information',
+	'Class:NetworkFlow:flowinfo' => 'Flow Details',
+	'Class:NetworkFlow/Attribute:org_id' => 'Organization',
+	'Class:NetworkFlow/Attribute:org_id+' => '',
+	'Class:NetworkFlow/Attribute:org_name' => 'Organization name',
+	'Class:NetworkFlow/Attribute:org_name+' => '',
+	'Class:NetworkFlow/Attribute:protocol' => 'Protocol',
+	'Class:NetworkFlow/Attribute:protocol+' => '',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP' => 'UDP',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP+' => '',
+	'Class:NetworkFlow/Attribute:protocol/Value:TCP' => 'TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:TCP+' => '',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP' => 'UDP/TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP+' => '',
+	'Class:NetworkFlow/Attribute:protocol/Value:Other' => 'Other',
+	'Class:NetworkFlow/Attribute:protocol/Value:Other+' => '',
+	'Class:NetworkFlow/Attribute:source_port' => 'Source port',
+	'Class:NetworkFlow/Attribute:source_port+' => '',
+	'Class:NetworkFlow/Attribute:dest_port' => 'Destination port',
+	'Class:NetworkFlow/Attribute:dest_port+' => '',
+	'Class:NetworkFlow/Attribute:source_ci_id' => 'Source CI',
+	'Class:NetworkFlow/Attribute:source_ci_id+' => '',
+	'Class:NetworkFlow/Attribute:source_ci_name' => 'Name of the source CI',
+	'Class:NetworkFlow/Attribute:source_ci_name+' => '',
+	'Class:NetworkFlow/Attribute:dest_ci_id' => 'Destination CI',
+	'Class:NetworkFlow/Attribute:dest_ci_id+' => '',
+	'Class:NetworkFlow/Attribute:dest_ci_name' => 'Name of the destination CI',
+	'Class:NetworkFlow/Attribute:dest_ci_name+' => '',
+	'Class:NetworkFlow/Attribute:status' => 'Status',
+	'Class:NetworkFlow/Attribute:status+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:production' => 'Production',
+	'Class:NetworkFlow/Attribute:status/Value:production+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:implementation' => 'Implementation',
+	'Class:NetworkFlow/Attribute:status/Value:implementation+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:obsolete' => 'Obsolete',
+	'Class:NetworkFlow/Attribute:status/Value:obsolete+' => '',
+	'Class:NetworkFlow/Attribute:move2production' => 'Move to production date',
+	'Class:NetworkFlow/Attribute:move2production+' => '',
+	'Class:NetworkFlow/Attribute:description' => 'Description',
+	'Class:NetworkFlow/Attribute:description+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity' => 'Business criticality',
+	'Class:NetworkFlow/Attribute:business_criticity+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:low' => 'Low',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:low+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:medium' => 'Medium',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:medium+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:high' => 'High',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:high+' => '',
+));
+
+//
+// Menus
 //
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:NetworkMgmtExtended:Typology' => 'Network typology configuration',
+	'Relation:networkflow/Description' => 'Network Flow layout',
+	'Relation:networkflow/DownStream' => 'Outgoing Flow...',
+	'Relation:networkflow/DownStream+' => 'Outgoing Network Flow layout',
+	'Relation:networkflow/UpStream' => 'Incoming Flow...',
+	'Relation:networkflow/UpStream+' => 'Incoming Network Flow layoutt',
 ));
-

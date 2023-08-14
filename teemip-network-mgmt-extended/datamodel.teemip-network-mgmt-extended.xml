@@ -1664,6 +1664,321 @@
         </list>
       </presentation>
     </class>
+    <class id="NetworkFlow" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>networkflow</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="protocol"/>
+            <attribute id="source_ci_name"/>
+            <attribute id="source_port"/>
+            <attribute id="dest_ci_name"/>
+            <attribute id="dest_port"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon>asset/img/icons8-flow.svg</icon>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="protocol"/>
+            <attribute id="source_ci_name"/>
+            <attribute id="source_port"/>
+            <attribute id="dest_ci_name"/>
+            <attribute id="dest_port"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules/>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+          <jointype/>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="protocol" xsi:type="AttributeEnum">
+          <values>
+            <value id="UDP">
+              <code>UDP</code>
+            </value>
+            <value id="TCP">
+              <code>TCP</code>
+            </value>
+            <value id="UDP/TCP">
+              <code>UDP/TCP</code>
+            </value>
+            <value id="Other">
+              <code>Other</code>
+            </value>
+          </values>
+          <sql>protocol</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="source_port" xsi:type="AttributeDomainName">
+          <sql>source_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="dest_port" xsi:type="AttributeDomainName">
+          <sql>dest_port</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="source_ci_id" xsi:type="AttributeExternalKey">
+          <sql>source_ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <filter><![CDATA[SELECT FunctionalCI WHERE org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="source_ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>source_ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="dest_ci_id" xsi:type="AttributeExternalKey">
+          <sql>dest_ci_id</sql>
+          <target_class>FunctionalCI</target_class>
+          <filter><![CDATA[SELECT FunctionalCI WHERE org_id = :this->org_id]]></filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="dest_ci_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>dest_ci_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <values>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
+          </values>
+          <sql>status</sql>
+          <default_value>production</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+        <field id="move2production" xsi:type="AttributeDate">
+          <sql>move2production</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="business_criticity" xsi:type="AttributeEnum">
+          <sql>business_criticity</sql>
+          <sort_type>rank</sort_type>
+          <values>
+            <value id="high">
+              <code>high</code>
+              <rank>10</rank>
+            </value>
+            <value id="medium">
+              <code>medium</code>
+              <rank>20</rank>
+            </value>
+            <value id="low">
+              <code>low</code>
+              <rank>30</rank>
+            </value>
+          </values>
+          <default_value>low</default_value>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+        </field>
+      </fields>
+      <methods/>
+      <relations>
+        <relation id="networkflow" _delta="define">
+          <neighbours>
+            <neighbour id="dest_ci_id">
+              <attribute>dest_ci_id</attribute>
+              <direction>down</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:Class:NetworkFlow:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="org_id">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="business_criticity">
+                      <rank>30</rank>
+                    </item>
+                    <item id="move2production">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:Class:NetworkFlow:flowinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="protocol">
+                      <rank>10</rank>
+                    </item>
+                    <item id="source_ci_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="source_port">
+                      <rank>30</rank>
+                    </item>
+                    <item id="dest_ci_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="dest_port">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <default_search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="protocol">
+              <rank>30</rank>
+            </item>
+            <item id="source_port">
+              <rank>40</rank>
+            </item>
+            <item id="dest_port">
+              <rank>50</rank>
+            </item>
+            <item id="source_ci_id">
+              <rank>60</rank>
+            </item>
+            <item id="dest_ci_id">
+              <rank>70</rank>
+            </item>
+          </items>
+        </default_search>
+        <search>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="move2production">
+              <rank>40</rank>
+            </item>
+            <item id="protocol">
+              <rank>50</rank>
+            </item>
+            <item id="source_port">
+              <rank>60</rank>
+            </item>
+            <item id="dest_port">
+              <rank>70</rank>
+            </item>
+            <item id="source_ci_id">
+              <rank>80</rank>
+            </item>
+            <item id="dest_ci_id">
+              <rank>90</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>20</rank>
+            </item>
+            <item id="business_criticity">
+              <rank>30</rank>
+            </item>
+            <item id="protocol">
+              <rank>40</rank>
+            </item>
+            <item id="source_port">
+              <rank>50</rank>
+            </item>
+            <item id="dest_port">
+              <rank>60</rank>
+            </item>
+            <item id="source_ci_id">
+              <rank>70</rank>
+            </item>
+            <item id="dest_ci_id">
+              <rank>80</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
+    <class id="FunctionalCI" _delta="must_exist">
+      <relations>
+        <relation id="networkflow" _delta="define">
+          <neighbours>
+            <neighbour id="networkflow">
+              <query_up>SELECT NetworkFlow AS nf WHERE nf.dest_ci_id = :this->id AND nf.status = 'production'</query_up>
+              <query_down>SELECT NetworkFlow AS nf WHERE nf.source_ci_id = :this->id AND nf.status = 'production'</query_down>
+              <direction>down</direction>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
+    </class>
   </classes>
   <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
@@ -1692,6 +2007,14 @@
               <dashlet id="70" xsi:type="DashletBadge" _delta="define">
                 <rank>70</rank>
                 <class>AggregateLink</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="teemip_connectivity" _delta="must_exist">
+            <dashlets>
+              <dashlet id="50" xsi:type="DashletBadge" _delta="define">
+                <rank>50</rank>
+                <class>NetworkFlow</class>
               </dashlet>
             </dashlets>
           </cell>
