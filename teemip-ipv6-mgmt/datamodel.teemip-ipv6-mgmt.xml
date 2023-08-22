@@ -997,6 +997,10 @@
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <jointype/>
         </field>
+        <field id="subnet_ip" xsi:type="AttributeExternalField">
+          <extkey_attcode>subnet_id</extkey_attcode>
+          <target_attcode>ip</target_attcode>
+        </field>
         <field id="firstip" xsi:type="AttributeIPv6Address">
           <sql>firstip</sql>
           <default_value/>
@@ -1245,6 +1249,10 @@
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
           <jointype/>
+        </field>
+        <field id="subnet_ip" xsi:type="AttributeExternalField">
+          <extkey_attcode>subnet_id</extkey_attcode>
+          <target_attcode>ip</target_attcode>
         </field>
         <field id="range_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT IPv6Range AS r WHERE r.subnet_id = :this->subnet_id AND r.org_id = :this->org_id]]></filter>
