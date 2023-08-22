@@ -329,6 +329,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv6Address+' => '',
 	'Class:IPv6Address/Attribute:subnet_id' => 'Subnet',
 	'Class:IPv6Address/Attribute:subnet_id+' => 'IPv6 Subnet',
+	'Class:IPv6Address/Attribute:subnet_ip' => 'Subnet IP',
+	'Class:IPv6Address/Attribute:subnet_ip+' => '',
 	'Class:IPv6Address/Attribute:range_id' => 'Range',
 	'Class:IPv6Address/Attribute:range_id+' => 'IPv6 Range',
 	'Class:IPv6Address/Attribute:ip' => 'Address',

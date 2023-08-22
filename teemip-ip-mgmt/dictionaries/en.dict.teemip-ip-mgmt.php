@@ -692,6 +692,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Address+' => '',
 	'Class:IPv4Address/Attribute:subnet_id' => 'Subnet',
 	'Class:IPv4Address/Attribute:subnet_id+' => 'IPv4 Subnet',
+    'Class:IPv4Address/Attribute:subnet_ip' => 'Subnet IP',
+    'Class:IPv4Address/Attribute:subnet_ip+' => '',
 	'Class:IPv4Address/Attribute:range_id' => 'Range',
 	'Class:IPv4Address/Attribute:range_id+' => 'IPv4 Range',
 	'Class:IPv4Address/Attribute:ip' => 'Address',
