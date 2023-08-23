@@ -23,7 +23,7 @@ class _IPApplication extends FunctionalCI {
 		$oSearchDup = DBObjectSearch::FromOQL_AllData("SELECT IPDiscovery WHERE uuid LIKE :sUUID");
 		do {
 			$sId = strtoupper(bin2hex(random_bytes(8)));
-			$sFinalId = vsprintf("%s_%s_%s_%s", str_split($sId,4));
+			$sFinalId = vsprintf("%s-%s-%s-%s", str_split($sId,4));
 
 			$oDupSet = new DBObjectSet($oSearchDup, array(), array('sUUID' => $sFinalId));
 			$bFound = ($oDupSet->Count() > 0);
