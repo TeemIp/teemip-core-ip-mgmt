@@ -311,7 +311,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv6Range+' => '',
 	'Class:IPv6Range/ComplementaryName' => '%1$s - %2$s',
 	'Class:IPv6Range/Attribute:subnet_id' => 'Subnet',
-	'Class:IPv6Range/Attribute:subnet_id+' => '',
+	'Class:IPv6Range/Attribute:subnet_id+' => 'IPv6 Subnet',
 	'Class:IPv6Range/Attribute:subnet_ip' => 'Subnet IP',
 	'Class:IPv6Range/Attribute:subnet_ip+' => '',
 	'Class:IPv6Range/Attribute:firstip' => 'First IP of Range',
