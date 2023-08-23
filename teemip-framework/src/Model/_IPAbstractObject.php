@@ -26,6 +26,9 @@ use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
 
+/**
+ * Root PHP class for both the IPObject and the DNSObject branches
+ */
 class _IPAbstractObject extends cmdbAbstractObject {
 	/**
 	 * @inheritdoc
@@ -34,13 +37,14 @@ class _IPAbstractObject extends cmdbAbstractObject {
 		parent::ComputeValues();
 
 		if ($this->IsNew()) {
-			// At creation, compute parent_id only in the case where no delegation is done.
-			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
-			$iOrgId = $this->Get('org_id');
-			if ($iOrgId != 0) {
-				$oIpConfig = IPConfig::GetGlobalIPConfig($iOrgId);
-				if (!is_null($oIpConfig)) {
-					$this->Set('ipconfig_id', $oIpConfig->GetKey());
+			// At creation, compute ipconfig_id if attribute exists.
+			if (MetaModel::IsValidAttCode(get_class($this), 'ipconfig_id')) {
+				$iOrgId = $this->Get('org_id');
+				if ($iOrgId != 0) {
+					$oIpConfig = IPConfig::GetGlobalIPConfig($iOrgId);
+					if (!is_null($oIpConfig)) {
+						$this->Set('ipconfig_id', $oIpConfig->GetKey());
+					}
 				}
 			}
 		}
