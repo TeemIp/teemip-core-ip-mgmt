@@ -156,6 +156,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDevice/Attribute:networkdevicecomponents_list+' => 'List of all network device components attached to this device',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list' => 'Aggregate links',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list+' => 'List of all aggregate links attached to this device',
+    'Class:NetworkDevice/Attribute:snmpcredentials_id' => 'SNMP Credentials',
 ));
 
 //
@@ -243,72 +244,42 @@ Dict::Add('EN US', 'English', 'English', array(
 ));
 
 //
-// Class: NetworkFlow
+// Class: SnmpCredentials
 //
 
 Dict::Add('EN US', 'English', 'English', array(
-	'Class:NetworkFlow' => 'Network Flow',
-	'Class:NetworkFlow+' => '',
-	'Class:NetworkFlow/Name' => '%1$s - %2$s / %3$s - %4$s / %5$s',
-	'Class:NetworkFlow:baseinfo' => 'General Information',
-	'Class:NetworkFlow:flowinfo' => 'Flow Details',
-	'Class:NetworkFlow/Attribute:org_id' => 'Organization',
-	'Class:NetworkFlow/Attribute:org_id+' => '',
-	'Class:NetworkFlow/Attribute:org_name' => 'Organization name',
-	'Class:NetworkFlow/Attribute:org_name+' => '',
-	'Class:NetworkFlow/Attribute:protocol' => 'Protocol',
-	'Class:NetworkFlow/Attribute:protocol+' => '',
-	'Class:NetworkFlow/Attribute:protocol/Value:UDP' => 'UDP',
-	'Class:NetworkFlow/Attribute:protocol/Value:UDP+' => '',
-	'Class:NetworkFlow/Attribute:protocol/Value:TCP' => 'TCP',
-	'Class:NetworkFlow/Attribute:protocol/Value:TCP+' => '',
-	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP' => 'UDP/TCP',
-	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP+' => '',
-	'Class:NetworkFlow/Attribute:protocol/Value:Other' => 'Other',
-	'Class:NetworkFlow/Attribute:protocol/Value:Other+' => '',
-	'Class:NetworkFlow/Attribute:source_port' => 'Source port',
-	'Class:NetworkFlow/Attribute:source_port+' => '',
-	'Class:NetworkFlow/Attribute:dest_port' => 'Destination port',
-	'Class:NetworkFlow/Attribute:dest_port+' => '',
-	'Class:NetworkFlow/Attribute:source_ci_id' => 'Source CI',
-	'Class:NetworkFlow/Attribute:source_ci_id+' => '',
-	'Class:NetworkFlow/Attribute:source_ci_name' => 'Name of the source CI',
-	'Class:NetworkFlow/Attribute:source_ci_name+' => '',
-	'Class:NetworkFlow/Attribute:dest_ci_id' => 'Destination CI',
-	'Class:NetworkFlow/Attribute:dest_ci_id+' => '',
-	'Class:NetworkFlow/Attribute:dest_ci_name' => 'Name of the destination CI',
-	'Class:NetworkFlow/Attribute:dest_ci_name+' => '',
-	'Class:NetworkFlow/Attribute:status' => 'Status',
-	'Class:NetworkFlow/Attribute:status+' => '',
-	'Class:NetworkFlow/Attribute:status/Value:production' => 'Production',
-	'Class:NetworkFlow/Attribute:status/Value:production+' => '',
-	'Class:NetworkFlow/Attribute:status/Value:implementation' => 'Implementation',
-	'Class:NetworkFlow/Attribute:status/Value:implementation+' => '',
-	'Class:NetworkFlow/Attribute:status/Value:obsolete' => 'Obsolete',
-	'Class:NetworkFlow/Attribute:status/Value:obsolete+' => '',
-	'Class:NetworkFlow/Attribute:move2production' => 'Move to production date',
-	'Class:NetworkFlow/Attribute:move2production+' => '',
-	'Class:NetworkFlow/Attribute:description' => 'Description',
-	'Class:NetworkFlow/Attribute:description+' => '',
-	'Class:NetworkFlow/Attribute:business_criticity' => 'Business criticality',
-	'Class:NetworkFlow/Attribute:business_criticity+' => '',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:low' => 'Low',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:low+' => '',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:medium' => 'Medium',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:medium+' => '',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:high' => 'High',
-	'Class:NetworkFlow/Attribute:business_criticity/Value:high+' => '',
+    'Class:SnmpCredentials' => 'SNMP Credentials',
+    'Class:SnmpCredentials/Attribute:auth_passphrase' => 'Authentication passphrase',
+    'Class:SnmpCredentials/Attribute:auth_protocol' => 'Authentication protocol',
+    'Class:SnmpCredentials/Attribute:auth_protocol/Value:md5' => 'MD5',
+    'Class:SnmpCredentials/Attribute:auth_protocol/Value:sha' => 'SHA',
+    'Class:SnmpCredentials/Attribute:community' => 'Community',
+    'Class:SnmpCredentials/Attribute:context_name' => 'Context name',
+    'Class:SnmpCredentials/Attribute:description' => 'Description',
+    'Class:SnmpCredentials/Attribute:device_list' => 'Devices',
+    'Class:SnmpCredentials/Attribute:device_list+' => 'Devices using these credentials.',
+    'Class:SnmpCredentials/Attribute:name' => 'Name',
+    'Class:SnmpCredentials/Attribute:org_id' => 'Organization',
+    'Class:SnmpCredentials/Attribute:priv_passphrase' => 'Privacy passphrase',
+    'Class:SnmpCredentials/Attribute:priv_protocol' => 'Privacy protocol',
+    'Class:SnmpCredentials/Attribute:priv_protocol/Value:aes' => 'AES',
+    'Class:SnmpCredentials/Attribute:priv_protocol/Value:des' => 'DES',
+    'Class:SnmpCredentials/Attribute:security_level' => 'Security level',
+    'Class:SnmpCredentials/Attribute:security_level/Value:authNoPriv' => 'AuthNoPriv',
+    'Class:SnmpCredentials/Attribute:security_level/Value:authPriv' => 'AuthPriv',
+    'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv' => 'NoAuthNoPriv',
+    'Class:SnmpCredentials/Attribute:security_name' => 'Security name',
+    'SnmpCredentials:baseinfo' => 'General Information',
+    'SnmpCredentials:v1-v2c' => 'SNMP V1 / V2c',
+    'SnmpCredentials:v3' => 'SNMP V3',
 ));
 
+
 //
-// Menus
+// Application Menu
 //
 
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:NetworkMgmtExtended:Typology' => 'Network typology configuration',
-	'Relation:networkflow/Description' => 'Network Flow layout',
-	'Relation:networkflow/DownStream' => 'Outgoing Flow...',
-	'Relation:networkflow/DownStream+' => 'Outgoing Network Flow layout',
-	'Relation:networkflow/UpStream' => 'Incoming Flow...',
-	'Relation:networkflow/UpStream+' => 'Incoming Network Flow layoutt',
 ));
+

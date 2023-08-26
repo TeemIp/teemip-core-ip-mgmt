@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="InterfaceConnector" _delta="define">
       <parent>Typology</parent>
@@ -1092,6 +1092,12 @@
           <count_max>0</count_max>
           <duplicates/>
         </field>
+        <field id="snmpcredentials_id" xsi:type="AttributeExternalKey" _delta="define">
+          <sql>snmpcredentials_id</sql>
+          <target_class>SnmpCredentials</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
       </fields>
       <relations>
         <relation id="impacts">
@@ -1124,6 +1130,13 @@
                     </item>
                     <item id="clusternetwork_role" _delta="define">
                       <rank>90</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo" _delta="must_exist">
+                  <items>
+                    <item id="snmpcredentials_id" _delta="define">
+                      <rank>47</rank>
                     </item>
                   </items>
                 </item>
@@ -1664,37 +1677,26 @@
         </list>
       </presentation>
     </class>
-    <class id="NetworkFlow" _delta="define">
+    <class id="SnmpCredentials" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>bizmodel,searchable,configmgmt</category>
+        <category>bizmodel,searchable</category>
         <abstract>false</abstract>
-        <key_type>autoincrement</key_type>
-        <db_table>networkflow</db_table>
-        <db_key_field>id</db_key_field>
-        <db_final_class_field/>
+        <db_table>snmpcredentials</db_table>
         <naming>
           <attributes>
-            <attribute id="protocol"/>
-            <attribute id="source_ci_name"/>
-            <attribute id="source_port"/>
-            <attribute id="dest_ci_name"/>
-            <attribute id="dest_port"/>
+            <attribute id="name"/>
           </attributes>
         </naming>
-        <style>
-          <icon>asset/img/icons8-flow.svg</icon>
-        </style>
-        <reconciliation>
+        <reconsiliation>
           <attributes>
-            <attribute id="protocol"/>
-            <attribute id="source_ci_name"/>
-            <attribute id="source_port"/>
-            <attribute id="dest_ci_name"/>
-            <attribute id="dest_port"/>
+            <attribute id="org_id"/>
+            <attribute id="name"/>
           </attributes>
-        </reconciliation>
-        <uniqueness_rules/>
+        </reconsiliation>
+        <style>
+          <icon>asset/img/icons8-switch-48-lock.png</icon>
+        </style>
       </properties>
       <fields>
         <field id="org_id" xsi:type="AttributeExternalKey">
@@ -1702,152 +1704,245 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
-          <jointype/>
-        </field>
-        <field id="org_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>org_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="protocol" xsi:type="AttributeEnum">
-          <values>
-            <value id="UDP">
-              <code>UDP</code>
-            </value>
-            <value id="TCP">
-              <code>TCP</code>
-            </value>
-            <value id="UDP/TCP">
-              <code>UDP/TCP</code>
-            </value>
-            <value id="Other">
-              <code>Other</code>
-            </value>
-          </values>
-          <sql>protocol</sql>
-          <default_value/>
-          <is_null_allowed>false</is_null_allowed>
-        </field>
-        <field id="source_port" xsi:type="AttributeDomainName">
-          <sql>source_port</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="dest_port" xsi:type="AttributeDomainName">
-          <sql>dest_port</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
-        </field>
-        <field id="source_ci_id" xsi:type="AttributeExternalKey">
-          <sql>source_ci_id</sql>
-          <target_class>FunctionalCI</target_class>
-          <filter><![CDATA[SELECT FunctionalCI WHERE org_id = :this->org_id]]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="source_ci_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>source_ci_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="dest_ci_id" xsi:type="AttributeExternalKey">
-          <sql>dest_ci_id</sql>
-          <target_class>FunctionalCI</target_class>
-          <filter><![CDATA[SELECT FunctionalCI WHERE org_id = :this->org_id]]></filter>
-          <dependencies>
-            <attribute id="org_id"/>
-          </dependencies>
-          <is_null_allowed>false</is_null_allowed>
-          <on_target_delete>DEL_AUTO</on_target_delete>
-        </field>
-        <field id="dest_ci_name" xsi:type="AttributeExternalField">
-          <extkey_attcode>dest_ci_id</extkey_attcode>
-          <target_attcode>name</target_attcode>
-        </field>
-        <field id="status" xsi:type="AttributeEnum">
-          <values>
-            <value id="production">
-              <code>production</code>
-            </value>
-            <value id="implementation">
-              <code>implementation</code>
-            </value>
-            <value id="obsolete">
-              <code>obsolete</code>
-            </value>
-          </values>
-          <sql>status</sql>
-          <default_value>production</default_value>
-          <is_null_allowed>true</is_null_allowed>
-          <display_style>list</display_style>
-        </field>
-        <field id="move2production" xsi:type="AttributeDate">
-          <sql>move2production</sql>
-          <default_value/>
-          <is_null_allowed>true</is_null_allowed>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
-        <field id="business_criticity" xsi:type="AttributeEnum">
-          <sql>business_criticity</sql>
-          <sort_type>rank</sort_type>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="community" xsi:type="AttributePassword">
+          <sql>community</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="device_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>snmpcredentials_id</ext_key_to_me>
+          <edit_mode>none</edit_mode>
+        </field>
+        <field id="security_level" xsi:type="AttributeEnum" _delta="define">
+          <sql>security_level</sql>
           <values>
-            <value id="high">
-              <code>high</code>
-              <rank>10</rank>
+            <value id="noAuthNoPriv">
+              <code>noAuthNoPriv</code>
+              <rank>1</rank>
             </value>
-            <value id="medium">
-              <code>medium</code>
-              <rank>20</rank>
+            <value id="authNoPriv">
+              <code>authNoPriv</code>
+              <rank>2</rank>
             </value>
-            <value id="low">
-              <code>low</code>
-              <rank>30</rank>
+            <value id="authPriv">
+              <code>authPriv</code>
+              <rank>3</rank>
             </value>
           </values>
-          <default_value>low</default_value>
+          <default_value/>
           <is_null_allowed>true</is_null_allowed>
           <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+        </field>
+        <field id="security_name" xsi:type="AttributeString">
+          <sql>security_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="auth_protocol" xsi:type="AttributeEnum" _delta="define">
+          <sql>auth_protocol</sql>
+          <values>
+            <value id="md5">
+              <code>md5</code>
+              <rank>1</rank>
+            </value>
+            <value id="sha">
+              <code>sha</code>
+              <rank>2</rank>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="auth_passphrase" xsi:type="AttributePassword">
+          <sql>auth_passphrase</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+            <attribute id="auth_protocol"/>
+          </dependencies>
+        </field>
+        <field id="priv_protocol" xsi:type="AttributeEnum" _delta="define">
+          <sql>priv_protocol</sql>
+          <values>
+            <value id="des">
+              <code>des</code>
+              <rank>1</rank>
+            </value>
+            <value id="aes">
+              <code>aes</code>
+              <rank>2</rank>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="priv_passphrase" xsi:type="AttributePassword">
+          <sql>priv_passphrase</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+            <attribute id="priv_protocol"/>
+          </dependencies>
+        </field>
+        <field id="context_name" xsi:type="AttributeString">
+          <sql>context_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
         </field>
       </fields>
-      <methods/>
-      <relations>
-        <relation id="networkflow" _delta="define">
-          <neighbours>
-            <neighbour id="dest_ci_id">
-              <attribute>dest_ci_id</attribute>
-              <direction>down</direction>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
+      <methods>
+        <method id="IsAttributeRelevantForSecurityLevel">
+          <static>true</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public static function IsAttributeRelevantForSecurityLevel(string $sAttCode, ?string $sSecLevel)
+	{
+		switch ($sAttCode) {
+			case 'community':
+				return empty($sSecLevel);
+			case 'security_name':
+			case 'context_name':
+				return !empty($sSecLevel);
+			case 'auth_passphrase':
+			case 'auth_protocol':
+				return $sSecLevel == 'authPriv' || $sSecLevel == 'authNoPriv';
+			case 'priv_passphrase':
+			case 'priv_protocol':
+				return $sSecLevel == 'authPriv';
+			default:
+				return false;
+		}
+	}]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
+		$iFlags = 0;
+		switch ($sAttCode) {
+			case 'priv_passphrase':
+				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_passphrase':
+				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_protocol':
+			case 'priv_protocol':
+			case 'security_name':
+			case 'context_name':
+			case 'community';
+				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				break;
+		}
+
+		return $iFlags | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+    }]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		$iFlags = 0;
+		switch ($sAttCode) {
+			case 'priv_passphrase':
+				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_passphrase':
+				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_protocol':
+			case 'priv_protocol':
+			case 'security_name':
+			case 'context_name':
+			case 'community';
+				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				break;
+		}
+
+		return $iFlags | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+    }]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		foreach ([
+			'community',
+			'security_name',
+			'auth_passphrase',
+			'auth_protocol',
+			'priv_passphrase',
+			'priv_protocol',
+			'context_name',
+		] as $sAttCode){
+			if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $this->Set($sAttCode, null);
+		}
+    }]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
             <item id="col:col1">
               <rank>10</rank>
               <items>
-                <item id="fieldset:Class:NetworkFlow:baseinfo">
+                <item id="fieldset:SnmpCredentials:baseinfo">
                   <rank>10</rank>
                   <items>
-                    <item id="org_id">
+                    <item id="name">
                       <rank>10</rank>
                     </item>
-                    <item id="status">
+                    <item id="org_id">
                       <rank>20</rank>
                     </item>
-                    <item id="business_criticity">
+                    <item id="description">
                       <rank>30</rank>
                     </item>
-                    <item id="move2production">
-                      <rank>40</rank>
-                    </item>
-                    <item id="description">
-                      <rank>50</rank>
+                  </items>
+                </item>
+                <item id="fieldset:SnmpCredentials:v1-v2c">
+                  <rank>20</rank>
+                  <items>
+                    <item id="community">
+                      <rank>10</rank>
                     </item>
                   </items>
                 </item>
@@ -1856,83 +1951,46 @@
             <item id="col:col2">
               <rank>20</rank>
               <items>
-                <item id="fieldset:Class:NetworkFlow:flowinfo">
+                <item id="fieldset:SnmpCredentials:v3">
                   <rank>10</rank>
                   <items>
-                    <item id="protocol">
+                    <item id="security_level">
                       <rank>10</rank>
                     </item>
-                    <item id="source_ci_id">
+                    <item id="security_name">
                       <rank>20</rank>
                     </item>
-                    <item id="source_port">
+                    <item id="auth_protocol">
                       <rank>30</rank>
                     </item>
-                    <item id="dest_ci_id">
+                    <item id="auth_passphrase">
                       <rank>40</rank>
                     </item>
-                    <item id="dest_port">
+                    <item id="priv_protocol">
                       <rank>50</rank>
+                    </item>
+                    <item id="priv_passphrase">
+                      <rank>60</rank>
+                    </item>
+                    <item id="context_name">
+                      <rank>70</rank>
                     </item>
                   </items>
                 </item>
               </items>
             </item>
+            <item id="device_list">
+              <rank>30</rank>
+            </item>
           </items>
         </details>
-        <default_search>
-          <items>
-            <item id="org_id">
-              <rank>10</rank>
-            </item>
-            <item id="status">
-              <rank>20</rank>
-            </item>
-            <item id="protocol">
-              <rank>30</rank>
-            </item>
-            <item id="source_port">
-              <rank>40</rank>
-            </item>
-            <item id="dest_port">
-              <rank>50</rank>
-            </item>
-            <item id="source_ci_id">
-              <rank>60</rank>
-            </item>
-            <item id="dest_ci_id">
-              <rank>70</rank>
-            </item>
-          </items>
-        </default_search>
         <search>
           <items>
-            <item id="org_id">
+            <item id="name">
               <rank>10</rank>
             </item>
-            <item id="status">
+            <item id="org_id">
               <rank>20</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>30</rank>
-            </item>
-            <item id="move2production">
-              <rank>40</rank>
-            </item>
-            <item id="protocol">
-              <rank>50</rank>
-            </item>
-            <item id="source_port">
-              <rank>60</rank>
-            </item>
-            <item id="dest_port">
-              <rank>70</rank>
-            </item>
-            <item id="source_ci_id">
-              <rank>80</rank>
-            </item>
-            <item id="dest_ci_id">
-              <rank>90</rank>
             </item>
           </items>
         </search>
@@ -1941,43 +1999,16 @@
             <item id="org_id">
               <rank>10</rank>
             </item>
-            <item id="status">
-              <rank>20</rank>
-            </item>
-            <item id="business_criticity">
-              <rank>30</rank>
-            </item>
-            <item id="protocol">
-              <rank>40</rank>
-            </item>
-            <item id="source_port">
-              <rank>50</rank>
-            </item>
-            <item id="dest_port">
-              <rank>60</rank>
-            </item>
-            <item id="source_ci_id">
-              <rank>70</rank>
-            </item>
-            <item id="dest_ci_id">
-              <rank>80</rank>
-            </item>
           </items>
         </list>
+        <summary>
+          <items>
+            <item id="description">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
-    </class>
-    <class id="FunctionalCI" _delta="must_exist">
-      <relations>
-        <relation id="networkflow" _delta="define">
-          <neighbours>
-            <neighbour id="networkflow">
-              <query_up>SELECT NetworkFlow AS nf WHERE nf.dest_ci_id = :this->id AND nf.status = 'production'</query_up>
-              <query_down>SELECT NetworkFlow AS nf WHERE nf.source_ci_id = :this->id AND nf.status = 'production'</query_down>
-              <direction>down</direction>
-            </neighbour>
-          </neighbours>
-        </relation>
-      </relations>
     </class>
   </classes>
   <menus>
@@ -2012,9 +2043,9 @@
           </cell>
           <cell id="teemip_connectivity" _delta="must_exist">
             <dashlets>
-              <dashlet id="50" xsi:type="DashletBadge" _delta="define">
+              <dashlet id="teemip-snmp_credentials" xsi:type="DashletBadge" _delta="define">
                 <rank>50</rank>
-                <class>NetworkFlow</class>
+                <class>SnmpCredentials</class>
               </dashlet>
             </dashlets>
           </cell>
@@ -2054,6 +2085,7 @@
           <class id="InterfaceSpeed"/>
           <class id="Layer2Protocol"/>
           <class id="NetworkDeviceComponent"/>
+          <class id="SnmpCredentials"/>
         </classes>
       </group>
     </groups>
