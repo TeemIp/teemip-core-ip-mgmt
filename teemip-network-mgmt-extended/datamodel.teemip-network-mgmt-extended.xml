@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="InterfaceConnector" _delta="define">
       <parent>Typology</parent>
@@ -1092,6 +1092,12 @@
           <count_max>0</count_max>
           <duplicates/>
         </field>
+        <field id="snmpcredentials_id" xsi:type="AttributeExternalKey" _delta="define">
+          <sql>snmpcredentials_id</sql>
+          <target_class>SnmpCredentials</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
       </fields>
       <relations>
         <relation id="impacts">
@@ -1124,6 +1130,13 @@
                     </item>
                     <item id="clusternetwork_role" _delta="define">
                       <rank>90</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Server:moreinfo" _delta="must_exist">
+                  <items>
+                    <item id="snmpcredentials_id" _delta="define">
+                      <rank>47</rank>
                     </item>
                   </items>
                 </item>
@@ -1664,6 +1677,339 @@
         </list>
       </presentation>
     </class>
+    <class id="SnmpCredentials" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>bizmodel,searchable</category>
+        <abstract>false</abstract>
+        <db_table>snmpcredentials</db_table>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconsiliation>
+          <attributes>
+            <attribute id="org_id"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconsiliation>
+        <style>
+          <icon>asset/img/icons8-switch-48-lock.png</icon>
+        </style>
+      </properties>
+      <fields>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="community" xsi:type="AttributePassword">
+          <sql>community</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="device_list" xsi:type="AttributeLinkedSet">
+          <linked_class>NetworkDevice</linked_class>
+          <ext_key_to_me>snmpcredentials_id</ext_key_to_me>
+          <edit_mode>none</edit_mode>
+        </field>
+        <field id="security_level" xsi:type="AttributeEnum" _delta="define">
+          <sql>security_level</sql>
+          <values>
+            <value id="noAuthNoPriv">
+              <code>noAuthNoPriv</code>
+              <rank>1</rank>
+            </value>
+            <value id="authNoPriv">
+              <code>authNoPriv</code>
+              <rank>2</rank>
+            </value>
+            <value id="authPriv">
+              <code>authPriv</code>
+              <rank>3</rank>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+        </field>
+        <field id="security_name" xsi:type="AttributeString">
+          <sql>security_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="auth_protocol" xsi:type="AttributeEnum" _delta="define">
+          <sql>auth_protocol</sql>
+          <values>
+            <value id="md5">
+              <code>md5</code>
+              <rank>1</rank>
+            </value>
+            <value id="sha">
+              <code>sha</code>
+              <rank>2</rank>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="auth_passphrase" xsi:type="AttributePassword">
+          <sql>auth_passphrase</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+            <attribute id="auth_protocol"/>
+          </dependencies>
+        </field>
+        <field id="priv_protocol" xsi:type="AttributeEnum" _delta="define">
+          <sql>priv_protocol</sql>
+          <values>
+            <value id="des">
+              <code>des</code>
+              <rank>1</rank>
+            </value>
+            <value id="aes">
+              <code>aes</code>
+              <rank>2</rank>
+            </value>
+          </values>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>list</display_style>
+          <sort_type>rank</sort_type>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+        <field id="priv_passphrase" xsi:type="AttributePassword">
+          <sql>priv_passphrase</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+            <attribute id="priv_protocol"/>
+          </dependencies>
+        </field>
+        <field id="context_name" xsi:type="AttributeString">
+          <sql>context_name</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <dependencies>
+            <attribute id="security_level"/>
+          </dependencies>
+        </field>
+      </fields>
+      <methods>
+        <method id="IsAttributeRelevantForSecurityLevel">
+          <static>true</static>
+          <access>public</access>
+          <type>Custom</type>
+          <code><![CDATA[	public static function IsAttributeRelevantForSecurityLevel(string $sAttCode, ?string $sSecLevel)
+	{
+		switch ($sAttCode) {
+			case 'community':
+				return empty($sSecLevel);
+			case 'security_name':
+			case 'context_name':
+				return !empty($sSecLevel);
+			case 'auth_passphrase':
+			case 'auth_protocol':
+				return $sSecLevel == 'authPriv' || $sSecLevel == 'authNoPriv';
+			case 'priv_passphrase':
+			case 'priv_protocol':
+				return $sSecLevel == 'authPriv';
+			default:
+				return false;
+		}
+	}]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
+		$iFlags = 0;
+		switch ($sAttCode) {
+			case 'priv_passphrase':
+				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_passphrase':
+				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_protocol':
+			case 'priv_protocol':
+			case 'security_name':
+			case 'context_name':
+			case 'community';
+				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				break;
+		}
+
+		return $iFlags | parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+    }]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		$iFlags = 0;
+		switch ($sAttCode) {
+			case 'priv_passphrase':
+				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_passphrase':
+				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+			case 'auth_protocol':
+			case 'priv_protocol':
+			case 'security_name':
+			case 'context_name':
+			case 'community';
+				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				break;
+		}
+
+		return $iFlags | parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+    }]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[ public function ComputeValues()
+	{
+		parent::ComputeValues();
+
+		foreach ([
+			'community',
+			'security_name',
+			'auth_passphrase',
+			'auth_protocol',
+			'priv_passphrase',
+			'priv_protocol',
+			'context_name',
+		] as $sAttCode){
+			if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $this->Set($sAttCode, null);
+		}
+    }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:SnmpCredentials:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:SnmpCredentials:v1-v2c">
+                  <rank>20</rank>
+                  <items>
+                    <item id="community">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:SnmpCredentials:v3">
+                  <rank>10</rank>
+                  <items>
+                    <item id="security_level">
+                      <rank>10</rank>
+                    </item>
+                    <item id="security_name">
+                      <rank>20</rank>
+                    </item>
+                    <item id="auth_protocol">
+                      <rank>30</rank>
+                    </item>
+                    <item id="auth_passphrase">
+                      <rank>40</rank>
+                    </item>
+                    <item id="priv_protocol">
+                      <rank>50</rank>
+                    </item>
+                    <item id="priv_passphrase">
+                      <rank>60</rank>
+                    </item>
+                    <item id="context_name">
+                      <rank>70</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="device_list">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="org_id">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <summary>
+          <items>
+            <item id="description">
+              <rank>10</rank>
+            </item>
+          </items>
+        </summary>
+      </presentation>
+    </class>
   </classes>
   <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
@@ -1692,6 +2038,14 @@
               <dashlet id="70" xsi:type="DashletBadge" _delta="define">
                 <rank>70</rank>
                 <class>AggregateLink</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+          <cell id="teemip_connectivity" _delta="must_exist">
+            <dashlets>
+              <dashlet id="teemip-snmp_credentials" xsi:type="DashletBadge" _delta="define">
+                <rank>50</rank>
+                <class>SnmpCredentials</class>
               </dashlet>
             </dashlets>
           </cell>
@@ -1731,6 +2085,7 @@
           <class id="InterfaceSpeed"/>
           <class id="Layer2Protocol"/>
           <class id="NetworkDeviceComponent"/>
+          <class id="SnmpCredentials"/>
         </classes>
       </group>
     </groups>

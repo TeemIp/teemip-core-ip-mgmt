@@ -156,6 +156,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDevice/Attribute:networkdevicecomponents_list+' => 'List of all network device components attached to this device',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list' => 'Aggregate links',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list+' => 'List of all aggregate links attached to this device',
+    'Class:NetworkDevice/Attribute:snmpcredentials_id' => 'SNMP Credentials',
 ));
 
 //
@@ -241,6 +242,38 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VLAN/Attribute:type/Value:protocol_based' => 'Protocol based',
 	'Class:VLAN/Attribute:type/Value:protocol_based+' => '',
 ));
+
+//
+// Class: SnmpCredentials
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:SnmpCredentials' => 'SNMP Credentials',
+    'Class:SnmpCredentials/Attribute:auth_passphrase' => 'Authentication passphrase',
+    'Class:SnmpCredentials/Attribute:auth_protocol' => 'Authentication protocol',
+    'Class:SnmpCredentials/Attribute:auth_protocol/Value:md5' => 'MD5',
+    'Class:SnmpCredentials/Attribute:auth_protocol/Value:sha' => 'SHA',
+    'Class:SnmpCredentials/Attribute:community' => 'Community',
+    'Class:SnmpCredentials/Attribute:context_name' => 'Context name',
+    'Class:SnmpCredentials/Attribute:description' => 'Description',
+    'Class:SnmpCredentials/Attribute:device_list' => 'Devices',
+    'Class:SnmpCredentials/Attribute:device_list+' => 'Devices using these credentials.',
+    'Class:SnmpCredentials/Attribute:name' => 'Name',
+    'Class:SnmpCredentials/Attribute:org_id' => 'Organization',
+    'Class:SnmpCredentials/Attribute:priv_passphrase' => 'Privacy passphrase',
+    'Class:SnmpCredentials/Attribute:priv_protocol' => 'Privacy protocol',
+    'Class:SnmpCredentials/Attribute:priv_protocol/Value:aes' => 'AES',
+    'Class:SnmpCredentials/Attribute:priv_protocol/Value:des' => 'DES',
+    'Class:SnmpCredentials/Attribute:security_level' => 'Security level',
+    'Class:SnmpCredentials/Attribute:security_level/Value:authNoPriv' => 'AuthNoPriv',
+    'Class:SnmpCredentials/Attribute:security_level/Value:authPriv' => 'AuthPriv',
+    'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv' => 'NoAuthNoPriv',
+    'Class:SnmpCredentials/Attribute:security_name' => 'Security name',
+    'SnmpCredentials:baseinfo' => 'General Information',
+    'SnmpCredentials:v1-v2c' => 'SNMP V1 / V2c',
+    'SnmpCredentials:v3' => 'SNMP V3',
+));
+
 
 //
 // Application Menu
