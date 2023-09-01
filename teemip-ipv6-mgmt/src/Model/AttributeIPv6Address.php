@@ -147,8 +147,8 @@ class AttributeIPv6Address extends AttributeString
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode().'_text'] = 'CHAR(39)';
-		$aColumns[$this->GetCode().'_comp'] = 'CHAR(39)';
+		$aColumns[$this->GetCode().'_text'] = 'CHAR(39)'.CMDBSource::GetSqlStringColumnDefinition();
+		$aColumns[$this->GetCode().'_comp'] = 'CHAR(39)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -276,7 +276,7 @@ class AttributeIPv6Address extends AttributeString
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'CHAR(39)';
+		$aColumns[$this->GetCode()] = 'CHAR(39)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
