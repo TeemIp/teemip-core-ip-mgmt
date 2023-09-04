@@ -1857,15 +1857,16 @@
 		$iFlags = 0;
 		switch ($sAttCode) {
 			case 'priv_passphrase':
-				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+				if (!empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_MANDATORY;
+				break;
 			case 'auth_passphrase':
-				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+				if (!empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_MANDATORY;
+				break;
 			case 'auth_protocol':
 			case 'priv_protocol':
 			case 'security_name':
-			case 'context_name':
 			case 'community';
-				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				if (static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_MANDATORY;
 				break;
 		}
 
@@ -1881,15 +1882,16 @@
 		$iFlags = 0;
 		switch ($sAttCode) {
 			case 'priv_passphrase':
-				if (empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_READONLY;
+				if (!empty($this->Get('priv_protocol'))) $iFlags |= OPT_ATT_MANDATORY;
+				break;
 			case 'auth_passphrase':
-				if (empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_READONLY;
+				if (!empty($this->Get('auth_protocol'))) $iFlags |= OPT_ATT_MANDATORY;
+				break;
 			case 'auth_protocol':
 			case 'priv_protocol':
 			case 'security_name':
-			case 'context_name':
 			case 'community';
-				if (!static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_READONLY;
+				if (static::IsAttributeRelevantForSecurityLevel($sAttCode, $this->Get('security_level'))) $iFlags |= OPT_ATT_MANDATORY;
 				break;
 		}
 
