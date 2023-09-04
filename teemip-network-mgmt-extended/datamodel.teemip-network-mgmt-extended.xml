@@ -1680,20 +1680,22 @@
     <class id="SnmpCredentials" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>bizmodel,searchable</category>
+        <category>bizmodel,searchable,configmgmt</category>
         <abstract>false</abstract>
         <db_table>snmpcredentials</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
         <naming>
           <attributes>
             <attribute id="name"/>
           </attributes>
         </naming>
-        <reconsiliation>
+        <reconciliation>
           <attributes>
-            <attribute id="org_id"/>
             <attribute id="name"/>
+            <attribute id="org_id"/>
           </attributes>
-        </reconsiliation>
+        </reconciliation>
         <style>
           <icon>asset/img/icons8-switch-48-lock.png</icon>
         </style>
@@ -1704,6 +1706,10 @@
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="org_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
         </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
@@ -1728,7 +1734,7 @@
           <ext_key_to_me>snmpcredentials_id</ext_key_to_me>
           <edit_mode>none</edit_mode>
         </field>
-        <field id="security_level" xsi:type="AttributeEnum" _delta="define">
+        <field id="security_level" xsi:type="AttributeEnum">
           <sql>security_level</sql>
           <values>
             <value id="noAuthNoPriv">
@@ -1757,7 +1763,7 @@
             <attribute id="security_level"/>
           </dependencies>
         </field>
-        <field id="auth_protocol" xsi:type="AttributeEnum" _delta="define">
+        <field id="auth_protocol" xsi:type="AttributeEnum">
           <sql>auth_protocol</sql>
           <values>
             <value id="md5">
@@ -1786,7 +1792,7 @@
             <attribute id="auth_protocol"/>
           </dependencies>
         </field>
-        <field id="priv_protocol" xsi:type="AttributeEnum" _delta="define">
+        <field id="priv_protocol" xsi:type="AttributeEnum">
           <sql>priv_protocol</sql>
           <values>
             <value id="des">
@@ -1984,6 +1990,19 @@
             </item>
           </items>
         </details>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="security_level">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
         <search>
           <items>
             <item id="name">
@@ -1999,12 +2018,18 @@
             <item id="org_id">
               <rank>10</rank>
             </item>
+            <item id="security_level">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
         <summary>
           <items>
             <item id="description">
               <rank>10</rank>
+            </item>
+            <item id="security_level">
+              <rank>20</rank>
             </item>
           </items>
         </summary>
