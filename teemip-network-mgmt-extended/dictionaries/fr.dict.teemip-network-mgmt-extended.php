@@ -242,6 +242,55 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: SnmpCredentials
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:SnmpCredentials' => 'Identification SNMP',
+	'Class:SnmpCredentials+' => 'Informations d\'identification SNMP',
+	'SnmpCredentials:baseinfo' => 'Informations Générales',
+	'SnmpCredentials:v1-v2c' => 'SNMP V1 / V2c',
+	'SnmpCredentials:v3' => 'SNMP V3',
+	'Class:SnmpCredentials/Attribute:auth_passphrase' => 'Phrase secrète d\'authentification',
+	'Class:SnmpCredentials/Attribute:auth_passphrase+' => 'Phrase secrète utilisée conjointement avec le protocole d\'authentification.',
+	'Class:SnmpCredentials/Attribute:auth_protocol' => 'Protocole d\'authentification',
+	'Class:SnmpCredentials/Attribute:auth_protocol+' => '',
+	'Class:SnmpCredentials/Attribute:auth_protocol/Value:md5' => 'MD5',
+	'Class:SnmpCredentials/Attribute:auth_protocol/Value:sha' => 'SHA',
+	'Class:SnmpCredentials/Attribute:auth_protocol/Value:hmac_sha_2' => 'HMAC-SHA-2',
+	'Class:SnmpCredentials/Attribute:community' => 'Community',
+	'Class:SnmpCredentials/Attribute:community+' => 'Community string V1 et V2 bien connue',
+	'Class:SnmpCredentials/Attribute:context_name' => 'Nom du contexte',
+	'Class:SnmpCredentials/Attribute:context_name+' => 'Chaîne qui identifie une collection d\'informations accessibles par une entité SNMP.',
+	'Class:SnmpCredentials/Attribute:description' => 'Description',
+	'Class:SnmpCredentials/Attribute:description+' => '',
+	'Class:SnmpCredentials/Attribute:device_list' => 'Equipements',
+	'Class:SnmpCredentials/Attribute:device_list+' => 'Equipements réseau utilisant cette identification SNMP.',
+	'Class:SnmpCredentials/Attribute:name' => 'Nom',
+	'Class:SnmpCredentials/Attribute:name+' => 'Chaine de caractère utilisée pour nommer l\'objet',
+	'Class:SnmpCredentials/Attribute:org_id' => 'Organisation',
+	'Class:SnmpCredentials/Attribute:org_id+' => 'Organisation à laquelle appartient l\'identification',
+	'Class:SnmpCredentials/Attribute:priv_passphrase' => 'Phrase secrète de confidentialité',
+	'Class:SnmpCredentials/Attribute:priv_passphrase+' => 'Phrase secrète utilisée conjointement avec le protocole de confidentialité.',
+	'Class:SnmpCredentials/Attribute:priv_protocol' => 'Protocole de confidentialité',
+	'Class:SnmpCredentials/Attribute:priv_protocol+' => '',
+	'Class:SnmpCredentials/Attribute:priv_protocol/Value:aes' => 'AES',
+	'Class:SnmpCredentials/Attribute:priv_protocol/Value:aes+' => 'Protocole CFB_AES_128',
+	'Class:SnmpCredentials/Attribute:priv_protocol/Value:des' => 'DES',
+	'Class:SnmpCredentials/Attribute:priv_protocol/Value:des+' => 'Protocole CBC_DES protocol',
+	'Class:SnmpCredentials/Attribute:security_level' => 'Niveau de sécurité',
+	'Class:SnmpCredentials/Attribute:security_level+' => 'Sélection du modèle de sécurité basé sur l\'utilisateur (USM). Lorsque ce paramètre est vide, les informations d\'identification utilisées sont réduites à la community string du protocole SNMP V1/V2c.',
+	'Class:SnmpCredentials/Attribute:security_level/Value:authNoPriv' => 'AuthNoPriv',
+	'Class:SnmpCredentials/Attribute:security_level/Value:authNoPriv+' => 'Communication avec authentification mais sans confidentialité',
+	'Class:SnmpCredentials/Attribute:security_level/Value:authPriv' => 'AuthPriv',
+	'Class:SnmpCredentials/Attribute:security_level/Value:authPriv+' => 'Communication avec authentification et confidentialité',
+	'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv' => 'NoAuthNoPriv',
+	'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv+' => 'Communication sans authentification ni confidentialité',
+	'Class:SnmpCredentials/Attribute:security_name' => 'Security name',
+	'Class:SnmpCredentials/Attribute:security_name+' => 'Chaîne qui représente le mandant pour le compte duquel les services sont fournis ou le traitement a lieu.',
+));
+
+//
 // Application Menu
 //
 
