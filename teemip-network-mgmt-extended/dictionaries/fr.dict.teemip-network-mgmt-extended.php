@@ -258,8 +258,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SnmpCredentials/Attribute:auth_protocol/Value:md5' => 'MD5',
 	'Class:SnmpCredentials/Attribute:auth_protocol/Value:sha' => 'SHA',
 	'Class:SnmpCredentials/Attribute:auth_protocol/Value:hmac_sha_2' => 'HMAC-SHA-2',
-	'Class:SnmpCredentials/Attribute:community' => 'Community',
-	'Class:SnmpCredentials/Attribute:community+' => 'Community string V1 et V2 bien connue',
+	'Class:SnmpCredentials/Attribute:community' => 'Communauté',
+	'Class:SnmpCredentials/Attribute:community+' => 'Chaîne de communauté SNMP V1 et V2 bien connue',
 	'Class:SnmpCredentials/Attribute:context_name' => 'Nom du contexte',
 	'Class:SnmpCredentials/Attribute:context_name+' => 'Chaîne qui identifie une collection d\'informations accessibles par une entité SNMP.',
 	'Class:SnmpCredentials/Attribute:description' => 'Description',
@@ -286,7 +286,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SnmpCredentials/Attribute:security_level/Value:authPriv+' => 'Communication avec authentification et confidentialité',
 	'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv' => 'NoAuthNoPriv',
 	'Class:SnmpCredentials/Attribute:security_level/Value:noAuthNoPriv+' => 'Communication sans authentification ni confidentialité',
-	'Class:SnmpCredentials/Attribute:security_name' => 'Security name',
+	'Class:SnmpCredentials/Attribute:security_name' => 'Utilisateur',
 	'Class:SnmpCredentials/Attribute:security_name+' => 'Chaîne qui représente le mandant pour le compte duquel les services sont fournis ou le traitement a lieu.',
 ));
 
