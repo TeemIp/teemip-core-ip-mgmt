@@ -2112,9 +2112,30 @@
           <class id="InterfaceSpeed"/>
           <class id="Layer2Protocol"/>
           <class id="NetworkDeviceComponent"/>
+        </classes>
+      </group>
+      <group id="SNMP" _delta="define">
+        <classes>
           <class id="SnmpCredentials"/>
         </classes>
       </group>
     </groups>
+    <profiles>
+      <profile id="5327" _delta="define">
+        <name>Network Security Manager</name>
+        <description>Person in charge of network security. Must be used in conjunction with "Configuration Manager" profile.</description>
+        <groups>
+          <group id="SNMP">
+            <actions>
+              <action id="action:read">allow</action>
+              <action id="action:bulk read">allow</action>
+              <action id="action:write">allow</action>
+              <action id="action:bulk write">allow</action>
+              <action id="action:delete">allow</action>
+             </actions>
+          </group>
+         </groups>
+      </profile>
+    </profiles>
   </user_rights>
 </itop_design>
