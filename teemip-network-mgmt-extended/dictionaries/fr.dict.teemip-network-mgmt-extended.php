@@ -297,11 +297,91 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
-// Application Menu
+// Class: NetworkFlowCapacity
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NetworkFlowCapacity' => 'Capacité d\'un flux',
+	'Class:NetworkFlowCapacity+' => 'Capacité fournie par un flux réseau',
+	'Class:NetworkFlowCapacity/Attribute:description' => 'Description',
+	'Class:NetworkFlowCapacity/Attribute:description+' => '',
+	'Class:NetworkFlowCapacity/Attribute:networkflows_list' => 'Flux réseau',
+	'Class:NetworkFlowCapacity/Attribute:networkflows_list+' => 'Liste des flux réseau ayant cette capacité',
+));
+
+//
+// Class: NetworkFlow
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:NetworkFlow' => 'Flux réseau',
+	'Class:NetworkFlow+' => '',
+	'Class:NetworkFlow/Name' => '%1$s - %2$s / %3$s - %4$s / %5$s',
+	'Class:NetworkFlow:baseinfo' => 'Information Générales',
+	'Class:NetworkFlow:flowinfo' => 'Détails du Flux',
+	'Class:NetworkFlow/Attribute:name' => 'Nom commun',
+	'Class:NetworkFlow/Attribute:name+' => 'Fournit un nom plus convivial ou plus orienté métier au flux réseau.',
+	'Class:NetworkFlow/Attribute:org_id' => 'Organisation',
+	'Class:NetworkFlow/Attribute:org_id+' => 'Organisation à laquelle appartient le flux réseau',
+	'Class:NetworkFlow/Attribute:org_name' => 'Nom de l\'organisation',
+	'Class:NetworkFlow/Attribute:org_name+' => '',
+	'Class:NetworkFlow/Attribute:protocol' => 'Protocole',
+	'Class:NetworkFlow/Attribute:protocol+' => '',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP' => 'UDP',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP+' => 'Protocole UDP',
+	'Class:NetworkFlow/Attribute:protocol/Value:TCP' => 'TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:TCP+' => 'Protocole TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP' => 'UDP/TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:UDP/TCP+' => 'Protocole UDP ou TCP',
+	'Class:NetworkFlow/Attribute:protocol/Value:Other' => 'Autre',
+	'Class:NetworkFlow/Attribute:protocol/Value:Other+' => 'Autre protocole',
+	'Class:NetworkFlow/Attribute:source_port' => 'Port source',
+	'Class:NetworkFlow/Attribute:source_port+' => '',
+	'Class:NetworkFlow/Attribute:dest_port' => 'Port destination',
+	'Class:NetworkFlow/Attribute:dest_port+' => '',
+	'Class:NetworkFlow/Attribute:source_ci_id' => 'CI source',
+	'Class:NetworkFlow/Attribute:source_ci_id+' => 'CI fonctionnel sur lequel le flux prend sa source',
+	'Class:NetworkFlow/Attribute:source_ci_name' => 'Nom du CI source',
+	'Class:NetworkFlow/Attribute:source_ci_name+' => '',
+	'Class:NetworkFlow/Attribute:dest_ci_id' => 'CI de destination',
+	'Class:NetworkFlow/Attribute:dest_ci_id+' => 'CI fonctionel vers lequel arrive le flux',
+	'Class:NetworkFlow/Attribute:dest_ci_name' => 'Nom du CI de destination',
+	'Class:NetworkFlow/Attribute:dest_ci_name+' => '',
+	'Class:NetworkFlow/Attribute:status' => 'Statut',
+	'Class:NetworkFlow/Attribute:status+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:production' => 'Production',
+	'Class:NetworkFlow/Attribute:status/Value:production+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:implementation' => 'Implémentation',
+	'Class:NetworkFlow/Attribute:status/Value:implementation+' => '',
+	'Class:NetworkFlow/Attribute:status/Value:obsolete' => 'Obsolète',
+	'Class:NetworkFlow/Attribute:status/Value:obsolete+' => '',
+	'Class:NetworkFlow/Attribute:move2production' => 'Date de mise en production',
+	'Class:NetworkFlow/Attribute:move2production+' => '',
+	'Class:NetworkFlow/Attribute:description' => 'Description',
+	'Class:NetworkFlow/Attribute:description+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity' => 'Criticité',
+	'Class:NetworkFlow/Attribute:business_criticity+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:low' => 'Basse',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:low+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:medium' => 'Moyenne',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:medium+' => '',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:high' => 'Haute',
+	'Class:NetworkFlow/Attribute:business_criticity/Value:high+' => '',
+	'Class:NetworkFlow/Attribute:networkflowcapacity_id' => 'Capacité',
+	'Class:NetworkFlow/Attribute:networkflowcapacity_id+' => '',
+));
+
+//
+// Menus
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:NetworkMgmtExtended:Typology' => 'Configuration des typologies réseau',
+	'Relation:networkflow/Description' => 'Schéma du flux réseau',
+	'Relation:networkflow/DownStream' => 'Flux sortant...',
+	'Relation:networkflow/DownStream+' => 'Schéma du flux sortan',
+	'Relation:networkflow/UpStream' => 'Flux entrant...',
+	'Relation:networkflow/UpStream+' => 'Schéma du flux entrant',
 ));
 
 
