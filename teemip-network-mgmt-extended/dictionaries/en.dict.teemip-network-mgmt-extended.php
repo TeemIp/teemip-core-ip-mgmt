@@ -100,6 +100,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ClusterNetwork/Attribute:redundancy/disabled' => 'The cluster is up if all the network devices are up',
 	'Class:ClusterNetwork/Attribute:redundancy/count' => 'The cluster is up if at least %1$s network device(s) is(are) up',
 	'Class:ClusterNetwork/Attribute:redundancy/percent' => 'The cluster is up if at least %1$s %% of the network devices are up',
+	'Class:ClusterNetwork/Attribute:replacement_date' => 'Replacement date',
+	'Class:ClusterNetwork/Attribute:replacement_date+' => 'Target date for the device\'s replacement',
 	'Class:ClusterNetwork/Tab:connectablecis_list' => 'Devices',
 	'Class:ClusterNetwork/Tab:connectablecis_list+' => 'List of all the devices connected to this cluster network',
 ));
@@ -157,6 +159,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDevice/Attribute:aggregatelinks_list' => 'Aggregate links',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list+' => 'List of all aggregate links attached to this device',
 	'Class:NetworkDevice/Attribute:snmpcredentials_id' => 'SNMP Credentials',
+	'Class:NetworkDevice/Attribute:snmpcredentials_id+' => 'Credentials that must be used to reach the device through SNMP',
+	'Class:NetworkDevice/Attribute:replacement_date' => 'Replacement date',
+	'Class:NetworkDevice/Attribute:replacement_date+' => 'Target date for the device\'s replacement',
 ));
 
 //

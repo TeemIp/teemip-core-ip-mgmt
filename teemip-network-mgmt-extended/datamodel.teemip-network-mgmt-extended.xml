@@ -740,6 +740,11 @@
           <min_up_type>count</min_up_type>
           <min_up_mode>user</min_up_mode>
         </field>
+        <field id="replacement_date" xsi:type="AttributeDate">
+          <sql>replacement_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <methods>
         <method id="DisplayBareRelations" _delta="define">
@@ -834,6 +839,9 @@
                     <item id="move2production">
                       <rank>10</rank>
                     </item>
+                    <item id="replacement_date">
+                      <rank>20</rank>
+                    </item>
                   </items>
                 </item>
                 <item id="fieldset:Class:ClusterNetwork:otherinfo">
@@ -870,6 +878,9 @@
             </item>
             <item id="move2production">
               <rank>80</rank>
+            </item>
+            <item id="replacement_date">
+              <rank>90</rank>
             </item>
           </items>
         </search>
@@ -1098,6 +1109,11 @@
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_AUTO</on_target_delete>
         </field>
+        <field id="replacement_date" xsi:type="AttributeDate" _delta="define_if_not_exists">
+          <sql>replacement_date</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
       </fields>
       <relations>
         <relation id="impacts">
@@ -1137,6 +1153,17 @@
                   <items>
                     <item id="snmpcredentials_id" _delta="define">
                       <rank>47</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2" _delta="must_exist">
+              <items>
+                <item id="fieldset:Server:Date" _delta="must_exist">
+                  <items>
+                    <item id="replacement_date" _delta="define_if_not_exists">
+                      <rank>60</rank>
                     </item>
                   </items>
                 </item>

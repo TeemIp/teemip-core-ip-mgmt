@@ -100,6 +100,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ClusterNetwork/Attribute:redundancy/disabled' => 'Le Cluster est opérationnel si tous les équipements réseau qui le composent sont opérationnels',
 	'Class:ClusterNetwork/Attribute:redundancy/count' => 'Nombre minimal d\'équipements réseau pour que le Cluster soit opérationnel : %1$s',
 	'Class:ClusterNetwork/Attribute:redundancy/percent' => 'Pourcentage minimal d\'équipements réseau pour que le Cluster soit opérationnel : %1$s %%',
+	'Class:ClusterNetwork/Attribute:replacement_date' => 'Date de remplacement',
+	'Class:ClusterNetwork/Attribute:replacement_date+' => 'Date à laquelle l\'équipement doit être remplacé',
 	'Class:ClusterNetwork/Tab:connectablecis_list' => 'Equipements',
 	'Class:ClusterNetwork/Tab:connectablecis_list+' => 'Liste de tous les matériels connectés au cluster',
 ));
@@ -155,6 +157,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:NetworkDevice/Attribute:networkdevicecomponents_list+' => 'Liste de tous les composants réseau attachés à cet équipement',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list' => 'Agrégats de Liens',
 	'Class:NetworkDevice/Attribute:aggregatelinks_list+' => 'Liste de tous les agrégats de liens attachés à cet équipement',
+	'Class:NetworkDevice/Attribute:snmpcredentials_id' => 'Identification SNMP',
+	'Class:NetworkDevice/Attribute:snmpcredentials_id+' => 'Informations d\'identification qui doivent être utilisées pour accéder à l\'équipement via SNMP',
+	'Class:NetworkDevice/Attribute:replacement_date' => 'Date de remplacement',
+	'Class:NetworkDevice/Attribute:replacement_date+' => 'Date à laquelle l\'équipement doit être remplacé',
 ));
 
 //
