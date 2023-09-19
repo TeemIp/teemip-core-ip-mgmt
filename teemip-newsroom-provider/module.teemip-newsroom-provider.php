@@ -7,7 +7,7 @@
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-newsroom-provider/1.1.1',
+	'teemip-newsroom-provider/1.1.2',
 	array(
 		// Identification
 		//
