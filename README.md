@@ -1,4 +1,4 @@
-# <img src="https://wiki.teemip.net/lib/exe/fetch.php?media=extensions:icone-teemip-48px.png"> TeemIp Core IP Management
+# <img src="https://wiki.teemip.net/lib/exe/fetch.php?media=extensions:picto_ipamforitop.png"> TeemIp Core IP Management
 Core modules of TeemIp, a WEB based IP Address Management tool
 
 
