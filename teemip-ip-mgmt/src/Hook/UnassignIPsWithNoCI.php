@@ -122,7 +122,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 				$sOQLj = "";
 				$i = 0;
 				foreach ($aIPAttributes as $sAttribute) {
-					$sOQLi = "SELECT IPAddress AS ip JOIN $sClass AS ci ON ci.$sAttribute = ip.id WHERE ci.org_id IN $sOrgToCleanList";
+					$sOQLi = "SELECT IPAddress AS ip JOIN $sClass AS ci ON ci.$sAttribute = ip.id";
 					if ($i++ == 0) {
 						$sOQLj = $sOQLi;
 					} else {
@@ -139,12 +139,12 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 		}
 
 		// 2nd step: add to OQL the list of IPs attached to interfaces of CIs belonging to listed organizations
-		$sOQLk = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id WHERE c.org_id IN $sOrgToCleanList";
+		$sOQLk = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id";
 		if (class_exists('NetworkDeviceVirtualInterface')) {
-			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id WHERE n.org_id IN $sOrgToCleanList";
+			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id";
 		}
 		if (class_exists('LogicalInterface')) {
-			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id WHERE v.org_id IN $sOrgToCleanList";
+			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN LogicalInterface AS l ON lnk.ipinterface_id = l.id JOIN VirtualMachine AS v ON l.virtualmachine_id = v.id";
 		}
 		if ($sOQLni == '') {
 			$sOQLni = $sOQLk;
@@ -153,7 +153,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 		}
 
 		// 3rd step: get allocated IPs not attached to any CI nor interface and set their status accordingly
-		$sOQL = "SELECT IPAddress WHERE status = 'allocated' AND id NOT IN (".$sOQLni.")";
+		$sOQL = "SELECT IPAddress WHERE status = 'allocated' AND id NOT IN (".$sOQLni.") AND org_id IN $sOrgToCleanList";
 		$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
 			try {
