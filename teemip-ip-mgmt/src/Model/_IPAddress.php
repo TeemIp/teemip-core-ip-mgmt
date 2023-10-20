@@ -289,36 +289,45 @@ class _IPAddress extends IPObject
 			$sName = Dict::Format('Class:IPAddress/Tab:ci_list');
 			$sTitle = Dict::Format('Class:IPAddress/Tab:ci_list+');
 			if ($iNbAllCIs != 0) {
-				$oP->SetCurrentTab($sName.' ('.$iNbAllCIs.')');
-				$oP->p($sTitle);
+				$oP->SetCurrentTab('ci_list', $sName.' ('.$iNbAllCIs.')', $sTitle);
 				foreach ($aCIsToList as $sCI => $sKey) {
 					if ($aCIsToList[$sCI]['nb_to_list'] != 0) {
 						$sClass = $aCIsToList[$sCI]['set']->GetClass();
-						if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-							$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass)));
-						} else {
-							$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-							$oClassIcon->SetDescription(Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass)))->AddCSSClass('ibo-block-list--medallion');
-							$oP->AddUiBlock($oClassIcon);
-						}
-						// Use DisplayBlock::FromObjectSet and not new DisplayBlock to make sure obsolete CIs are displayd
 						$oBlock = DisplayBlock::FromObjectSet($aCIsToList[$sCI]['set'], 'list', array('show_obsolete_data' => true));
-						$oBlock->Display($oP, $sCI, array('menu' => false));
+						$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
+						if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
+							$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
+							$oClassIcon->SetDescription($sSubTitle)->AddCSSClass('ibo-block-list--medallion');
+							$oP->AddUiBlock($oClassIcon);
+							$oBlock->Display($oP, 'blk-'.strtolower($sClass), array('menu' => false));
+						} else {
+							$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
+								'menu' => false,
+								'panel_title' => MetaModel::GetName($sClass),
+								'panel_title_tooltip' => $sSubTitle,
+								'panel_icon' => MetaModel::GetClassIcon($sClass, false)
+							));
+						}
 					}
 				}
 
 				if ($iNbIPInterfaces != 0) {
 					$sClass = $oIPInterfaceSet->GetClass();
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$oP->p(MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass)));
-					} else {
-						$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-						$oClassIcon->SetDescription(Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass)))->AddCSSClass('ibo-block-list--medallion');
-						$oP->AddUiBlock($oClassIcon);
-					}
-					// Use DisplayBlock::FromObjectSet and not new DisplayBlock to make sure obsolete interfaces are displayd
 					$oBlock = DisplayBlock::FromObjectSet($oIPInterfaceSet, 'list', array('show_obsolete_data' => true));
-					$oBlock->Display($oP, 'ii_id', array('menu' => false));
+					$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
+					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
+						$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
+						$oClassIcon->SetDescription($sSubTitle)->AddCSSClass('ibo-block-list--medallion');
+						$oP->AddUiBlock($oClassIcon);
+						$oBlock->Display($oP, 'blk-'.strtolower($sClass), array('menu' => false));
+					} else {
+						$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
+							'menu' => false,
+							'panel_title' => MetaModel::GetName($sClass),
+							'panel_title_tooltip' => $sSubTitle,
+							'panel_icon' => MetaModel::GetClassIcon($sClass, false)
+						));
+					}
 				}
 			} else {
 				$oSet = CMDBObjectSet::FromScratch('FunctionalCI');
