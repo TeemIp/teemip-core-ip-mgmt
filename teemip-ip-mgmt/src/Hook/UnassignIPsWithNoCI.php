@@ -108,7 +108,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 		}
 		$sOrgToCleanList .= ")";
 
-		// 1st step: create OQL that lists the IPs attached to a CI belonging to listed organizations
+		// 1st step: create OQL that lists the IPs attached to a CI
 		$aClassesWithIPs = IPUtils::GetListOfClassesWithIPs();
 		$sOQLni = "";
 		if (empty($aClassesWithIPs)) {
@@ -138,7 +138,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 			}
 		}
 
-		// 2nd step: add to OQL the list of IPs attached to interfaces of CIs belonging to listed organizations
+		// 2nd step: add to OQL the list of IPs attached to interfaces of CIs
 		$sOQLk = "SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN PhysicalInterface AS p ON lnk.ipinterface_id = p.id JOIN ConnectableCI AS c ON p.connectableci_id = c.id";
 		if (class_exists('NetworkDeviceVirtualInterface')) {
 			$sOQLk .= " UNION SELECT IPAddress AS ip JOIN lnkIPInterfaceToIPAddress AS lnk ON lnk.ipaddress_id = ip.id JOIN NetworkDeviceVirtualInterface AS vi ON lnk.ipinterface_id = vi.id JOIN NetworkDevice AS n ON vi.networkdevice_id = n.id";
@@ -152,7 +152,7 @@ class UnassignIPsWithNoCI implements iScheduledProcess
 			$sOQLni .= " UNION ".$sOQLk;
 		}
 
-		// 3rd step: get allocated IPs not attached to any CI nor interface and set their status accordingly
+		// 3rd step: get allocated IPs not attached to any CI nor interface and belonging to listed organizations then set their status accordingly
 		$sOQL = "SELECT IPAddress WHERE status = 'allocated' AND id NOT IN (".$sOQLni.") AND org_id IN $sOrgToCleanList";
 		$oIPAddressSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL));
 		while ((time() < $iUnixTimeLimit) && $oIPAddress = $oIPAddressSet->Fetch()) {
