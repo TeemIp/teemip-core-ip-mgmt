@@ -105,125 +105,52 @@ class FindSpace {
 			'ipv6space' => Dict::S('UI:IPManagement:Action:FindSpace:IPv6Space'),
 		);
 
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sClassIcon = MetaModel::GetClassIcon('IPv4Block');
-			$oP->add(<<<HTML
-				<!-- Display title -->
-				<div class="page_header teemip_page_header">
-					<h1>$sClassIcon $sHeaderTitle</h1>
-				</div>
-				<!-- Beginning of wizContainer -->
-				<div class="wizContainer">
-HTML
-			);
+		$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$sClassIconUrl = MetaModel::GetClassIcon('IPv4Block', false);
+		$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
+			->SetIcon($sClassIconUrl);
+		$oP->AddUiBlock($oPanel);
 
-			// Display form's attributes
-			$iFormId = rand();
-			$iTransactionId = utils::GetNewTransactionId();
-			$oP->SetTransactionId($iTransactionId);
-			$sFormAction = utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-			$oP->add("<form action=\"$sFormAction\" id=\"form_$iFormId\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_$iFormId');\">\n");
-			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oPanel->AddMainBlock($oClassForm);
 
-			$oP->add("<table>");
-			$oP->add('<tr><td style="vertical-align:top">');
+		$oMultiColumn = new MultiColumn();
+		$oClassForm->AddSubBlock($oMultiColumn)
+			->AddHtml($oAppContext->GetForForm())
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'findspace'));
 
-			$aDetails = array();
+		// First column = labels
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
+		// Second column = selects
+		$oColumn2 = new Column();
+		$oMultiColumn->AddColumn($oColumn2);
 
-			// Select organization
-			$sLabelOfAction = Dict::S('UI:IPManagement:Action:FindSpace:Organization');
-			$sInputId = $iFormId.'_org_id';
-			$sHTMLValue = "<select id=\"$sInputId\" name=\"org_id\">\n";
-			while ($oOrg = $oOrgSet->Fetch()) {
-				$iOrgKey = $oOrg->GetKey();
-				$sOrgName = $oOrg->GetName();
-				if ($iOrgKey == $iUserOrg) {
-					$sHTMLValue .= "<option selected='' value=\"$iOrgKey\">".$sOrgName."</option>\n";
-				} else {
-					$sHTMLValue .= "<option value=\"$iOrgKey\">".$sOrgName."</option>\n";
-				}
-			}
-			$sHTMLValue .= "</select>";
-			$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction.'</span>', 'value' => $sHTMLValue);
-
-			// Select IP space type
-			$sLabelOfAction = Dict::S('UI:IPManagement:Action:FindSpace:SpaceType');
-			$sInputId = $iFormId.'_spacetype';
-			$sHTMLValue = '<select id='.$sInputId.' name=spacetype>';
-			foreach ($aPossibleSpaces as $sSpaceName => $sSpaceLabel) {
-				$sHTMLValue .= '<option value='.$sSpaceName.'>'.$sSpaceLabel.'</option>';
-			}
-			$sHTMLValue .= "</select>";
-			$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction.'</span>', 'value' => $sHTMLValue);
-
-			$oP->Details($aDetails);
-			$oP->add('</td></tr>');
-
-			// Apply button
-			$oP->add("<tr><td><button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Next')."</span></button></td></tr>");
-			$oP->add("</table>");
-
-			// Load other parameters to post
-			$sNextOperation = 'findspace';
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
-
-			$oP->add('</form>');
-			$oP->add("</div>\n");
-
-			$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-HTML
-			);
-		} else {
-			$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-			$sClassIconUrl = MetaModel::GetClassIcon('IPv4Block', false);
-			$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
-				->SetIcon($sClassIconUrl);
-			$oP->AddUiBlock($oPanel);
-
-			$oClassForm = FormUIBlockFactory::MakeStandard();
-			$oPanel->AddMainBlock($oClassForm);
-
-			$oMultiColumn = new MultiColumn();
-			$oClassForm->AddSubBlock($oMultiColumn)
-				->AddHtml($oAppContext->GetForForm())
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'findspace'));
-
-			// First column = labels
-			$oColumn1 = new Column();
-			$oMultiColumn->AddColumn($oColumn1);
-			// Second column = selects
-			$oColumn2 = new Column();
-			$oMultiColumn->AddColumn($oColumn2);
-
-			//  Organization
-			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:Organization')));
-			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-			$oSelect = SelectUIBlockFactory::MakeForSelect('org_id');
-			$oColumn2->AddSubBlock($oSelect);
-			while ($oOrg = $oOrgSet->Fetch()) {
-				$iOrgKey = $oOrg->GetKey();
-				$sOrgName = $oOrg->GetName();
-				$bSelected = ($iOrgKey == $iUserOrg) ? true : false;
-				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iOrgKey, $sOrgName, $bSelected));
-			}
-			$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
-
-			//  IP space type
-			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:SpaceType')));
-			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-			$oSelect = SelectUIBlockFactory::MakeForSelect('spacetype');
-			$oColumn2->AddSubBlock($oSelect);
-			foreach ($aPossibleSpaces as $sSpaceName => $sSpaceLabel) {
-				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sSpaceName, $sSpaceLabel, false));
-			}
-
-			$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-			$oClassForm->AddSubBlock($oToolbar);
-			$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+		//  Organization
+		$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:Organization')));
+		$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+		$oSelect = SelectUIBlockFactory::MakeForSelect('org_id');
+		$oColumn2->AddSubBlock($oSelect);
+		while ($oOrg = $oOrgSet->Fetch()) {
+			$iOrgKey = $oOrg->GetKey();
+			$sOrgName = $oOrg->GetName();
+			$bSelected = ($iOrgKey == $iUserOrg) ? true : false;
+			$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iOrgKey, $sOrgName, $bSelected));
 		}
+		$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
+
+		//  IP space type
+		$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:SpaceType')));
+		$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+		$oSelect = SelectUIBlockFactory::MakeForSelect('spacetype');
+		$oColumn2->AddSubBlock($oSelect);
+		foreach ($aPossibleSpaces as $sSpaceName => $sSpaceLabel) {
+			$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sSpaceName, $sSpaceLabel, false));
+		}
+
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oClassForm->AddSubBlock($oToolbar);
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
@@ -274,176 +201,79 @@ HTML
 			$InputSize = IPUtils::MaskToSize(IPUtils::BitToMask($iPrefix)); // Corrects pb with some 64bits OS - Centos...
 		}
 
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sClassIcon = MetaModel::GetClassIcon($sBlockClass);
-			$oP->add(<<<HTML
-			<!-- Display title -->
-			<div class="page_header teemip_page_header">
-				<h1>$sClassIcon $sHeaderTitle</h1>
-			</div>
-			<!-- Beginning of wizContainer -->
-			<div class="wizContainer">
-HTML
-			);
+		$sClassIconUrl = MetaModel::GetClassIcon('IPv4Block', false);
+		$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
+			->SetIcon($sClassIconUrl);
+		$oP->AddUiBlock($oPanel);
 
-			// Display form's attributes
-			$iFormId = rand();
-			$iTransactionId = utils::GetNewTransactionId();
-			$oP->SetTransactionId($iTransactionId);
-			$sFormAction = utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-			$oP->add("<form action=\"$sFormAction\" id=\"form_{$iFormId}\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_{$iFormId}');\">\n");
-			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oPanel->AddMainBlock($oClassForm);
 
-			$oP->add("<table>");
-			$oP->add('<tr><td style="vertical-align:top">');
+		$oMultiColumn = new MultiColumn();
+		$oClassForm->AddSubBlock($oMultiColumn)
+			->AddHtml($oAppContext->GetForForm())
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('org_id', $iOrgId))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('spacetype', $sSpaceType))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'dofindspace'));
 
-			$aDetails = array();
+		// First column = labels
+		$oColumn1 = new Column();
+		$oMultiColumn->AddColumn($oColumn1);
+		// Second column = data
+		$oColumn2 = new Column();
+		$oMultiColumn->AddColumn($oColumn2);
 
-			// First IP
-			$sLabelOfAction = Dict::S('UI:IPManagement:Action:FindSpace:FirstIP');
-			$sAttCode = 'ip';
-			$sInputId = $iFormId.'_ip';
-			$oAttDef = MetaModel::GetAttributeDef($sAddressClass, 'ip');
-			if (($iBlockId == 0) || is_null($oBlock)) {
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sAddressClass, $sAttCode, $oAttDef, '', '', $sInputId, '', 0, '');
-			} else {
-				$sHTMLValue = '';
-				$oP->add("<input type=\"hidden\" name=\"attr_ip\" value=\"$sHTMLValue\">\n");
-			}
-			$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction.'</span>', 'value' => $sHTMLValue);
-
-			// Size
-			$sLabelOfAction = Dict::S('UI:IPManagement:Action:FindSpace:SpaceSize');
-			$sInputId = $iFormId.'_spacesize';
-			$sHTMLValue = '<select id='.$sInputId.' name=spacesize>';
-			$iPrefix = (($iBlockId == 0) || is_null($oBlock)) ? 1 : $oBlock->GetMinTheoriticalBlockPrefix();
-			if ($sSpaceType == 'ipv4space') {
-				while ($iPrefix <= 32) {
-					if ($iPrefix == $iDefaultMask) {
-						$sHTMLValue .= "<option selected='' value=\"$InputSize\">".IPUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
-					} else {
-						$sHTMLValue .= "<option value=\"$InputSize\">".IPUtils::BitToMask($iPrefix)." /$iPrefix</option>\n";
-					}
-					$InputSize /= 2;
-					$iPrefix++;
-				}
-			} else {
-				while ($iPrefix <= 128) {
-					if ($iPrefix == IPV6_SUBNET_MAX_PREFIX) {
-						$sHTMLValue .= "<option selected='' value=\"$iPrefix\"> /$iPrefix</option>\n";
-					} else {
-						$sHTMLValue .= "<option value=\"$iPrefix\"> /$iPrefix</option>\n";
-					}
-					$iPrefix++;
-				}
-			}
-			$sHTMLValue .= "</select>";
-			$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction.'</span>', 'value' => $sHTMLValue);
-
-			// Max number of offers
-			$sLabelOfAction = Dict::S('UI:IPManagement:Action:FindSpace:MaxNumberOfOffers');
-			$sInputId = $iFormId.'_maxoffer';
-			$sHTMLValue = '<input id='.$sInputId.' type=text value='.DEFAULT_MAX_FREE_SPACE_OFFERS.' name=maxoffer maxlength=2 size=2>';
-			$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction.'</span>', 'value' => $sHTMLValue);
-
-			$oP->Details($aDetails);
-			$oP->add('</td></tr>');
-
-			// Apply button
-			$oP->add("<tr><td><button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
-
-			$oP->add("</table>");
-
-			// Load other parameters to post
-			$sNextOperation = 'dofindspace';
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"org_id\" value=\"$iOrgId\">\n");
-			$oP->add("<input type=\"hidden\" name=\"spacetype\" value=\"$sSpaceType\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
-
-			$oP->add('</form>');
-			$oP->add("</div>\n");
-
-			$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-HTML
-			);
+		// First IP
+		$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:FirstIP')));
+		$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+		$oAttDef = MetaModel::GetAttributeDef($sAddressClass, 'ip');
+		if (($iBlockId == 0) || is_null($oBlock)) {
+			$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sAddressClass, 'ip', $oAttDef, '', '', 'ip');
 		} else {
-			$sClassIconUrl = MetaModel::GetClassIcon('IPv4Block', false);
-			$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
-				->SetIcon($sClassIconUrl);
-			$oP->AddUiBlock($oPanel);
-
-			$oClassForm = FormUIBlockFactory::MakeStandard();
-			$oPanel->AddMainBlock($oClassForm);
-
-			$oMultiColumn = new MultiColumn();
-			$oClassForm->AddSubBlock($oMultiColumn)
-				->AddHtml($oAppContext->GetForForm())
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('org_id', $iOrgId))
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('spacetype', $sSpaceType))
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'dofindspace'));
-
-			// First column = labels
-			$oColumn1 = new Column();
-			$oMultiColumn->AddColumn($oColumn1);
-			// Second column = data
-			$oColumn2 = new Column();
-			$oMultiColumn->AddColumn($oColumn2);
-
-			// First IP
-			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:FirstIP')));
-			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-			$oAttDef = MetaModel::GetAttributeDef($sAddressClass, 'ip');
-			if (($iBlockId == 0) || is_null($oBlock)) {
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sAddressClass, 'ip', $oAttDef, '', '', 'ip');
-			} else {
-				$sHTMLValue = '';
-			}
-			$val = array(
-				'label' => '',
-				'value' => $sHTMLValue,
-				'input_id' => 'ip',
-				'input_type' => '',
-				'comments' => '',
-				'infos' => '',
-			);
-			$oField = FieldUIBlockFactory::MakeFromParams($val);
-			$oColumn2->AddSubBlock($oField);
-			$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-
-			// Size
-			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:SpaceSize')));
-			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-			$oSelect = SelectUIBlockFactory::MakeForSelect('spacesize');
-			$oColumn2->AddSubBlock($oSelect);
-			if ($sSpaceType == 'ipv4space') {
-				while ($iPrefix <= 32) {
-					$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
-					$InputSize /= 2;
-					$iPrefix++;
-				}
-			} else {
-				while ($iPrefix <= 128) {
-					$bSelected = ($iPrefix == IPV6_SUBNET_MAX_PREFIX) ? true : false;
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iPrefix, '/'.$iPrefix, $bSelected));
-					$iPrefix++;
-				}
-			}
-			$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
-
-			// Max number of offers
-			$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:MaxNumberOfOffers')));
-			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-			$oInput = InputUIBlockFactory::MakeStandard('text', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
-			$oColumn2->AddSubBlock($oInput);
-
-			$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-			$oClassForm->AddSubBlock($oToolbar);
-			$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+			$sHTMLValue = '';
 		}
+		$val = array(
+			'label' => '',
+			'value' => $sHTMLValue,
+			'input_id' => 'ip',
+			'input_type' => '',
+			'comments' => '',
+			'infos' => '',
+		);
+		$oField = FieldUIBlockFactory::MakeFromParams($val);
+		$oColumn2->AddSubBlock($oField);
+		$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+
+		// Size
+		$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:SpaceSize')));
+		$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+		$oSelect = SelectUIBlockFactory::MakeForSelect('spacesize');
+		$oColumn2->AddSubBlock($oSelect);
+		if ($sSpaceType == 'ipv4space') {
+			while ($iPrefix <= 32) {
+				$bSelected = ($iPrefix == $iDefaultMask) ? true : false;
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($InputSize, IPUtils::BitToMask($iPrefix).'/'.$iPrefix, $bSelected));
+				$InputSize /= 2;
+				$iPrefix++;
+			}
+		} else {
+			while ($iPrefix <= 128) {
+				$bSelected = ($iPrefix == IPV6_SUBNET_MAX_PREFIX) ? true : false;
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iPrefix, '/'.$iPrefix, $bSelected));
+				$iPrefix++;
+			}
+		}
+		$oColumn2->AddSubBlock(HtmlFactory::MakeRaw('<br><br>'));
+
+		// Max number of offers
+		$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:FindSpace:MaxNumberOfOffers')));
+		$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+		$oInput = InputUIBlockFactory::MakeStandard('text', 'maxoffer', DEFAULT_MAX_FREE_SPACE_OFFERS);
+		$oColumn2->AddSubBlock($oInput);
+
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oClassForm->AddSubBlock($oToolbar);
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 	}
 
 	/**
@@ -528,23 +358,18 @@ HTML
 		if ($sMessage != '') {
 			DisplayMessage::Info($oP, $sMessage);
 		}
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$oBlock->SetPageTitles($oP, 'UI:IPManagement:Action:DoFindSpace:'.$sClass.':');
-			$oP->add($sHtml);
-		} else {
-			$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-			$sClassLabel = MetaModel::GetName($sClass);
-			$sClassName = $oBlock->Get('name');
+		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+		$sClassLabel = MetaModel::GetName($sClass);
+		$sClassName = $oBlock->Get('name');
 
-			$sTitle = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':Title_Class_Object', $sClassLabel, $sClassName);
-			$oP->SetBreadCrumbEntry($sTitle, $sTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-			$oP->set_title($sTitle);
+		$sTitle = Dict::Format('UI:IPManagement:Action:DoFindSpace:'.$sClass.':Title_Class_Object', $sClassLabel, $sClassName);
+		$oP->SetBreadCrumbEntry($sTitle, $sTitle, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->set_title($sTitle);
 
-			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
-			$oP->AddUiBlock($oPanel);
-			$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))
-				->AddHtml($sHtml);
-		}
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
+		$oP->AddUiBlock($oPanel);
+		$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))
+			->AddHtml($sHtml);
 	}
 
 }
