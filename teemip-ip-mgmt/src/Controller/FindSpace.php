@@ -397,7 +397,7 @@ HTML
 			$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
 			$oAttDef = MetaModel::GetAttributeDef($sAddressClass, 'ip');
 			if (($iBlockId == 0) || is_null($oBlock)) {
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sAddressClass, 'ip', $oAttDef, '', '', 'ip', '', 0, '');
+				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sAddressClass, 'ip', $oAttDef, '', '', 'ip');
 			} else {
 				$sHTMLValue = '';
 			}
