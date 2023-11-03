@@ -126,111 +126,56 @@ class _IPAbstractObject extends cmdbAbstractObject {
 		}
 
 		$sNextOperation = $this->GetNextOperation($sOperation);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			// Set page titles
-			$this->SetPageTitles($oP, $sUIPath);
+		// Prepare form
+		$sUITitle = Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel);
+		$oP->SetBreadCrumbEntry($sUITitle, $sUITitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->set_title($sUITitle);
 
-			// Set blue modification frame
-			$oP->add("<div class=\"wizContainer\">\n");
+		$iTransactionId = utils::GetNewTransactionId();
+		$oP->SetTransactionId($iTransactionId);
+		$this->GetNewFormId('');
 
-			// Preparation to allow new values to be posted
-			$aFieldsMap = array();
-			$sPrefix = '';
-			$m_iFormId = $this->GetNewFormId($sPrefix);
-			$iTransactionId = utils::GetNewTransactionId();
-			$oP->SetTransactionId($iTransactionId);
-			$sFormAction = utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-			$oP->add("<form action=\"$sFormAction\" id=\"form_$m_iFormId\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_$m_iFormId');\">\n");
-			$oP->add_ready_script("$(window).unload(function() { OnUnload('$iTransactionId') } );\n");
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
+		$oContentBlock = new UIContentBlock();
+		$oP->AddUiBlock($oContentBlock);
 
-			// Display object attributes as a reminder
-			if (in_array($sOperation, array('shrinkblock', 'shrinksubnet', 'splitblock', 'splitsubnet', 'expandblock', 'expandsubnet'))) {
-				// Display main tab
-				$oP->AddTabContainer(OBJECT_PROPERTIES_TAB);
-				$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oForm = FormUIBlockFactory::MakeStandard();
+		$oContentBlock->AddSubBlock($oForm);
 
-				// Display object attributes
-				$this->DisplayMainAttributesForOperation($oP, $sOperation, $m_iFormId, $sPrefix, $aDefault);
+		$oForm->AddHtml($oAppContext->GetForForm())
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sNextOperation))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $id))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
-				$oP->SetCurrentTab();
-			}
+		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('$sClass', '$id', '', '{null}');");
+		$oCancelButton->AddCSSClasses(['action', 'cancel']);
+		$oToolbarButtons->AddSubBlock($oCancelButton);
+		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
+		$oApplyButton->AddCSSClass('action');
+		$oToolbarButtons->AddSubBlock($oApplyButton);
 
-			// Display action fields
-			$this->DisplayActionFieldsForOperation($oP, $sOperation, $m_iFormId, $aDefault);
+		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
+		$oObjectDetails->AddToolbarBlock($oToolbarButtons);
 
-			// Load other parameters to post
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sNextOperation\">\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"$iTransactionId\">\n");
-			$oP->add("<input type=\"hidden\" name=\"id\" value=\"$id\">\n");
+		$oForm->AddSubBlock($oObjectDetails);
 
-			$oP->add('</form>');
-			$oP->add("</div>\n");
+		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
+		$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
+		$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oP->SetCurrentTab(Dict::S($sUIPath));
 
-			$iFieldsCount = count($aFieldsMap);
-			$sJsonFieldsMap = json_encode($aFieldsMap);
-			$sState = $this->GetState();
-			$oP->add_script(
-				<<<EOF
-				// Create the object once at the beginning of the page...
-				var oWizardHelper$sPrefix = new WizardHelper('$sClass', '$sPrefix', '$sState');
-				oWizardHelper$sPrefix.SetFieldsMap($sJsonFieldsMap);
-				oWizardHelper$sPrefix.SetFieldsCount($iFieldsCount);
+		// Display action fields and action buttons
+		$this->DisplayActionFieldsForOperationV3($oP, $oObjectDetails, $sOperation, $aDefault);
+
+		$oP->add_ready_script(
+			<<<EOF
+			$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $id) } );
 EOF
-			);
-		} else {
-			// Prepare form
-			$sUITitle = Dict::Format($sUIPath.':PageTitle_Object_Class', $this->GetName(), $sClassLabel);
-			$oP->SetBreadCrumbEntry($sUITitle, $sUITitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-			$oP->set_title($sUITitle);
+		);
 
-			$iTransactionId = utils::GetNewTransactionId();
-			$oP->SetTransactionId($iTransactionId);
-			$this->GetNewFormId('');
-
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
-			$oContentBlock = new UIContentBlock();
-			$oP->AddUiBlock($oContentBlock);
-
-			$oForm = FormUIBlockFactory::MakeStandard();
-			$oContentBlock->AddSubBlock($oForm);
-
-			$oForm->AddHtml($oAppContext->GetForForm())
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sNextOperation))
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $id))
-				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
-
-			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
-			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')->SetOnClickJsCode("BackToDetails('$sClass', '$id', '', '{null}');");
-			$oCancelButton->AddCSSClasses(['action', 'cancel']);
-			$oToolbarButtons->AddSubBlock($oCancelButton);
-			$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true);
-			$oApplyButton->AddCSSClass('action');
-			$oToolbarButtons->AddSubBlock($oApplyButton);
-
-			$oObjectDetails = ObjectFactory::MakeDetails($this);
-			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
-			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
-
-			$oForm->AddSubBlock($oObjectDetails);
-
-			// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
-			$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
-			$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-			$oP->SetCurrentTab(Dict::S($sUIPath));
-
-			// Display action fields and action buttons
-			$this->DisplayActionFieldsForOperationV3($oP, $oObjectDetails, $sOperation, $aDefault);
-
-			$oP->add_ready_script(
-				<<<EOF
-				$(window).on('unload',function() { return OnUnload('$iTransactionId', '$sClass', $id) } );
-EOF
-			);
-
-		}
 	}
 
 	/**
@@ -449,36 +394,25 @@ EOF
 	 */
 	public function DisplayBareTab(iTopWebPage $oP, $sTitle = '') {
 		$sClass = get_class($this);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			// Display action menu
-			$oSingletonFilter = new DBObjectSearch($sClass);
-			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
-			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oBlock->Display($oP, 'baretab');
+		// The object can be read - Process request now
+		$sClassLabel = MetaModel::GetName($sClass);
 
-			// Set titles
-			$this->SetPageTitles($oP, $sTitle.$sClass);
-		} else {
-			// The object can be read - Process request now
-			$sClassLabel = MetaModel::GetName($sClass);
+		$oP->set_title(Dict::Format('UI:DetailsPageTitle', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
+		$oObjectDetails = ObjectFactory::MakeDetails($this);
 
-			$oP->set_title(Dict::Format('UI:DetailsPageTitle', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-			$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($this, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
-			$oObjectDetails = ObjectFactory::MakeDetails($this);
-
-			$aHeadersBlocks = $this->DisplayBareHeader($oP, false);
-			if (false === empty($aHeadersBlocks['subtitle'])) {
-				$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
-			}
-			if (false === empty($aHeadersBlocks['toolbar'])) {
-				$oObjectDetails->AddToolbarBlocks($aHeadersBlocks['toolbar']);
-			}
-
-			$oP->AddUiBlock($oObjectDetails);
-			$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
-			$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-			$oP->SetCurrentTab(Dict::Format($sTitle.$sClass, '', ''));
+		$aHeadersBlocks = $this->DisplayBareHeader($oP, false);
+		if (false === empty($aHeadersBlocks['subtitle'])) {
+			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 		}
+		if (false === empty($aHeadersBlocks['toolbar'])) {
+			$oObjectDetails->AddToolbarBlocks($aHeadersBlocks['toolbar']);
+		}
+
+		$oP->AddUiBlock($oObjectDetails);
+		$oP->AddTabContainer(OBJECT_PROPERTIES_TAB, '', $oObjectDetails);
+		$oP->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
+		$oP->SetCurrentTab(Dict::Format($sTitle.$sClass, '', ''));
 	}
 
 	/**
