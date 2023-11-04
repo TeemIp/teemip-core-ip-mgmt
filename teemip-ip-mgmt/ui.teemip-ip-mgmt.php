@@ -99,25 +99,17 @@ try {
 			$oBlockSearch = new DisplayBlock($oFilter, 'search', false /* Asynchronous */, array('open' => true, 'table_id' => $sTableId, 'baseClass' => $sClass));
 			$oBlock = new DisplayBlock($oFilter, 'list', false);
 
-			if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-				$oBlockSearch->Display($oP, 'search_1');
-				$oP->add("<p class=\"page-header\">\n");
-				$oP->add(MetaModel::GetClassIcon($sClass, true)." ".$sTitle);
-				$oP->add("</p>\n");
-				$oBlock->Display($oP, $sTableId);
-			} else {
-				$oUIBlockSearch = $oBlockSearch->GetDisplay($oP, 'search_1', array());
+			$oUIBlockSearch = $oBlockSearch->GetDisplay($oP, 'search_1', array());
 
-				$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
-				$oUIBlockSearch->AddSubBlock($oTitle);
+			$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
+			$oUIBlockSearch->AddSubBlock($oTitle);
 
-				$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
-				$oUIBlock->AddCSSClasses(['display_block', 'sf_results_area']);
-				$oUIBlock->AddDataAttribute('target', 'search_results');
-				$oUIBlockSearch->AddSubBlock($oUIBlock);
+			$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
+			$oUIBlock->AddCSSClasses(['display_block', 'sf_results_area']);
+			$oUIBlock->AddDataAttribute('target', 'search_results');
+			$oUIBlockSearch->AddSubBlock($oUIBlock);
 
-				$oP->AddUiBlock($oUIBlockSearch);
-			}
+			$oP->AddUiBlock($oUIBlockSearch);
 			break; // End case displaylist
 
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -399,15 +391,9 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = ($sClass == 'IPv4Subnet')
+						? Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
+						: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 
@@ -459,15 +445,9 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = ($sClass == 'IPv4Subnet')
+						? Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
+						: Dict::Format('UI:IPManagement:Action:Split:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'split_result', array('display_limit' => false, 'menu' => false));
@@ -520,15 +500,9 @@ try {
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>', $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = ($sClass == 'IPv4Subnet')
-							? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
-							: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = ($sClass == 'IPv4Subnet')
+						? Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName(), $aPostedParam['scale'])
+						: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 
@@ -636,68 +610,38 @@ try {
 					'IPv6Subnet' => MetaModel::GetName('IPv6Subnet'),
 				);
 
-				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					// Select the subnet class to calculate
-					$sClassIconUrl = MetaModel::GetClassIcon('IPv4Subnet');
-					$oP->add(<<<HTML
-	<!-- Display title -->
-	<div class="page_header teemip_page_header">
-		<h1>$sClassIconUrl $sHeaderTitle</h1>
-	</div>
-	<!-- Beginning of wizContainer -->
-	<div class="wizContainer">
-HTML
-					);
-					$sFormAction = utils::GetAbsoluteUrlModulesRoot()."/teemip-ip-mgmt/ui.teemip-ip-mgmt.php";
-					$oP->add("<form action=\"$sFormAction\" id=\"form_for_subnet_calculator\" enctype=\"multipart/form-data\" method=\"post\" onSubmit=\"return OnSubmit('form_for_subnet_calculator');\">\n");
-					$oP->add('<p>'.Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType'));
-					$oP->add($oAppContext->GetForForm());
-					$oP->add("<input type=\"hidden\" name=\"operation\" value=\"calculator\">\n");
-					$oP->add('<select name="class">');
-					foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
-						$oP->add("<option value=\"$sClassName\">$sClassLabel</option>");
-					}
-					$oP->add('</select>');
-					$oP->add("&nbsp; <input type=\"submit\" value=\"".Dict::S('UI:Button:Apply')."\"></p>");
-					$oP->add('</form>');
-					$oP->add(<<<HTML
-	</div><!-- End of wizContainer -->
-HTML
-					);
-				} else {
-					$sClassIconUrl = MetaModel::GetClassIcon('IPv4Subnet', false);
-					$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-					$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
-						->SetIcon($sClassIconUrl);
-					$oP->AddUiBlock($oPanel);
+				$sClassIconUrl = MetaModel::GetClassIcon('IPv4Subnet', false);
+				$oP->SetBreadCrumbEntry($sHeaderTitle, $sHeaderTitle, '', '', 'fas fa-wrench', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+				$oPanel = PanelUIBlockFactory::MakeNeutral($sHeaderTitle)
+					->SetIcon($sClassIconUrl);
+				$oP->AddUiBlock($oPanel);
 
-					$oClassForm = FormUIBlockFactory::MakeStandard();
-					$oPanel->AddMainBlock($oClassForm);
+				$oClassForm = FormUIBlockFactory::MakeStandard();
+				$oPanel->AddMainBlock($oClassForm);
 
-					$oMultiColumn = new MultiColumn();
-					$oClassForm->AddSubBlock($oMultiColumn)
-						->AddHtml($oAppContext->GetForForm())
-						->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'calculator'));
+				$oMultiColumn = new MultiColumn();
+				$oClassForm->AddSubBlock($oMultiColumn)
+					->AddHtml($oAppContext->GetForForm())
+					->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'calculator'));
 
-					// First column = labels
-					$oColumn1 = new Column();
-					$oMultiColumn->AddColumn($oColumn1);
-					// Second column = selects
-					$oColumn2 = new Column();
-					$oMultiColumn->AddColumn($oColumn2);
+				// First column = labels
+				$oColumn1 = new Column();
+				$oMultiColumn->AddColumn($oColumn1);
+				// Second column = selects
+				$oColumn2 = new Column();
+				$oMultiColumn->AddColumn($oColumn2);
 
-					$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType')));
-					$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
-					$oSelect = SelectUIBlockFactory::MakeForSelect('class');
-					$oColumn2->AddSubBlock($oSelect);
-					foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
-						$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, false));
-					}
-
-					$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-					$oClassForm->AddSubBlock($oToolbar);
-					$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('UI:IPManagement:Action:Calculator:IPSubnet:SelectSubnetType')));
+				$oColumn1->AddSubBlock(HtmlFactory::MakeRaw('<br>'));
+				$oSelect = SelectUIBlockFactory::MakeForSelect('class');
+				$oColumn2->AddSubBlock($oSelect);
+				foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, false));
 				}
+
+				$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+				$oClassForm->AddSubBlock($oToolbar);
+				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
 			}
 			break; // End case calculator
 
@@ -736,14 +680,9 @@ HTML
 			if ($sErrorString != '') {
 				// Found issues, explain and give the user another chance
 				$sMessage = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':CannotRun', $sErrorString);
-				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					$sMessageContainer = "<div class=\"header_message message_error teemip_message_status\">".$sMessage."</div>";
-					$oP->add($sMessageContainer);
-				} else {
-					$oPanel = PanelUIBlockFactory::MakeForWarning('')
-						->AddHtml($sMessage);
-					$oP->AddUiBlock($oPanel);
-				}
+				$oPanel = PanelUIBlockFactory::MakeForWarning('')
+					->AddHtml($sMessage);
+				$oP->AddUiBlock($oPanel);
 
 				$sNextOperation = $oObj->GetNextOperation($operation);
 				$oObj->DisplayOperationForm($oP, $oAppContext, $sNextOperation, $aPostedParam);
@@ -753,19 +692,14 @@ HTML
 					$oObj->DisplayCalculatorOutput($oP, $aPostedParam);
 				} else {
 					$sHtml = $oObj->GetCalculatorOutput($oP, $aPostedParam);
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$oObj->SetPageTitles($oP, 'UI:IPManagement:Action:DoCalculator:'.$sClass.':');
-						$oP->add($sHtml);
-					} else {
-						$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-						$sTitle = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':Title_Class_Object', $sClassLabel, '');
+					$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+					$sTitle = Dict::Format('UI:IPManagement:Action:DoCalculator:'.$sClass.':Title_Class_Object', $sClassLabel, '');
 
-						$oP->set_title($sTitle);
-						$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
-						$oP->AddUiBlock($oPanel);
-						$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))
-							->AddHtml($sHtml);
-					}
+					$oP->set_title($sTitle);
+					$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)->SetIcon($sClassIconUrl);
+					$oP->AddUiBlock($oPanel);
+					$oPanel->AddSubBlock(HtmlFactory::MakeParagraph(''))
+						->AddHtml($sHtml);
 				}
 			}
 			break; // End case docalculator
@@ -850,11 +784,7 @@ HTML
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 
@@ -904,11 +834,7 @@ HTML
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = Dict::Format('UI:IPManagement:Action:Undelegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 				}
@@ -986,11 +912,7 @@ HTML
 
 					// Display result
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 
@@ -1040,11 +962,7 @@ HTML
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = Dict::Format('UI:IPManagement:Action:Unallocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 				}
@@ -1093,11 +1011,7 @@ HTML
 					// Display result
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':PageTitle_Object_Class', $oObj->GetName(), $sClassLabel));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-						$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, '<span class="hilite">'.$oObj->GetName().'</span>');
-					} else {
-						$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
-					}
+					$sMessage = Dict::Format('UI:IPManagement:Action:ExplodeFQDN:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
 				}
@@ -1195,25 +1109,20 @@ class TeemIpUI
 	 */
 	public static function LogInvalidTransaction(WebPage $oP, $operation, $sTransactionId, $id, $sObjectName, $sClass, $sClassLabel)
 	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel));
-			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-		} else {
-			$sUser = UserRights::GetUser();
-			IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
-			$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
-			$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
-			//$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
-			//$sSeverity = 'error';
+		$sUser = UserRights::GetUser();
+		IssueLog::Error("UI.php '$operation' : invalid transaction_id ! data: user='$sUser', class='$sClass'");
+		$oP->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $sObjectName, $sClassLabel)); // Set title will take care of the encoding
+		$oP->p("<strong>".Dict::S('UI:Error:ObjectAlreadyUpdated')."</strong>\n");
+		//$sMessage = Dict::Format('UI:Error:ObjectAlreadyUpdated', MetaModel::GetName($sClass), $sObjectName);
+		//$sSeverity = 'error';
 
-			IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
-				'$operation' => $operation,
-				'$id' => $id,
-				'$sTransactionId' => $sTransactionId,
-				'$sUser' => UserRights::GetUser(),
-				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-				'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-			));
-		}
+		IssueLog::Trace('Object not updated (invalid transaction_id)', $sClass, array(
+			'$operation' => $operation,
+			'$id' => $id,
+			'$sTransactionId' => $sTransactionId,
+			'$sUser' => UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+		));
 	}
 }

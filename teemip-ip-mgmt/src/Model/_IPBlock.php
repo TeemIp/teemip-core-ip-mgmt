@@ -180,64 +180,6 @@ class _IPBlock extends IPObject {
 	}
 
 	/**
-	 * Display main block attributes
-	 *
-	 * @param \iTopWebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $sPrefix
-	 * @param $aDefault
-	 *
-	 * @throws \CoreException
-	 */
-	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-		$sClass = get_class($this);
-		$sLabelOfAction = Dict::S($this->MakeUIPath($sOperation).':Summary');
-		$oP->SetCurrentTab($sLabelOfAction);
-
-		$oP->add('<table style="vertical-align:top"><tr>');
-		$oP->add('<td style="vertical-align:top">');
-		$aDetails = array();
-
-		// Parent ID
-		$sDisplayValue = $this->GetAsHTML('parent_id');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription($sClass, 'parent_id').'">'.MetaModel::GetLabel($sClass, 'parent_id').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// First IP
-		$sDisplayValue = $this->GetAsHTML('firstip');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription($sClass, 'firstip').'">'.MetaModel::GetLabel($sClass, 'firstip').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// Last IP
-		$sDisplayValue = $this->GetAsHTML('lastip');
-		$aDetails[] = array(
-			'label' => '<span title="'.MetaModel::GetDescription($sClass, 'lastip').'">'.MetaModel::GetLabel($sClass, 'lastip').'</span>',
-			'value' => $sDisplayValue,
-		);
-
-		// Requestor ID - Can be modified
-		$sInputId = $iFormId.'_'.'requestor_id';
-		$oAttDef = MetaModel::GetAttributeDef('IPObject', 'requestor_id');
-		$sValue = (array_key_exists('requestor_id', $aDefault)) ? $aDefault['requestor_id'] : $this->Get('requestor_id');
-		$iFlags = $this->GetAttributeFlags('requestor_id');
-		$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
-		$sHTMLValue = "<span id=\"field_{$sInputId}\">".$this->GetFormElementForField($oP, 'IPObject', 'requestor_id', $oAttDef, $sValue, '', $sInputId, '', $iFlags, $aArgs).'</span>';
-		$aDetails[] = array(
-			'label' => '<span title="'.$oAttDef->GetDescription().'">'.$oAttDef->GetLabel().'</span>',
-			'value' => $sHTMLValue,
-		);
-
-		$oP->Details($aDetails);
-		$oP->add('</td>');
-		$oP->add('</tr></table>');
-	}
-
-	/**
 	 * Remind main block attributes to user when performing resizing actions
 	 *
 	 * @param \iTopWebPage $oP

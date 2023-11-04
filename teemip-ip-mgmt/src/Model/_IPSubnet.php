@@ -280,11 +280,7 @@ class _IPSubnet extends IPObject {
 			case 'iplookup_discovered':
 			case 'scan_duration':
 			case 'scan_discovered':
-				if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-					return (OPT_ATT_READONLY | $sFlagsFromParent);
-				} else {
-					return (OPT_ATT_HIDDEN | $sFlagsFromParent);
-				}
+				return (OPT_ATT_HIDDEN | $sFlagsFromParent);
 
 			default:
 				break;
@@ -341,23 +337,12 @@ class _IPSubnet extends IPObject {
 	public function DisplayIPsAsCSV(iTopWebPage $oP, $aParam) {
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 		$sHtml = $this->GetIPsAsCSV($aParam);
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$oP->add(<<<HTML
-				<div id="listipscsv" class="display_block">
-				<textarea>{$sHtml}</textarea>
-				</div>
+		$oP->add(<<<HTML
+			<div id="listipscsv" class="ibo-is-code">
+			{$sHtml}
+			</div>
 HTML
-			);
-			// Adjust the size of the block
-			$oP->add_ready_script(" $('#listipscsv>textarea').height($('#listipscsv').parent().height() - 220).width( $('#listipscsv').parent().width() - 30);");
-		} else {
-			$oP->add(<<<HTML
-				<div id="listipscsv" class="ibo-is-code">
-				{$sHtml}
-				</div>
-HTML
-			);
-		}
+		);
 	}
 
 	/**

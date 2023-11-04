@@ -125,8 +125,8 @@ class _IPv4Range extends IPRange {
 		$iLastIp = IPUtils::myip2long($sLastIp);
 		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sFirstIp') <= INET_ATON(i.ip)  AND INET_ATON(i.ip) <= INET_ATON('$sLastIp')  AND i.org_id = $sOrgId"));
 
-		// Set CRLF format according to version
-		$sCrLf = (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) ? "\n" : "<br>";
+		// Set CRLF format
+		$sCrLf = "<br>";
 
 		// List exported parameters
 		$sHtml = '"Registered","Id"';
@@ -355,9 +355,6 @@ EOF
 		// Close table
 		$sHtml .= '</div>';
 		$sHtml .= '</td></tr></table>';
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sHtml .= '</div>';         // ??
-		}
 		$oP->add_ready_script("\$('#tree ul').treeview();\n");
 		$oP->add_dict_entry('UI:ValueMustBeSet');
 		$oP->add_dict_entry('UI:ValueMustBeChanged');
@@ -427,64 +424,6 @@ EOF
 		while ($oIP = $oIPsSet->Fetch()) {
 			$oIP->DoExplodeFQDN($sFqdnAttr);
 		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
-		$oP->add("<table>");
-		$oP->add('<tr><td style="vertical-align:top">');
-
-		switch ($sOperation) {
-			case 'listips':
-			case 'csvexportips':
-				if ($sOperation == 'listips') {
-					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:ListIps:IPv4Range:FirstIP');
-					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:ListIps:IPv4Range:LastIP');
-
-					// Sub title
-					$oP->add("<b>".Dict::S('UI:IPManagement:Action:ListIps:IPv4Range:Subtitle_ListRange')."</b>\n");
-				} else {
-					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv4Range:FirstIP');
-					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv4Range:LastIP');
-
-					// Sub title
-					$oP->add("<b>".Dict::S('UI:IPManagement:Action:CsvExportIps:IPv4Range:Subtitle_ListRange')."</b>\n");
-				}
-
-				// New first IP
-				$sAttCode = 'firstip';
-				$sInputId = $iFormId.'_'.'firstip';
-				$oAttDef = MetaModel::GetAttributeDef('IPv4Range', 'firstip');
-				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
-
-				// New last IP
-				$sAttCode = 'lastip';
-				$sInputId = $iFormId.'_'.'lastip';
-				$oAttDef = MetaModel::GetAttributeDef('IPv4Range', 'lastip');
-				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv4Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction2.'</span>', 'value' => $sHTMLValue);
-
-				$oP->Details($aDetails);
-				$oP->add('</td></tr>');
-
-				// Cancell button
-				$iObjId = $this->GetKey();
-				$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('IPv4Range', $iObjId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				break;
-
-			default:
-				break;
-		}
-
-		// Apply button
-		$oP->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
-
-		$oP->add("</table>");
 	}
 
 	/**

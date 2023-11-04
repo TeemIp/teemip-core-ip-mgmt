@@ -296,20 +296,6 @@ EOF
 	}
 
 	/**
-	 * Remind main block attributes to user when performing resizing actions
-	 *
-	 * @param \iTopWebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $sPrefix
-	 * @param $aDefault
-	 *
-	 * @return void
-	 */
-	protected function DisplayMainAttributesForOperation(iTopWebPage $oP, $sOperation, $iFormId, $sPrefix, $aDefault) {
-	}
-
-	/**
 	 * Remind main block attributes to user when performing resizing actions - V >= 3.0
 	 *
 	 * @param \iTopWebPage $oP
@@ -350,21 +336,6 @@ EOF
 		$sHTML .= "</select>";
 		$val = $this->GetSimpleFieldForForm('AttributeExternalKey', 'requestor_id', $sLabel, $sHTML);
 		$oColumn->AddSubBlock(FieldUIBlockFactory::MakeFromParams($val));
-	}
-
-	/**
-	 * Display attributes associated to an operation
-	 *
-	 * @param \iTopWebPage $oP
-	 * @param $sOperation
-	 * @param $iFormId
-	 * @param $aDefault
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
 	}
 
 	/**

@@ -340,8 +340,8 @@ class _IPv6Subnet extends IPSubnet implements iTree
 		$oIpRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key"), array(), array('key' => $iId));
 		$iCountRange = $oIpRangeSet->Count();
 
-		// Set CRLF format according to version
-		$sCrLf = (version_compare(ITOP_DESIGN_LATEST_VERSION, 3.0) < 0) ? "\n" : "<br>";
+		// Set CRLF format
+		$sCrLf = "<br>";
 
 		// List exported parameters
 		$sHtml = "Registered,Id";
@@ -518,11 +518,7 @@ class _IPv6Subnet extends IPSubnet implements iTree
 		$iMaxOffer = $aParam['maxoffer'];
 
 		// Get list of free space in subnet
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sIPv6RangeCreationTitle = '';
-		} else {
-			$sIPv6RangeCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Range')));
-		}
+		$sIPv6RangeCreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Range')));
 		$aFreeSpace = $this->GetFreeSpace($iRangeSize, $iMaxOffer);
 
 		// Check user rights
@@ -657,11 +653,7 @@ EOF
 		$aIpRange = $oIpRangeSet->GetColumnAsArray('firstip', false);
 
 		// Preset display of name and subnet attributes
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sIPv6CreationTitle = '';
-		} else {
-			$sIPv6CreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Address')));
-		}
+		$sIPv6CreationTitle = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', MetaModel::GetName('IPv6Address')));
 		$sStatusIp = $aParam['status_ip'];
 		$sShortName = $aParam['short_name'];
 		$iDomainId = $aParam['domain_id'];
@@ -741,9 +733,6 @@ EOF
 		// Close table
 		$sHtml .= '</div>';
 		$sHtml .= '</td></tr></table>';
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-			$sHtml .= '</div>';         // ??
-		}
 		$oP->add_ready_script("\$('#tree ul').treeview();\n");
 		$oP->add_dict_entry('UI:ValueMustBeSet');
 		$oP->add_dict_entry('UI:ValueMustBeChanged');
@@ -851,140 +840,6 @@ EOF
 		$sHtml .= "&nbsp;".Dict::S('Class:IPv6Subnet/Attribute:mask/Value_cidr:'.$this->Get('mask'));
 
 		return $sHtml;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault)
-	{
-		$oP->add("<table>");
-		$oP->add('<tr><td style="vertical-align:top">');
-
-		switch ($sOperation) {
-			case 'findspace':
-				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:SizeOfRange');
-				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:FindSpace:IPv6Subnet:MaxNumberOfOffers');
-
-				// Size of range
-				$sInputId = $iFormId.'_'.'spacesize';
-				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" name=\"spacesize\" maxlength=\"4\" size=\"4\">\n";
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-				// Max number of offers
-				$sInputId = $iFormId.'_'.'maxoffer';
-				$jDefault = (array_key_exists('maxoffer', $aDefault)) ? $aDefault['maxoffer'] : DEFAULT_MAX_FREE_SPACE_OFFERS;
-				$sHTMLValue = "<input id=\"$sInputId\" type=\"text\" value=\"$jDefault\" name=\"maxoffer\" maxlength=\"2\" size=\"2\">\n";
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-				$oP->Details($aDetails);
-				$oP->add('</td></tr>');
-
-				// Cancell button
-				$iObjId = $this->GetKey();
-				$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('IPv6Subnet', $iObjId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				break;
-
-			case 'listips':
-			case 'csvexportips':
-				if ($sOperation == 'listips') {
-					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:FirstIP');
-					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:LastIP');
-
-					// Sub title
-					$oP->add("<b>".Dict::S('UI:IPManagement:Action:ListIps:IPv6Subnet:Subtitle_ListRange')."</b>\n");
-				} else {
-					$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv6Subnet:FirstIP');
-					$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:CsvExportIps:IPv6Subnet:LastIP');
-
-					// Sub title
-					$oP->add("<b>".Dict::S('UI:IPManagement:Action:CsvExportIps:IPv6Subnet:Subtitle_ListRange')."</b>\n");
-				}
-
-				// Preset subnet bits of IP
-				$oSubnetIp = $this->Get('ip');
-				$sSubnetIp = $oSubnetIp->GetAsCompressed();
-
-				// New first IP
-				$sAttCode = 'firstip';
-				$sInputId = $iFormId.'_'.'firstip';
-				$oAttDef = MetaModel::GetAttributeDef('IPv6Range', 'firstip');
-				$sDefault = (array_key_exists('firstip', $aDefault)) ? $aDefault['firstip'] : $sSubnetIp;
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-				// New last IP
-				$sAttCode = 'lastip';
-				$sInputId = $iFormId.'_'.'lastip';
-				$oAttDef = MetaModel::GetAttributeDef('IPv6Range', 'lastip');
-				$sDefault = (array_key_exists('lastip', $aDefault)) ? $aDefault['lastip'] : $sSubnetIp;
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Range', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-				$oP->Details($aDetails);
-				$oP->add('</td></tr>');
-
-				// Cancell button
-				$iObjId = $this->GetKey();
-				$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('IPv6Subnet', $iObjId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				break;
-
-			case 'calculator':
-				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Calculator:IPv6Subnet:IP');
-				$sLabelOfAction2 = Dict::S('UI:IPManagement:Action:Calculator:IPv6Subnet:Prefix');
-
-				// IP
-				$sAttCode = 'ip';
-				$sInputId = $iFormId.'_'.'ip';
-				$oAttDef = MetaModel::GetAttributeDef('IPv6Subnet', 'ip');
-				$sDefault = (array_key_exists('ip', $aDefault)) ? $aDefault['ip'] : '';
-				$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, 'IPv6Subnet', $sAttCode, $oAttDef, $sDefault, '', $sInputId, '', 0, '');
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction1.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-				// CIDR
-				$sInputId = $iFormId.'_'.'cidr';
-				$sHTMLValue = "<input type=\"number\" id=\"$sInputId\" name=\"cidr\">\n";
-				$aDetails[] = array(
-					'label' => '<span title="">'.$sLabelOfAction2.'</span>',
-					'value' => $sHTMLValue,
-				);
-
-
-				$oP->Details($aDetails);
-				$oP->add('</td></tr>');
-
-				// Cancell button
-				$iObjId = $this->GetKey();
-				if ($iObjId > 0) {
-					$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('IPv6Subnet', $iObjId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				} else {
-					$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"window.history.back()\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-				}
-				break;
-
-			default:
-				break;
-		};
-
-		// Apply button
-		$oP->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
-
-		$oP->add("</table>");
 	}
 
 	/**

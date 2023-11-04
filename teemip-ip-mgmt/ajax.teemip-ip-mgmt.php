@@ -29,15 +29,9 @@ try {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
-	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.0', '<')) {
-		$sVersion = '2x';
-		$oP = new ajax_page("");
-		$oP->no_cache();
-	} else {
-		$sVersion = '3x';
-		$oP = new AjaxPage("");
-		ContextTag::AddContext(ContextTag::TAG_CONSOLE);
-	}
+	$sVersion = '3x';
+	$oP = new AjaxPage("");
+	ContextTag::AddContext(ContextTag::TAG_CONSOLE);
 
 	$operation = utils::ReadParam('operation', '');
 	$iVId = utils::ReadParam('vid', '');

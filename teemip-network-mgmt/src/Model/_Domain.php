@@ -526,64 +526,6 @@ class _Domain extends DNSObject implements iTree {
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperation(iTopWebPage $oP, $sOperation, $iFormId, $aDefault) {
-		$oP->add("<table>");
-		$oP->add('<tr><td style="vertical-align:top">');
-
-		$aDetails = array();
-		switch ($sOperation) {
-			case 'delegate':
-				$sLabelOfAction1 = Dict::S('UI:IPManagement:Action:Delegate:Domain:ChildDomain');
-
-				$iOrgId = $this->Get('org_id');
-				$sDelegateToChildrenOnly = IPConfig::GetFromGlobalIPConfig('delegate_domain_to_children_only', $iOrgId);
-				if ($sDelegateToChildrenOnly == 'dtc_yes') {
-					// Domain can only be delegated to children (or grand children) organization
-					// Get block's children (list should not be empty at this stage)
-					// Block is not already delegated (checked previously) so it can be delegated to child organization
-					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS child JOIN Organization AS parent ON child.parent_id BELOW parent.id WHERE parent.id = $iOrgId AND child.id != $iOrgId"));
-				} else {
-					// Block can be delegated to any organization
-					$oChildOrgSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT Organization AS o WHERE o.id != $iOrgId"));
-				}
-
-				// Display list of choices now
-				$sAttCode = 'child_org_id';
-				$sInputId = $iFormId.'_'.$sAttCode;
-				$sHTMLValue = "<select id=\"$sInputId\" name=\"child_org_id\">\n";
-				while ($oChildOrg = $oChildOrgSet->Fetch()) {
-					$iChildOrgKey = $oChildOrg->GetKey();
-					$sChildOrgName = $oChildOrg->GetName();
-					if ($iChildOrgKey == $iOrgId) {
-						$sHTMLValue .= "<option selected='' value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
-					} else {
-						$sHTMLValue .= "<option value=\"$iChildOrgKey\">".$sChildOrgName."</option>\n";
-					}
-				}
-				$sHTMLValue .= "</select>";
-				$aDetails[] = array('label' => '<span title="">'.$sLabelOfAction1.'</span>', 'value' => $sHTMLValue);
-				break;
-
-			default:
-				break;
-		}
-
-		$oP->Details($aDetails);
-		$oP->add('</td></tr>');
-
-		// Cancell button
-		$iBlockId = $this->GetKey();
-		$oP->add("<tr><td><button type=\"button\" class=\"action\" onClick=\"BackToDetails('Domain', $iBlockId)\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;");
-
-		// Apply button
-		$oP->add("&nbsp;&nbsp<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:Apply')."</span></button></td></tr>");
-
-		$oP->add("</table>");
-	}
-
-	/**
-	 * @inheritdoc
-	 */
 	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
