@@ -56,7 +56,7 @@ try {
 	$oP->add_linked_script("../js/forms-json-utils.js");
 	$oP->add_linked_script("../js/wizardhelper.js");
 	$oP->add_linked_script("../js/wizard.utils.js");
-	$oP->add_linked_script("../js/linkswidget.js");
+	$oP->add_linked_script("../js/links/links_widget.js");
 	$oP->add_linked_script("../js/extkeywidget.js");
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js");
