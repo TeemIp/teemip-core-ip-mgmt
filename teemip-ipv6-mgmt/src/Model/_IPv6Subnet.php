@@ -1553,7 +1553,12 @@ EOF
 		}
 
 		// Release all subnet's IPs when subnet is released
-		if (($this->Get('status') == 'released') && ($this->GetOriginal('status') != 'released')) {
+		$aOldValues = $this->ListPreviousValuesForUpdatedAttributes();
+		$sOriginalStatus = $this->GetOriginal('status');	// Workaround for GetOriginal bug
+		if (array_key_exists('status', $aOldValues)) {
+			$sOriginalStatus = $aOldValues['status'];
+		}
+		if (($this->Get('status') == 'released') && ($sOriginalStatus != 'released')) {
 			$sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release', $iOrgId);
 			if ($sIpRelease == 'yes') {
 				$sOQL = "SELECT IPv6Address WHERE subnet_id = :id AND status != 'released'";
