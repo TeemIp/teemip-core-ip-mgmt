@@ -688,7 +688,7 @@
 /*************************************************************************************************************************
  * Plugin to handle DisplayBare methods on non TeemIp classes and impacts on IPs when a CI is created, changed or deleted
  */
-class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationObjectExtension {
+class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension {
 	/**
 	 * @inheritdoc
 	 */
@@ -768,122 +768,6 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension, iApplicationOb
 		return array();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function OnIsModified($oObject) {
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnCheckToWrite($oObject) {
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnCheckToDelete($oObject) {
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnDBUpdate($oObject, $oChange = null) {
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
-			if ($oObject instanceof FunctionalCI) {
-				// Check if $oObject has IP Attributes
-				$sCiClass = get_class($oObject);
-				$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
-				if (empty($aIPsOfClass)) {
-					return;
-				}
-
-				// Check if these or name have changed
-				$aListChanges = $oObject->ListPreviousValuesForUpdatedAttributes();
-				$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
-				$iOrgId = $oObject->Get('org_id');
-				foreach ($aIPAttributes AS $key => $sIPAttribute) {
-					$iIPId = $oObject->Get($sIPAttribute);
-
-					// Change IPs status if IP has changed
-					if (array_key_exists($sIPAttribute, $aListChanges)) {
-						$iPreviousIPId = $aListChanges[$sIPAttribute];
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
-    					TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iPreviousIPId);
-					} else {
-						$iPreviousIPId = $iIPId;
-					}
-
-					// Change IPs name if name has changed or IP has changed
-					if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
-						$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iPreviousIPId);
-					}
-				}
-
-				return;
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnDBInsert($oObject, $oChange = null) {
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
-			if ($oObject instanceof FunctionalCI) {
-				// Check if $oObject has IP Attributes
-				$sCiClass = get_class($oObject);
-				$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
-				if (empty($aIPsOfClass)) {
-					return;
-				}
-
-				// Check if these or name are set
-				$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
-				$iOrgId = $oObject->Get('org_id');
-				foreach ($aIPAttributes AS $key => $sIPAttribute) {
-					$iIPId = $oObject->Get($sIPAttribute);
-					$sName = $oObject->GetNameForIPAttribute($sIPAttribute);
-					if ($iIPId != 0) {
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIPId);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName ,$iIPId);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnDBDelete($oObject, $oChange = null)
-	{
-		if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
-			if ($oObject instanceof FunctionalCI) {
-				// Check if $oObject has IP Attributes
-				$sCiClass = get_class($oObject);
-				$aIPsOfClass = TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::GetListOfIPAttributes($sCiClass);
-				if (empty($aIPsOfClass)) {
-					return;
-				}
-
-				// Check if these or name are set
-				$aIPAttributes = array_merge($aIPsOfClass['IPAddress'], $aIPsOfClass['IPv4Address'], $aIPsOfClass['IPv6Address']);
-				foreach ($aIPAttributes AS $key => $sIPAttribute) {
-					$iIPId = $oObject->Get($sIPAttribute);
-					if ($iIPId != 0) {
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iIPId);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iIPId);
-					}
-				}
-
-				return;
-			}
-		}
-	}
 }]]></content>
     </snippet>
   </snippets>
