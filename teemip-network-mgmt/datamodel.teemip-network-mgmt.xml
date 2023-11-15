@@ -1800,7 +1800,7 @@
               <dashlet id="7" xsi:type="DashletBadge" _delta="delete_if_exists"/>
             </dashlets>
           </cell>
-          <cell id="Network" _delta="define">
+          <cell id="Network" _delta="define_if_not_exists">
             <rank>10</rank>
             <dashlets>
               <dashlet id="teemip-1101" xsi:type="DashletHeaderStatic">

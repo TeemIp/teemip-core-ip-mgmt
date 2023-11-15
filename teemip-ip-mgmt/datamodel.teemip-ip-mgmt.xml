@@ -4098,15 +4098,15 @@
       <parent>IPTools</parent>
       <url>$pages/exec.php?exec_module=teemip-ip-mgmt&amp;exec_page=ui.teemip-ip-mgmt.php&amp;c[menu]=SubnetCalculator&amp;operation=calculator</url>
     </menu>
-	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
+	<menu id="Typology" xsi:type="DashboardMenuNode" _delta="must_exist">
 	  <definition>
-      <cells>
-        <cell id="IPMgmt" _delta="define">
-          <rank>8</rank>
-          <dashlets>
-            <dashlet id="teemip-1001" xsi:type="DashletHeaderStatic">
-              <rank>0</rank>
-              <title>Menu:IPMgmt:Typology</title>
+        <cells>
+          <cell id="IPMgmt" _delta="define">
+            <rank>8</rank>
+            <dashlets>
+              <dashlet id="teemip-1001" xsi:type="DashletHeaderStatic">
+                <rank>0</rank>
+                <title>Menu:IPMgmt:Typology</title>
                 <icon>teemip-ip-mgmt/asset/img/icons8-new-item-48.png</icon>
               </dashlet>
               <dashlet id="teemip-1004" xsi:type="DashletBadge">
