@@ -454,7 +454,7 @@ class IPUtils
 
 		$biTopDevelopmentMode = utils::IsDevelopmentEnvironment();
 		$bTeemIpDevelopmentMode = MetaModel::GetModuleSetting(static::MODULE_CODE, static::DEVELOPER_MODE_FUNCTION_CODE, false);
-		if (!$biTopDevelopmentMode || !$bTeemIpDevelopmentMode) {
+		if (!$biTopDevelopmentMode || ($bTeemIpDevelopmentMode === false)) {
 			// Try to read from cache
 			$sCacheFileName = utils::GetCachePath().static::TEEMIP_CACHE_DIR."/".static::LIST_CLASSES_WITH_IPS_FILE_NAME;
 			if (is_file($sCacheFileName)) {
