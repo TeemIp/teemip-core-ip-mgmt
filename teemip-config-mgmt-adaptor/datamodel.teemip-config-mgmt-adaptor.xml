@@ -612,7 +612,7 @@
       </presentation>
     </class>
     <class id="lnkPhysicalInterfaceToVLAN" _delta="must_exist">
-			<fields>
+      <fields>
         <field id="mode" xsi:type="AttributeEnum" _delta="define">
           <values>
             <value id="tagged">
@@ -637,32 +637,32 @@
           <is_null_allowed>true</is_null_allowed>
           <display_style/>
         </field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="mode" _delta="define">
-							<rank>30</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="mode" _delta="define">
-							<rank>30</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="mode" _delta="define">
-							<rank>5</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="mode" _delta="define">
+              <rank>30</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="mode" _delta="define">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="mode" _delta="define">
+              <rank>5</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
+    </class>
   </classes>
   <menus>
     <menu id="ConfigManagementOverview" xsi:type="DashboardMenuNode" _delta="must_exist">
