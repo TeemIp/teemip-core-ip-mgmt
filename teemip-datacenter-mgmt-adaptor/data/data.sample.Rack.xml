@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<Rack alias="Rack" id="141">
+		<name>Rack 2</name>
+		<org_id>2</org_id>
+		<business_criticity>low</business_criticity>
+		<location_id>2</location_id>
+		<status>production</status>
+	</Rack>
+	<Rack alias="Rack" id="142">
+		<name>Rack 3</name>
+		<org_id>2</org_id>
+		<business_criticity>low</business_criticity>
+		<location_id>2</location_id>
+		<status>production</status>
+	</Rack>
+	<Rack alias="Rack" id="143">
+		<name>Rack 4</name>
+		<org_id>2</org_id>
+		<business_criticity>low</business_criticity>
+		<location_id>2</location_id>
+		<status>production</status>
+	</Rack>
+	<Rack alias="Rack" id="144">
+		<name>Rack 5</name>
+		<org_id>2</org_id>
+		<business_criticity>low</business_criticity>
+		<location_id>2</location_id>
+		<status>production</status>
+	</Rack>
+	<NetworkDevice alias="NetworkDevice" id="102">
+		<rack_id>141</rack_id>
+	</NetworkDevice>
+	<NetworkDevice alias="NetworkDevice" id="103">
+		<rack_id>142</rack_id>
+	</NetworkDevice>
+</Set>

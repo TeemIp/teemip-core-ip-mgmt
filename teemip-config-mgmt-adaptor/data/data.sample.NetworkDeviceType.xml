@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<NetworkDeviceType alias="NetworkDeviceType" id="101">
+		<name>Firewall</name>
+	</NetworkDeviceType>
+</Set>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<NetworkDevice alias="NetworkDevice" id="102">
+		<rack_id>141</rack_id>
+	</NetworkDevice>
+	<NetworkDevice alias="NetworkDevice" id="103">
+		<rack_id>142</rack_id>
+	</NetworkDevice>
+</Set>

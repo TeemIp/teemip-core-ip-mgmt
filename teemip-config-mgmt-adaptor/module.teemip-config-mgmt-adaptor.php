@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-config-mgmt-adaptor/3.1.0',
+	'teemip-config-mgmt-adaptor/3.1.1',
 	array(
 		// Identification
 		//
@@ -17,7 +17,7 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-config-mgmt/3.0.0',
-			'teemip-ip-mgmt/3.1.0',
+			'teemip-ip-mgmt/3.1.2',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
@@ -29,7 +29,12 @@ SetupWebPage::AddModule(
 			'model.teemip-config-mgmt-adaptor.php',
 		),
 		'data.struct' => array(),
-		'data.sample' => array(),
+		'data.sample' => array(
+			'data/data.sample.NetworkDeviceType.xml',
+			'data/data.sample.NetworkDevice.xml',
+			'data/data.sample.Server.xml',
+			'data/data.sample.PhysicalInterface.xml',
+		),
 
 		// Documentation
 		//

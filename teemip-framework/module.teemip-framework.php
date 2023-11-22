@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-framework/3.1.2',
+	'teemip-framework/3.1.3',
 	array(
 		// Identification
 		//
@@ -39,6 +39,9 @@ SetupWebPage::AddModule(
 		'data.struct' => array(// add your 'structure' definition XML files here,
 		),
 		'data.sample' => array(// add your sample data XML files here,
+			'data/data.sample.IPGlue.xml',
+			'data/data.sample.IPConfig.xml',
+			'data/data.sample.IPUsage.xml',
 		),
 
 		// Documentation

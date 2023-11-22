@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<Server alias="Server" id="121">
+		<name>MyApplication - Backend</name>
+		<org_id>2</org_id>
+		<status>production</status>
+		<business_criticity>high</business_criticity>
+		<location_id>2</location_id>
+		<brand_id>2</brand_id>
+		<model_id>4</model_id>
+		<osfamily_id>6</osfamily_id>
+		<osversion_id>6</osversion_id>
+		<asset_number>HP-1234-52</asset_number>
+		<purchase_date>2023-02-01</purchase_date>
+		<end_of_warranty>2026-01-31</end_of_warranty>
+		<move2production>2023-08-15</move2production>
+		<serialnumber>HP123456-78</serialnumber>
+	</Server>
+	<Server alias="Server" id="122">
+		<name>MyApplication - Frontend</name>
+		<org_id>2</org_id>
+		<status>production</status>
+		<business_criticity>high</business_criticity>
+		<location_id>2</location_id>
+		<brand_id>2</brand_id>
+		<model_id>4</model_id>
+		<osfamily_id>6</osfamily_id>
+		<osversion_id>6</osversion_id>
+		<asset_number>HP-1234-53</asset_number>
+		<purchase_date>2023-02-01</purchase_date>
+		<end_of_warranty>2026-01-31</end_of_warranty>
+		<move2production>2023-08-15</move2production>
+		<serialnumber>HP123456-79</serialnumber>
+	</Server>
+</Set>

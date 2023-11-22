@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<Server alias="Server" id="121">
+		<rack_id>141</rack_id>
+	</Server>
+	<Server alias="Server" id="122">
+		<rack_id>143</rack_id>
+	</Server>
+</Set>

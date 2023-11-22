@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Set>
+	<PhysicalInterface alias="PhysicalInterface" id="131">
+		<name>Eth0</name>
+		<status>active</status>
+		<connectableci_id>121</connectableci_id>
+		<macaddress>02:80:37:EC:02:00</macaddress>
+	</PhysicalInterface>
+	<PhysicalInterface alias="PhysicalInterface" id="132">
+		<name>Eth1</name>
+		<status>active</status>
+		<connectableci_id>121</connectableci_id>
+		<macaddress>02:80:37:EC:02:01</macaddress>
+	</PhysicalInterface>
+	<PhysicalInterface alias="PhysicalInterface" id="133">
+		<name>Eth0</name>
+		<status>active</status>
+		<connectableci_id>122</connectableci_id>
+		<macaddress>02:80:37:FF:02:A5</macaddress>
+	</PhysicalInterface>
+	<PhysicalInterface alias="PhysicalInterface" id="134">
+		<name>Eth 1/6</name>
+		<status>active</status>
+		<connectableci_id>102</connectableci_id>
+		<macaddress>02:80:37:FF:02:A6</macaddress>
+	</PhysicalInterface>
+	<PhysicalInterface alias="PhysicalInterface" id="135">
+		<name>Eth 1/8</name>
+		<status>active</status>
+		<connectableci_id>102</connectableci_id>
+		<macaddress>6D:EE:24:09:00:4C</macaddress>
+	</PhysicalInterface>
+	<PhysicalInterface alias="PhysicalInterface" id="136">
+		<name>Eth3</name>
+		<status>active</status>
+		<connectableci_id>103</connectableci_id>
+		<macaddress>6D:EE:24:09:00:E5</macaddress>
+	</PhysicalInterface>
+</Set>
