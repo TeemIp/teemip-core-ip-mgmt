@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-mgmt/3.1.1',
+	'teemip-ip-mgmt/3.1.2',
 	array(
 		// Identification
 		//
@@ -17,8 +17,8 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-tickets/3.0.0',
-			'teemip-framework/3.1.0',
-			'teemip-network-mgmt/3.1.0',
+			'teemip-framework/3.1.3',
+			'teemip-network-mgmt/3.1.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
@@ -39,11 +39,8 @@ SetupWebPage::AddModule(
 		'data.struct' => array(//'data.struct.IPAudit.xml',
 		),
 		'data.sample' => array(
-			'data/data.sample.IPGlue.xml',
-			'data/data.sample.IPConfig.xml',
 			'data/data.sample.IPBlockType.xml',
 			'data/data.sample.IPRangeUsage.xml',
-			'data/data.sample.IPUsage.xml',
 			'data/data.sample.IPv4Block.xml',
 			'data/data.sample.IPv4Subnet.xml',
 			'data/data.sample.IPv4Range.xml',
