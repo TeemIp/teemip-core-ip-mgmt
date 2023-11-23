@@ -46,22 +46,35 @@ class HandleIPWaterMarks implements iScheduledProcess {
 	}
 
 	/**
+	 * Read module settings and return parameters required for the process to run
+	 *
+	 * @return array
+	 */
+	private function GetSetting(): array
+	{
+		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
+		return [
+			(bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED],
+			$aFunctionSettings[static::FUNCTION_SETTING_PERIODICITY],
+			$aFunctionSettings[static::FUNCTION_SETTING_TARGET_CLASSES]
+		];
+	}
+
+	/**
 	 * Gives the exact time at which the process must be run next time
 	 *
 	 * @return \DateTime
 	 * @throws \Exception
 	 */
-	public function GetNextOccurrence() {
-		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
-		$bEnabled = (bool)$aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
+	public function GetNextOccurrence()
+	{
+		// Get module parameters and postpone next occurrence if function is disabled
+		list ($bEnabled, $sPeriodicity) = $this->GetSetting();
+		$oRet = new DateTime();
 		if (!$bEnabled) {
-			$oRet = new DateTime();
-			$oRet->modify('+86400 seconds');
-		} else {
-			$sPeriodicity = $aFunctionSettings[static::FUNCTION_SETTING_PERIODICITY];
-			$oRet = new DateTime();
-			$oRet->modify('+'.$sPeriodicity.' seconds');
+			$sPeriodicity = '86400';
 		}
+		$oRet->modify('+'.$sPeriodicity.' seconds');
 
 		return $oRet;
 	}
@@ -69,17 +82,20 @@ class HandleIPWaterMarks implements iScheduledProcess {
 	/**
 	 * @inheritdoc
 	 */
-	public function Process($iUnixTimeLimit) {
+	public function Process($iUnixTimeLimit)
+	{
+		// Get module parameters and don't run the process if the module is disabled
+		list ($bEnabled, $iPeriodicity, $aTargetClasses) = $this->GetSetting();
+		if (!$bEnabled) {
+			return 'Process being disabled for the time being, execution has not run.';
+		}
+
 		$aReport = array(
 			'reached_watermark' => 0,
 		);
 
 		CMDBObject::SetTrackInfo('Automatic - Background task to handle IP watermarks in subnets and ranges');
 		CMDBObject::SetTrackOrigin('custom-extension');
-
-		// Get target classes to consider
-		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
-		$aTargetClasses = $aFunctionSettings[static::FUNCTION_SETTING_TARGET_CLASSES];
 
 		// Process each object of each target class
 		foreach ($aTargetClasses as $sTargetClass) {

@@ -47,6 +47,21 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 	}
 
 	/**
+	 * Read module settings and return parameters required for the process to run
+	 *
+	 * @return array
+	 */
+	private function GetSetting(): array
+	{
+		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
+		return [
+			(bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED],
+			$aFunctionSettings[static::FUNCTION_SETTING_PERIODICITY],
+			$aFunctionSettings[static::FUNCTION_SETTING_STATUS_LIST]
+			];
+	}
+
+	/**
 	 * Gives the exact time at which the process must be run next time
 	 *
 	 * @return \DateTime
@@ -54,16 +69,13 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 	 */
 	public function GetNextOccurrence()
 	{
-		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
-		$bEnabled = (bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
+		// Get module parameters and postpone next occurrence if function is disabled
+		list ($bEnabled, $sPeriodicity) = $this->GetSetting();
+		$oRet = new DateTime();
 		if (!$bEnabled) {
-			$oRet = new DateTime();
-			$oRet->modify('+86400 seconds');
-		} else {
-			$sPeriodicity = $aFunctionSettings[static::FUNCTION_SETTING_PERIODICITY];
-			$oRet = new DateTime();
-			$oRet->modify('+'.$sPeriodicity.' seconds');
+			$sPeriodicity = '86400';
 		}
+		$oRet->modify('+'.$sPeriodicity.' seconds');
 
 		return $oRet;
 	}
@@ -73,6 +85,12 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 	 */
 	public function Process($iUnixTimeLimit)
 	{
+		// Get module parameters and don't run the process if the module is disabled
+		list ($bEnabled, $iPeriodicity, $aStatusList) = $this->GetSetting();
+		if (!$bEnabled) {
+			return 'Process being disabled for the time being, execution has not run.';
+		}
+
 		$aReport = array(
 			'ipchecked' => 0,
 		);
@@ -100,8 +118,6 @@ class AllocateIPsToProductionCIs implements iScheduledProcess
 		$sOrgToCleanList .= ")";
 
 		// 1st step: get list of status that trigger the allocation action
-		$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $this->aDefaultSettings);
-		$aStatusList = $aFunctionSettings[static::FUNCTION_SETTING_STATUS_LIST];
 		$sStatusList = "";
 		$i = 0;
 		foreach ($aStatusList as $sStatus) {
