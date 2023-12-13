@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-framework/3.1.3',
+	'teemip-framework/3.1.4',
 	array(
 		// Identification
 		//
