@@ -917,8 +917,8 @@
   </classes>
   <menus>
     <menu id="IPConfig" xsi:type="OQLMenuNode" _delta="define">
-      <rank>100</rank>
-      <parent>ConfigEditor</parent>
+      <rank>15</rank>
+      <parent>ConfigurationTools</parent>
       <oql>SELECT IPConfig</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
