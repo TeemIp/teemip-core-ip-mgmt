@@ -40,7 +40,6 @@ SetupWebPage::AddModule(
 		),
 		'data.sample' => array(
 			'data/data.sample.IPBlockType.xml',
-			'data/data.sample.IPRangeUsage.xml',
 			'data/data.sample.IPv4Block.xml',
 			'data/data.sample.IPv4Subnet.xml',
 			'data/data.sample.IPv4Range.xml',

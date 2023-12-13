@@ -41,6 +41,7 @@ SetupWebPage::AddModule(
 		'data.sample' => array(// add your sample data XML files here,
 			'data/data.sample.IPGlue.xml',
 			'data/data.sample.IPConfig.xml',
+			'data/data.sample.IPRangeUsage.xml',
 			'data/data.sample.IPUsage.xml',
 		),
 
