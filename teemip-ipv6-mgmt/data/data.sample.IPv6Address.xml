@@ -59,4 +59,48 @@
 		<comment></comment>
 		<requestor_id></requestor_id>
 	</IPv6Address>
+	<IPv6Address alias="IPv6Address" id="39">
+		<org_id>2</org_id>
+		<ipconfig_id>1</ipconfig_id>
+		<subnet_id>31</subnet_id>
+		<ip>FC01:0:1964:0404::12</ip>
+		<status>allocated</status>
+		<short_name>sw3</short_name>
+		<domain_id>1</domain_id>
+		<usage_id>35</usage_id>
+		<requestor_id>0</requestor_id>
+	</IPv6Address>
+	<IPv6Address alias="IPv6Address" id="40">
+		<org_id>2</org_id>
+		<ipconfig_id>1</ipconfig_id>
+		<subnet_id>31</subnet_id>
+		<ip>FC01:0:1964:0404::64</ip>
+		<status>allocated</status>
+		<short_name>netcluster1</short_name>
+		<domain_id>1</domain_id>
+		<usage_id>35</usage_id>
+		<requestor_id>0</requestor_id>
+	</IPv6Address>
+	<IPv6Address alias="IPv6Address" id="41">
+		<org_id>2</org_id>
+		<ipconfig_id>1</ipconfig_id>
+		<subnet_id>31</subnet_id>
+		<ip>FC01:0:1964:0404::6A</ip>
+		<status>allocated</status>
+		<short_name></short_name>
+		<domain_id>1</domain_id>
+		<usage_id>35</usage_id>
+		<requestor_id>0</requestor_id>
+	</IPv6Address>
+	<IPv6Address alias="IPv6Address" id="42">
+		<org_id>2</org_id>
+		<ipconfig_id>1</ipconfig_id>
+		<subnet_id>31</subnet_id>
+		<ip>FC01:0:1964:0404::6B</ip>
+		<status>allocated</status>
+		<short_name></short_name>
+		<domain_id>1</domain_id>
+		<usage_id>35</usage_id>
+		<requestor_id>0</requestor_id>
+	</IPv6Address>
 </Set>
