@@ -455,4 +455,17 @@ HTML
 	public function DoExplodeFQDN($sFqdnAttr) {
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function GetShortcutActions($sFinalClass)
+	{
+		// Prepend the shortcut actions with the navigation menu
+		$aNavigationActions = ['previous_ipsubnet', 'next_ipsubnet'];
+		$aConfiguredActions = parent::GetShortcutActions($sFinalClass);
+		$aShortcutActions = array_merge($aNavigationActions, $aConfiguredActions);
+
+		return $aShortcutActions;
+	}
+
 }

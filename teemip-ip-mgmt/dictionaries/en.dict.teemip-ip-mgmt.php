@@ -1019,6 +1019,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:DoCalculator:IPSubnet:CreateBlock' => 'Create the subnet block',
 	'UI:IPManagement:Action:DoCalculator:IPSubnet:CannotCreateBlock:MaskIsToBig' => 'Mask is too big: subnet block cannot be created!',
 
+	// Display pointers to previous and next Subnets
+	'UI:IPManagement:Action:DisplayPrevious:IPSubnet' => 'Previous',
+	'UI:IPManagement:Action:DisplayNext:IPSubnet' => 'Next',
+
 //
 // Management of IPv4 Subnets
 //

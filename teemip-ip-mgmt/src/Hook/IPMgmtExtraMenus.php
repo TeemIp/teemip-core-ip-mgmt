@@ -26,12 +26,17 @@ use utils;
 class IPMgmtExtraMenus implements iPopupMenuExtension
 {
 	const MODULE_CODE = 'teemip-ip-mgmt';
-	const FUNCTION_CODE = 'ip_navigation';
-	const FUNCTION_SETTING_ENABLED = 'enabled';
-	const FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+	const IP_NAV_FUNCTION_CODE = 'ip_navigation';
+	const IP_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+	const SUBNET_NAV_FUNCTION_CODE = 'subnet_navigation';
+	const SUBNET_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = 'within_block_only';
 
-	const DEFAULT_FUNCTION_SETTING_ENABLED = true;
-	const DEFAULT_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+	const DEFAULT_IP_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = true;
 
 	/**
 	 * @inheritdoc
@@ -520,12 +525,41 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 							break;
 					}
 				} elseif ($oObj instanceof IPSubnet) {
+					$sClass = get_class($oObj);
+
+					// Display pointers to previous and next Subnets according to configuration parameters
+					$aDefaultSettings = array(
+						static::SUBNET_NAV_FUNCTION_SETTING_ENABLED => static::DEFAULT_SUBNET_NAV_FUNCTION_SETTING_ENABLED,
+						static::SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY => static::DEFAULT_SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY,
+					);
+					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::SUBNET_NAV_FUNCTION_CODE, $aDefaultSettings);
+					$bEnabled = (bool) $aFunctionSettings[static::SUBNET_NAV_FUNCTION_SETTING_ENABLED];
+					if ($bEnabled) {
+						$bWithinBlockOnly = (bool) $aFunctionSettings[static::SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY];
+						$oPreviousIPSubnet = $oObj->GetPreviousSubnet($bWithinBlockOnly);
+						if (!is_null($oPreviousIPSubnet)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPSubnet');
+							$id = $oPreviousIPSubnet->GetKey();
+							$oItem = new URLButtonItem('previous_ipsubnet', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-left');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+						$oNextIPSubnet = $oObj->GetNextSubnet($bWithinBlockOnly);
+						if (!is_null($oNextIPSubnet)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayNext:IPSubnet');
+							$id = $oNextIPSubnet->GetKey();
+							$oItem = new URLButtonItem('next_ipsubnet', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-right');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+					}
+
 					// Additional actions for IPSubnets
 					$oAppContext = new ApplicationContext();
-					$sContext = $oAppContext->GetForLink();
-
 					$id = $oObj->GetKey();
-					$sClass = get_class($oObj);
+					$sContext = $oAppContext->GetForLink();
 
 					$aParams = $oAppContext->GetAsHash();
 					$aParams['class'] = $sClass;
@@ -701,13 +735,13 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 
 					// Display pointers to previous and next IPs according to configuration parameters
 					$aDefaultSettings = array(
-						static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
-						static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY => static::DEFAULT_FUNCTION_SETTING_WITHIN_SUBNET_ONLY,
+						static::IP_NAV_FUNCTION_SETTING_ENABLED => static::DEFAULT_IP_NAV_FUNCTION_SETTING_ENABLED,
+						static::IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY => static::DEFAULT_IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY,
 					);
-					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::FUNCTION_CODE, $aDefaultSettings);
-					$bEnabled = (bool) $aFunctionSettings[static::FUNCTION_SETTING_ENABLED];
+					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::IP_NAV_FUNCTION_CODE, $aDefaultSettings);
+					$bEnabled = (bool) $aFunctionSettings[static::IP_NAV_FUNCTION_SETTING_ENABLED];
 					if ($bEnabled) {
-						$bWithinSubnetOnly = (bool) $aFunctionSettings[static::FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
+						$bWithinSubnetOnly = (bool) $aFunctionSettings[static::IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
 						$oPreviousIPAddress = $oObj->GetPreviousIp($bWithinSubnetOnly);
 						if (!is_null($oPreviousIPAddress)) {
 							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPAddress');
