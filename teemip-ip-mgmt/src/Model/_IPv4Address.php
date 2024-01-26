@@ -345,10 +345,10 @@ class _IPv4Address extends IPAddress {
                 return null;
             }
         } else {
-            $sOQL = 'SELECT IPv4Address AS ip WHERE INET_ATON(ip.ip) > INET_ATON(:ip)';
+            $sOQL = 'SELECT IPv4Address AS ip WHERE ip.org_id = :org_id AND INET_ATON(ip.ip) > INET_ATON(:ip)';
         }
         // Set the ordering criteria ['ip'=> false] and set a limit (1)
-        $oIpSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => true], ['subnet_id' => $iSubnet, 'ip' => $this->Get('ip')], null, 1);
+        $oIpSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => true], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $this->Get('ip')], null, 1);
         $oIpSet->OptimizeColumnLoad(['IPv4Address' => ['id', 'ip']]);
         if ($oNextIp = $oIpSet->Fetch()) {
             return $oNextIp;
