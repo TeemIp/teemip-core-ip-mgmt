@@ -14,6 +14,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use IPConfig;
 use IPSubnet;
@@ -1815,6 +1817,71 @@ EOF
 			default:
 				return "FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF";
 		}
+	}
+	/**
+	 * Get the previous Subnet if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in subnet's block only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousSubnet($bInBlock)
+	{
+		$oIp = $this->Get('ip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInBlock
+		$iBlock = $this->Get('block_id');
+		if ($bInBlock) {
+			if ($iBlock > 0) {
+				$sOQL = 'SELECT IPv6Subnet AS s WHERE s.block_id = :block_id AND s.ip_text < :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Subnet AS s WHERE s.org_id = :org_id AND s.ip_text < :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oSubnetSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => false], ['org_id' => $this->Get('org_id'), 'block_id' => $iBlock, 'ip' => $sIp], null, 1);
+		$oSubnetSet->OptimizeColumnLoad(['IPv6Subnet' => ['id', 'ip']]);
+		if ($oPreviousSubnet = $oSubnetSet->Fetch()) {
+			return $oPreviousSubnet;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the next Subnet if it exists
+	 *
+	 * @param $bInBlock true if lookup should be done in subnet's block only
+	 *
+	 * @return null
+	 */
+	public function GetNextSubnet($bInBlock)
+	{
+		$oIp = $this->Get('ip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInBlock
+		$iBlock = $this->Get('block_id');
+		if ($bInBlock) {
+			if ($iBlock > 0) {
+				$sOQL = 'SELECT IPv6Subnet AS s WHERE s.block_id = :block_id AND s.ip_text > :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Subnet AS s WHERE s.org_id = :org_id AND s.ip_text > :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oSubnetSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['ip' => true], ['org_id' => $this->Get('org_id'), 'block_id' => $iBlock, 'ip' => $sIp], null, 1);
+		$oSubnetSet->OptimizeColumnLoad(['IPv6Subnet' => ['id', 'ip']]);
+		if ($oNextSubnet = $oSubnetSet->Fetch()) {
+			return $oNextSubnet;
+		}
+
+		return null;
 	}
 
 }
