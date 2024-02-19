@@ -1500,7 +1500,7 @@ EOF
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
 			$sSubTitle = ($oSubnetSet->Count() > 0) ? '<div class="teemip-space-occupation">'.$this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent').'</div><br>' : '';
-			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet, false);
 		}
 	}
 

@@ -552,7 +552,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vm_id' => $oObject->GetKey()));
 				$sName = Dict::Format('Class:VirtualMachine/Tab:ipaddresses_list');
 				$sTitle = Dict::Format('Class:VirtualMachine/Tab:ipaddresses_list+');
-				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
 		    }
 		}
 		elseif ($oObject instanceof Hypervisor)
@@ -566,14 +566,14 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	            $oPhysicalInterface =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('server_id' => $iServerId));
 				$sName = Dict::Format('Class:Hypervisor/Tab:physicalinterfaces_list');
 				$sTitle = Dict::Format('Class:Hypervisor/Tab:physicalinterfaces_list+');
-				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'physicalinterface', 'PhysicalInterface', $sTitle, '', $oPhysicalInterface);
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'physicalinterface', 'PhysicalInterface', $sTitle, '', $oPhysicalInterface, false);
 
 				// Display interfaces' IPs
 	            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN PhysicalInterface AS int ON l.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
 		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $iServerId));
 				$sName = Dict::Format('Class:Hypervisor/Tab:ipaddresses_list');
 				$sTitle = Dict::Format('Class:Hypervisor/Tab:ipaddresses_list+');
-				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
 	        }
 		}
 	}

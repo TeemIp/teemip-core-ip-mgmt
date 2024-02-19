@@ -401,7 +401,7 @@ class IPUtils
 	 * @throws \ApplicationException
 	 * @throws \CoreException
 	 */
-	public static function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet)
+	public static function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet, $bDisplayMenu = false)
 	{
 		$iCount = $oSet->Count();
 		$sCount = ($iCount != 0) ? " ($iCount)" : "";
@@ -410,7 +410,7 @@ class IPUtils
 		$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 		$oP->AddSubBlock($oHtml);
 		$oBlock->Display($oP, 'blk-'.$sCode, array(
-			'menu' => false,
+			'menu' => $bDisplayMenu,
 			'panel_title' => MetaModel::GetName($sClass),
 			'panel_title_tooltip' => $sTitle,
 			'panel_icon' => MetaModel::GetClassIcon($sClass, false)

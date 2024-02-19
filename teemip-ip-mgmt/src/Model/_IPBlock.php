@@ -343,7 +343,7 @@ class _IPBlock extends IPObject {
 			}
 
 			$sName = Dict::Format('Class:IPBlock/Tab:childblock');
-			IPUtils::DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet, false);
 		}
 	}
 

@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-virtualization-mgmt-adaptor/3.1.2',
+	'teemip-virtualization-mgmt-adaptor/3.1.3-dev',
 	array(
 		// Identification
 		//

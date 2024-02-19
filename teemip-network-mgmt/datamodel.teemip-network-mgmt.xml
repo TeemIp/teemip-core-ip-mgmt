@@ -1074,7 +1074,7 @@
 	        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vrf_id' => $iVRFId));
 			$sName = Dict::Format('Class:VRF/Tab:ipaddresses_list');
 			$sTitle = Dict::Format('Class:VRF/Tab:ipaddresses_list+');
-			TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oP, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
+			TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oP, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
         }
 	}]]></code>
         </method>

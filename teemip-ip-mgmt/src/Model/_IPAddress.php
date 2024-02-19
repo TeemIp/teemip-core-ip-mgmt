@@ -317,7 +317,7 @@ class _IPAddress extends IPObject
 				}
 			} else {
 				$oSet = CMDBObjectSet::FromScratch('FunctionalCI');
-				IPUtils::DisplayTabContent($oP, $sName, 'ci_list', 'FunctionalCI', $sTitle, '', $oSet);
+				IPUtils::DisplayTabContent($oP, $sName, 'ci_list', 'FunctionalCI', $sTitle, '', $oSet, false);
 			}
 
 
@@ -329,7 +329,7 @@ class _IPAddress extends IPObject
 
 				$sName = Dict::Format('Class:IPAddress/Tab:requests');
 				$sTitle = Dict::Format('Class:IPAddress/Tab:requests+');
-				IPUtils::DisplayTabContent($oP, $sName, 'ip_requests', 'IPRequestAddress', $sTitle, '', $oIpRequestSet);
+				IPUtils::DisplayTabContent($oP, $sName, 'ip_requests', 'IPRequestAddress', $sTitle, '', $oIpRequestSet, false);
 			}
 		}
 	}

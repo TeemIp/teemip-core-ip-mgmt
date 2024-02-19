@@ -185,7 +185,7 @@ class _Domain extends DNSObject implements iTree {
 				$sHtml .= "</div><br>";
 			}
 			$sName = Dict::Format('Class:Domain/Tab:hosts');
-			IPUtils::DisplayTabContent($oP, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet, false);
 
 			// Tab for child domains
 			$sOQL = "SELECT Domain AS dc JOIN Domain AS dp ON dc.parent_id BELOW dp.id WHERE dp.id = :domain_id AND dc.id != :domain_id";
@@ -193,7 +193,7 @@ class _Domain extends DNSObject implements iTree {
 
 			$sName = Dict::Format('Class:Domain/Tab:child_domain');
 			$sTitle = Dict::Format('Class:Domain/Tab:child_domain+');
-			IPUtils::DisplayTabContent($oP, $sName, 'child_domains', 'Domain', $sTitle, '', $oDomainsSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'child_domains', 'Domain', $sTitle, '', $oDomainsSet, false);
 
 			// Tab for related zones
 			if (class_exists('Zone')) {
@@ -202,7 +202,7 @@ class _Domain extends DNSObject implements iTree {
 
 				$sName = Dict::Format('Class:Domain/Tab:zones_list');
 				$sTitle = Dict::Format('Class:Domain/Tab:zones_list+');
-				IPUtils::DisplayTabContent($oP, $sName, 'associated_zones', 'Zone', $sTitle, '', $oZonesSet);
+				IPUtils::DisplayTabContent($oP, $sName, 'associated_zones', 'Zone', $sTitle, '', $oZonesSet, false);
 			}
 		}
 	}

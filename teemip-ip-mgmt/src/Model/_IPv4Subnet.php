@@ -1955,7 +1955,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:ipregistered');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:ipregistered+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
 
 			// Tab for IP Ranges
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$iKey' AND r.org_id = $iOrgId");
@@ -1972,7 +1972,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:iprange');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:iprange+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv4Range', $sTitle, $sHtml, $oIpRangeSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv4Range', $sTitle, $sHtml, $oIpRangeSet, false);
 
 			// Tab for IP Requests
 			if (MetaModel::IsValidClass('IPRequestSubnet')) {
@@ -1980,7 +1980,7 @@ EOF
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
 				$sName = Dict::S('Class:IPSubnet/Tab:requests');
 				$sTitle = Dict::S('Class:IPSubnet/Tab:requests+');
-				IPUtils::DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet);
+				IPUtils::DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet, false);
 			}
 		}
 	}

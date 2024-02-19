@@ -705,7 +705,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension {
 				$oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ci_id' => $oObject->GetKey()));
 				$sName = Dict::Format('Class:'.$sDisplayClass.'/Tab:ipaddresses_list');
 				$sTitle = Dict::Format('Class:'.$sDisplayClass.'/Tab:ipaddresses_list+');
-				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
 	        } elseif ($oObject instanceof VLAN) {
 	            $iVLANId = $oObject->GetKey();
 
@@ -716,7 +716,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension {
 	            $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vlan_id' => $iVLANId));
 				$sName = Dict::Format('Class:VLAN/Tab:ipaddresses_list');
 				$sTitle = Dict::Format('Class:VLAN/Tab:ipaddresses_list+');
-				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet);
+				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
 	        }
 	    }
 	}

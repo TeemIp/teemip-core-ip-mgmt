@@ -513,7 +513,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPRange/Tab:ipregistered');
 			$sTitle = Dict::S('Class:IPRange/Tab:ipregistered+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet);
+			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
 		}
 	}
 

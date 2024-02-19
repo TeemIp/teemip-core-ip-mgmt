@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-config-mgmt-adaptor/3.1.1',
+	'teemip-config-mgmt-adaptor/3.1.2-dev',
 	array(
 		// Identification
 		//
