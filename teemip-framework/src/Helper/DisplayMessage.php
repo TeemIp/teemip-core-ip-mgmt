@@ -6,7 +6,7 @@
 
 namespace TeemIp\TeemIp\Extension\Framework\Helper;
 
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use iTopWebPage;
 
 class DisplayMessage {
@@ -15,9 +15,8 @@ class DisplayMessage {
 	 * @param $sMessage
 	 */
 	public static function Success(iTopWebPage $oP, $sMessage) {
-		$oPanel = PanelUIBlockFactory::MakeForSuccess('')
-			->AddHtml($sMessage);
-		$oP->AddUiBlock($oPanel);
+		$oMessage = AlertUIBlockFactory::MakeForSuccess('', $sMessage);
+		$oP->AddUiBlock($oMessage);
 	}
 
 	/**
@@ -25,9 +24,8 @@ class DisplayMessage {
 	 * @param $sMessage
 	 */
 	public static function Info(iTopWebPage $oP, $sMessage) {
-		$oPanel = PanelUIBlockFactory::MakeForInformation('')
-			->AddHtml($sMessage);
-		$oP->AddUiBlock($oPanel);
+		$oMessage = AlertUIBlockFactory::MakeForInformation('', $sMessage);
+		$oP->AddUiBlock($oMessage);
 	}
 
 	/**
@@ -35,8 +33,7 @@ class DisplayMessage {
 	 * @param $sMessage
 	 */
 	public static function Warning(iTopWebPage $oP, $sMessage) {
-		$oPanel = PanelUIBlockFactory::MakeForWarning('')
-			->AddHtml($sMessage);
-		$oP->AddUiBlock($oPanel);
+		$oMessage = AlertUIBlockFactory::MakeForWarning('', $sMessage);
+		$oP->AddUiBlock($oMessage);
 	}
 }
