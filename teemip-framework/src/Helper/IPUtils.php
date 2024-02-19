@@ -426,7 +426,7 @@ class IPUtils
 	 */
 	public static function DisplayDetails(iTopWebPage $oP, $oObj)
 	{
-		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
+		$oObj->SetDisplayMode($oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW);
 		$oObj->DisplayDetails($oP);
 	}
 
