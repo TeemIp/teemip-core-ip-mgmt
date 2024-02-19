@@ -259,11 +259,6 @@
     </class>
     <class id="lnkSubnetToVLAN" _delta="delete"/>
     <class id="NetworkInterface" _created_in="itop-config-mgmt" _delta="must_exist">
-      <properties>
-        <obsolescence _delta="define_if_not_exists">
-          <condition>operational_status = 'inactive'</condition>
-        </obsolescence>
-      </properties>
       <fields>
         <field id="operational_status" xsi:type="AttributeMetaEnum" _delta="define">
           <values>
