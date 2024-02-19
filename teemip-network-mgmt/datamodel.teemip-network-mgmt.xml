@@ -547,8 +547,11 @@
                     <item id="status">
                       <rank>30</rank>
                     </item>
-                    <item id="description">
+                     <item id="business_criticity">
                       <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
