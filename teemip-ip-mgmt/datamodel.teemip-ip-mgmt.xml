@@ -37,9 +37,11 @@
           <target_attcode>name</target_attcode>
         </field>
         <field id="status" xsi:type="AttributeEnum">
+          <sort_type>rank</sort_type>
           <values>
             <value id="reserved">
               <code>reserved</code>
+              <rank>10</rank>
               <style>
                 <main_color>hsla(0, 60.8%, 48%, 1)</main_color>
                 <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
@@ -48,6 +50,7 @@
             </value>
             <value id="allocated">
               <code>allocated</code>
+              <rank>20</rank>
               <style>
                 <main_color>hsla(207, 72.6%, 57.1%, 1)</main_color>
                 <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
@@ -56,6 +59,7 @@
             </value>
             <value id="released">
               <code>released</code>
+              <rank>30</rank>
               <style>
                 <main_color>hsla(209, 23.7%, 74.3%, 1)</main_color>
                 <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
@@ -64,6 +68,7 @@
             </value>
             <value id="unassigned">
               <code>unassigned</code>
+              <rank>40</rank>
               <style>
                 <main_color>hsla(88, 50.2%, 52.7%, 1)</main_color>
                 <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
