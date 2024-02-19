@@ -295,32 +295,6 @@ class _IPAddress extends IPObject
 						$sClass = $aCIsToList[$sCI]['set']->GetClass();
 						$oBlock = DisplayBlock::FromObjectSet($aCIsToList[$sCI]['set'], 'list', array('show_obsolete_data' => true));
 						$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
-						if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
-							$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-							$oClassIcon->SetDescription($sSubTitle)->AddCSSClass('ibo-block-list--medallion');
-							$oP->AddUiBlock($oClassIcon);
-							$oBlock->Display($oP, 'blk-'.strtolower($sClass), array('menu' => false));
-						} else {
-							$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
-								'menu' => false,
-								'panel_title' => MetaModel::GetName($sClass),
-								'panel_title_tooltip' => $sSubTitle,
-								'panel_icon' => MetaModel::GetClassIcon($sClass, false)
-							));
-						}
-					}
-				}
-
-				if ($iNbIPInterfaces != 0) {
-					$sClass = $oIPInterfaceSet->GetClass();
-					$oBlock = DisplayBlock::FromObjectSet($oIPInterfaceSet, 'list', array('show_obsolete_data' => true));
-					$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
-					if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.1', '<')) {
-						$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sClass, false));
-						$oClassIcon->SetDescription($sSubTitle)->AddCSSClass('ibo-block-list--medallion');
-						$oP->AddUiBlock($oClassIcon);
-						$oBlock->Display($oP, 'blk-'.strtolower($sClass), array('menu' => false));
-					} else {
 						$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
 							'menu' => false,
 							'panel_title' => MetaModel::GetName($sClass),
@@ -328,6 +302,18 @@ class _IPAddress extends IPObject
 							'panel_icon' => MetaModel::GetClassIcon($sClass, false)
 						));
 					}
+				}
+
+				if ($iNbIPInterfaces != 0) {
+					$sClass = $oIPInterfaceSet->GetClass();
+					$oBlock = DisplayBlock::FromObjectSet($oIPInterfaceSet, 'list', array('show_obsolete_data' => true));
+					$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
+					$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
+						'menu' => false,
+						'panel_title' => MetaModel::GetName($sClass),
+						'panel_title_tooltip' => $sSubTitle,
+						'panel_icon' => MetaModel::GetClassIcon($sClass, false)
+					));
 				}
 			} else {
 				$oSet = CMDBObjectSet::FromScratch('FunctionalCI');
