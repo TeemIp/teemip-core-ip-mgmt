@@ -264,19 +264,19 @@
           <values>
             <value id="active">
               <code>active</code>
-							<style>
-								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
-							<style>
-								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
           </values>
           <sql>operational_status</sql>
@@ -457,19 +457,19 @@
             </value>
             <value id="active">
               <code>active</code>
-							<style>
-								<main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(92, 47.9%, 42.2%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
-							<style>
-								<main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
-								<complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
-								<decoration_classes/>
-							</style>
+              <style>
+                <main_color>hsla(33, 89.9%, 64.9%, 1)</main_color>
+                <complementary_color>hsla(0, 0%, 100%, 1)</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="obsolete">
               <code>obsolete</code>
