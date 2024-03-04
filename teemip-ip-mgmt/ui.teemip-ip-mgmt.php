@@ -19,6 +19,7 @@ use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayTree;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
+use const ITOP_DESIGN_LATEST_VERSION;
 
 /*******************************************************************
  *
@@ -52,12 +53,15 @@ try {
 
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 	// All the following actions use advanced forms that require more javascript to be loaded
-	$oP->add_linked_script("../js/json.js");
-	$oP->add_linked_script("../js/forms-json-utils.js");
-	$oP->add_linked_script("../js/wizardhelper.js");
-	$oP->add_linked_script("../js/wizard.utils.js");
-	$oP->add_linked_script("../js/links/links_widget.js");
-	$oP->add_linked_script("../js/extkeywidget.js");
+	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+		// Deprecated lib in iTop 3.2.0
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/json.js');
+	}
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/forms-json-utils.js');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/wizardhelper.js');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/wizard.utils.js');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/links/links_widget.js');
+	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/extkeywidget.js');
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js");
 
