@@ -13,6 +13,7 @@ use Dict;
 use IPConfig;
 use IPUsage;
 use MetaModel;
+use UserRights;
 
 class _IPConfig extends cmdbAbstractObject
 {
@@ -330,9 +331,13 @@ class _IPConfig extends cmdbAbstractObject
 				}
 
 			}
-			$oIpConfig->DBInsert();
 
-			IPUsage::CreateBasicIpUsages($iOrgId);
+			// Register config if user has the rights for it
+			if (UserRights::IsActionAllowed('IPConfig', UR_ACTION_MODIFY) == UR_ALLOWED_YES) {
+				$oIpConfig->DBInsert();
+
+				IPUsage::CreateBasicIpUsages($iOrgId);
+			}
 		}
 
 		return ($oIpConfig);
