@@ -21,6 +21,7 @@ class _IPConfig extends cmdbAbstractObject
 	const FUNCTION_SETTING_CORE_PARAMETERS = 'core_parameters';
 	const FUNCTION_SETTING_IP_REQUEST_PARAMETERS = 'ip_request_parameters';
 	const FUNCTION_SETTING_ZONE_PARAMETERS = 'zone_parameters';
+	const FUNCTION_SETTING_CABLE_PARAMETERS = 'cable_parameters';
 
 	// Enable the default configuration in the configuration file
 	const FUNCTION_SETTING_ENABLED = 'enabled';
@@ -89,8 +90,10 @@ class _IPConfig extends cmdbAbstractObject
 	const DEFAULT_FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY = 'dtc_yes';
 
 	// Other settings
+	const FUNCTION_ATTACH_ALREADY_ALLOCATED_IPS = 'attach_already_allocated_ips';
 	const FUNCTION_MAC_ADDRESS_FORMAT = 'mac_address_format';
 
+	const DEFAULT_FUNCTION_ATTACH_ALREADY_ALLOCATED_IPS = 'no';
 	const DEFAULT_FUNCTION_MAC_ADDRESS_FORMAT = 'colons';
 
 	// Settings for IP Requests - if TeemIp IP Request Mgmt is installed
@@ -102,8 +105,15 @@ class _IPConfig extends cmdbAbstractObject
 
 	// Default settings for Zone Mgmt - if TeemIp Zone mgmt is installed
 	const FUNCTION_IP_UPDATE_DNS_RECORDS = 'ip_update_dns_records';
+	const FUNCTION_REMOVE_RR_ON_IP_OBSOLETE = 'remove_rr_on_ip_obsolete';
 
 	const DEFAULT_FUNCTION_IP_UPDATE_DNS_RECORDS = 'no';
+	const DEFAULT_FUNCTION_REMOVE_RR_ON_IP_OBSOLETE = 'no';
+
+	// Default settings for Cable Mgmt - if TeemIp Cable mgmt is installed
+	const FUNCTION_ALLOW_BACKENDNETWORKCABLE_TO_CROSS_ORGS = 'allow_backendnetworkcable_to_cross_orgs';
+
+	const DEFAULT_FUNCTION_ALLOW_BACKENDNETWORKCABLE_TO_CROSS_ORGS = 'no';
 
 	/**
 	 * @inheritdoc
@@ -212,6 +222,7 @@ class _IPConfig extends cmdbAbstractObject
 			static::FUNCTION_IP_UNASSIGN_ON_NO_CI => static::DEFAULT_FUNCTION_IP_UNASSIGN_ON_NO_CI,
 			static::FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE => static::DEFAULT_FUNCTION_IP_RELEASE_ON_SUBNET_RELEASE,
 			static::FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY => static::DEFAULT_FUNCTION_DELEGATE_DOMAIN_TO_CHILDREN_ONLY,
+			static::FUNCTION_ATTACH_ALREADY_ALLOCATED_IPS => static::DEFAULT_FUNCTION_ATTACH_ALREADY_ALLOCATED_IPS,
 			static::FUNCTION_MAC_ADDRESS_FORMAT => static::DEFAULT_FUNCTION_MAC_ADDRESS_FORMAT,
 		];
 		if (class_exists('IPRequest')) {
@@ -225,15 +236,24 @@ class _IPConfig extends cmdbAbstractObject
 		if (class_exists('Zone')) {
 			$aZoneParameters = [
 				static::FUNCTION_IP_UPDATE_DNS_RECORDS => static::DEFAULT_FUNCTION_IP_UPDATE_DNS_RECORDS,
+				static::FUNCTION_REMOVE_RR_ON_IP_OBSOLETE => static::DEFAULT_FUNCTION_REMOVE_RR_ON_IP_OBSOLETE,
 			];
 		} else {
 			$aZoneParameters = [];
+		}
+		if (class_exists('BackEndNetworkCable')) {
+			$aCableParameters = [
+				static::FUNCTION_ALLOW_BACKENDNETWORKCABLE_TO_CROSS_ORGS => static::DEFAULT_FUNCTION_ALLOW_BACKENDNETWORKCABLE_TO_CROSS_ORGS,
+			];
+		} else {
+			$aCableParameters = [];
 		}
 		$aDefaultSettings = [
 			static::FUNCTION_SETTING_ENABLED => static::DEFAULT_FUNCTION_SETTING_ENABLED,
 			static::FUNCTION_SETTING_CORE_PARAMETERS => $aCoreIpParameters,
 			static::FUNCTION_SETTING_IP_REQUEST_PARAMETERS => $aIpRequestParameters,
 			static::FUNCTION_SETTING_ZONE_PARAMETERS => $aZoneParameters,
+			static::FUNCTION_SETTING_CABLE_PARAMETERS => $aCableParameters,
 		];
 
 		return $aDefaultSettings;
@@ -298,6 +318,17 @@ class _IPConfig extends cmdbAbstractObject
 						$oIpConfig->Set($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_ZONE_PARAMETERS][$sParameter]);
 					}
 				}
+
+				// Set Cable parameters
+				if (!array_key_exists(static::FUNCTION_SETTING_CABLE_PARAMETERS, $aFunctionSettings)) {
+					$aFunctionSettings[static::FUNCTION_SETTING_CABLE_PARAMETERS] = $aDefaultSettings[static::FUNCTION_SETTING_CABLE_PARAMETERS];
+				}
+				foreach ($aDefaultSettings[static::FUNCTION_SETTING_CABLE_PARAMETERS] as $sParameter => $sValueParameter) {
+					if (array_key_exists($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_CABLE_PARAMETERS])) {
+						$oIpConfig->Set($sParameter, $aFunctionSettings[static::FUNCTION_SETTING_CABLE_PARAMETERS][$sParameter]);
+					}
+				}
+
 			}
 			$oIpConfig->DBInsert();
 
