@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use IPRange;
 use iTopWebPage;
@@ -678,4 +680,71 @@ EOF
 
 		return $sFlagsFromParent;
 	}
+
+	/**
+	 * Get the previous Range if it exists
+	 *
+	 * @param bool $bInSubnet if lookup should be done in subnet only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousRange($bInSubnet)
+	{
+		$oIp = $this->Get('firstip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInBlock
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv6Range AS r WHERE r.subnet_id = :subnet_id AND r.firstip_text < :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Range AS r WHERE r.org_id = :org_id AND r.firstip_text < :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oRangeSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => false], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $sIp], null, 1);
+		$oRangeSet->OptimizeColumnLoad(['IPv6Range' => ['id', 'firstip']]);
+		if ($oPreviousRange = $oRangeSet->Fetch()) {
+			return $oPreviousRange;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the next Range if it exists
+	 *
+	 * @param $bInSubnet true if lookup should be done in subnetk only
+	 *
+	 * @return null
+	 */
+	public function GetNextRange($bInSubnet)
+	{
+		$oIp = $this->Get('firstip');
+		$sIp = $oIp->GetAsCannonical();
+
+		// Create OQL according to $bInBlock
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv6Range AS r WHERE r.subnet_id = :subnet_id AND r.firstip_text > :ip';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv6Range AS r WHERE r.org_id = :org_id AND r.firstip_text > :ip';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oRangeSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => true], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $sIp], null, 1);
+		$oRangeSet->OptimizeColumnLoad(['IPv6Range' => ['id', 'firstip']]);
+		if ($oNextRange = $oRangeSet->Fetch()) {
+			return $oNextRange;
+		}
+
+		return null;
+	}
+
 }

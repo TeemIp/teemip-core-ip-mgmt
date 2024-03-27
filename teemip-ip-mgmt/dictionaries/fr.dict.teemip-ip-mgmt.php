@@ -1169,6 +1169,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs DHCP !',
 	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un serveur DHCP ne peut être que de classe Serveur ou Machine Virtuelle !',
 
+	// Display pointers to previous and next Ranges
+	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Précédent',
+	'UI:IPManagement:Action:DisplayNext:IPRange' => 'Suivant',
+
 //
 // Management of IPv4 ranges
 //

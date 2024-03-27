@@ -298,4 +298,41 @@ HTML
 	public function DoExplodeFQDN($sFqdnAttr) {
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function GetShortcutActions($sFinalClass)
+	{
+		// Prepend the shortcut actions with the navigation menu
+		$aNavigationActions = ['previous_iprange', 'next_iprange'];
+		$aConfiguredActions = parent::GetShortcutActions($sFinalClass);
+		$aShortcutActions = array_merge($aNavigationActions, $aConfiguredActions);
+
+		return $aShortcutActions;
+	}
+
+	/**
+	 * Get the previous Range if it exists
+	 *
+	 * @param bool $bInSubnet if lookup should be done in subnet only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousRange($bInSubnet)
+	{
+		return null;
+	}
+
+	/**
+	 * Get the next Range if it exists
+	 *
+	 * @param $bInSubnet true if lookup should be done in subnet only
+	 *
+	 * @return null
+	 */
+	public function GetNextRange($bInSubnet)
+	{
+		return null;
+	}
+
 }

@@ -1169,6 +1169,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Solo gli intervalli DHCP possono essere collegati ai server DHCP!',
 	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un server DHCP può essere solo di classe Server o Macchina virtuale!',
 
+	// Display pointers to previous and next Ranges
+	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Precedente',
+	'UI:IPManagement:Action:DisplayNext:IPRange' => 'Prossimo',
+
 //
 // Management of IPv4 ranges
 //

@@ -1169,6 +1169,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Nur DHCP-Bereiche können mit DHCP-Servern verknüpft werden!',
 	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Ein DHCP-Server kann nur der Klasse Server oder virtuelle Maschine angehören!',
 
+	// Display pointers to previous and next Ranges
+	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Vorherige',
+	'UI:IPManagement:Action:DisplayNext:IPRange' => 'Nächste',
+
 //
 // Management of IPv4 ranges
 //

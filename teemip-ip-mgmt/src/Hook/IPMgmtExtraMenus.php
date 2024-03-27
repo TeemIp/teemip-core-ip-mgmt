@@ -13,6 +13,8 @@ use IPAddress;
 use IPBlock;
 use iPopupMenuExtension;
 use IPRange;
+use IPv4Range;
+use IPv6Range;
 use IPSubnet;
 use IPv4Subnet;
 use IPv6Subnet;
@@ -29,12 +31,17 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 	const IP_NAV_FUNCTION_CODE = 'ip_navigation';
 	const IP_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
 	const IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+	const RANGE_NAV_FUNCTION_CODE = 'range_navigation';
+	const RANGE_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
 	const SUBNET_NAV_FUNCTION_CODE = 'subnet_navigation';
 	const SUBNET_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
 	const SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = 'within_block_only';
 
 	const DEFAULT_IP_NAV_FUNCTION_SETTING_ENABLED = true;
 	const DEFAULT_IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
 	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_ENABLED = true;
 	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = true;
 
@@ -672,12 +679,41 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 					$sMenu = 'UI:IPManagement:Action:Calculator:'.$sClass;
 					$aResult[] = new URLPopupMenuItem($sMenu, Dict::S($sMenu), utils::GetAbsoluteUrlModulePage('teemip-ip-mgmt', 'ui.teemip-ip-mgmt.php', $aParams));
 				} elseif ($oObj instanceof IPRange) {
+					$sClass = get_class($oObj);
+
+					// Display pointers to previous and next IPRange according to configuration parameters
+					$aDefaultSettings = array(
+						static::RANGE_NAV_FUNCTION_SETTING_ENABLED => static::DEFAULT_RANGE_NAV_FUNCTION_SETTING_ENABLED,
+						static::RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY => static::DEFAULT_RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY,
+					);
+					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::RANGE_NAV_FUNCTION_CODE, $aDefaultSettings);
+					$bEnabled = (bool) $aFunctionSettings[static::RANGE_NAV_FUNCTION_SETTING_ENABLED];
+					if ($bEnabled) {
+						$bWithinSubnetOnly = (bool) $aFunctionSettings[static::RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY];
+						$oPreviousIPRange = $oObj->GetPreviousRange($bWithinSubnetOnly);
+						if (!is_null($oPreviousIPRange)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPRange');
+							$id = $oPreviousIPRange->GetKey();
+							$oItem = new URLButtonItem('previous_iprange', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-left');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+						$oNextIPRange = $oObj->GetNextRange($bWithinSubnetOnly);
+						if (!is_null($oNextIPRange)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayNext:IPRange');
+							$id = $oNextIPRange->GetKey();
+							$oItem = new URLButtonItem('next_iprange', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-right');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+					}
+
 					// Additional actions for IPRange
 					$oAppContext = new ApplicationContext();
-					$sContext = $oAppContext->GetForLink();
-
 					$id = $oObj->GetKey();
-					$sClass = get_class($oObj);
+					$sContext = $oAppContext->GetForLink();
 
 					$aParams = $oAppContext->GetAsHash();
 					$aParams['class'] = $sClass;

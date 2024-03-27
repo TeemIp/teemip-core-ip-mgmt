@@ -12,6 +12,8 @@ use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use IPRange;
 use iTopWebPage;
@@ -658,4 +660,65 @@ EOF
 
 		return $sFlagsFromParent;
 	}
+
+	/**
+	 * Get the previous Range if it exists
+	 *
+	 * @param bool $bInSubnet if lookup should be done in subnet only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousRange($bInSubnet)
+	{
+		// Create OQL according to $bInSubnet
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv4Range AS r WHERE r.subnet_id = :subnet_id AND INET_ATON(r.firstip) < INET_ATON(:ip)';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv4Range AS r WHERE r.org_id = :org_id AND INET_ATON(r.firstip) < INET_ATON(:ip)';
+		}
+		// Set the ordering criteria ['firstip'=> false] and set a limit (1)
+		$oRangeSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => false], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $this->Get('firstip')], null, 1);
+		$oRangeSet->OptimizeColumnLoad(['IPv4Range' => ['id', 'firstip']]);
+		if ($oPreviousRange = $oRangeSet->Fetch()) {
+			return $oPreviousRange;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the next Range if it exists
+	 *
+	 * @param $bInSubnet true if lookup should be done in subnet only
+	 *
+	 * @return null
+	 */
+	public function GetNextRange($bInSubnet)
+	{
+		// Create OQL according to $bInBlock
+		$iSubnet = $this->Get('subnet_id');
+		if ($bInSubnet) {
+			if ($iSubnet > 0) {
+				$sOQL = 'SELECT IPv4Range AS r WHERE r.subnet_id = :subnet_id AND INET_ATON(r.firstip) > INET_ATON(:ip)';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv4Range AS r WHERE r.org_id = :org_id AND INET_ATON(r.firstip) > INET_ATON(:ip)';
+		}
+		// Set the ordering criteria ['firstip'=> false] and set a limit (1)
+		$oRangeSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => true], ['org_id' => $this->Get('org_id'), 'subnet_id' => $iSubnet, 'ip' => $this->Get('firstip')], null, 1);
+		$oRangeSet->OptimizeColumnLoad(['IPv4Range' => ['id', 'firsip']]);
+		if ($oNextRange = $oRangeSet->Fetch()) {
+			return $oNextRange;
+		}
+
+		return null;
+	}
+
 }

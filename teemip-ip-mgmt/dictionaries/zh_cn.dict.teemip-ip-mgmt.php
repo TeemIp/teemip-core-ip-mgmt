@@ -1271,6 +1271,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => '只有DHCP范围可以链接到DHCP服务器！',
 'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'DHCP服务器只能是Server或Virtual Machine类！',
 
+'UI:IPManagement:Action:DisplayPrevious:IPRange' => '上一个',
+'UI:IPManagement:Action:DisplayNext:IPRange' => '下一个',
+
 //
 // IPv4范围的管理
 //

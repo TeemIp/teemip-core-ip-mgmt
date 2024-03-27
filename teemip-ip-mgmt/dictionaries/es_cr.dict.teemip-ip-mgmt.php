@@ -1169,6 +1169,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
 	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'A DHCP server can only be of Server or Virtual Machine class!',
 
+	// Display pointers to previous and next Ranges
+	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Previa',
+	'UI:IPManagement:Action:DisplayNext:IPRange' => 'Próxima',
+
 //
 // Management of IPv4 ranges
 //
