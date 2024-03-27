@@ -17,6 +17,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use IPBlock;
 use IPConfig;
@@ -1861,6 +1863,66 @@ EOF
 		}
 
 		return $sFlagsFromParent;
+	}
+
+	/**
+	 * Get the previous Block if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in parent block onl
+	 *
+	 * @return null
+	 */
+	public function GetPreviousBlock($bInBlock)
+	{
+		// Create OQL according to $bInBlock
+		$iParent = $this->Get('parent_id');
+		if ($bInBlock) {
+			if ($iParent > 0) {
+				$sOQL = 'SELECT IPv4Block AS b WHERE b.parent_id = :parent_id AND INET_ATON(b.firstip) < INET_ATON(:ip)';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv4Block AS b WHERE b.org_id = :org_id AND INET_ATON(b.firstip) < INET_ATON(:ip)';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oBlockSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => false], ['org_id' => $this->Get('org_id'), 'parent_id' => $iParent, 'ip' => $this->Get('firstip')], null, 1);
+		$oBlockSet->OptimizeColumnLoad(['IPv4Block' => ['id', 'firstip']]);
+		if ($oPreviousBlock = $oBlockSet->Fetch()) {
+			return $oPreviousBlock;
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the next Block if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in parent block only
+	 *
+	 * @return null
+	 */
+	public function GetNextBlock($bInBlock)
+	{
+		// Create OQL according to $bInBlock
+		$iParent = $this->Get('parent_id');
+		if ($bInBlock) {
+			if ($iParent > 0) {
+				$sOQL = 'SELECT IPv4Block AS b WHERE b.parent_id = :parent_id AND INET_ATON(b.firstip) > INET_ATON(:ip)';
+			} else {
+				return null;
+			}
+		} else {
+			$sOQL = 'SELECT IPv4Block AS b WHERE b.org_id = :org_id AND INET_ATON(b.firstip) > INET_ATON(:ip)';
+		}
+		// Set the ordering criteria ['ip'=> false] and set a limit (1)
+		$oBlockSet = new DBObjectSet(DBSearch::FromOQL($sOQL), ['firstip' => true], ['org_id' => $this->Get('org_id'), 'parent_id' => $iParent, 'ip' => $this->Get('firstip')], null, 1);
+		$oBlockSet->OptimizeColumnLoad(['IPv4Block' => ['id', 'firstip']]);
+		if ($oNextBlock = $oBlockSet->Fetch()) {
+			return $oNextBlock;
+		}
+
+		return null;
 	}
 
 }

@@ -895,6 +895,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Block has children blocks!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Block has children subnets!',
 
+	// Display pointers to previous and next blocks
+	'UI:IPManagement:Action:DisplayPrevious:IPBlock' => 'Previous',
+	'UI:IPManagement:Action:DisplayNext:IPBlock' => 'Next',
+
 //
 // Management of IPv4Blocks
 //

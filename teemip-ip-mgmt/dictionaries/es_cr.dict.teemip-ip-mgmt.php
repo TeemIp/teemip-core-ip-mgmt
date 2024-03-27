@@ -878,7 +878,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Undelegate:IPBlock:IsNotDelegated' => 'Block is not delegated!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Block has children blocks!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Block has children subnets!',
-	
+
+	// Display pointers to previous and next Blocks
+	'UI:IPManagement:Action:DisplayPrevious:IPBlock' => 'Previa',
+	'UI:IPManagement:Action:DisplayNext:IPBlock' => 'Próxima',
+
 //
 // Management of IPv4Blocks
 //

@@ -878,7 +878,11 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Undelegate:IPBlock:IsNotDelegated' => 'Il blocco non è delegato!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Il block ha blocchi figli!',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Il blocco ha sottoreti di bambini!',
-	
+
+	// Display pointers to previous and next Block
+	'UI:IPManagement:Action:DisplayPrevious:IPBlock' => 'Precedente',
+	'UI:IPManagement:Action:DisplayNext:IPBlock' => 'Prossimo',
+
 //
 // Management of IPv4Blocks
 //

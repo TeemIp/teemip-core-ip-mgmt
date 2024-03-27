@@ -879,6 +879,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => 'Le bloc a des blocs fils !',
 	'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => 'Le bloc a des subnets fils !',
 
+	// Display pointers to previous and next Blocks
+	'UI:IPManagement:Action:DisplayPrevious:IPBlock' => 'Précédent',
+	'UI:IPManagement:Action:DisplayNext:IPBlock' => 'Suivant',
+
 //
 // Management of IPv4Blocks
 //

@@ -1007,6 +1007,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 'UI:IPManagement:Action:Undelegate:IPBlock:HasChildBlocks' => '块有子块！',
 'UI:IPManagement:Action:Undelegate:IPBlock:HasChildSubnets' => '块有子网！',
 
+'UI:IPManagement:Action:DisplayPrevious:IPBlock' => '上一个',
+'UI:IPManagement:Action:DisplayNext:IPBlock' => '下一个',
+
 //
 // IPv4块的管理
 //

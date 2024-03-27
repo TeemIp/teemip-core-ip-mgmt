@@ -13,8 +13,6 @@ use IPAddress;
 use IPBlock;
 use iPopupMenuExtension;
 use IPRange;
-use IPv4Range;
-use IPv6Range;
 use IPSubnet;
 use IPv4Subnet;
 use IPv6Subnet;
@@ -28,22 +26,27 @@ use utils;
 class IPMgmtExtraMenus implements iPopupMenuExtension
 {
 	const MODULE_CODE = 'teemip-ip-mgmt';
-	const IP_NAV_FUNCTION_CODE = 'ip_navigation';
-	const IP_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
-	const IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
-	const RANGE_NAV_FUNCTION_CODE = 'range_navigation';
-	const RANGE_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
-	const RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+	const BLOCK_NAV_FUNCTION_CODE = 'block_navigation';
+	const BLOCK_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const BLOCK_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = 'within_block_only';
 	const SUBNET_NAV_FUNCTION_CODE = 'subnet_navigation';
 	const SUBNET_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
 	const SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = 'within_block_only';
+	const RANGE_NAV_FUNCTION_CODE = 'range_navigation';
+	const RANGE_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
+	const IP_NAV_FUNCTION_CODE = 'ip_navigation';
+	const IP_NAV_FUNCTION_SETTING_ENABLED = 'enabled';
+	const IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = 'within_subnet_only';
 
-	const DEFAULT_IP_NAV_FUNCTION_SETTING_ENABLED = true;
-	const DEFAULT_IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
-	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_ENABLED = true;
-	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+	const DEFAULT_BLOCK_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_BLOCK_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = true;
 	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_ENABLED = true;
 	const DEFAULT_SUBNET_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY = true;
+	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_RANGE_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
+	const DEFAULT_IP_NAV_FUNCTION_SETTING_ENABLED = true;
+	const DEFAULT_IP_NAV_FUNCTION_SETTING_WITHIN_SUBNET_ONLY = true;
 
 	/**
 	 * @inheritdoc
@@ -427,13 +430,43 @@ class IPMgmtExtraMenus implements iPopupMenuExtension
 				$oObj = $param;
 
 				if ($oObj instanceof IPBlock) {
+					$sClass = get_class($oObj);
+
+					// Display pointers to previous and next Subnets according to configuration parameters
+					$aDefaultSettings = array(
+						static::BLOCK_NAV_FUNCTION_SETTING_ENABLED => static::DEFAULT_BLOCK_NAV_FUNCTION_SETTING_ENABLED,
+						static::BLOCK_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY => static::DEFAULT_BLOCK_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY,
+					);
+					$aFunctionSettings = MetaModel::GetModuleSetting(static::MODULE_CODE, static::BLOCK_NAV_FUNCTION_CODE, $aDefaultSettings);
+					$bEnabled = (bool) $aFunctionSettings[static::BLOCK_NAV_FUNCTION_SETTING_ENABLED];
+					if ($bEnabled) {
+						$bWithinBlockOnly = (bool) $aFunctionSettings[static::BLOCK_NAV_FUNCTION_SETTING_WITHIN_BLOCK_ONLY];
+						$oPreviousIPBlock = $oObj->GetPreviousBlock($bWithinBlockOnly);
+						if (!is_null($oPreviousIPBlock)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayPrevious:IPBlock');
+							$id = $oPreviousIPBlock->GetKey();
+							$oItem = new URLButtonItem('previous_ipblock', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-left');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+						$oNextIPBlock = $oObj->GetNextBlock($bWithinBlockOnly);
+						if (!is_null($oNextIPBlock)) {
+							$slabel = Dict::S('UI:IPManagement:Action:DisplayNext:IPBlock');
+							$id = $oNextIPBlock->GetKey();
+							$oItem = new URLButtonItem('next_ipblock', $slabel, utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sClass.'&id='.$id, '_top');
+							$oItem->SetIconClass('fas fa-caret-right');
+							$oItem->SetTooltip($slabel);
+							$aResult[] = $oItem;
+						}
+					}
+
 					// Additional actions for IPBlocks
 					$oAppContext = new ApplicationContext();
+					$id = $oObj->GetKey();
 					$sContext = $oAppContext->GetForLink();
 
-					$id = $oObj->GetKey();
 					$iBlockSize = $oObj->GetSize();
-					$sClass = get_class($oObj);
 
 					$aParams = $oAppContext->GetAsHash();
 					$aParams['class'] = $sClass;

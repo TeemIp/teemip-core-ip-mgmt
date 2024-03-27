@@ -457,4 +457,41 @@ class _IPBlock extends IPObject {
 		return $sFlagsFromParent;
 	}
 
+	/**
+	 * @inheritdoc
+	 */
+	public static function GetShortcutActions($sFinalClass)
+	{
+		// Prepend the shortcut actions with the navigation menu
+		$aNavigationActions = ['previous_ipblock', 'next_ipblock'];
+		$aConfiguredActions = parent::GetShortcutActions($sFinalClass);
+		$aShortcutActions = array_merge($aNavigationActions, $aConfiguredActions);
+
+		return $aShortcutActions;
+	}
+
+	/**
+	 * Get the previous Block if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in parent block onl
+	 *
+	 * @return null
+	 */
+	public function GetPreviousBlock($bInBlock)
+	{
+		return null;
+	}
+
+	/**
+	 * Get the next Block if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in parent block only
+	 *
+	 * @return null
+	 */
+	public function GetNextBlock($bInBlock)
+	{
+		return null;
+	}
+
 }
