@@ -12,13 +12,15 @@ use iTopWebPage;
 use utils;
 use WebPage;
 
-class _IPSubnet extends IPObject {
+class _IPSubnet extends IPObject
+{
 	/**
 	 * Returns size of subnet
 	 *
 	 * @return int
 	 */
-	public function GetSize() {
+	public function GetSize()
+	{
 		return 1;
 	}
 
@@ -29,7 +31,8 @@ class _IPSubnet extends IPObject {
 	 *
 	 * @return int
 	 */
-	public function GetOccupancy($sObject) {
+	public function GetOccupancy($sObject)
+	{
 		return 0;
 	}
 
@@ -40,7 +43,8 @@ class _IPSubnet extends IPObject {
 	 *
 	 * @return string
 	 */
-	public function GetNextOperation($sOperation) {
+	public function GetNextOperation($sOperation)
+	{
 		switch ($sOperation) {
 			case 'findspace':
 				return 'dofindspace';
@@ -90,7 +94,8 @@ class _IPSubnet extends IPObject {
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetPostedParam($sOperation) {
+	public function GetPostedParam($sOperation)
+	{
 		$aParam = array();
 		switch ($sOperation) {
 			case 'dofindspace':
@@ -146,7 +151,8 @@ class _IPSubnet extends IPObject {
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function GetAttributeParams($sAttCode) {
+	public function GetAttributeParams($sAttCode)
+	{
 		$aParams = array();
 		if (($sAttCode == 'ip_occupancy') || ($sAttCode == 'range_occupancy')) {
 			if ($sAttCode == 'ip_occupancy') {
@@ -188,7 +194,8 @@ class _IPSubnet extends IPObject {
 	 *
 	 * @return int
 	 */
-	public function IPCount($sStatus) {
+	public function IPCount($sStatus)
+	{
 		return 0;
 	}
 
@@ -199,14 +206,16 @@ class _IPSubnet extends IPObject {
 	 *
 	 * @return string
 	 */
-	public function GetFreeIP($iCreationOffset) {
+	public function GetFreeIP($iCreationOffset)
+	{
 		return '';
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function OnInsert() {
+	public function OnInsert()
+	{
 		parent::OnInsert();
 
 		if (class_exists('IPDiscovery')) {
@@ -225,7 +234,8 @@ class _IPSubnet extends IPObject {
 	/**
 	 * @inheritdoc
 	 */
-	public function OnUpdate() {
+	public function OnUpdate()
+	{
 		parent::OnUpdate();
 
 		if (class_exists('IPDiscovery')) {
@@ -244,7 +254,8 @@ class _IPSubnet extends IPObject {
 	/**
 	 * @inheritDoc
 	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
 		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 
 		switch ($sAttCode) {
@@ -269,7 +280,8 @@ class _IPSubnet extends IPObject {
 	/**
 	 * @inheritDoc
 	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
 		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 
 		switch ($sAttCode) {
@@ -303,7 +315,8 @@ class _IPSubnet extends IPObject {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayCalculatorOutput(iTopWebPage $oP, $aParam) {
+	public function DisplayCalculatorOutput(iTopWebPage $oP, $aParam)
+	{
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoCalculator:');
 		$oP->add($this->GetCalculatorOutput($oP, $aParam));
 	}
@@ -316,7 +329,8 @@ class _IPSubnet extends IPObject {
 	 *
 	 * @return string
 	 */
-	public function GetCalculatorOutput(WebPage $oP, $aParam) {
+	public function GetCalculatorOutput(WebPage $oP, $aParam)
+	{
 		return '';
 	}
 
@@ -334,7 +348,8 @@ class _IPSubnet extends IPObject {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DisplayIPsAsCSV(iTopWebPage $oP, $aParam) {
+	public function DisplayIPsAsCSV(iTopWebPage $oP, $aParam)
+	{
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:CsvExportIps:');
 		$sHtml = $this->GetIPsAsCSV($aParam);
 		$oP->add(<<<HTML
@@ -357,7 +372,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DoListIps(iTopWebPage $oP, $aParam) {
+	public function DoListIps(iTopWebPage $oP, $aParam)
+	{
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:ListIps:');
 		$oP->add($this->GetListIps($oP, $aParam));
 	}
@@ -378,7 +394,8 @@ HTML
 	 * @throws \OQLException
 	 *
 	 */
-	protected function GetListIps(WebPage $oP, $aParam) {
+	protected function GetListIps(WebPage $oP, $aParam)
+	{
 		return '';
 	}
 
@@ -397,7 +414,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public function DoDisplayAvailableSpace(iTopWebPage $oP, $iChangeId, $aParameter) {
+	public function DoDisplayAvailableSpace(iTopWebPage $oP, $iChangeId, $aParameter)
+	{
 		$sHtml = $this->GetAvailableSpace($oP, $iChangeId, $aParameter);
 		$this->DisplayBareTab($oP, 'UI:IPManagement:Action:DoFindSpace:');
 		$oP->add($sHtml);
@@ -412,7 +430,8 @@ HTML
 	 *
 	 * @return string
 	 */
-	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam) {
+	protected function GetAvailableSpace(WebPage $oP, $iChangeId, $aParam)
+	{
 		return '';
 	}
 
@@ -423,7 +442,8 @@ HTML
 	 *
 	 * @return string
 	 */
-	protected function GetIPsAsCSV($aParam) {
+	protected function GetIPsAsCSV($aParam)
+	{
 		return '';
 	}
 
@@ -436,7 +456,8 @@ HTML
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public function DoCheckToExplodeFQDN($sFqdnAttr) {
+	public function DoCheckToExplodeFQDN($sFqdnAttr)
+	{
 
 		return '';
 	}
@@ -452,7 +473,8 @@ HTML
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoExplodeFQDN($sFqdnAttr) {
+	public function DoExplodeFQDN($sFqdnAttr)
+	{
 	}
 
 	/**
@@ -466,6 +488,30 @@ HTML
 		$aShortcutActions = array_merge($aNavigationActions, $aConfiguredActions);
 
 		return $aShortcutActions;
+	}
+
+	/**
+	 * Get the previous Subnet if it exists
+	 *
+	 * @param bool $bInBlock if lookup should be done in subnet's block only
+	 *
+	 * @return null
+	 */
+	public function GetPreviousSubnet($bInBlock)
+	{
+		return null;
+	}
+
+	/**
+	 * Get the next Subnet if it exists
+	 *
+	 * @param $bInBlock true if lookup should be done in subnet's block only
+	 *
+	 * @return null
+	 */
+	public function GetNextSubnet($bInBlock)
+	{
+		return null;
 	}
 
 }

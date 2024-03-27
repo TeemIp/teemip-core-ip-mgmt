@@ -1818,6 +1818,7 @@ EOF
 				return "FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF:FFFF";
 		}
 	}
+
 	/**
 	 * Get the previous Subnet if it exists
 	 *
