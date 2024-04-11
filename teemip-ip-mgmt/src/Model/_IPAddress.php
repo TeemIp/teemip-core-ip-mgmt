@@ -388,7 +388,13 @@ class _IPAddress extends IPObject
 				} else {
 					$sOQL = "SELECT IPAddress AS i WHERE i.fqdn = :fqdn AND i.org_id = :org_id AND i.status != 'released' AND i.id != :key";
 				}
-				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('fqdn' => $sFqdn, 'org_id' => $iOrgId, 'key' => $iKey));
+				if (class_exists('View')) {
+					$sOQL .= " AND i.view_id = :view_id";
+					$iView = $this->Get('view_id');
+				} else {
+					$iView = '';
+				}
+				$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('fqdn' => $sFqdn, 'org_id' => $iOrgId, 'key' => $iKey, 'view_id' => $iView));
 				// Match for creations is verbiden. Match for modifications as well unless the current name is kept
 				$bDualStackMatchConsummed = false;
 				while ($oIp = $oIpSet->Fetch()) {
