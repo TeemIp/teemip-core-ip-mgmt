@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,8 +8,6 @@ namespace TeemIp\TeemIp\Extension\Framework\Helper;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
-use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
-use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use DisplayBlock;
 use iTopWebPage;
 use MetaModel;
