@@ -26,18 +26,18 @@ class AttributeIPv6Address extends AttributeString
 	}
 
 	/**
-	 * @param $value
+	 * @param $sValue
 	 * @param null $oHostObj
 	 *
 	 * @return string
 	 */
-	public function GetEditValue($value, $oHostObj = null)
+	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if (is_null($value) || ($value == '')) {
+		if (is_null($sValue) || ($sValue == '')) {
 			return '::0';
 		} else {
-			/** @var \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6 $value */
-			return $value->GetAsCompressed();
+			/** @var \TeemIp\TeemIp\Extension\IPv6Management\Model\ormIPv6 $sValue */
+			return $sValue->GetAsCompressed();
 		}
 	}
 
@@ -204,19 +204,19 @@ class AttributeIPv6Address extends AttributeString
 	}
 
 	/**
-	 * @param string $value
+	 * @param string $sValue
 	 * @param null $oHostObject
 	 * @param bool $bLocalize
 	 *
 	 * @return string|string[]|null
 	 */
-	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceof ormIPv6) {
-			$value = $value->GetAsCompressed();
+		if ($sValue instanceof ormIPv6) {
+			$sValue = $sValue->GetAsCompressed();
 		}
 
-		return $value;
+		return $sValue;
 	}
 
 	/**
@@ -239,19 +239,19 @@ class AttributeIPv6Address extends AttributeString
 	}
 
 	/**
-	 * @param string $value
+	 * @param string $sValue
 	 * @param null $oHostObject
 	 * @param bool $bLocalize
 	 *
 	 * @return mixed|string
 	 */
-	public function GetAsXML($value, $oHostObject = null, $bLocalize = true)
+	public function GetAsXML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if ($value instanceof ormIPv6) {
-			$value = $value->GetAsCompressed();
+		if ($sValue instanceof ormIPv6) {
+			$sValue = $sValue->GetAsCompressed();
 		}
 
-		return $value;
+		return $sValue;
 	}
 
 	/**

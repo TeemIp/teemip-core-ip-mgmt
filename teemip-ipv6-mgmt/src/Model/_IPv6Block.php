@@ -1260,14 +1260,14 @@ EOF
 	 * Display block and child subnets as tree leaf
 	 *
 	 * @param $bWithIcon
-	 * @param $sTreeOrgId
+	 * @param $iTreeOrgId
 	 *
 	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function GetAsLeaf($bWithIcon, $sTreeOrgId) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
 		$sHtml = '';
 		if ($bWithIcon) {
 			$sHtml = $this->GetMultiSizeIcon(true, true);
@@ -1282,7 +1282,7 @@ EOF
 		$iOrgId = $this->Get('org_id');
 		$iParentOrgId = $this->Get('parent_org_id');
 		if ($iParentOrgId != 0) {
-			if ($sTreeOrgId == $iOrgId) {
+			if ($iTreeOrgId == $iOrgId) {
 				// Block is delegated from parent org
 				$sHtml .= "&nbsp;&nbsp;&nbsp; - ".Dict::Format('Class:IPBlock:DelegatedFromParent', $this->GetAsHTML('parent_org_id'));
 			} else {
