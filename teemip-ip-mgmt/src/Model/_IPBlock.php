@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -261,27 +261,19 @@ class _IPBlock extends IPObject {
 	}
 
 	/**
-	 * Displays the tabs listing the child blocks and the subnets belonging to a block
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+     * @inheritdoc
+     */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
 		if (!$bEditMode) {
 			// Add related style sheet
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+                $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            } else {
+                $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            }
 
 			$sClass = get_class($this);
 			$iBlockId = $this->GetKey();
@@ -343,7 +335,7 @@ class _IPBlock extends IPObject {
 			}
 
 			$sName = Dict::Format('Class:IPBlock/Tab:childblock');
-			IPUtils::DisplayTabContent($oP, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'children_occupancy', $sClass, $sTitle, $sHtml, $oChildBlockSet, false);
 		}
 	}
 
