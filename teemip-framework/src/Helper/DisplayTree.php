@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -75,7 +75,11 @@ class DisplayTree
 			->AddHtml(self::GetTree($sClass, $iCurrentOrganization));
 
 		$oP->add_ready_script("\$('#tree ul').treeview();");
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-framework/asset/css/teemip-display-tree.css');
+        if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+            $oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-framework/asset/css/teemip-display-tree.css');
+        } else {
+            $oP->LinkStylesheetFromModule('teemip-framework/asset/css/teemip-display-tree.css');
+        }
 
 	}
 
