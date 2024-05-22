@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -697,7 +697,11 @@ EOF
 	protected function GetListIps(WebPage $oP, $aParam)
 	{
 		// Add related style sheeet
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+        if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+            $oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+        } else {
+            $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+        }
 
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
@@ -1907,14 +1911,18 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		// Execute parent function first 
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
 		if (!$bEditMode) {
 			// Add related style sheet
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+                $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            } else {
+                $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            }
 
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
@@ -1955,7 +1963,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:ipregistered');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:ipregistered+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'ip_addresses', 'IPv4Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
 
 			// Tab for IP Ranges
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv4Range AS r WHERE r.subnet_id = '$iKey' AND r.org_id = $iOrgId");
@@ -1972,7 +1980,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:iprange');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:iprange+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv4Range', $sTitle, $sHtml, $oIpRangeSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'ip_ranges', 'IPv4Range', $sTitle, $sHtml, $oIpRangeSet, false);
 
 			// Tab for IP Requests
 			if (MetaModel::IsValidClass('IPRequestSubnet')) {
@@ -1980,7 +1988,7 @@ EOF
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
 				$sName = Dict::S('Class:IPSubnet/Tab:requests');
 				$sTitle = Dict::S('Class:IPSubnet/Tab:requests+');
-				IPUtils::DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet, false);
+				IPUtils::DisplayTabContent($oPage, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet, false);
 			}
 		}
 	}
