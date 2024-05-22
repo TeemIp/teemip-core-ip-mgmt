@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1089,26 +1089,20 @@ EOF
 	}
 
 	/**
-	 * Displays the tabs related to IPv6Subnets
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+     * @inheritdoc
+     */
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		// Execute parent function first 
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
 		if (!$bEditMode) {
 			// Add related style sheet
-			$oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
+                $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            } else {
+                $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
+            }
 
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();
@@ -1155,7 +1149,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:ipregistered');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:ipregistered+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_addresses', 'IPv6Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'ip_addresses', 'IPv6Address', $sTitle, $sHtml, $oIpRegisteredSet, false);
 
 			// Tab for IP Ranges
 			$oIpRangeSearch = DBObjectSearch::FromOQL("SELECT IPv6Range AS r WHERE r.subnet_id = :key", array('key' => $iKey));
@@ -1172,7 +1166,7 @@ EOF
 			}
 			$sName = Dict::S('Class:IPSubnet/Tab:iprange');
 			$sTitle = Dict::S('Class:IPSubnet/Tab:iprange+');
-			IPUtils::DisplayTabContent($oP, $sName, 'ip_ranges', 'IPv6Range', $sTitle, $sHtml, $oIpRangeSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'ip_ranges', 'IPv6Range', $sTitle, $sHtml, $oIpRangeSet, false);
 
 			// Tab for related subnet requests, if any, in non edit mode
 			if (MetaModel::IsValidClass('IPRequestSubnet')) {
@@ -1180,7 +1174,7 @@ EOF
 				$oSubnetRequestSet = new CMDBObjectSet($oSubnetRequestSearch);
 				$sName = Dict::S('Class:IPSubnet/Tab:requests');
 				$sTitle = Dict::S('Class:IPSubnet/Tab:requests+');
-				IPUtils::DisplayTabContent($oP, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet, false);
+				IPUtils::DisplayTabContent($oPage, $sName, 'subnet_requests', 'IPRequestSubnet', $sTitle, '', $oSubnetRequestSet, false);
 			}
 		}
 	}
