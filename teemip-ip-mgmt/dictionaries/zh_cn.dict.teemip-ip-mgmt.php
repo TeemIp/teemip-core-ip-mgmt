@@ -433,7 +433,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:subnetip_plus_1' => '子网IP + 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:broadcastip_minus_1' => '广播IP - 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:free_setup' => '自由分配',
-	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => '网关IP',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => '网关IP分配',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format+' => '',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:default' => '与全局IP设置对齐',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1' => '强制使用子网IP + 1',

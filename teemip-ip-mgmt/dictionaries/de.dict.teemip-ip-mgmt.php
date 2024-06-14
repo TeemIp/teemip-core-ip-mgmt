@@ -422,7 +422,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'Subnetz IP + 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:broadcastip_minus_1' => 'Broadcast IP - 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:free_setup' => 'Freie Zuweisung',
-	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => 'Gateway IP',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => 'Gateway IP Zuweisung',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format+' => '',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:default' => 'Abgestimmt auf globale IP-Einstellungen',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'Auf Subnetz-IP + 1 erzwingen',

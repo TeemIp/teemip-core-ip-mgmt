@@ -433,7 +433,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'Subnet IP + 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:broadcastip_minus_1' => 'Broadcast IP - 1',
 	'Class:IPv4Subnet/Attribute:ipconfig_ipv4_gateway_ip_format/Value:free_setup' => 'Free allocation',
-	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => 'Gateway IP',
+	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format' => 'Gateway IP allocation',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format+' => '',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:default' => 'Aligned with global IP settings',
 	'Class:IPv4Subnet/Attribute:ipv4_gateway_ip_format/Value:subnetip_plus_1' => 'Force to subnet IP + 1',
