@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -233,6 +233,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Scollega gli IP rilasciati dai CIs',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Scollega gli IP il cui stato è cambiato in \'Rilasciato\' da tutti gli elementi del CIs e le interfacce',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'Si',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'No',
 ));
 
 //

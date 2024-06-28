@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -97,24 +97,13 @@ class _Domain extends DNSObject implements iTree {
 		return array($sError, $iDomainId, $sDomainName);
 	}
 
-	/**
-	 * Displays the tabs listing the child blocks and the subnets belonging to a block
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+    /**
+     * * @inheritdoc
+     *
+     */
+	public function DisplayBareRelations($oPage, $bEditMode = false) {
 		// Execute parent function first 
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
 		if (!$this->IsNew()) {
 			$iOrgId = $this->Get('org_id');
@@ -151,7 +140,7 @@ class _Domain extends DNSObject implements iTree {
 			));
 			// Then, display form to select list of hosts if domain is not in edition
 			$sHtml = '';
-			if (!$bEditMode) {
+			if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 				$sHtml = '<div style="padding: 15px; background: #f8f9fa;">';
 				$sHtml .= "<form>";
 				$sHtml .= "<table>";
@@ -185,7 +174,7 @@ class _Domain extends DNSObject implements iTree {
 				$sHtml .= "</div><br>";
 			}
 			$sName = Dict::Format('Class:Domain/Tab:hosts');
-			IPUtils::DisplayTabContent($oP, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'child_hosts', 'IPAddress', $sTitle, $sHtml, $oHostsSet, false);
 
 			// Tab for child domains
 			$sOQL = "SELECT Domain AS dc JOIN Domain AS dp ON dc.parent_id BELOW dp.id WHERE dp.id = :domain_id AND dc.id != :domain_id";
@@ -193,7 +182,7 @@ class _Domain extends DNSObject implements iTree {
 
 			$sName = Dict::Format('Class:Domain/Tab:child_domain');
 			$sTitle = Dict::Format('Class:Domain/Tab:child_domain+');
-			IPUtils::DisplayTabContent($oP, $sName, 'child_domains', 'Domain', $sTitle, '', $oDomainsSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'child_domains', 'Domain', $sTitle, '', $oDomainsSet, false);
 
 			// Tab for related zones
 			if (class_exists('Zone')) {
@@ -202,7 +191,7 @@ class _Domain extends DNSObject implements iTree {
 
 				$sName = Dict::Format('Class:Domain/Tab:zones_list');
 				$sTitle = Dict::Format('Class:Domain/Tab:zones_list+');
-				IPUtils::DisplayTabContent($oP, $sName, 'associated_zones', 'Zone', $sTitle, '', $oZonesSet, false);
+				IPUtils::DisplayTabContent($oPage, $sName, 'associated_zones', 'Zone', $sTitle, '', $oZonesSet, false);
 			}
 		}
 	}

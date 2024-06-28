@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -233,6 +233,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'Nein',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Freigegebene IPs von CIs trennen',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Trennen Sie IPs, deren Status auf \'Freigegeben\' wechselt, von allen CIs und Schnittstellen.',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'ja',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'Nein',
 ));
 
 //

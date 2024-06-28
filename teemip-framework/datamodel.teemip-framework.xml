@@ -163,7 +163,7 @@
       </properties>
       <fields>
         <!--  General information -->
-	      <field id="org_id" xsi:type="AttributeExternalKey">
+        <field id="org_id" xsi:type="AttributeExternalKey">
           <sql>org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>false</is_null_allowed>
@@ -194,8 +194,8 @@
           <extkey_attcode>requestor_id</extkey_attcode>
           <target_attcode>name</target_attcode>
         </field>
-	      <!-- Settings for subnet blocks -->
-	      <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
+        <!-- Settings for subnet blocks -->
+	    <field id="ipv4_block_min_size" xsi:type="AttributeInteger">
           <sql>ipv4_block_min_size</sql>
           <default_value>256</default_value>
           <is_null_allowed>false</is_null_allowed>
@@ -539,6 +539,19 @@
           <default_value>no</default_value>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="detach_released_ip_from_cis" xsi:type="AttributeEnum">
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <sql>detach_released_ip_from_cis</sql>
+          <default_value>yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="mac_address_format" xsi:type="AttributeEnum">
           <values>
             <value id="colons">
@@ -687,8 +700,11 @@
                     <item id="attach_already_allocated_ips">
                       <rank>10</rank>
                     </item>
-                    <item id="mac_address_format">
+                    <item id="detach_released_ip_from_cis">
                       <rank>20</rank>
+                    </item>
+                    <item id="mac_address_format">
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>

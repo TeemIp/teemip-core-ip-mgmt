@@ -911,8 +911,11 @@ class _IPAddress extends IPObject
 		if ($sStatus == 'released') {
 			$aChanges = $this->ListPreviousValuesForUpdatedAttributes();
 			if (array_key_exists('status', $aChanges)) {
-				$this->RemoveFromCIs();
-				$this->RemoveFromInterfaces();
+                $sDetachReleasedIPFromCIs = IPConfig::GetFromGlobalIPConfig('detach_released_ip_from_cis', $this->Get('org_id'));
+                if ($sDetachReleasedIPFromCIs == 'yes') {
+                    $this->RemoveFromCIs();
+                    $this->RemoveFromInterfaces();
+                }
 			}
 		}
 	}

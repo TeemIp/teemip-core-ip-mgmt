@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -233,6 +233,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:yes+' => '',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'Non',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Détache des CIs les IPs libérées',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Detache de tous les CIs et interfaces les IPs dont le statut est passé à \'Libéré\'',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'Oui',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'Non',
 ));
 
 //
