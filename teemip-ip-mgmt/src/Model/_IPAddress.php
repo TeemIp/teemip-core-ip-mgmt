@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -82,6 +82,7 @@ class _IPAddress extends IPObject
 					$aCIs = $oIP->GetHostingCIs();
 					foreach ($aCIs as $key => $aCI) {
 						$oCI = $aCI['ci'];
+                        if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
 						if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
 							return;
 						}
@@ -91,9 +92,10 @@ class _IPAddress extends IPObject
 					$aCIs = $oIP->GetHostingThroughInterfacesCIs();
 					foreach ($aCIs as $key => $aCI) {
 						$oCI = $aCI['ci'];
-						if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
-							return;
-						}
+                        if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
+                        if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
+                            return;
+                        }
 					}
 
 					$oIP->Set('status', 'released');    // release_date is managed at IPObject level
