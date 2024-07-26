@@ -234,7 +234,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Scollega gli IP rilasciati dai CIs',
-    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Scollega gli IP il cui stato è cambiato in \'Rilasciato\' da tutti gli elementi del CIs e le interfacce',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Scollega gli IP il cui stato è cambiato in \'Rilasciato\' da tutti gli elementi del CIs. Questo non riguarda le interfacce per le quali gli IP \'Rilasciati\' vengono sempre scollegi.',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'Si',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'No',
 ));

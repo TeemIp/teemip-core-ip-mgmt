@@ -234,7 +234,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Separa las IP liberadas de los CI',
-    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Separa las IP cuyo estado ha cambiado a \'Liberada\' de todos los CI e interfaces',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Separa las IP cuyo estado ha cambiado a \'Liberada\' de todos los CI. Esto no afecta a las interfaces para las cuales las IP \'liberadas\' siempre están separadas.',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'sI',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'No',
 ));

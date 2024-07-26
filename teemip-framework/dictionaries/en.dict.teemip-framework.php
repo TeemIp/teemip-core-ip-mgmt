@@ -234,7 +234,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'No',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Detach released IPs from CIs',
-    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Detach IPs which status move to \'Released\' from all CIs and interfaces',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Detach IPs which status moves to \'Released\' from all CIs. This does not include interfaces for which released IPs are always detached.',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'Yes',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'No',
 ));

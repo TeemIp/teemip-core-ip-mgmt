@@ -234,7 +234,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no' => 'Nein',
 	'Class:IPConfig/Attribute:attach_already_allocated_ips/Value:no+' => '',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis' => 'Freigegebene IPs von CIs trennen',
-    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Trennen Sie IPs, deren Status auf \'Freigegeben\' wechselt, von allen CIs und Schnittstellen.',
+    'Class:IPConfig/Attribute:detach_released_ip_from_cis+' => 'Trennen Sie IPs, deren Status auf \'Freigegeben\' wechselt, von allen CIs. Dies betrifft nicht Schnittstellen, bei denen die \'Freigegebenen\' IPs immer getrennt sind.',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:yes' => 'ja',
     'Class:IPConfig/Attribute:detach_released_ip_from_cis/Value:no' => 'Nein',
 ));
