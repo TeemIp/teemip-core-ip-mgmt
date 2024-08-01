@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,6 +14,7 @@ use DBSearch;
 use Dict;
 use IPAddress;
 use IPConfig;
+use IPv4Subnet;
 use MetaModel;
 
 class _IPv4Address extends IPAddress {
