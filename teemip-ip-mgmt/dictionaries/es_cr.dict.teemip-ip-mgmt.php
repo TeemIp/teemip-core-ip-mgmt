@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -17,7 +17,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:IPObject' => 'Objeto IP',
 	'Class:IPObject+' => '',
 	'IPObject:GlobalParams' => 'Configuración Global',
-	'IPObject:GlobalParams' => 'Configuración global predeterminada establecida en el nivel de organización y configuración realmente utilizada para el objeto',
+	'IPObject:GlobalParams+' => 'Configuración global predeterminada establecida en el nivel de organización y configuración realmente utilizada para el objeto',
 	'Class:IPObject:GeneralConfigParameters' => 'Configuración Organización',
 	'Class:IPObject/Attribute:finalclass' => 'Clase',
 	'Class:IPObject/Attribute:finalclass+' => '',
