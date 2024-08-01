@@ -1,14 +1,14 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace TeemIp\TeemIp\Extension\Webservices\Controller;
 
 use DBObject;
-use ObjectResult;
 use RestResult;
+use TeemIpObjectResult;
 
 class RestResultWithTextFile extends RestResult
 {
@@ -26,7 +26,7 @@ class RestResultWithTextFile extends RestResult
 	 */
 	public function AddObject($iCode, $sMessage, $oObject, $sText) {
 		$sClass = get_class($oObject);
-		$oObjRes = new ObjectResult($sClass, $oObject->GetKey());
+		$oObjRes = new TeemIpObjectResult($sClass, $oObject->GetKey());
 		$oObjRes->code = $iCode;
 		$oObjRes->message = $sMessage;
 

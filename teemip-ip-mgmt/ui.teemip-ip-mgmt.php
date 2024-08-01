@@ -70,7 +70,7 @@ try {
         $oP->LinkScriptFromAppRoot('js/links/links_widget.js');
         $oP->LinkScriptFromAppRoot('js/extkeywidget.js');
 
-        $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js');
+        $oP->LinkScriptFromModule('teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js');
     }
 
 	// Add teemip style sheeet
