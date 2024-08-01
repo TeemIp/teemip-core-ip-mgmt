@@ -9,7 +9,7 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 use ApplicationContext;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
-use Combodo\iTop\Application\WebPage\WebPage;
+//use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use Dict;
 use IPConfig;
@@ -19,7 +19,7 @@ use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
-
+use WebPage;
 class _IPBlock extends IPObject {
 	/**
 	 * Returns size of block

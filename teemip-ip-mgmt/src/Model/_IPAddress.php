@@ -14,7 +14,7 @@ use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Application\WebPage\WebPage;
+//use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -26,6 +26,7 @@ use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
+use WebPage;
 
 class _IPAddress extends IPObject
 {
