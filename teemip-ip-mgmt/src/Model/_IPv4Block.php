@@ -1474,9 +1474,9 @@ EOF
     /**
      * @inheritDoc
      */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
         if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet - Done in parent class
@@ -1491,7 +1491,7 @@ EOF
 			$sName = Dict::Format('Class:IPBlock/Tab:subnet');
 			$sTitle = Dict::Format('Class:IPBlock/Tab:subnet+');
 			$sSubTitle = ($oSubnetSet->Count() > 0) ? '<div class="teemip-space-occupation">'.$this->GetAsHTML('subnet_occupancy').Dict::Format('Class:IPBlock/Tab:subnet-count-percent').'</div><br>' : '';
-			IPUtils::DisplayTabContent($oP, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet, false);
+			IPUtils::DisplayTabContent($oPage, $sName, 'child_subnets', 'IPv4Subnet', $sTitle, $sSubTitle, $oSubnetSet, false);
 		}
 	}
 

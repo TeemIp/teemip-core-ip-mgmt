@@ -102,7 +102,7 @@ class _Domain extends DNSObject implements iTree {
      * * @inheritdoc
      *
      */
-	public function DisplayBareRelations($oPage, $bEditMode = false) {
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oPage, $bEditMode);
 

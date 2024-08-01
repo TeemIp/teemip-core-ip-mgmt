@@ -219,10 +219,10 @@ class _IPAddress extends IPObject
 	/**
 	 * @inheritdoc
 	 */
-	public function DisplayBareRelations(WebPage $oP, $bEditMode = false)
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		// Execute parent function first
-		parent::DisplayBareRelations($oP, $bEditMode);
+		parent::DisplayBareRelations($oPage, $bEditMode);
 
 		$iKey = $this->GetKey();
 
@@ -292,13 +292,13 @@ class _IPAddress extends IPObject
 			$sName = Dict::Format('Class:IPAddress/Tab:ci_list');
 			$sTitle = Dict::Format('Class:IPAddress/Tab:ci_list+');
 			if ($iNbAllCIs != 0) {
-				$oP->SetCurrentTab('ci_list', $sName.' ('.$iNbAllCIs.')', $sTitle);
+				$oPage->SetCurrentTab('ci_list', $sName.' ('.$iNbAllCIs.')', $sTitle);
 				foreach ($aCIsToList as $sCI => $sKey) {
 					if ($aCIsToList[$sCI]['nb_to_list'] != 0) {
 						$sClass = $aCIsToList[$sCI]['set']->GetClass();
 						$oBlock = DisplayBlock::FromObjectSet($aCIsToList[$sCI]['set'], 'list', array('show_obsolete_data' => true));
 						$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
-						$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
+						$oBlock->Display($oPage, 'blk-'.strtolower($sClass), array(
 							'menu' => false,
 							'panel_title' => MetaModel::GetName($sClass),
 							'panel_title_tooltip' => $sSubTitle,
@@ -311,7 +311,7 @@ class _IPAddress extends IPObject
 					$sClass = $oIPInterfaceSet->GetClass();
 					$oBlock = DisplayBlock::FromObjectSet($oIPInterfaceSet, 'list', array('show_obsolete_data' => true));
 					$sSubTitle = Dict::Format('Class:IPAddress/Tab:ci_list_class', MetaModel::GetName($sClass));
-					$oBlock->Display($oP, 'blk-'.strtolower($sClass), array(
+					$oBlock->Display($oPage, 'blk-'.strtolower($sClass), array(
 						'menu' => false,
 						'panel_title' => MetaModel::GetName($sClass),
 						'panel_title_tooltip' => $sSubTitle,
@@ -320,7 +320,7 @@ class _IPAddress extends IPObject
 				}
 			} else {
 				$oSet = CMDBObjectSet::FromScratch('FunctionalCI');
-				IPUtils::DisplayTabContent($oP, $sName, 'ci_list', 'FunctionalCI', $sTitle, '', $oSet, false);
+				IPUtils::DisplayTabContent($oPage, $sName, 'ci_list', 'FunctionalCI', $sTitle, '', $oSet, false);
 			}
 
 
@@ -332,7 +332,7 @@ class _IPAddress extends IPObject
 
 				$sName = Dict::Format('Class:IPAddress/Tab:requests');
 				$sTitle = Dict::Format('Class:IPAddress/Tab:requests+');
-				IPUtils::DisplayTabContent($oP, $sName, 'ip_requests', 'IPRequestAddress', $sTitle, '', $oIpRequestSet, false);
+				IPUtils::DisplayTabContent($oPage, $sName, 'ip_requests', 'IPRequestAddress', $sTitle, '', $oIpRequestSet, false);
 			}
 		}
 	}
