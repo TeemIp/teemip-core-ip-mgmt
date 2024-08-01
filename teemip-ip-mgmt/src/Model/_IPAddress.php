@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use Dict;
 use DisplayBlock;
@@ -25,7 +26,6 @@ use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
-use WebPage;
 
 class _IPAddress extends IPObject
 {
@@ -225,7 +225,7 @@ class _IPAddress extends IPObject
 
 		$iKey = $this->GetKey();
 
-		if (!$bEditMode) {
+        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Tab for CIs using the IP
 			//   Retrieve CIs first
 			//     -- FunctionalCIs with a 1:n relation to the IP

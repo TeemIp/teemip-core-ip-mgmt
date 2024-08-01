@@ -690,7 +690,7 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension {
 	 * @inheritdoc
 	 */
 	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false) {
-		if (!$bEditMode) {
+		if ($oObject->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 			if ($oObject instanceof ConnectableCI) {
 				$sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN PhysicalInterface AS int ON l1.ipinterface_id = int.id JOIN ConnectableCI AS c ON int.connectableci_id = c.id WHERE c.id = :ci_id";
 				$sDisplayClass = 'ConnectableCI';

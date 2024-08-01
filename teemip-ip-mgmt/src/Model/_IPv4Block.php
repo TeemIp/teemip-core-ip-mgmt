@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
+use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -28,7 +29,6 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
-use WebPage;
 
 class _IPv4Block extends IPBlock implements iTree {
 	/**
@@ -1470,26 +1470,14 @@ EOF
 		return $sHtml;
 	}
 
-	/**
-	 * Displays the tabs listing the child blocks and the subnets belonging to a block
-	 *
-	 * @param \WebPage $oP
-	 * @param bool $bEditMode
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
+    /**
+     * @inheritDoc
+     */
 	public function DisplayBareRelations(WebPage $oP, $bEditMode = false) {
 		// Execute parent function first
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if (!$bEditMode) {
+        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet - Done in parent class
 
 			$iBlockId = $this->GetKey();

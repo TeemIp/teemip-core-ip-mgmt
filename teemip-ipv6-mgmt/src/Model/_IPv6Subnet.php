@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
+use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -26,7 +27,6 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
-use WebPage;
 
 /**
  * Class
@@ -1096,7 +1096,7 @@ EOF
 		// Execute parent function first 
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if (!$bEditMode) {
+        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet
             if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
                 $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');

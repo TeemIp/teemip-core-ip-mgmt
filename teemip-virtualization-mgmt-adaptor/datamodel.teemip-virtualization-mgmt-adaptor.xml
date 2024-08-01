@@ -544,8 +544,7 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 	{
 		if ($oObject instanceof VirtualMachine)
 		{
-	        if (!$bEditMode)
-	        {
+			if ($oObject->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 		        $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l JOIN LogicalInterface AS int ON l.ipinterface_id = int.id JOIN VirtualMachine AS vm ON int.virtualmachine_id = vm.id WHERE vm.id = :vm_id";
 		        $oLnkSet =  new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('vm_id' => $oObject->GetKey()));
 				$sName = Dict::Format('Class:VirtualMachine/Tab:ipaddresses_list');
@@ -553,10 +552,8 @@ class TeemIpVirtualizationMgmtAdaptor implements iApplicationUIExtension
 				TeemIp\TeemIp\Extension\Framework\Helper\IPUtils::DisplayTabContent($oPage, $sName, 'ipint_to_ipadd', 'IPAddress', $sTitle, '', $oLnkSet, false);
 		    }
 		}
-		elseif ($oObject instanceof Hypervisor)
-		{
-	        if (!$bEditMode)
-	        {
+		elseif ($oObject instanceof Hypervisor) {
+			if ($oObject->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 				$iServerId = $oObject->Get('server_id');
 
 	            // Display all physicalInterface associated to the hypervisor's server

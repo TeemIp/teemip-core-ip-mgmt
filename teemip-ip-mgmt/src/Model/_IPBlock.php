@@ -9,6 +9,7 @@ namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 use ApplicationContext;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use Dict;
 use IPConfig;
@@ -18,7 +19,6 @@ use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
-use WebPage;
 
 class _IPBlock extends IPObject {
 	/**
@@ -267,7 +267,7 @@ class _IPBlock extends IPObject {
 		// Execute parent function first
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if (!$bEditMode) {
+        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet
             if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
                 $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');

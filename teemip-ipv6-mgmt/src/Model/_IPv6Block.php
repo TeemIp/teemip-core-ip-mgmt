@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
+use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
@@ -29,7 +30,6 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use UserRights;
 use utils;
-use WebPage;
 
 /**
  * Class _IPv6Block
@@ -1510,7 +1510,7 @@ EOF
 		// Execute parent function first 
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if (!$bEditMode) {
+        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet - Done in parent class
 
 			$iBlockId = $this->GetKey();
