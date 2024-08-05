@@ -8,7 +8,7 @@ namespace TeemIp\TeemIp\Extension\Webservices\Controller;
 
 use DBObject;
 use RestResult;
-use TeemIpObjectResult;
+use TeemIp\TeemIp\Extension\Webservices\Model\TeemIpObjectResult;
 
 class RestResultCountIps extends RestResult
 {

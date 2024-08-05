@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -26,6 +26,7 @@ SetupWebPage::AddModule(
 		'datamodel' => array(
 			'vendor/autoload.php',
 			'src/Hook/TeemIpServices.php',
+            'src/Model/TeemIpObjectResult.php',
 		),
 		'data.struct' => array(
 		),
