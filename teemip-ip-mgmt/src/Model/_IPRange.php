@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -178,7 +178,9 @@ class _IPRange extends IPObject {
 				//      $sPattern = '/^'.Dict::S('Class:IPRange/Attribute:functionalcis_list').'/';
 				//      $sTabName = $oPage->FindTab($sPattern);
 				$sTabName = 'Class:'.get_class($this).'/Attribute:functionalcis_list';
-				$oPage->RemoveTab($sTabName);
+
+                /** @var \iTopWebPage $oPage */
+                $oPage->RemoveTab($sTabName);
 			}
 		}
 	}

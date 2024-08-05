@@ -389,7 +389,7 @@ class IPUtils
 	/**
 	 * Display the content of an object tab
 	 *
-	 * @param WebPage $oP
+	 * @param iTopWebPage $oP
 	 * @param $sName
 	 * @param $sCode
 	 * @param $sClass

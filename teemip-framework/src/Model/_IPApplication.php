@@ -39,7 +39,8 @@ class _IPApplication extends FunctionalCI {
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		$oPage->RemoveTab('Class:FunctionalCI/Tab:OpenedTickets');
+        /** @var \iTopWebPage $oPage */
+        $oPage->RemoveTab('Class:FunctionalCI/Tab:OpenedTickets');
 	}
 
 	/**

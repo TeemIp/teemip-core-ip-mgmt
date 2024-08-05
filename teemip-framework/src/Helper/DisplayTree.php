@@ -27,7 +27,7 @@ class DisplayTree
 	/**
 	 * Display tree
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oAppContext
 	 * @param $sClass
 	 *
@@ -42,7 +42,7 @@ class DisplayTree
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	static public function Display(WebPage $oP, $oAppContext, $sClass)
+	static public function Display($oP, $oAppContext, $sClass)
 	{
 		// Get number of records
 		$iCurrentOrganization = $oAppContext->GetCurrentValue('org_id');

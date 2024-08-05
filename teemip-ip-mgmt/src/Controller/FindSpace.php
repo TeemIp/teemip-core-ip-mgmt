@@ -89,12 +89,12 @@ class FindSpace {
 	/**
 	 * First step of Find Space process: select organization and space type
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oAppContext
 	 *
 	 * @throws \CoreException
 	 */
-	static private function FindSpaceProcessStep1(WebPage $oP, $oAppContext) {
+	static private function FindSpaceProcessStep1($oP, $oAppContext) {
 		$sHeaderTitle = Dict::S('UI:IPManagement:Action:FindSpace');
 		$oP->set_title($sHeaderTitle);
 
@@ -157,7 +157,7 @@ class FindSpace {
 	/**
 	 * Second step of Find Space process: select IP, size and required number of proposal
 	 *
-	 * @param \WebPage $oP
+	 * @param \iTopWebPage $oP
 	 * @param $oAppContext
 	 * @param $aDefault
 	 *
@@ -173,7 +173,7 @@ class FindSpace {
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	static private function FindSpaceProcessStep2(WebPage $oP, $oAppContext, $aDefault) {
+	static private function FindSpaceProcessStep2($oP, $oAppContext, $aDefault) {
 		$sSpaceType = $aDefault['spacetype'];
 		$iOrgId = $aDefault['org_id'];
 		$iBlockId = (array_key_exists('block_id', $aDefault)) ? $aDefault['block_id'] : 0;
