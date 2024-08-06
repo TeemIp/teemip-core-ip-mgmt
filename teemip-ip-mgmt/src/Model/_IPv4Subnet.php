@@ -2459,7 +2459,6 @@ EOF
 			case 'broadcastip':
 			case 'ip_occupancy':
 			case 'range_occupancy':
-			case 'ipv4_gateway_ip_format':
 				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			case 'gatewayip':

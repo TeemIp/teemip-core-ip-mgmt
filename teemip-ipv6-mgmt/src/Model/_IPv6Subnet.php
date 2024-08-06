@@ -1650,7 +1650,6 @@ EOF
 			case 'lastip':
 			case 'ip_occupancy':
 			case 'range_occupancy':
-			case 'ipv6_gateway_ip_format':
 				return (OPT_ATT_READONLY | $sFlagsFromParent);
 
 			case 'gatewayip':
