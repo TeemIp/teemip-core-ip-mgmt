@@ -1,12 +1,12 @@
 <?php
-/**
- * @copyright   Copyright (C) 2023 TeemIp
+/*
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-virtualization-mgmt-adaptor/3.1.3-dev',
+	'teemip-virtualization-mgmt-adaptor/3.2.0',
 	array(
 		// Identification
 		//
@@ -16,10 +16,10 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/3.0.0',
-			'itop-virtualization-mgmt/3.0.0',
-			'teemip-ip-mgmt/3.1.0',
-			'teemip-config-mgmt-adaptor/3.1.0',
+			'itop-config-mgmt/3.1.0',
+			'itop-virtualization-mgmt/3.1.0',
+			'teemip-ip-mgmt/3.2.0',
+			'teemip-config-mgmt-adaptor/3.2.0',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard

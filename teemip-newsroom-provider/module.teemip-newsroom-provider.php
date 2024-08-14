@@ -1,13 +1,13 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /** @noinspection PhpUnhandledExceptionInspection */
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-newsroom-provider/1.1.2',
+	'teemip-newsroom-provider/1.2.0',
 	array(
 		// Identification
 		//
@@ -17,7 +17,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-ip-mgmt/2.7.1',
+			'teemip-ip-mgmt/3.2.0',
 		),
 		'mandatory' => false,
 		'visible' => false,

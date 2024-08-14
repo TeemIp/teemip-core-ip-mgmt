@@ -1,12 +1,12 @@
 <?php
-/**
- * @copyright   Copyright (C) 2023 TeemIp
+/*
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'teemip-datacenter-mgmt-adaptor/3.1.1',
+	'teemip-datacenter-mgmt-adaptor/3.2.0',
 	array(
 		// Identification
 		//
@@ -16,9 +16,9 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-datacenter-mgmt/3.0.0',
-			'teemip-ip-mgmt/3.1.2',
-			'teemip-config-mgmt-adaptor/3.1.1',
+			'itop-datacenter-mgmt/3.1.0',
+			'teemip-ip-mgmt/3.2.0',
+			'teemip-config-mgmt-adaptor/3.2.0',
 		),
 		'mandatory' => false,
 		'visible' => true, // To prevent auto-install but shall not be listed in the install wizard
