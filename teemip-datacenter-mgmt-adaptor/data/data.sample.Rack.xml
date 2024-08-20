@@ -6,6 +6,7 @@
 		<business_criticity>low</business_criticity>
 		<location_id>2</location_id>
 		<status>production</status>
+		<nb_u>32</nb_u>
 	</Rack>
 	<Rack alias="Rack" id="142">
 		<name>Rack 3</name>
@@ -13,6 +14,7 @@
 		<business_criticity>low</business_criticity>
 		<location_id>2</location_id>
 		<status>production</status>
+		<nb_u>32</nb_u>
 	</Rack>
 	<Rack alias="Rack" id="143">
 		<name>Rack 4</name>
@@ -20,6 +22,7 @@
 		<business_criticity>low</business_criticity>
 		<location_id>2</location_id>
 		<status>production</status>
+		<nb_u>64</nb_u>
 	</Rack>
 	<Rack alias="Rack" id="144">
 		<name>Rack 5</name>
@@ -27,6 +30,7 @@
 		<business_criticity>low</business_criticity>
 		<location_id>2</location_id>
 		<status>production</status>
+		<nb_u>32</nb_u>
 	</Rack>
 	<NetworkDevice alias="NetworkDevice" id="102">
 		<rack_id>141</rack_id>
