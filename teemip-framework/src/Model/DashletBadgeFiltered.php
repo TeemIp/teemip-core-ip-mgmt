@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -49,7 +49,14 @@ class DashletBadgeFiltered extends Dashlet
 		$oSet = new CMDBObjectSet($oFilter);
 		$iCount = $oSet->Count();
 		$sTitle = Dict::S($this->aProperties['title']);
-		$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sTitle, null, null, array());
+        $aExtraParams['context_filter'] = 1;
+        $aExtraParams['withJSRefreshCallBack'] = true;
+        $aExtraParams['query_params'] = '';
+        $aRefreshParams = [
+            "filter" => $oFilter->ToOQL(), //$this->m_oFilter->ToOQL(),
+            "extra_params" => $aExtraParams,
+        ];
+		$oBlock = DashletFactory::MakeForDashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sTitle, null, null, $aRefreshParams);
 
 		$sId = 'block_'.$this->sId.($bEditMode ? '_edit' : '');
 		$oHtml = new UIContentBlock($sId);
@@ -59,7 +66,7 @@ class DashletBadgeFiltered extends Dashlet
 		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
 		$oDashletContainer->AddSubBlock($oHtml);
 
-		return $oDashletContainer;
+        return $oDashletContainer;
 	}
 
 	/**
