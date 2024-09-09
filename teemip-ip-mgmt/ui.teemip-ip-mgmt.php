@@ -53,32 +53,16 @@ try {
 
 	$oP->set_base(utils::GetAbsoluteUrlAppRoot().'pages/');
 	// All the following actions use advanced forms that require more javascript to be loaded
-	if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-		// Deprecated lib in iTop 3.2.0
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/json.js');
-        $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/forms-json-utils.js');
-        $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/wizardhelper.js');
-        $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/wizard.utils.js');
-        $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/links/links_widget.js');
-        $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/extkeywidget.js');
+    $oP->LinkScriptFromAppRoot('js/forms-json-utils.js');
+    $oP->LinkScriptFromAppRoot('js/wizardhelper.js');
+    $oP->LinkScriptFromAppRoot('js/wizard.utils.js');
+    $oP->LinkScriptFromAppRoot('js/links/links_widget.js');
+    $oP->LinkScriptFromAppRoot('js/extkeywidget.js');
 
-        $oP->add_linked_script(utils::GetAbsoluteUrlModulesRoot()."teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js");
-	} else {
-        $oP->LinkScriptFromAppRoot('js/forms-json-utils.js');
-        $oP->LinkScriptFromAppRoot('js/wizardhelper.js');
-        $oP->LinkScriptFromAppRoot('js/wizard.utils.js');
-        $oP->LinkScriptFromAppRoot('js/links/links_widget.js');
-        $oP->LinkScriptFromAppRoot('js/extkeywidget.js');
-
-        $oP->LinkScriptFromModule('teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js');
-    }
+    $oP->LinkScriptFromModule('teemip-ip-mgmt/asset/js/teemip-ip-mgmt.js');
 
 	// Add teemip style sheeet
-    if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-        $oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-    } else {
-        $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-    }
+    $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
 	switch ($operation) {
 		///////////////////////////////////////////////////////////////////////////////////////////

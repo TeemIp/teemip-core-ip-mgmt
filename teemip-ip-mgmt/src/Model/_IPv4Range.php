@@ -245,11 +245,7 @@ class _IPv4Range extends IPRange {
 	 */
 	function GetListIps(WebPage $oP, $aParam) {
 		// Add related style sheeet
-        if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-            $oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-        } else {
-            $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-        }
+        $oP->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
 		// Define first and last IPs to display
 		$sFirstIp = $aParam['first_ip'];
@@ -476,11 +472,7 @@ EOF
 
 		if (!$this->IsNew()) {
 			// Add related style sheet
-            if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-                $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-            } else {
-                $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-            }
+            $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
 			$sOrgId = $this->Get('org_id');
 			$sFirstIp = $this->Get('firstip');

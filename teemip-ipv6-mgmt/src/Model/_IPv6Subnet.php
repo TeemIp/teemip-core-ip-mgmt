@@ -1099,11 +1099,7 @@ EOF
 
         if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet
-            if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-                $oPage->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-            } else {
-                $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
-            }
+            $oPage->LinkStylesheetFromModule('teemip-ip-mgmt/asset/css/teemip-ip-mgmt.css');
 
 			$iOrgId = $this->Get('org_id');
 			$iKey = $this->GetKey();

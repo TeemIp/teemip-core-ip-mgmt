@@ -74,11 +74,7 @@ class DisplayTree
 			->AddHtml(self::GetTree($sClass, $iCurrentOrganization));
 
 		$oP->add_ready_script("\$('#tree ul').treeview();");
-        if (version_compare(ITOP_DESIGN_LATEST_VERSION, '3.2', '<')) {
-            $oP->add_linked_stylesheet(utils::GetAbsoluteUrlModulesRoot().'teemip-framework/asset/css/teemip-display-tree.css');
-        } else {
-            $oP->LinkStylesheetFromModule('teemip-framework/asset/css/teemip-display-tree.css');
-        }
+        $oP->LinkStylesheetFromModule('teemip-framework/asset/css/teemip-display-tree.css');
 
 	}
 
