@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -29,7 +29,11 @@ class IPTriggerOnWaterMark extends Trigger {
 			"on_target_delete" => DEL_MANUAL,
 			"depends_on" => array(),
 		)));
-		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array("allowed_values" => null, "extkey_attcode" => 'org_id', "target_attcode" => 'name')));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("org_name", array(
+            "allowed_values" => null,
+            "extkey_attcode" => 'org_id',
+            "target_attcode" => 'name',
+        )));
 		MetaModel::Init_AddAttribute(new AttributeEnum("target_class", array(
 			"allowed_values" => new ValueSetEnum('IPv4Subnet,IPv4Range,IPv6Range'),
 			"sql" => "target_class",
@@ -37,11 +41,19 @@ class IPTriggerOnWaterMark extends Trigger {
 			"is_null_allowed" => false,
 			"depends_on" => array(),
 		)));
-		MetaModel::Init_AddAttribute(new AttributeEnum("event", array("allowed_values" => new ValueSetEnum('cross_high,cross_low'), "sql" => "event", "default_value" => "cross_high", "is_null_allowed" => true, "depends_on" => array())));
+		MetaModel::Init_AddAttribute(new AttributeEnum("event", array(
+            "allowed_values" => new ValueSetEnum('cross_high,cross_low'),
+            "sql" => "event",
+            "default_value" => "cross_high",
+            "is_null_allowed" => true,
+            "depends_on" => array(),
+        )));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('org_id', 'description', 'target_class', 'event', 'action_list')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'description', 'event', 'org_id')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('details', array('org_id', 'description', 'target_class', 'event', 'subscription_policy', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class', 'event', 'org_id')); // Attributes to be displayed for a list
+        // Search criteria
+        MetaModel::Init_SetZListItems('standard_search', array('org_id', 'description', 'target_class', 'event')); // Criteria of the std search form
 	}
 
 	/**
