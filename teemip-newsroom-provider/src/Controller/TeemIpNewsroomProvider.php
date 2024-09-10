@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -23,7 +23,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetTTL()
+	public function GetTTL(): int
 	{
 		// Update every hour
 		return 60 * 60;
@@ -32,7 +32,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function IsApplicable(User $oUser = null)
+	public function IsApplicable(User $oUser = null): bool
 	{
 		if(!$this->IsEnabled())
 		{
@@ -52,7 +52,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetLabel()
+	public function GetLabel(): string
 	{
 		return 'TeemIp';
 	}
@@ -60,7 +60,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetMarkAllAsReadURL()
+	public function GetMarkAllAsReadURL(): string
 	{
 		return $this->MakeUrl('mark_all_as_read');
 	}
@@ -68,7 +68,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetFetchURL()
+	public function GetFetchURL(): string
 	{
 		return $this->MakeUrl('fetch');
 	}
@@ -76,7 +76,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetViewAllURL()
+	public function GetViewAllURL(): string
 	{
 		return $this->MakeUrl('view_all');
 	}
@@ -87,11 +87,10 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 * @inheritDoc
 	 * @noinspection PhpUnhandledExceptionInspection
 	 */
-	public function GetPlaceholders()
+	public function GetPlaceholders(): array
 	{
 		$aPlaceholders = array();
 
-		/** @var \User $oUser */
 		$oUser = UserRights::GetUserObject();
 		if ($oUser !== null)
 		{
@@ -99,7 +98,6 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 			$aPlaceholders['%user_hash%'] = $this->GetUserHash();
 		}
 
-		/** @var \Contact $oContact */
 		$oContact = UserRights::GetContactObject();
 		if ($oContact !== null)
 		{
@@ -123,7 +121,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	/**
 	 * @inheritDoc
 	 */
-	public function GetPreferencesUrl()
+	public function GetPreferencesUrl(): mixed
 	{
 		return null;
 	}
@@ -135,7 +133,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
 	 */
-	public static function IsEnabled()
+	public static function IsEnabled(): bool
 	{
 		$defaultValue = static::DEFAULT_SETTING_ENABLED;
 		$bValue = MetaModel::GetModuleSetting(static::MODULE_NAME, 'enabled', $defaultValue);
@@ -157,7 +155,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 *
 	 * @return boolean
 	 */
-	public static function IsDebugEnabled()
+	public static function IsDebugEnabled(): bool
 	{
 		$defaultValue = static::DEFAULT_SETTING_DEBUG;
 		return MetaModel::GetModuleSetting(static::MODULE_NAME, 'debug', $defaultValue);
@@ -168,19 +166,19 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 *
 	 * @return string
 	 */
-	private static function GetVersion()
+	private static function GetVersion(): string
 	{
 		return static::API_VERSION;
 	}
 
 	/**
-	 * Returns an hash to identify the current user
-	 *
+	 * Returns a hash to identify the current user
 	 * Note: User ID is sent as a non-reversible hash to ensure user's privacy
 	 *
-	 * @return string
-	 */
-	private static function GetUserHash()
+     * @return string
+     * @throws \OQLException
+     */
+    private static function GetUserHash(): string
 	{
 		$sUserId = UserRights::GetUserId();
 
@@ -195,22 +193,22 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 *
 	 * @return string
 	 */
-	private static function GetInstanceHash()
+	private static function GetInstanceHash(): string
 	{
-		$sITopUUID = (string) trim(@file_get_contents(APPROOT . 'data/instance.txt'), "{} \n");
+		$sITopUUID = trim(@file_get_contents(APPROOT . 'data/instance.txt'), "{} \n");
 
 		// Note: We don't retrieve DB UUID for now as it is not of any use for now.
 		return hash('fnv1a64', $sITopUUID);
 	}
 
 	/**
-	 * Returns an URL to the news editor for the $sOperation and current user
+	 * Returns a URL to the news editor for the $sOperation and current user
 	 *
-	 * @param string $sOperation
-	 *
-	 * @return string
-	 */
-	private function MakeUrl($sOperation)
+     * @param string $sOperation
+     * @return string
+     * @throws \OQLException
+     */
+    private function MakeUrl(string $sOperation): string
 	{
 		return static::DEFAULT_SETTING_ENDPOINT
 			.'&operation='.$sOperation
