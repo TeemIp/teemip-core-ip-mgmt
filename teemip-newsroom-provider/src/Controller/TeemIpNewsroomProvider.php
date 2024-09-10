@@ -19,6 +19,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	const DEFAULT_SETTING_ENABLED = true;
 	const DEFAULT_SETTING_DEBUG = false;
 	const DEFAULT_SETTING_ENDPOINT = 'https://support.teemip.net/pages/exec.php?exec_module=teemip-newsroom-editor&exec_page=index.php';
+    const TEEMIP_NEWSROOM_LABEL = 'TeemIP Headlines';
 
 	/**
 	 * @inheritDoc
@@ -54,7 +55,7 @@ class TeemIpNewsroomProvider extends NewsroomProviderBase
 	 */
 	public function GetLabel(): string
 	{
-		return 'TeemIp';
+		return static::TEEMIP_NEWSROOM_LABEL;
 	}
 
 	/**
