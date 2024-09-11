@@ -7,13 +7,13 @@
 namespace TeemIp\TeemIp\Extension\NetworkManagement\Model;
 
 use ApplicationContext;
+use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\Column;
 use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
-//use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use Dict;
 use DNSObject;
@@ -25,14 +25,16 @@ use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use utils;
 use WebPage;
 
-class _Domain extends DNSObject implements iTree {
+class _Domain extends DNSObject implements iTree
+{
 	/**
 	 * Returns index to be used within tree computations
 	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
-	public function GetIndexForTree() {
+	public function GetIndexForTree(): string
+    {
 		return $this->GetName();
 	}
 
@@ -47,7 +49,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function GetAsLeaf($bWithIcon, $iTreeOrgId) {
+	public function GetAsLeaf($bWithIcon, $iTreeOrgId): string
+    {
 		$sHtml = '';
 		$sHtml .= $this->GetHyperlink();
 
@@ -79,7 +82,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	static function GetDomainFromFqdn($sFqdn, $iOrgId) {
+    public static function GetDomainFromFqdn($sFqdn, $iOrgId): array
+    {
 		$sError = '';
 		if ((strlen($sFqdn) == 0) || ($iOrgId == 0)) {
 			return array(Dict::Format('UI:IPManagement:Action:ExplodeFQDN:Domain:Error:CannotFindDomain'), 0, '');
@@ -92,7 +96,7 @@ class _Domain extends DNSObject implements iTree {
 		} else {
 			$i = strpos($sFqdn, '.');
 			$sNextFqdn = substr($sFqdn, $i + 1);
-			list($sError, $iDomainId, $sDomainName) = static::GetDomainFromFqdn($sNextFqdn, $iOrgId);
+			list($sError, $iDomainId, $sDomainName) = Domain::GetDomainFromFqdn($sNextFqdn, $iOrgId);
 		}
 
 		return array($sError, $iDomainId, $sDomainName);
@@ -102,7 +106,8 @@ class _Domain extends DNSObject implements iTree {
      * * @inheritdoc
      *
      */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
+	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false):void
+    {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
@@ -141,7 +146,7 @@ class _Domain extends DNSObject implements iTree {
 			));
 			// Then, display form to select list of hosts if domain is not in edition
 			$sHtml = '';
-			if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
+			if ($this->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 				$sHtml = '<div style="padding: 15px; background: #f8f9fa;">';
 				$sHtml .= "<form>";
 				$sHtml .= "<table>";
@@ -202,7 +207,8 @@ class _Domain extends DNSObject implements iTree {
 	 *
 	 * @throws \CoreException
 	 */
-	public function ComputeValues() {
+	public function ComputeValues():void
+    {
 		parent::ComputeValues();
 
 		$this->Set('name', static::ComputeFqdn($this->Get('name'), $this->Get('parent_name')));
@@ -213,7 +219,7 @@ class _Domain extends DNSObject implements iTree {
 	 *
 	 * @throws \CoreException
 	 */
-	public function DoCheckToWrite() {
+	public function DoCheckToWrite(): void {
 		// Run standard iTop checks first
 		parent::DoCheckToWrite();
 
@@ -287,7 +293,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckToDelegate($aParam) {
+	public function DoCheckToDelegate($aParam): string
+    {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iDomainId = $this->GetKey();
@@ -330,7 +337,8 @@ class _Domain extends DNSObject implements iTree {
 	 *
 	 * @throws \CoreException
 	 */
-	public function IsDelegated() {
+	public function IsDelegated(): bool
+    {
 		if ($this->Get('parent_org_id') != 0) {
 			return true;
 		}
@@ -350,7 +358,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoDelegate($aParam) {
+	public function DoDelegate($aParam)
+    {
 		$iOrgId = $this->Get('org_id');
 		$iChildOrgId = $aParam['child_org_id'];
 
@@ -375,7 +384,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckToUndelegate() {
+	public function DoCheckToUndelegate(): string
+    {
 		// Set working variables
 		$iOrgId = $this->Get('org_id');
 		$iDomainId = $this->GetKey();
@@ -476,7 +486,8 @@ class _Domain extends DNSObject implements iTree {
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function DoCheckOperation($sOperation) {
+	public function DoCheckOperation($sOperation): string
+    {
 		switch ($sOperation) {
 			case 'delegate':
 				// If domain is delegated, deny re-delegation
@@ -516,7 +527,8 @@ class _Domain extends DNSObject implements iTree {
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault) {
+	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault)
+    {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);
 
@@ -570,7 +582,8 @@ class _Domain extends DNSObject implements iTree {
 	 *
 	 * @return string
 	 */
-	public function GetNextOperation($sOperation) {
+	public function GetNextOperation($sOperation): string
+    {
 		switch ($sOperation) {
 			case 'delegate':
 				return 'dodelegate';
@@ -585,11 +598,12 @@ class _Domain extends DNSObject implements iTree {
 	/**
 	 * Get parameters used for operation
 	 *
-	 * @param $sOperation
-	 *
-	 * @return array
-	 */
-	public function GetPostedParam($sOperation) {
+     * @param $sOperation
+     *
+     * @return array
+     */
+    public function GetPostedParam($sOperation): array
+    {
 		$aParam = array();
 		switch ($sOperation) {
 			case 'dodelegate':
