@@ -1492,7 +1492,7 @@ EOF
 				}
 			} else {
 				$iNbIps = $oAnIp->GetSizeInterval($oLastIp);
-R                $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
+                $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
                 $sPercentageHtml = AttributeIPPercentage::RenderAttribute($iPercentage, DEFAULT_BLOCK_LOW_WATER_MARK, DEFAULT_BLOCK_HIGH_WATER_MARK);
 				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnIp->GetAsCompressed(), $oLastIp->GetAsCompressed(), $iNbIps).' - '.$sPercentageHtml;
 				$oAnIp = $oLastIp->GetNextIp();
