@@ -19,7 +19,6 @@ use TeemIp\TeemIp\Extension\Framework\Helper\DisplayMessage;
 use TeemIp\TeemIp\Extension\Framework\Helper\DisplayTree;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\IPManagement\Controller\FindSpace;
-use const ITOP_DESIGN_LATEST_VERSION;
 
 /*******************************************************************
  *
@@ -69,6 +68,8 @@ try {
 
 		case 'displaytree':     // Display hierarchical tree for domains, blocks or subnets
 			$sClass = utils::ReadParam('class', '', false, 'class');
+            $sDelegatedNodesRendering = utils::ReadParam('delegated_nodes_rendering', '');
+
 			// Check if right parameters have been given
 			if (empty($sClass)) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
@@ -77,7 +78,7 @@ try {
 				throw new ApplicationException(Dict::Format('UI:Error:WrongActionForClass', $operation, $sClass));
 			}
 
-			DisplayTree::Display($oP, $oAppContext, $sClass);
+			DisplayTree::Display($oP, $oAppContext, $sClass, $sDelegatedNodesRendering);
 			break; // End case displaytree
 
 		///////////////////////////////////////////////////////////////////////////////////////////

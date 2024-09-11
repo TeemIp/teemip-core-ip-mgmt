@@ -289,3 +289,12 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'These Global IP Settings may be over written for that action.',
 	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'An IP Address Usage already exists with the same name!',
 ));
+
+//
+// Display Tree
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'UI:Action:DisplayTree:DelegatedItems:folded' => 'Fold delegated nodes',
+    'UI:Action:DisplayTree:DelegatedItems:unfolded' => 'Unfold delegated nodes',
+));

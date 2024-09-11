@@ -289,3 +289,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Diese Globalen Einstellungen können durch diese Aktion überschrieben werden.',
 	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Es existiert bereits eine IP Adresse Nutzung mit demselben Namen!',
 ));
+
+//
+// Display Tree
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+    'UI:Action:DisplayTree:DelegatedItems:folded' => 'Delegiertenknoten falten',
+    'UI:Action:DisplayTree:DelegatedItems:unfolded' => 'Delegiertenknoten erweitern',
+));

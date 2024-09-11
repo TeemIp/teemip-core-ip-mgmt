@@ -289,3 +289,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Estas Configuraciones IP Globales pueder ser sobre escritas por esta acción.',
 	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Ya existe un uso de dirección IP con el mismo nombre!',
 ));
+
+//
+// Display Tree
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+    'UI:Action:DisplayTree:DelegatedItems:folded' => 'Doblar nodos delegados',
+    'UI:Action:DisplayTree:DelegatedItems:unfolded' => 'Explandir nodos delegados',
+));

@@ -289,3 +289,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Qusti settaggi globali dei IP possono essere sovrascritti per questa azione.',
 	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Esiste già un uso indirizzo IP con lo stesso nome!',
 ));
+
+//
+// Display Tree
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+    'UI:Action:DisplayTree:DelegatedItems:folded' => 'Riduci i nodi delegati',
+    'UI:Action:DisplayTree:DelegatedItems:unfolded' => 'Espandi i nodi delegati',
+));

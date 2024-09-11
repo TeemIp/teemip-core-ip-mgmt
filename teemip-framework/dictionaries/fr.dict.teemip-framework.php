@@ -289,3 +289,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Modify:GlobalConfig' => 'Ces paramètres IP globaux peuvent être redéfinis pour cette action.',
 	'UI:IPManagement:Action:New:IPUsage:AlreadyExists' => 'Un type d\'utilisation d\'une adresse IP existe déjà avec le même nom !',
 ));
+
+//
+// Display Tree
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+    'UI:Action:DisplayTree:DelegatedItems:folded' => 'Replier les noeuds délégués',
+    'UI:Action:DisplayTree:DelegatedItems:unfolded' => 'Déplier les noeuds délégués',
+));
