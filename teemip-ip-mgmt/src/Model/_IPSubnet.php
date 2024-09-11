@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -160,31 +160,20 @@ class _IPSubnet extends IPObject
 			} else {
 				$Occupancy = $this->GetOccupancy('IPRange');
 			}
-			$sOrgId = $this->Get('org_id');
-			if ($sOrgId != null) {
-				$sLowWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $sOrgId);
-				$sHighWaterMark = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $sOrgId);
-				if ($Occupancy >= $sHighWaterMark) {
-					$sColor = RED;
-				} else {
-					if ($Occupancy >= $sLowWaterMark) {
-						$sColor = YELLOW;
-					} else {
-						$sColor = GREEN;
-					}
-				}
-				$aParams ['value'] = round($Occupancy, 0);
-				$aParams ['color'] = $sColor;
-			} else {
-				$aParams ['value'] = 0;
-				$aParams ['color'] = GREEN;
-			}
-		} else {
-			$aParams ['value'] = 0;
-			$aParams ['color'] = GREEN;
+			$iOrgId = $this->Get('org_id');
+			if ($iOrgId != null) {
+                $aParams ['value'] = round($Occupancy, 0);
+                $aParams['low_water_mark'] = IPConfig::GetFromGlobalIPConfig('subnet_low_watermark', $iOrgId);
+                $aParams['high_water_mark'] = IPConfig::GetFromGlobalIPConfig('subnet_high_watermark', $iOrgId);
+                return $aParams;
+            }
 		}
 
-		return ($aParams);
+        $aParams ['value'] = 0;
+        $aParams['low_water_mark'] = 0;
+        $aParams['high_water_mark'] = 0;
+
+        return $aParams;
 	}
 
 	/**

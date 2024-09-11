@@ -68,7 +68,7 @@ try {
 
 		case 'displaytree':     // Display hierarchical tree for domains, blocks or subnets
 			$sClass = utils::ReadParam('class', '', false, 'class');
-            $sDelegatedNodesRendering = utils::ReadParam('delegated_nodes_rendering', '');
+            $sDelegatedNodesRendering = utils::ReadParam('delegated_nodes_rendering', 'folded');
 
 			// Check if right parameters have been given
 			if (empty($sClass)) {

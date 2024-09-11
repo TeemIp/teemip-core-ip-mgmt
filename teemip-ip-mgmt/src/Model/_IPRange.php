@@ -124,32 +124,21 @@ class _IPRange extends IPObject {
 	public function GetAttributeParams($sAttCode) {
 		$aParams = array();
 		if ($sAttCode == 'occupancy') {
-			$Occupancy = $this->GetOccupancy();
-			$sOrgId = $this->Get('org_id');
-			if ($sOrgId != null) {
-				$sLowWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $sOrgId);
-				$sHighWaterMark = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $sOrgId);
-				if ($Occupancy >= $sHighWaterMark) {
-					$sColor = RED;
-				} else {
-					if ($Occupancy >= $sLowWaterMark) {
-						$sColor = YELLOW;
-					} else {
-						$sColor = GREEN;
-					}
-				}
-				$aParams ['value'] = round($Occupancy, 0);
-				$aParams ['color'] = $sColor;
-			} else {
-				$aParams ['value'] = 0;
-				$aParams ['color'] = GREEN;
-			}
-		} else {
-			$aParams ['value'] = 0;
-			$aParams ['color'] = GREEN;
-		}
+            $Occupancy = $this->GetOccupancy();
+            $iOrgId = $this->Get('org_id');
+            if ($iOrgId != null) {
+                $aParams ['value'] = round($Occupancy, 0);
+                $aParams['low_water_mark'] = IPConfig::GetFromGlobalIPConfig('iprange_low_watermark', $iOrgId);
+                $aParams['high_water_mark'] = IPConfig::GetFromGlobalIPConfig('iprange_high_watermark', $iOrgId);
+                return $aParams;
+            }
+        }
 
-		return ($aParams);
+        $aParams ['value'] = 0;
+        $aParams['low_water_mark'] = 0;
+        $aParams['high_water_mark'] = 0;
+
+		return $aParams;
 	}
 
 	/**

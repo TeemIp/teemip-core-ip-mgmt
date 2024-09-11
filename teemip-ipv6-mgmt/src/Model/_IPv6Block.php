@@ -7,6 +7,7 @@
 namespace TeemIp\TeemIp\Extension\IPv6Management\Model;
 
 use ApplicationException;
+use AttributeIPPercentage;
 use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
@@ -1467,7 +1468,9 @@ EOF
 					// Display free space
 					$oALastIp = $aOccupiedSpace[$j]['firstip']->GetPreviousIp();
 					$iNbIps = $oAnIp->GetSizeInterval($oALastIp);
-					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace', $oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100);
+                    $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
+                    $sPercentageHtml = AttributeIPPercentage::RenderAttribute($iPercentage, DEFAULT_BLOCK_LOW_WATER_MARK, DEFAULT_BLOCK_HIGH_WATER_MARK);
+					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnIp->GetAsCompressed(), $oALastIp->GetAsCompressed(), $iNbIps).' - '.$sPercentageHtml;
 					$oAnIp = $aOccupiedSpace[$j]['firstip'];
 				} elseif ($oAnIp->IsEqual($aOccupiedSpace[$j]['firstip'])) {
 					// Display object attributes
@@ -1489,7 +1492,9 @@ EOF
 				}
 			} else {
 				$iNbIps = $oAnIp->GetSizeInterval($oLastIp);
-				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpace', $oAnIp->GetAsCompressed(), $oLastIp->GetAsCompressed(), $iNbIps, ($iNbIps / $iBlockSize) * 100);
+R                $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
+                $sPercentageHtml = AttributeIPPercentage::RenderAttribute($iPercentage, DEFAULT_BLOCK_LOW_WATER_MARK, DEFAULT_BLOCK_HIGH_WATER_MARK);
+				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv6Block:FreeSpaceNoPercent', $oAnIp->GetAsCompressed(), $oLastIp->GetAsCompressed(), $iNbIps).' - '.$sPercentageHtml;
 				$oAnIp = $oLastIp->GetNextIp();
 			}
 			$sHtml .= "</li>\n";

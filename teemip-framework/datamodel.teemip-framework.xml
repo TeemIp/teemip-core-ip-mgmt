@@ -948,6 +948,9 @@
     <constant id="GATEWAY_IP_DESC" xsi:type="string" _delta="define">Gateway IP</constant>
     <constant id="BROADCAST_IP_CODE" xsi:type="string" _delta="define">Broadcast</constant>
     <constant id="BROADCAST_IP_DESC" xsi:type="string" _delta="define">Broadcast IP</constant>
+    <constant id="RED" xsi:type="string" _delta="define">#cc3300</constant>
+    <constant id="YELLOW" xsi:type="string" _delta="define">#ffff00</constant>
+    <constant id="GREEN" xsi:type="string" _delta="define">#33ff00</constant>
   </constants>
   <user_rights>
     <groups>

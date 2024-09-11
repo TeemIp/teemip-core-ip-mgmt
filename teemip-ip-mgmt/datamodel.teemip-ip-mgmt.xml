@@ -4155,9 +4155,6 @@
     <constant id="DEFAULT_MAX_FREE_IP_OFFERS" xsi:type="integer" _delta="define">10</constant>
     <constant id="DEFAULT_MAX_FREE_IP_OFFERS_WITH_PING" xsi:type="integer" _delta="define">5</constant>
     <constant id="DEFAULT_SUBNET_CREATE_MAX_OFFER" xsi:type="integer" _delta="define">10</constant>
-    <constant id="RED" xsi:type="string" _delta="define">#cc3300</constant>
-    <constant id="YELLOW" xsi:type="string" _delta="define">#ffff00</constant>
-    <constant id="GREEN" xsi:type="string" _delta="define">#33ff00</constant>
     <constant id="TIME_TO_WAIT_FOR_PING_LONG" xsi:type="integer" _delta="define">3</constant>
     <constant id="TIME_TO_WAIT_FOR_PING_SHORT" xsi:type="integer" _delta="define">1</constant>
     <constant id="NUMBER_OF_PINGS" xsi:type="integer" _delta="define">1</constant>

@@ -7,6 +7,7 @@
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
 use ApplicationException;
+use AttributeIPPercentage;
 use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
@@ -1431,7 +1432,9 @@ EOF
 					$iLastOccupiedIp = $aOccupiedSpace[$j]['firstip'] - 1;
 					$iNbIps = $iLastOccupiedIp - $iAnOccupiedIp + 1;
 					$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-					$sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, IPUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
+                    $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
+                    $sPercentageHtml = AttributeIPPercentage::RenderAttribute($iPercentage, DEFAULT_BLOCK_LOW_WATER_MARK, DEFAULT_BLOCK_HIGH_WATER_MARK);
+                    $sHtml .= "<li>&nbsp;".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent', $sAnIp, IPUtils::mylong2ip($iLastOccupiedIp), $iFormatNbIps).' - '.$sPercentageHtml;
 					$iAnOccupiedIp = $aOccupiedSpace[$j]['firstip'];
 				} else {
 					if ($iAnOccupiedIp == $aOccupiedSpace[$j]['firstip']) {
@@ -1456,7 +1459,9 @@ EOF
 			} else {
 				$iNbIps = $iObjLastIp - $iAnOccupiedIp + 1;
 				$iFormatNbIps = number_format($iNbIps, 0, ',', ' ');
-				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpace', $sAnIp, IPUtils::mylong2ip($iObjLastIp), $iFormatNbIps, ($iNbIps / $iBlockSize) * 100);
+                $iPercentage = round(($iNbIps / $iBlockSize) * 100, 2);
+                $sPercentageHtml = AttributeIPPercentage::RenderAttribute($iPercentage, DEFAULT_BLOCK_LOW_WATER_MARK, DEFAULT_BLOCK_HIGH_WATER_MARK);
+				$sHtml .= "<li>".Dict::Format('UI:IPManagement:Action:ListSpace:IPv4Block:FreeSpaceNoPercent', $sAnIp, IPUtils::mylong2ip($iObjLastIp), $iFormatNbIps).' - '.$sPercentageHtml;
 				$iAnOccupiedIp = $iObjLastIp + 1;
 			}
 			$sHtml .= "</li>\n";

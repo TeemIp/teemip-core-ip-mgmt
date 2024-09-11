@@ -157,26 +157,15 @@ class _IPBlock extends IPObject {
 					$Occupancy = $this->GetOccupancy('IPBlock') + $this->GetOccupancy('IPSubnet');
 				}
 			}
-			// Note: water marks for blocks are not global parameters that can be modified
-			$sLowWaterMark = DEFAULT_BLOCK_LOW_WATER_MARK;
-			$sHighWaterMark = DEFAULT_BLOCK_HIGH_WATER_MARK;
-			if ($Occupancy >= $sHighWaterMark) {
-				$sColor = RED;
-			} else {
-				if ($Occupancy >= $sLowWaterMark) {
-					$sColor = YELLOW;
-				} else {
-					$sColor = GREEN;
-				}
-			}
-			$aParams ['value'] = round($Occupancy, 0);
-			$aParams ['color'] = $sColor;
+			// Note: watermarks for blocks are not global parameters that can be modified
+			$aParams['value'] = round($Occupancy, 0);
 		} else {
 			$aParams ['value'] = 0;
-			$aParams ['color'] = GREEN;
 		}
+        $aParams['low_water_mark'] = DEFAULT_BLOCK_LOW_WATER_MARK;
+        $aParams['high_water_mark'] = DEFAULT_BLOCK_HIGH_WATER_MARK;
 
-		return ($aParams);
+		return $aParams;
 	}
 
 	/**
