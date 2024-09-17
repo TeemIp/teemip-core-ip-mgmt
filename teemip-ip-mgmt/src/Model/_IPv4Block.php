@@ -1483,7 +1483,7 @@ EOF
 		// Execute parent function first
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
+        if ($this->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 			// Add related style sheet - Done in parent class
 
 			$iBlockId = $this->GetKey();

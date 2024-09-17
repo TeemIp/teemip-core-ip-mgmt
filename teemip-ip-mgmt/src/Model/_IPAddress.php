@@ -6,6 +6,7 @@
 
 namespace TeemIp\TeemIp\Extension\IPManagement\Model;
 
+use cmdbAbstractObject;
 use CMDBObjectSet;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
@@ -226,7 +227,7 @@ class _IPAddress extends IPObject
 
 		$iKey = $this->GetKey();
 
-        if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
+        if ($this->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
 			// Tab for CIs using the IP
 			//   Retrieve CIs first
 			//     -- FunctionalCIs with a 1:n relation to the IP

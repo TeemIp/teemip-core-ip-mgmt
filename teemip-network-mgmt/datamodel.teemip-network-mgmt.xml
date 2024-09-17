@@ -1067,7 +1067,7 @@
     {
 		parent::DisplayBareRelations($oP, $bEditMode);
 
-		if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_VIEW) {
+		if ($this->GetDisplayMode() == cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW) {
             $iVRFId = $this->GetKey();
 
             $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVRF AS l2 ON l2.physicalinterface_id = int.id JOIN VRF AS v ON l2.vrf_id = v.id WHERE v.id = :vrf_id";
