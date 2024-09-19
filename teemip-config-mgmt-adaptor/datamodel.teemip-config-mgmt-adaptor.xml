@@ -357,6 +357,11 @@
       </presentation>
     </class>
     <class id="IPInterface" _delta="must_exist">
+      <properties>
+        <naming _delta="must_exist">
+          <complementary_attributes  _delta="delete"/>
+        </naming>
+      </properties>
       <fields>
         <field id="ipaddress" xsi:type="AttributeIPAddress" _delta="delete"/>
         <field id="ip_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
@@ -595,7 +600,7 @@
             </item>
           </items>
         </list>
-        <summary _delta="if_exists">
+        <summary _delta="must_exist">
           <items>
             <item id="ipaddress" _delta="delete"/>
           </items>
