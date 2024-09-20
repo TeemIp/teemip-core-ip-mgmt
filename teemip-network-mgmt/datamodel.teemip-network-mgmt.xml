@@ -1436,13 +1436,13 @@
             <item id="status">
               <rank>10</rank>
             </item>
-            <item id="macaddress">
+            <item id="speed">
               <rank>20</rank>
             </item>
-            <item id="comment">
+            <item id="macaddress">
               <rank>30</rank>
             </item>
-            <item id="speed">
+            <item id="comment">
               <rank>40</rank>
             </item>
             <item id="org_id">
