@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -74,7 +74,7 @@ class HandleIPWaterMarks implements iScheduledProcess {
 		if (!$bEnabled) {
 			$sPeriodicity = '86400';
 		}
-		$oRet->modify('+'.$sPeriodicity.' seconds');
+		$oRet->modify($sPeriodicity.' seconds');
 
 		return $oRet;
 	}
