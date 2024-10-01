@@ -2028,7 +2028,7 @@ EOF
 		} else {
 			$sGatewayIp = $sIp;
 		}
-		$this->Set('gatewayip', $sGatewayIp);
+        $this->Set('gatewayip', $sGatewayIp);
 
 		// Set parent block if not set
 		// Note: this may give incorrect result if only one block exists under the organization since, in such case, framework preset block_id to that unique block as block_id cannot be null
@@ -2311,14 +2311,16 @@ EOF
 				$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
 				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
 				if (is_null($oIp)) {
-					$oIp = MetaModel::NewObject('IPv4Address');
-					$oIp->Set('subnet_id', $iId);
-					$oIp->Set('ip', $sGatewayIp);
-					$oIp->Set('org_id', $iOrgId);
-					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-					$oIp->Set('status', 'reserved');
-					$oIp->Set('usage_id', $sUsageGatewayIpId);
-					$oIp->DBInsert();
+                    if ($sGatewayIp != '') {
+                        $oIp = MetaModel::NewObject('IPv4Address');
+                        $oIp->Set('subnet_id', $iId);
+                        $oIp->Set('ip', $sGatewayIp);
+                        $oIp->Set('org_id', $iOrgId);
+                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                        $oIp->Set('status', 'reserved');
+                        $oIp->Set('usage_id', $sUsageGatewayIpId);
+                        $oIp->DBInsert();
+                    }
 				} else {
 					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
 						$oIp->Set('subnet_id', $iId);
