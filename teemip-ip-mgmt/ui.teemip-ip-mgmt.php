@@ -133,6 +133,7 @@ try {
 				$oP->P(Dict::S('UI:ObjectDoesNotExist'));
 			} else {
 				// Dump space
+                /** @var $oObj _IPBlock */
 				$oObj->DisplayAllSpace($oP);
 			}
 			break; // End case listspace
@@ -397,9 +398,6 @@ try {
 						: Dict::Format('UI:IPManagement:Action:Shrink:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
-
-					// Close transaction
-					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			break; // End case doshrink
@@ -452,9 +450,6 @@ try {
 					DisplayMessage::Success($oP, $sMessage);
 					$oBlock = new DisplayBlock($oSet->GetFilter(), 'list', false);
 					$oBlock->Display($oP, 'split_result', array('display_limit' => false, 'menu' => false));
-
-					// Close transaction
-					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			break; // End case dosplit
@@ -506,9 +501,6 @@ try {
 						: Dict::Format('UI:IPManagement:Action:Expand:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
-
-					// Close transaction
-					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			break; // End case doexpand
@@ -788,9 +780,6 @@ try {
 					$sMessage = Dict::Format('UI:IPManagement:Action:Delegate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
-
-					// Close transaction
-					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			break; // End case dodelegate
@@ -898,7 +887,7 @@ try {
 			} else {
 				$aPostedParam = $oObj->GetPostedParam($operation);
 
-				// Make sure object can be delegated
+				// Make sure object can be allocated
 				$sErrorString = $oObj->DoCheckToAllocate($aPostedParam);
 				if ($sErrorString != '') {
 					// Found issues, explain and give the user another chance
@@ -916,9 +905,6 @@ try {
 					$sMessage = Dict::Format('UI:IPManagement:Action:Allocate:'.$sClass.':Done', $sClassLabel, $oObj->GetName());
 					DisplayMessage::Success($oP, $sMessage);
 					IPUtils::DisplayDetails($oP, $oObj);
-
-					// Close transaction
-					utils::RemoveTransaction($sTransactionId);
 				}
 			}
 			break; // End case doallocateip
