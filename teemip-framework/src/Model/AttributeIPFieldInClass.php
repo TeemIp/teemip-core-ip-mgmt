@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -26,14 +26,17 @@ class AttributeIPFieldInClass extends AttributeString
 			$sThisClass = get_class($oHostObj);
 			switch ($sThisClass) {
 				case 'IPRequestAddressCreateV6':
-					$sClass = 'IPv6Address';
+					$sIpClass = 'IPv6Address';
 					break;
 
 				case 'IPRequestAddressCreateV4':
-				default:
-					$sClass = 'IPv4Address';
+					$sIpClass = 'IPv4Address';
 					break;
-			}
+
+                default:
+                    $sIpClass = 'IPAddress';
+                    break;
+            }
 			$sCiClass = $oHostObj->Get('ciclass');
 			if ($sCiClass != '') {
 				$aCIClassesWithIp = IPUtils::GetListOfClassesWithIPs();
@@ -41,7 +44,7 @@ class AttributeIPFieldInClass extends AttributeString
 					$oAttDef = MetaModel::GetAttributeDef($sCiClass, $sAttribute);
 					$aValues[$oAttDef->GetCode()] = $oAttDef->GetLabel();
 				}
-				foreach ($aCIClassesWithIp[$sCiClass][$sClass] as $sKey => $sAttribute) {
+				foreach ($aCIClassesWithIp[$sCiClass][$sIpClass] as $sKey => $sAttribute) {
 					$oAttDef = MetaModel::GetAttributeDef($sCiClass, $sAttribute);
 					$aValues[$oAttDef->GetCode()] = $oAttDef->GetLabel();
 				}
