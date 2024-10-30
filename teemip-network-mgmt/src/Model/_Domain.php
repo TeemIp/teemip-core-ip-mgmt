@@ -233,14 +233,14 @@ class _Domain extends DNSObject implements iTree
 			$sOQL = "SELECT Domain AS d WHERE d.parent_id = :key";
 			$oChildDomainSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('key' => $iKey));
 			if ($oChildDomainSet->CountExceeds(0)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasChildren');
+				$this->AddCheckIssue(Dict::S('UI:IPManagement:Action:ChangeOrg:Domain:HasChildren'));
 
 				return;
 			}
 			$sOQL = "SELECT IPAddress AS i WHERE i.domain_name LIKE :domain AND i.org_id = :org_id";
 			$oHostSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('domain' => '%'.$sDomain, 'org_id' => $sOrgId));
 			if ($oHostSet->CountExceeds(0)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasHosts');
+				$this->AddCheckIssue(Dict::S('UI:IPManagement:Action:ChangeOrg:Domain:HasHosts'));
 
 				return;
 			}
@@ -248,7 +248,7 @@ class _Domain extends DNSObject implements iTree
 				$sOQL = "SELECT Zone WHERE name LIKE CONCAT('%',:zone_name)";
 				$oZonesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('zone_name' => $sDomain));
 				if ($oZonesSet->CountExceeds(0)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:ChangeOrg:Domain:HasZones');
+					$this->AddCheckIssue(Dict::S('UI:IPManagement:Action:ChangeOrg:Domain:HasZones'));
 
 					return;
 				}
