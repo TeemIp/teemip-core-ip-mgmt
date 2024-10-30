@@ -171,9 +171,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ASNumber' => 'Número AS',
-	'Class:ASNumber+' => 'Autonomous System Number',
+	'Class:ASNumber+' => 'Número de sistema autónomo',
 	'Class:ASNumber:baseinfo' => 'Información General',
 	'Class:ASNumber:admininfo' => 'Información Administrativa',
+    'Class:ASNumber/Attribute:asnumberrange_id' => 'Rango',
+    'Class:ASNumber/Attribute:asnumberrange_id+' => 'Rango de números AS al que pertenece el número',
 	'Class:ASNumber/Attribute:number' => 'Número',
 	'Class:ASNumber/Attribute:number+' => '',
     'Class:ASNumber/Attribute:org_id+' => 'La entidad a la que se ha asignado el número',
@@ -210,6 +212,28 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
     'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
     'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nombre de la localidad',
     'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
+));
+
+//
+// Class: ASNumberRange
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+    'Class:ASNumberRange' => 'Rango de números AS',
+    'Class:ASNumberRange+' => 'Rango de número de sistema autónomo',
+    'Class:ASNumberRange:baseinfo' => 'Información General',
+    'Class:ASNumberRange:admininfo' => 'Información Administrativa',
+    'Class:ASNumberRange/Attribute:first_number' => 'Primer número',
+    'Class:ASNumberRange/Attribute:first_number+' => '',
+    'Class:ASNumberRange/Attribute:last_number' => 'Último número',
+    'Class:ASNumberRange/Attribute:last_number+' => '',
+    'Class:ASNumberRange/Attribute:org_id+' => 'La entidad a la que se ha asignado el rango',
+    'Class:ASNumberRange/Attribute:registrar_id' => 'Registrante',
+    'Class:ASNumberRange/Attribute:registrar_id+' => 'La autoridad responsable de las asignaciones en esta rango',
+    'Class:ASNumberRange/Attribute:registrar_name' => 'Nombre Registrante',
+    'Class:ASNumberRange/Attribute:registrar_name+' => '',
+    'Class:ASNumberRange/Attribute:asnumbers_list' => 'Números AS',
+    'Class:ASNumberRange/Attribute:asnumbers_list+' => 'Números AS que forman parte del rango',
 ));
 
 //
@@ -356,6 +380,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Conectividad',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Denominación',
+
+//
+// Management of AS Numbers
+//
+    // Creation Management
+    'UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder' => 'El primer número es mayor o igual que el último',
+    'UI:IPManagement:Action:New:ASNumber:NotInRange' => 'El número AS no está en el rango de números AS especificado',
 
 //
 // Management of Domains

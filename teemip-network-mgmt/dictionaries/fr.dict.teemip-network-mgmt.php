@@ -174,12 +174,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ASNumber+' => 'Numéro de Système Autonome',
 	'Class:ASNumber:baseinfo' => 'Information Générale',
 	'Class:ASNumber:admininfo' => 'Information Administrative',
+    'Class:ASNumber/Attribute:asnumberrange_id' => 'Plage',
+    'Class:ASNumber/Attribute:asnumberrange_id+' => 'Plage de numéros d\'AS à laquelle appartient le numéro',
 	'Class:ASNumber/Attribute:number' => 'Numéro',
 	'Class:ASNumber/Attribute:number+' => '',
     'Class:ASNumber/Attribute:org_id+' => 'Entité à qui le numéro a été assigné',
 	'Class:ASNumber/Attribute:registrar_id' => 'Registre Internet',
     'Class:ASNumber/Attribute:registrar_id+' => 'Autorité responsable de l\'allocation de ce numéro d\'AS',
-	'Class:ASNumber/Attribute:registrar_name' => 'Registrar Name',
+	'Class:ASNumber/Attribute:registrar_name' => 'Nom du registre',
 	'Class:ASNumber/Attribute:registrar_name+' => '',
 	'Class:ASNumber/Attribute:whois' => 'Whois',
 	'Class:ASNumber/Attribute:whois+' => 'URL vers le whois du registre',
@@ -210,6 +212,28 @@ Dict::Add('FR FR', 'French', 'Français', array(
     'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
     'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nom du lieu',
     'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
+));
+
+//
+// Class: ASNumberRange
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+    'Class:ASNumberRange' => 'Plage de numéros d\'AS',
+    'Class:ASNumberRange+' => '',
+    'Class:ASNumberRange:baseinfo' => 'Information Générale',
+    'Class:ASNumberRange:admininfo' => 'Information Administrative',
+    'Class:ASNumberRange/Attribute:first_number' => 'Premier numéro',
+    'Class:ASNumberRange/Attribute:first_number+' => '',
+    'Class:ASNumberRange/Attribute:last_number' => 'Dernier numéro',
+    'Class:ASNumberRange/Attribute:last_number+' => '',
+    'Class:ASNumberRange/Attribute:org_id+' => 'Entité à qui le numéro a été assigné',
+    'Class:ASNumberRange/Attribute:registrar_id' => 'Registre Internet',
+    'Class:ASNumberRange/Attribute:registrar_id+' => 'Autorité responsable de l\'allocation des numéros d\'AS dans cette plage',
+    'Class:ASNumberRange/Attribute:registrar_name' => 'Nom du registre',
+    'Class:ASNumberRange/Attribute:registrar_name+' => '',
+    'Class:ASNumberRange/Attribute:asnumbers_list' => 'Numéros d\'AS',
+    'Class:ASNumberRange/Attribute:asnumbers_list+' => 'Numéros d\'AS qui font partie de cette plage',
 ));
 
 //
@@ -356,6 +380,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivité',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Nomage',
+
+//
+// Management of AS Numbers
+//
+    // Creation Management
+    'UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder' => 'Le premier numéro est plus grand ou égal au denrnier',
+    'UI:IPManagement:Action:New:ASNumber:NotInRange' => 'Le numéro d\'AS n\'est pas contenu dans la plage de numéros d\'AS',
 
 //
 // Management of Domains

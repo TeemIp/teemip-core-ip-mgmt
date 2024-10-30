@@ -858,6 +858,13 @@
           <digits>10</digits>
           <decimals>0</decimals>
         </field>
+        <field id="asnumberrange_id" xsi:type="AttributeExternalKey">
+          <sql>asnumberrange_id</sql>
+          <target_class>ASNumberRange</target_class>
+          <filter>SELECT ASNumberRange AS r WHERE r.org_id = :this->org_id</filter>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
         <field id="registrar_id" xsi:type="AttributeExternalKey">
           <sql>registrar_id</sql>
           <target_class>Organization</target_class>
@@ -892,7 +899,31 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <methods>
+        <method id="DoCheckToWrite">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  function DoCheckToWrite()
+  {
+    // Run standard iTop checks first
+    parent::DoCheckToWrite();
+
+    // Make sure we are in the range, if any
+    $iRangeId = $this->Get('asnumberrange_id');
+    if ($iRangeId > 0) {
+        $oRange = MetaModel::GetObject('ASNumberRange', $iRangeId, false);
+        if (!is_null($oRange)) {
+            $iNumber = $this->Get('number');
+            if (($iNumber < $oRange->Get('first_number')) || ($oRange->Get('last_number') < $iNumber)) {
+                $this->AddCheckIssue(Dict::S('UI:IPManagement:Action:New:ASNumber:NotInRange'));
+            }
+        }
+    }
+  }]]></code>
+        </method>
+      </methods>
       <presentation>
         <details>
           <items>
@@ -905,14 +936,17 @@
                     <item id="name">
                       <rank>10</rank>
                     </item>
-                    <item id="number">
+                    <item id="asnumberrange_id">
                       <rank>20</rank>
                     </item>
-                    <item id="org_id">
+                    <item id="number">
                       <rank>30</rank>
                     </item>
-                    <item id="description">
+                    <item id="org_id">
                       <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
                     </item>
                   </items>
                 </item>
@@ -1100,6 +1134,182 @@
             </item>
           </items>
         </list>
+      </presentation>
+    </class>
+    <class id="ASNumberRange" _delta="define">
+      <parent>FunctionalCI</parent>
+      <properties>
+        <category>bizmodel,searchable,configmgmt</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>asnumberrange</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <style>
+          <icon>asset/img/icons8-asn-range.svg</icon>
+        </style>
+        <reconciliation>
+          <attributes>
+            <attribute id="name"/>
+            <attribute id="org_id"/>
+            <attribute id="organization_name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="first_number" xsi:type="AttributeInteger">
+          <sql>first_number</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="last_number" xsi:type="AttributeInteger">
+          <sql>last_number</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="registrar_id" xsi:type="AttributeExternalKey">
+          <sql>registrar_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>true</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="registrar_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>registrar_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="asnumbers_list" xsi:type="AttributeLinkedSet">
+          <linked_class>ASNumber</linked_class>
+          <ext_key_to_me>asnumberrange_id</ext_key_to_me>
+          <tracking_level/>
+          <edit_mode/>
+        </field>
+      </fields>
+      <methods>
+        <method id="DoCheckToWrite">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[  function DoCheckToWrite()
+  {
+    // Run standard iTop checks first
+    parent::DoCheckToWrite();
+
+    // Make sure first number is lower than last number
+    if ($this->Get('first_number') > $this->Get('last_number')) {
+        $this->AddCheckIssue(Dict::S('UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder'));
+    }
+  }]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:Class:ASNumber:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="first_number">
+                      <rank>20</rank>
+                    </item>
+                    <item id="last_number">
+                      <rank>30</rank>
+                    </item>
+                    <item id="org_id">
+                      <rank>40</rank>
+                    </item>
+                    <item id="description">
+                      <rank>50</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:Class:ASNumber:admininfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="registrar_id">
+                      <rank>10</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="contacts_list">
+              <rank>30</rank>
+            </item>
+            <item id="documents_list">
+              <rank>40</rank>
+            </item>
+            <item id="asnumbers_list">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="first_number">
+              <rank>20</rank>
+            </item>
+            <item id="last_number">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+            <item id="registrar_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="first_number">
+              <rank>10</rank>
+            </item>
+            <item id="last_number">
+              <rank>10</rank>
+            </item>
+            <item id="registrar_id">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+        <summary>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="first_number">
+              <rank>20</rank>
+            </item>
+            <item id="last_number">
+              <rank>30</rank>
+            </item>
+            <item id="org_id">
+              <rank>40</rank>
+            </item>
+          </items>
+        </summary>
       </presentation>
     </class>
     <class id="VRF" _delta="define">
@@ -1894,6 +2104,10 @@
               </dashlet>
               <dashlet id="30" xsi:type="DashletBadge">
                 <rank>30</rank>
+                <class>ASNumberRange</class>
+              </dashlet>
+              <dashlet id="40" xsi:type="DashletBadge">
+                <rank>40</rank>
                 <class>ASNumber</class>
               </dashlet>
             </dashlets>

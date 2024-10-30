@@ -174,6 +174,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ASNumber+' => 'Numero di sistema autonomo',
 	'Class:ASNumber:baseinfo' => 'Informazioni Generali',
 	'Class:ASNumber:admininfo' => 'Informazioni Amministrative',
+    'Class:ASNumber/Attribute:asnumberrange_id' => 'Intervallo',
+    'Class:ASNumber/Attribute:asnumberrange_id+' => 'Intervallo di numeri AS a cui appartiene il numero',
 	'Class:ASNumber/Attribute:number' => 'Numero',
 	'Class:ASNumber/Attribute:number+' => '',
     'Class:ASNumber/Attribute:org_id+' => 'L\'entità a cui è stato assegnato il numero',
@@ -211,6 +213,28 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
     'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
     'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nome della localizzazione',
     'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
+));
+
+//
+// Class: ASNumberRange
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+    'Class:ASNumberRange' => 'Intervallo di numeri AS',
+    'Class:ASNumberRange+' => 'Intervallo di numeri di sistema autonomo',
+    'Class:ASNumberRange:baseinfo' => 'Informazioni Generali',
+    'Class:ASNumberRange:admininfo' => 'Informazioni Amministrative ',
+    'Class:ASNumberRange/Attribute:first_number' => 'Primo numero',
+    'Class:ASNumberRange/Attribute:first_number+' => '',
+    'Class:ASNumberRange/Attribute:last_number' => 'Ultimo numero',
+    'Class:ASNumberRange/Attribute:last_number+' => '',
+    'Class:ASNumberRange/Attribute:org_id+' => 'L\'entità a cui è stato assegnato l\'intervallo',
+    'Class:ASNumberRange/Attribute:registrar_id' => 'Registrar',
+    'Class:ASNumberRange/Attribute:registrar_id+' => 'L\'autorità responsabile per le assegnazioni in questo intervallo',
+    'Class:ASNumberRange/Attribute:registrar_name' => 'Nome del Registrar',
+    'Class:ASNumberRange/Attribute:registrar_name+' => '',
+    'Class:ASNumberRange/Attribute:asnumbers_list' => 'Numeri AS',
+    'Class:ASNumberRange/Attribute:asnumbers_list+' => 'AS Numeri che fanno parte dell\'intervallo',
 ));
 
 //
@@ -357,6 +381,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfacce',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connettività',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Denominazione',
+
+//
+// Management of AS Numbers
+//
+    // Creation Management
+    'UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder' => 'Il primo numero è maggiore o uguale all\'ultimo numero',
+    'UI:IPManagement:Action:New:ASNumber:NotInRange' => 'Il numero AS non rientra nell\'intervallo di numeri AS specificato',
 
 //
 // Management of Domains

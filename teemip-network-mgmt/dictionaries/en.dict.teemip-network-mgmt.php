@@ -174,6 +174,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:ASNumber+' => 'Autonomous System Number',
 	'Class:ASNumber:baseinfo' => 'General Information',
 	'Class:ASNumber:admininfo' => 'Administrative Information',
+    'Class:ASNumber/Attribute:asnumberrange_id' => 'Range',
+    'Class:ASNumber/Attribute:asnumberrange_id+' => 'AS Number Range that the number belongs to',
 	'Class:ASNumber/Attribute:number' => 'Number',
 	'Class:ASNumber/Attribute:number+' => '',
     'Class:ASNumber/Attribute:org_id+' => 'The entity who the number has been assigned to',
@@ -211,6 +213,28 @@ Dict::Add('EN US', 'English', 'English', array(
     'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
     'Class:lnkASNumberToLocation/Attribute:location_name' => 'Location Name',
     'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
+));
+
+//
+// Class: ASNumberRange
+//
+
+Dict::Add('EN US', 'English', 'English', array(
+    'Class:ASNumberRange' => 'AS Number Range',
+    'Class:ASNumberRange+' => 'Range of Autonomous System Numbers',
+    'Class:ASNumberRange:baseinfo' => 'General Information',
+    'Class:ASNumberRange:admininfo' => 'Administrative Information',
+    'Class:ASNumberRange/Attribute:first_number' => 'First number',
+    'Class:ASNumberRange/Attribute:first_number+' => '',
+    'Class:ASNumberRange/Attribute:last_number' => 'Last number',
+    'Class:ASNumberRange/Attribute:last_number+' => '',
+    'Class:ASNumberRange/Attribute:org_id+' => 'The entity who the range has been assigned to',
+    'Class:ASNumberRange/Attribute:registrar_id' => 'Registrar',
+    'Class:ASNumberRange/Attribute:registrar_id+' => 'The authority responsible for the allocations in this range',
+    'Class:ASNumberRange/Attribute:registrar_name' => 'Registrar Name',
+    'Class:ASNumberRange/Attribute:registrar_name+' => '',
+    'Class:ASNumberRange/Attribute:asnumbers_list' => 'AS Numbers',
+    'Class:ASNumberRange/Attribute:asnumbers_list+' => 'AS Numbers that are part of the range',
 ));
 
 //
@@ -360,6 +384,13 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivity',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Naming',
+
+//
+// Management of AS Numbers
+//
+    // Creation Management
+    'UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder' => 'First number is greater or equal than last number',
+    'UI:IPManagement:Action:New:ASNumber:NotInRange' => 'The AS Number is not in the specified AS Number Range',
 
 //
 // Management of Domains

@@ -174,6 +174,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ASNumber+' => 'Autonomes System Nummer',
 	'Class:ASNumber:baseinfo' => 'Allgemeine Informationen',
 	'Class:ASNumber:admininfo' => 'Administrative Informationen',
+    'Class:ASNumber/Attribute:asnumberrange_id' => 'Bereich',
+    'Class:ASNumber/Attribute:asnumberrange_id+' => 'AS Nummernbereich, zu dem die Nummer gehört',
 	'Class:ASNumber/Attribute:number' => 'Nummer',
 	'Class:ASNumber/Attribute:number+' => '',
     'Class:ASNumber/Attribute:org_id+' => 'Die Stelle, der die Nummer zugewiesen wurde',
@@ -210,6 +212,28 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
     'Class:lnkASNumberToLocation/Attribute:location_name' => 'Standort Name',
     'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
+));
+
+///
+// Class: ASNumberRange
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+    'Class:ASNumberRange' => 'AS Nummern Bereich',
+    'Class:ASNumberRange+' => 'Bereich der Autonomous System Numbers',
+    'Class:ASNumberRange:baseinfo' => 'Allgemeine Informationen',
+    'Class:ASNumberRange:admininfo' => 'Administrative Informationen',
+    'Class:ASNumberRange/Attribute:first_number' => 'Erste Nummer',
+    'Class:ASNumberRange/Attribute:first_number+' => '',
+    'Class:ASNumberRange/Attribute:last_number' => 'Letzte Nummer',
+    'Class:ASNumberRange/Attribute:last_number+' => '',
+    'Class:ASNumberRange/Attribute:org_id+' => 'Die Entität, der der Bereich zugewiesen wurde',
+    'Class:ASNumberRange/Attribute:registrar_id' => 'Registrar',
+    'Class:ASNumberRange/Attribute:registrar_id+' => 'Die für die Zuweisungen in diesem Bereich zuständige Behörde',
+    'Class:ASNumberRange/Attribute:registrar_name' => 'Registrar Name',
+    'Class:ASNumberRange/Attribute:registrar_name+' => '',
+    'Class:ASNumberRange/Attribute:asnumbers_list' => 'AS Nummern',
+    'Class:ASNumberRange/Attribute:asnumbers_list+' => 'AS Nummern, die Teil des Bereichs sind',
 ));
 
 //
@@ -356,6 +380,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Netzwerkschnittstellen',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Konnektivität',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Benennung',
+
+//
+// Management of AS Numbers
+//
+    // Creation Management
+    'UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder' => 'Erste Nummer ist größer oder gleich der letzten Nummer',
+    'UI:IPManagement:Action:New:ASNumber:NotInRange' => 'Die AS Nummer liegt nicht im angegebenen AS Nummernbereich',
 
 //
 // Management of Domains
