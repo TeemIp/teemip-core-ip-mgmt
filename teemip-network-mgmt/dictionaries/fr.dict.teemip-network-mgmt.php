@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -176,8 +176,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ASNumber:admininfo' => 'Information Administrative',
 	'Class:ASNumber/Attribute:number' => 'Numéro',
 	'Class:ASNumber/Attribute:number+' => '',
+    'Class:ASNumber/Attribute:org_id+' => 'Entité à qui le numéro a été assigné',
 	'Class:ASNumber/Attribute:registrar_id' => 'Registre Internet',
-	'Class:ASNumber/Attribute:registrar_id+' => '',
+    'Class:ASNumber/Attribute:registrar_id+' => 'Autorité responsable de l\'allocation de ce numéro d\'AS',
 	'Class:ASNumber/Attribute:registrar_name' => 'Registrar Name',
 	'Class:ASNumber/Attribute:registrar_name+' => '',
 	'Class:ASNumber/Attribute:whois' => 'Whois',
@@ -188,6 +189,27 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ASNumber/Attribute:validity_end+' => 'Date après laquelle l\'AS n\'est plus valide.',
 	'Class:ASNumber/Attribute:renewal_date' => 'Date de renouvellement',
 	'Class:ASNumber/Attribute:renewal_date+' => 'Date à laquelle l\'AS a été renouvelé.',
+    'Class:ASNumber/Attribute:locations_list' => 'Lieux',
+    'Class:ASNumber/Attribute:locations_list+' => 'Lieux ou le numéro d\'AS a été déployé',
+));
+
+//
+// Class: lnkASNumberToLocation
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+    'Class:lnkASNumberToLocation' => 'Lien Numéro d\'AS / Lieu',
+    'Class:lnkASNumberToLocation+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id' => 'Numéro d\'AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name' => 'Nom du numéro d\'AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number' => 'Numéro d\'AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_id' => 'Lieu',
+    'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nom du lieu',
+    'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
 ));
 
 //

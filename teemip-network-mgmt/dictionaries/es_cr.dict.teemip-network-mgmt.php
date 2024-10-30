@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -176,8 +176,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ASNumber:admininfo' => 'Información Administrativa',
 	'Class:ASNumber/Attribute:number' => 'Número',
 	'Class:ASNumber/Attribute:number+' => '',
+    'Class:ASNumber/Attribute:org_id+' => 'La entidad a la que se ha asignado el número',
 	'Class:ASNumber/Attribute:registrar_id' => 'Registrante',
-	'Class:ASNumber/Attribute:registrar_id+' => '',
+	'Class:ASNumber/Attribute:registrar_id+' => 'Autoridad responsable de la atribución de este número AS',
 	'Class:ASNumber/Attribute:registrar_name' => 'Nombre Registrante',
 	'Class:ASNumber/Attribute:registrar_name+' => '',
 	'Class:ASNumber/Attribute:whois' => 'Whois',
@@ -188,6 +189,27 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ASNumber/Attribute:validity_end+' => 'Date after which AS is not valid anymore.',
 	'Class:ASNumber/Attribute:renewal_date' => 'Fecha Renovación',
 	'Class:ASNumber/Attribute:renewal_date+' => 'Date when the AS has been renewed',
+    'Class:ASNumber/Attribute:locations_list' => 'Localidades',
+    'Class:ASNumber/Attribute:locations_list+' => 'Localidades en las que se ha implantado el número AS',
+));
+
+//
+// Class: lnkASNumberToLocation
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+    'Class:lnkASNumberToLocation' => 'Relación Número AS / Localidad',
+    'Class:lnkASNumberToLocation+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id' => 'Número AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name' => 'Nombre del número AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number' => 'Número AS',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_id' => 'Localidad',
+    'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nombre de la localidad',
+    'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
 ));
 
 //

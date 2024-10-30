@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -176,8 +176,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ASNumber:admininfo' => 'Administrative Informationen',
 	'Class:ASNumber/Attribute:number' => 'Nummer',
 	'Class:ASNumber/Attribute:number+' => '',
+    'Class:ASNumber/Attribute:org_id+' => 'Die Stelle, der die Nummer zugewiesen wurde',
 	'Class:ASNumber/Attribute:registrar_id' => 'Registrar',
-	'Class:ASNumber/Attribute:registrar_id+' => '',
+	'Class:ASNumber/Attribute:registrar_id+' => 'Die für die Zuteilung dieser AS-Nummer zuständige Behörde',
 	'Class:ASNumber/Attribute:registrar_name' => 'Registrar Name',
 	'Class:ASNumber/Attribute:registrar_name+' => '',
 	'Class:ASNumber/Attribute:whois' => 'Whois',
@@ -188,6 +189,27 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ASNumber/Attribute:validity_end+' => 'Datum, nach dem AS nicht mehr gültig ist.',
 	'Class:ASNumber/Attribute:renewal_date' => 'Verlängerungsdatum',
 	'Class:ASNumber/Attribute:renewal_date+' => 'Datum, an dem AS verlängert wurde',
+    'Class:ASNumber/Attribute:locations_list' => 'Standorte',
+    'Class:ASNumber/Attribute:locations_list+' => 'Standorte, an denen die AS Nummer eingesetzt wurde',
+));
+
+//
+// Class: lnkASNumberToLocation
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+    'Class:lnkASNumberToLocation' => 'Verknüpfung AS Nummer / Standort',
+    'Class:lnkASNumberToLocation+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id' => 'AS Nummer',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name' => 'AS Nummer Name',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number' => 'AS Nummer',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_id' => 'Standort',
+    'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_name' => 'Standort Name',
+    'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
 ));
 
 //

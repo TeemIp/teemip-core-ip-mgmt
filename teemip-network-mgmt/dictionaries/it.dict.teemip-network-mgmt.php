@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2024 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -176,11 +176,12 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ASNumber:admininfo' => 'Informazioni Amministrative',
 	'Class:ASNumber/Attribute:number' => 'Numero',
 	'Class:ASNumber/Attribute:number+' => '',
+    'Class:ASNumber/Attribute:org_id+' => 'L\'entità a cui è stato assegnato il numero',
 	'Class:ASNumber/Attribute:registrar_id' => 'Registrar',
-	'Class:ASNumber/Attribute:registrar_id+' => '',
+	'Class:ASNumber/Attribute:registrar_id+' => 'L\'autorità responsabile del\'assegnazione di questo numero AS',
 	'Class:ASNumber/Attribute:registrar_name' => 'Nome del Registrar',
 	'Class:ASNumber/Attribute:registrar_name+' => '',
-	'Class:ASNumber/Attribute:whois' => 'Chi Þ',
+	'Class:ASNumber/Attribute:whois' => 'Whois',
 	'Class:ASNumber/Attribute:whois+' => 'URL toward registrar whois information',
 	'Class:ASNumber/Attribute:move2production' => 'Data di registrazione ',
 	'Class:ASNumber/Attribute:move2production+' => 'Data in cui AS Þ stato registrato.',
@@ -188,6 +189,28 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ASNumber/Attribute:validity_end+' => 'Data dopo la quale AS non Þ pi¨ valido.',
 	'Class:ASNumber/Attribute:renewal_date' => 'Data di rinnovo',
 	'Class:ASNumber/Attribute:renewal_date+' => 'Data in cui l\'AS Þ stato rinnovato',
+    'Class:ASNumber/Attribute:locations_list' => 'Localizzaziones',
+    'Class:ASNumber/Attribute:locations_list+' => 'Localizzaziones in cui è stato distribuito il numero AS',
+));
+
+
+//
+// Class: lnkASNumberToLocation
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+    'Class:lnkASNumberToLocation' => 'Link AS Numero / Localizzazione',
+    'Class:lnkASNumberToLocation+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id' => 'AS Numero',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name' => 'Nome del AS numero',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_name+' => '',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number' => 'AS numero',
+    'Class:lnkASNumberToLocation/Attribute:asnumber_number+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_id' => 'Localizzazione',
+    'Class:lnkASNumberToLocation/Attribute:location_id+' => '',
+    'Class:lnkASNumberToLocation/Attribute:location_name' => 'Nome della localizzazione',
+    'Class:lnkASNumberToLocation/Attribute:locqtion_name+' => '',
 ));
 
 //

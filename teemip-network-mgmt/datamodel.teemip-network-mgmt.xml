@@ -883,6 +883,14 @@
           <default_value/>
           <is_null_allowed>true</is_null_allowed>
         </field>
+        <field id="locations_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkASNumberToLocation</linked_class>
+          <ext_key_to_me>asnumber_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>location_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
       </fields>
       <methods/>
       <presentation>
@@ -941,6 +949,9 @@
             <item id="documents_list">
               <rank>40</rank>
             </item>
+            <item id="locations_list">
+              <rank>50</rank>
+            </item>
           </items>
         </details>
         <search>
@@ -994,6 +1005,101 @@
             </item>
           </items>
         </summary>
+      </presentation>
+    </class>
+    <class id="lnkASNumberToLocation" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <is_link>1</is_link>
+        <category>bizmodel</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>lnkasnumbertolocation</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="asnumber_name"/>
+            <attribute id="location_name"/>
+          </attributes>
+        </naming>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="asnumber_id"/>
+            <attribute id="location_id"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="no_duplicate">
+            <attributes>
+              <attribute id="asnumber_id"/>
+              <attribute id="location_id"/>
+            </attributes>
+            <filter><![CDATA[]]></filter>
+            <disabled>false</disabled>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+      </properties>
+      <fields>
+        <field id="asnumber_id" xsi:type="AttributeExternalKey">
+          <sql>asnumber_id</sql>
+          <target_class>ASNumber</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="asnumber_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>asnumber_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="asnumber_number" xsi:type="AttributeExternalField">
+          <extkey_attcode>asnumber_id</extkey_attcode>
+          <target_attcode>number</target_attcode>
+        </field>
+        <field id="location_id" xsi:type="AttributeExternalKey">
+          <sql>location_id</sql>
+          <target_class>Location</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_AUTO</on_target_delete>
+        </field>
+        <field id="location_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>location_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+      </fields>
+      <methods/>
+      <presentation>
+        <details>
+          <items>
+            <item id="asnumber_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="asnumber_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </search>
+        <list>
+          <items>
+            <item id="asnumber_id">
+              <rank>10</rank>
+            </item>
+            <item id="location_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
       </presentation>
     </class>
     <class id="VRF" _delta="define">
