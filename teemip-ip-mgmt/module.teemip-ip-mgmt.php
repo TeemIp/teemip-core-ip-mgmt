@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-ip-mgmt/3.2.0',
+	'teemip-ip-mgmt/3.2.1',
 	array(
 		// Identification
 		//
@@ -16,7 +16,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-tickets/3.1.0',
+			'itop-tickets/3.2.0',
 			'teemip-framework/3.2.0',
 			'teemip-network-mgmt/3.2.0',
 		),

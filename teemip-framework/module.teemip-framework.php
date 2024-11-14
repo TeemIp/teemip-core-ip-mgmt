@@ -6,7 +6,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'teemip-framework/3.2.1-dev',
+	'teemip-framework/3.2.1',
 	array(
 		// Identification
 		//
@@ -16,7 +16,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/3.1.0',
+			'itop-config-mgmt/3.2.0',
 		),
 		'mandatory' => true,
 		'visible' => false,
