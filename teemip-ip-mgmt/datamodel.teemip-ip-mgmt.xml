@@ -3345,15 +3345,15 @@
           <on_target_delete>DEL_AUTO</on_target_delete>
           <jointype/>
         </field>
-        <field id="usage_id" xsi:type="AttributeExternalField" _delta="define">
+        <field id="usage_id" xsi:type="AttributeExternalField">
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>usage_id</target_attcode>
         </field>
-        <field id="ipaddress_org_name" xsi:type="AttributeExternalField" _delta="define">
+        <field id="ipaddress_org_name" xsi:type="AttributeExternalField">
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>org_name</target_attcode>
         </field>
-        <field id="ipaddress_fqdn" xsi:type="AttributeExternalField" _delta="define">
+        <field id="ipaddress_fqdn" xsi:type="AttributeExternalField">
           <extkey_attcode>ipaddress_id</extkey_attcode>
           <target_attcode>fqdn</target_attcode>
         </field>
@@ -3364,7 +3364,7 @@
         </field>
       </fields>
       <methods>
-        <method id="ComputeIP" _delta="define">
+        <method id="ComputeIP">
           <comment/>
           <static>false</static>
           <access>public</access>
@@ -3383,7 +3383,7 @@
 		return $this->Get('ipaddress_fqdn');
 	}]]></code>
         </method>
-        <method id="OnInsert" _delta="define">
+        <method id="OnInsert">
           <comment/>
           <static>false</static>
           <access>public</access>
@@ -3395,7 +3395,7 @@
 		$this->Set('ipaddress_ip', $this->ComputeIP());
 	}]]></code>
         </method>
-        <method id="OnUpdate" _delta="define">
+        <method id="OnUpdate">
           <comment/>
           <static>false</static>
           <access>public</access>
@@ -3407,7 +3407,7 @@
 		$this->Set('ipaddress_ip', $this->ComputeIP());
 	}]]></code>
         </method>
-        <method id="AfterInsert" _delta="define">
+        <method id="AfterInsert">
           <comment/>
           <static>false</static>
           <access>public</access>
@@ -3420,7 +3420,7 @@
         TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIpId);
 	}]]></code>
         </method>
-        <method id="AfterDelete" _delta="define">
+        <method id="AfterDelete">
           <comment/>
           <static>false</static>
           <access>public</access>
@@ -3433,6 +3433,24 @@
         TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iIpId);
 	}]]></code>
         </method>
+        <method id="GetAttributeParams">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function GetAttributeParams($sAttCode) {
+        if ($sAttCode == 'macaddress') {
+            $iIPInterfaceId = $this->Get('ipinterface_id');
+            $oIPInterface = MetaModel::GetObject('IPInterface', $iIPInterfaceId, false /* MustBeFound */);
+            if ($oIPInterface != null) {
+                return $oIPInterface->GetAttributeParams('macaddress');
+            }
+            return 'colons';
+        }
+        return '';
+	}]]></code>
+        </method>
+
       </methods>
       <presentation>
         <details>
