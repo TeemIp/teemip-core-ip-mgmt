@@ -16,7 +16,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'teemip-ip-mgmt/3.2.0',
+			'teemip-ip-mgmt/3.2.1',
 		),
 		'mandatory' => false,
 		'visible' => true,
