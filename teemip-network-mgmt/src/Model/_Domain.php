@@ -96,7 +96,7 @@ class _Domain extends DNSObject implements iTree
 		} else {
 			$i = strpos($sFqdn, '.');
 			$sNextFqdn = substr($sFqdn, $i + 1);
-			list($sError, $iDomainId, $sDomainName) = Domain::GetDomainFromFqdn($sNextFqdn, $iOrgId);
+			list($sError, $iDomainId, $sDomainName) = _Domain::GetDomainFromFqdn($sNextFqdn, $iOrgId);
 		}
 
 		return array($sError, $iDomainId, $sDomainName);
