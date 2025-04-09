@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -51,7 +51,7 @@ class DashletBadgeFiltered extends Dashlet
 		$sTitle = Dict::S($this->aProperties['title']);
         $aExtraParams['context_filter'] = 1;
         $aExtraParams['withJSRefreshCallBack'] = true;
-        $aExtraParams['query_params'] = '';
+        $aExtraParams['query_params'] = [];
         $aRefreshParams = [
             "filter" => $oFilter->ToOQL(), //$this->m_oFilter->ToOQL(),
             "extra_params" => $aExtraParams,
