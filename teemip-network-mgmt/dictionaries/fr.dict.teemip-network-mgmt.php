@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -263,7 +263,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkPhysicalInterfaceToVRF' => 'Lien Interface réseau / VRF',
+	'Class:lnkPhysicalInterfaceToVRF' => 'Lien Interface Physique réseau / VRF',
 	'Class:lnkPhysicalInterfaceToVRF+' => '',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_id' => 'Interface réseau',
 	'Class:lnkPhysicalInterfaceToVRF/Attribute:physicalinterface_id+' => '',

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -66,6 +66,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:PhysicalInterface/Attribute:status/Value:inactive+' => '',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolet',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
+    'Class:PhysicalInterface/Attribute:org_id' => 'Organisation',
+    'Class:PhysicalInterface/Attribute:org_id+' => 'Organisation des CIs zu dem die Schnittstelle gehört',
+    'Class:PhysicalInterface/Attribute:location_id' => 'Standort',
+    'Class:PhysicalInterface/Attribute:location_id+' => 'Standort des CIs zu dem die Schnittstelle gehört',
 ));
 
 //

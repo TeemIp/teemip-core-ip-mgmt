@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -68,7 +68,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkLogicalInterfaceToVLAN' => 'Lien Interface réseau / VLAN',
+	'Class:lnkLogicalInterfaceToVLAN' => 'Lien Interface Logique réseau / VLAN',
 	'Class:lnkLogicalInterfaceToVLAN+' => '',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id' => 'Interface réseau',
 	'Class:lnkLogicalInterfaceToVLAN/Attribute:logicalinterface_id+' => '',
@@ -95,7 +95,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkLogicalInterfaceToVRF' => 'Lien Interface réseau / VRF',
+	'Class:lnkLogicalInterfaceToVRF' => 'Lien Interface Logique réseau / VRF',
 	'Class:lnkLogicalInterfaceToVRF+' => '',
 	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id' => 'Interface réseau',
 	'Class:lnkLogicalInterfaceToVRF/Attribute:logicalinterface_id+' => '',
