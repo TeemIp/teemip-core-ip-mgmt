@@ -711,6 +711,9 @@ class TeemIpConfigMgmtAdaptor implements iApplicationUIExtension {
 	            $iVLANId = $oObject->GetKey();
 
 	            $sOQL = "SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkPhysicalInterfaceToVLAN AS l2 ON l2.physicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	            if (class_exists('NetworkDeviceVirtualInterface')) {
+		            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkNetworkDeviceVirtualInterfaceToVLAN AS l2 ON l2.networkdevicevirtualinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
+	            }
 	            if (class_exists('LogicalInterface')) {
 		            $sOQL .= " UNION SELECT lnkIPInterfaceToIPAddress AS l1 JOIN IPInterface AS int ON l1.ipinterface_id = int.id JOIN lnkLogicalInterfaceToVLAN AS l2 ON l2.logicalinterface_id = int.id JOIN VLAN AS v ON l2.vlan_id = v.id WHERE v.id = :vlan_id";
 	            }
