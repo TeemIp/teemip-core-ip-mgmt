@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -128,11 +128,6 @@ class DisplayTree
 	static private function DeployTree($iOrgId, $sClass, $sDelegatedNodesRendering): string
 	{
 		switch ($sClass) {
-			case 'IPv4Block':
-			case 'IPv6Block':
-			case 'Domain':
-				return DisplayTree::GetNode($iOrgId, $sClass, 0, '', $sDelegatedNodesRendering);
-
 			case 'IPv4Subnet':
 				return DisplayTree::GetNode($iOrgId, 'IPv4Block', 0, 'IPv4Subnet', $sDelegatedNodesRendering);
 
@@ -140,10 +135,8 @@ class DisplayTree
 				return DisplayTree::GetNode($iOrgId, 'IPv6Block', 0, 'IPv6Subnet', $sDelegatedNodesRendering);
 
 			default:
-				break;
+				return DisplayTree::GetNode($iOrgId, $sClass, 0, '', $sDelegatedNodesRendering);
 		}
-
-		return '';
 	}
 
 	/**
