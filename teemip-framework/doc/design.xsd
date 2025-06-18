@@ -13,7 +13,11 @@
     <!-- ########################### AttributeClassWithIP ########################### -->
     <xs:complexType name="AttributeClassWithIP">
         <xs:complexContent>
-            <xs:extension base="AttributeString" />
+            <xs:extension base="AttributeString">
+                <xs:all>
+                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0" />
+                </xs:all>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeClassWithIP ########################### -->
@@ -37,7 +41,11 @@
     <!-- ########################### AttributeIPFieldInClass ########################### -->
     <xs:complexType name="AttributeIPFieldInClass">
         <xs:complexContent>
-            <xs:extension base="AttributeString" />
+            <xs:extension base="AttributeString">
+                <xs:all>
+                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0" />
+                </xs:all>
+            </xs:extension>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeIPFieldInClass ########################### -->
