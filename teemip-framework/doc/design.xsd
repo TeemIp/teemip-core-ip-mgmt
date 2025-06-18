@@ -1,6 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="https://rudnerbjoern.github.io/iTop-schema/itop_design.xsd"/>
+    <xs:include schemaLocation="https://raw.githubusercontent.com/rudnerbjoern/iTop-schema/refs/heads/main/3.2/itop_design.xsd"/>
+
+    <!-- ########################### AttributeAliasList ########################### -->
+    <xs:complexType name="AttributeAliasList">
+        <xs:complexContent>
+            <xs:extension base="AttributeText" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeAliasList ########################### -->
+
+    <!-- ########################### AttributeClassWithIP ########################### -->
+    <xs:complexType name="AttributeClassWithIP">
+        <xs:complexContent>
+            <xs:extension base="AttributeString" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeClassWithIP ########################### -->
+
+    <!-- ########################### AttributeDomainName ########################### -->
+    <xs:complexType name="AttributeDomainName">
+        <xs:complexContent>
+            <xs:extension base="AttributeString" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeDomainName ########################### -->
+
+    <!-- ########################### AttributeHostName ########################### -->
+    <xs:complexType name="AttributeHostName">
+        <xs:complexContent>
+            <xs:extension base="AttributeString" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeHostName ########################### -->
+
+    <!-- ########################### AttributeIPFieldInClass ########################### -->
+    <xs:complexType name="AttributeIPFieldInClass">
+        <xs:complexContent>
+            <xs:extension base="AttributeString" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeIPFieldInClass ########################### -->
+
+    <!-- ########################### AttributeIPPercentage ########################### -->
+    <xs:complexType name="AttributeIPPercentage">
+        <xs:complexContent>
+            <xs:extension base="AttributeInteger" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeIPPercentage ########################### -->
+
+    <!-- ########################### AttributeMacAddress ########################### -->
+    <xs:complexType name="AttributeMacAddress">
+        <xs:complexContent>
+            <xs:extension base="AttributeString" />
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeMacAddress ########################### -->
 
     <!-- ########################### DashletBadgeFiltered ########################### -->
     <xs:complexType name="DashletBadgeFiltered">
