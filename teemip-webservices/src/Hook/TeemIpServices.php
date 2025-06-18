@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2021 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,8 +14,8 @@ use RestResult;
 use RestResultWithObjects;
 use RestUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
-use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultCountIps;
-use TeemIp\TeemIp\Extension\Webservices\Controller\RestResultWithTextFile;
+use TeemIp\TeemIp\Extension\Framework\Controller\RestResultCountIps;
+use TeemIp\TeemIp\Extension\Framework\Controller\RestResultWithTextFile;
 use UserRights;
 
 /**
@@ -54,13 +54,6 @@ class TeemIpServices implements iRestServiceProvider
 			'verb' => 'teemip/pick_subnet_in_block',
 			'description' => 'Automatically pick and register an IPv4 or IPv6 subnet in a given IP block'
 		);
-		if (class_exists('Zone'))
-		{
-			$aOps[] = array(
-				'verb' => 'teemip/get_zone_file',
-				'description' => 'Generate and provide the text file that describes the specified DNS zones'
-			);
-		}
 		return $aOps;
 	}
 
@@ -83,7 +76,7 @@ class TeemIpServices implements iRestServiceProvider
 		{
 			case 'teemip/get_webservices_version':
 				$oResult = new RestResult();
-				$oResult->message = "TeemIp WEB Services version running is: 1.2";
+				$oResult->message = "TeemIp WEB Services version running is: 1.3";
 				break;
 
 			case 'teemip/get_nb_of_registered_ips_in_subnet':
@@ -329,36 +322,6 @@ class TeemIpServices implements iRestServiceProvider
 							$oResult->code = RestResult::INTERNAL_ERROR;
 							$oResult->message = "The IP block does not exist";
 						}
-					}
-				}
-				break;
-
-			case 'teemip/get_zone_file':
-				$oResult = new RestResultWithTextFile();
-				if (!class_exists('Zone'))
-				{
-					$oResult->code = RestResult::INTERNAL_ERROR;
-					$oResult->message = "No TeemIp zone management extension has been installed !";
-				}
-				else
-				{
-					if (UserRights::IsActionAllowed('Zone', UR_ACTION_READ) != UR_ALLOWED_YES)
-					{
-						$oResult->code = RestResult::UNAUTHORIZED;
-						$oResult->message = "The current user does not have enough permissions for reading data of class Zone";
-					}
-					else
-					{
-						$key = RestUtils::GetMandatoryParam($aParams, 'key');
-						$oZoneSet = RestUtils::GetObjectSetFromKey('Zone', $key);
-						while ($oZone = $oZoneSet->Fetch())
-						{
-							$sFormat = RestUtils::GetMandatoryParam($aParams, 'format');
-							$sFormat = ($sFormat == 'sort_by_record') ? 'sort_by_record' : 'sort_by_char';
-							$sText = $oZone->GetDataFile($sFormat);
-							$oResult->AddObject(0, 'computed', $oZone, $sText);
-						}
-						$oResult->message = "Found: ".$oZoneSet->Count();
 					}
 				}
 				break;
