@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+    <xs:include schemaLocation="https://rudnerbjoern.github.io/iTop-schema/itop_design.xsd"/>
+
+    <!-- ########################### DashletBadgeFiltered ########################### -->
+    <xs:complexType name="DashletBadgeFiltered">
+        <xs:all>
+            <xs:element name="rank" type="xs:decimal" minOccurs="0" />
+            <xs:element name="title" type="xs:string" minOccurs="1" />
+            <xs:element name="query" type="xs:string" minOccurs="1" />
+        </xs:all>
+        <xs:attribute name="id" type="xs:string" use="required" />
+        <xs:attributeGroup ref="alteredNode" />
+    </xs:complexType>
+    <!-- ########################### /DashletBadgeFiltered ########################### -->
+
+</xs:schema>

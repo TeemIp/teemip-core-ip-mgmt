@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" load="strict">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" load="strict"
+  xsi:noNamespaceSchemaLocation="doc/itop_design.xsd">
   <classes>
     <class id="IPApplication" _delta="define">
       <parent>FunctionalCI</parent>
@@ -804,7 +805,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -836,7 +836,7 @@
           <comment/>
           <static>true</static>
           <access>public</access>
-          <type>custom</type>
+          <type>Custom</type>
           <code><![CDATA[ public static function CreateBasicIpUsages($iOrgId)
 	{
 		IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
@@ -848,7 +848,7 @@
           <comment/>
           <static>true</static>
           <access>public</access>
-          <type>custom</type>
+          <type>Custom</type>
           <code><![CDATA[ public static function GetIpUsageId($iOrgId, $sCode)
 	{
 		$oIpUsage = MetaModel::GetObjectFromOQL("SELECT IPUsage AS i WHERE i.name = :code AND i.org_id = :org_id", array('code' => $sCode, 'org_id' => $iOrgId), false);
