@@ -33,6 +33,7 @@ SetupWebPage::AddModule(
 			'src/Model/AttributeIPPercentage.php',
 			'src/Model/AttributeMacAddress.php',
 			'src/Model/DashletBadgeFiltered.php',
+            'src/Model/TeemIpObjectResult.php',
 			'model.teemip-framework.php',
 		),
 		'webservice' => array(),
