@@ -22,10 +22,7 @@ class ComposerStaticInit5bfa4bcf619d3ccd370baaa384792d28
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
-        'TeemIp\\TeemIp\\Extension\\Webservices\\Controller\\RestResultCountIps' => __DIR__ . '/../..' . '/src/Controller/RestResultCountIps.php',
-        'TeemIp\\TeemIp\\Extension\\Webservices\\Controller\\RestResultWithTextFile' => __DIR__ . '/../..' . '/src/Controller/RestResultWithTextFile.php',
         'TeemIp\\TeemIp\\Extension\\Webservices\\Hook\\TeemIpServices' => __DIR__ . '/../..' . '/src/Hook/TeemIpServices.php',
-        'TeemIp\\TeemIp\\Extension\\Webservices\\Model\\TeemIpObjectResult' => __DIR__ . '/../..' . '/src/Model/TeemIpObjectResult.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
