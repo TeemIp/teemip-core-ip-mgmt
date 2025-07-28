@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
-    <xs:include schemaLocation="https://raw.githubusercontent.com/rudnerbjoern/iTop-schema/refs/heads/main/3.2/itop_design.xsd"/>
+    <xs:include schemaLocation="https://rudnerbjoern.github.io/iTop-schema/3.2/itop_design.xsd"/>
 
     <!-- ########################### AttributeAliasList ########################### -->
     <xs:complexType name="AttributeAliasList">
         <xs:complexContent>
-            <xs:extension base="AttributeText" />
+            <xs:extension base="AttributeText"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeAliasList ########################### -->
@@ -13,9 +13,16 @@
     <!-- ########################### AttributeClassWithIP ########################### -->
     <xs:complexType name="AttributeClassWithIP">
         <xs:complexContent>
-            <xs:extension base="AttributeString">
+            <xs:extension base="AttributeDefinition">
                 <xs:all>
-                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0" />
+                    <xs:element name="sql" type="alteredString" minOccurs="0"/>
+                    <xs:element name="default_value" type="alteredString" minOccurs="0"/>
+                    <xs:element name="is_null_allowed" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="validation_pattern" type="alteredString" minOccurs="0"/>
+                    <xs:element name="tracking_level" type="trackingLevelEnumeration" minOccurs="0"/>
+                    <xs:element name="always_load_in_tables" type="xs:boolean" minOccurs="0" default="false"/>
+                    <xs:element name="dependencies" type="dependenciesType" minOccurs="0"/>
+                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0"/>
                 </xs:all>
             </xs:extension>
         </xs:complexContent>
@@ -25,7 +32,7 @@
     <!-- ########################### AttributeDomainName ########################### -->
     <xs:complexType name="AttributeDomainName">
         <xs:complexContent>
-            <xs:extension base="AttributeString" />
+            <xs:extension base="AttributeString"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeDomainName ########################### -->
@@ -33,7 +40,7 @@
     <!-- ########################### AttributeHostName ########################### -->
     <xs:complexType name="AttributeHostName">
         <xs:complexContent>
-            <xs:extension base="AttributeString" />
+            <xs:extension base="AttributeString"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeHostName ########################### -->
@@ -41,9 +48,16 @@
     <!-- ########################### AttributeIPFieldInClass ########################### -->
     <xs:complexType name="AttributeIPFieldInClass">
         <xs:complexContent>
-            <xs:extension base="AttributeString">
+            <xs:extension base="AttributeDefinition">
                 <xs:all>
-                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0" />
+                    <xs:element name="sql" type="alteredString" minOccurs="0"/>
+                    <xs:element name="default_value" type="alteredString" minOccurs="0"/>
+                    <xs:element name="is_null_allowed" type="xs:boolean" minOccurs="0"/>
+                    <xs:element name="validation_pattern" type="alteredString" minOccurs="0"/>
+                    <xs:element name="tracking_level" type="trackingLevelEnumeration" minOccurs="0"/>
+                    <xs:element name="always_load_in_tables" type="xs:boolean" minOccurs="0" default="false"/>
+                    <xs:element name="dependencies" type="dependenciesType" minOccurs="0"/>
+                    <xs:element name="display_style" type="displayStyleEnumeration" minOccurs="0"/>
                 </xs:all>
             </xs:extension>
         </xs:complexContent>
@@ -53,7 +67,7 @@
     <!-- ########################### AttributeIPPercentage ########################### -->
     <xs:complexType name="AttributeIPPercentage">
         <xs:complexContent>
-            <xs:extension base="AttributeInteger" />
+            <xs:extension base="AttributeInteger"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeIPPercentage ########################### -->
@@ -61,20 +75,22 @@
     <!-- ########################### AttributeMacAddress ########################### -->
     <xs:complexType name="AttributeMacAddress">
         <xs:complexContent>
-            <xs:extension base="AttributeString" />
+            <xs:extension base="AttributeString"/>
         </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /AttributeMacAddress ########################### -->
 
     <!-- ########################### DashletBadgeFiltered ########################### -->
     <xs:complexType name="DashletBadgeFiltered">
-        <xs:all>
-            <xs:element name="rank" type="xs:decimal" minOccurs="0" />
-            <xs:element name="title" type="xs:string" minOccurs="1" />
-            <xs:element name="query" type="xs:string" minOccurs="1" />
-        </xs:all>
-        <xs:attribute name="id" type="xs:string" use="required" />
-        <xs:attributeGroup ref="alteredNode" />
+        <xs:complexContent>
+            <xs:extension base="Dashlet">
+                <xs:all>
+                    <xs:element name="rank" type="alteredFloat" minOccurs="0"/>
+                    <xs:element name="title" type="alteredString" minOccurs="0"/>
+                    <xs:element name="query" type="alteredString" minOccurs="0"/>
+                </xs:all>
+            </xs:extension>
+        </xs:complexContent>
     </xs:complexType>
     <!-- ########################### /DashletBadgeFiltered ########################### -->
 
