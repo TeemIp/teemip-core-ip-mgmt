@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" load="strict">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" load="strict"
+  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/TeemIp/teemip-core-ip-mgmt/refs/heads/master/teemip-framework/doc/design.xsd">
   <classes>
     <class id="VirtualMachine" _delta="must_exist">
       <fields>
@@ -245,7 +246,6 @@
             <attribute id="vlan_tag"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="logicalinterface_id"/>
@@ -315,7 +315,6 @@
           <sql>mode</sql>
           <default_value>untagged</default_value>
           <is_null_allowed>true</is_null_allowed>
-          <display_style/>
         </field>
       </fields>
       <methods/>
@@ -377,7 +376,6 @@
             <attribute id="vrf_name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="logicalinterface_id"/>
@@ -504,7 +502,7 @@
     </class>
   </classes>
   <menus>
-    <menu id="ConfigManagement:TeemIpNetworking" _delta="must_exist">
+    <menu id="ConfigManagement:TeemIpNetworking" xsi:type="DashboardMenuNode" _delta="must_exist">
       <definition>
         <cells>
           <cell id="teemip_interfaces" _delta="must_exist">

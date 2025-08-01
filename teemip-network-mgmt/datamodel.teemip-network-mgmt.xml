@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" load="strict">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" load="strict"
+  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/TeemIp/teemip-core-ip-mgmt/refs/heads/master/teemip-framework/doc/design.xsd">
   <classes>
     <class id="DNSObject" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -18,7 +19,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -131,7 +131,6 @@
       <fields>
         <field id="parent_org_id" xsi:type="AttributeExternalKey">
           <filter/>
-          <dependencies/>
           <sql>parent_org_id</sql>
           <target_class>Organization</target_class>
           <is_null_allowed>true</is_null_allowed>
@@ -150,7 +149,6 @@
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MOVEUP</on_target_delete>
           <filter><![CDATA[SELECT Domain AS d WHERE d.org_id = :this->org_id]]></filter>
-          <default_value>null</default_value>
         </field>
         <field id="parent_name" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_id</extkey_attcode>
@@ -446,7 +444,6 @@
         </field>
         <field id="type_id" xsi:type="AttributeExternalKey">
           <filter><![CDATA[SELECT WANType]]></filter>
-          <dependencies/>
           <sql>type_id</sql>
           <target_class>WANType</target_class>
           <is_null_allowed>true</is_null_allowed>
@@ -748,7 +745,6 @@
             </item>
           </items>
         </list>
-      </presentation>
         <summary>
           <items>
             <item id="org_id">
@@ -762,6 +758,7 @@
             </item>
           </items>
         </summary>
+      </presentation>
     </class>
     <class id="WANType" _delta="define">
       <parent>Typology</parent>
@@ -777,7 +774,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1057,7 +1053,6 @@
             <attribute id="location_name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="asnumber_id"/>
@@ -1185,7 +1180,6 @@
         <field id="asnumbers_list" xsi:type="AttributeLinkedSet">
           <linked_class>ASNumber</linked_class>
           <ext_key_to_me>asnumberrange_id</ext_key_to_me>
-          <tracking_level/>
           <edit_mode/>
         </field>
       </fields>
@@ -1497,7 +1491,6 @@
             <attribute id="vrf_name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="physicalinterface_id"/>
@@ -1784,7 +1777,6 @@
             <attribute id="vlan_tag"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="networkdevicevirtualinterface_id"/>
@@ -1854,7 +1846,6 @@
           <sql>mode</sql>
           <default_value>untagged</default_value>
           <is_null_allowed>true</is_null_allowed>
-          <display_style/>
         </field>
       </fields>
       <methods/>
@@ -1916,7 +1907,6 @@
             <attribute id="vrf_name"/>
           </attributes>
         </naming>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="networkdevicevirtualinterface_id"/>
@@ -2004,7 +1994,6 @@
         <field id="networkdevicevirtualinterfaces_list" xsi:type="AttributeLinkedSet" _delta="define">
           <linked_class>NetworkDeviceVirtualInterface</linked_class>
           <ext_key_to_me>networkdevice_id</ext_key_to_me>
-          <tracking_level/>
           <edit_mode/>
         </field>
       </fields>
@@ -2115,7 +2104,7 @@
         </cells>
       </definition>
     </menu>
-    <menu id="Typology" _delta="must_exist">
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="must_exist">
       <definition>
         <cells>
           <cell id="0" _delta="must_exist">
@@ -2128,7 +2117,7 @@
             <dashlets>
               <dashlet id="teemip-1101" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
-                <title>Menu:NetworkMgmtExtended:Typology</title>
+                <title>Menu:NetworkMgmt:Typology</title>
                 <icon>teemip-ip-mgmt/asset/img/icons8-new-item.svg</icon>
               </dashlet>
               <dashlet id="teemip-1102" xsi:type="DashletBadge">

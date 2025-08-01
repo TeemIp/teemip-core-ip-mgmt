@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0" load="strict">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" load="strict"
+  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/TeemIp/teemip-core-ip-mgmt/refs/heads/master/teemip-framework/doc/design.xsd">
   <classes>
     <class id="IPv6Block" _delta="define">
       <parent>IPBlock</parent>
@@ -20,8 +21,8 @@
             <attribute id="name"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="firstip"></attribute>
-            <attribute id="lastip"></attribute>
+            <attribute id="firstip"/>
+            <attribute id="lastip"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -52,7 +53,6 @@
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MOVEUP</on_target_delete>
           <filter><![CDATA[SELECT IPv6Block AS b WHERE IF (:this->parent_org_id = 0, b.org_id = :this->org_id, b.org_id = :this->parent_org_id)]]></filter>
-          <default_value>null</default_value>
         </field>
         <field id="parent_name" xsi:type="AttributeExternalField">
           <extkey_attcode>parent_id</extkey_attcode>
@@ -391,9 +391,9 @@
             <attribute id="ip"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="mask"></attribute>
-            <attribute id="name"></attribute>
-            <attribute id="status"></attribute>
+            <attribute id="mask"/>
+            <attribute id="name"/>
+            <attribute id="status"/>
           </complementary_attributes>
         </naming>
         <style>
@@ -965,8 +965,8 @@
             <attribute id="range"/>
           </attributes>
           <complementary_attributes>
-            <attribute id="firstip"></attribute>
-            <attribute id="lastip"></attribute>
+            <attribute id="firstip"/>
+            <attribute id="lastip"/>
           </complementary_attributes>
         </naming>
         <style>
