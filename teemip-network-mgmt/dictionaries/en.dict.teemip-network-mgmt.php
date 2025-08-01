@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -384,6 +384,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivity',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Naming',
+    'Menu:NetworkMgmt:Typology' => 'Network Typology Configuration',
 
 //
 // Management of AS Numbers

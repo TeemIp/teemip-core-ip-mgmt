@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -338,6 +338,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => '接口',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => '连接',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => '命名',
+    'Menu:NetworkMgmt:Typology' => '网络拓扑配置',
 
 	//
 	// Management of Domains

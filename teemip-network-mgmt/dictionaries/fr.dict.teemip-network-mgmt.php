@@ -380,6 +380,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivité',
 	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Nomage',
+    'Menu:NetworkMgmt:Typology' => 'Configuration des typologies réseau',
 
 //
 // Management of AS Numbers
