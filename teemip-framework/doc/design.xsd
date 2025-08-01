@@ -45,6 +45,14 @@
     </xs:complexType>
     <!-- ########################### /AttributeHostName ########################### -->
 
+    <!-- ########################### AttributeIPv6Address ########################### -->
+    <xs:complexType name="AttributeIPv6Address">
+        <xs:complexContent>
+            <xs:extension base="AttributeString"/>
+        </xs:complexContent>
+    </xs:complexType>
+    <!-- ########################### /AttributeIPv6Address ########################### -->
+
     <!-- ########################### AttributeIPFieldInClass ########################### -->
     <xs:complexType name="AttributeIPFieldInClass">
         <xs:complexContent>
