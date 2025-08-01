@@ -91,7 +91,7 @@ class DisplayTree
 
 	}
 
-	static private function GetTree($sClass, $iOrganization, $sDelegatedNodesRendering): string
+	static public function GetTree($sClass, $iOrganization, $sDelegatedNodesRendering): string
 	{
 		$sHtml = '<table style="width:100%"><tr><td colspan="2">';
 		$sHtml .= '<div style="vertical-align:top;" id="tree">';
