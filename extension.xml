@@ -5,9 +5,9 @@
 	<author><![CDATA[Christophe Naud]]></author>
 	<label><![CDATA[IPAM for iTop]]></label>
 	<description><![CDATA[TeemIp application embedded in iTop for full blown IP Address Management]]></description>
-	<version>3.2.1</version>
-	<release_date>2024-11-26</release_date>
-	<version_description><![CDATA[Enhancements from 3.2.0: - See Wiki at https://wiki.teemip.net/doku.php?id=extensions:teemip-core-ip-mgmt]]></version_description>
+	<version>3.2.2</version>
+	<release_date>2025-08-27</release_date>
+	<version_description><![CDATA[Enhancements from 3.2.1: See Wiki at https://wiki.teemip.net/doku.php?id=extensions:teemip-core-ip-mgmt]]></version_description>
 	<itop_version_min>3.2.0</itop_version_min>
 	<status>stable</status>
 	<mandatory>false</mandatory>
