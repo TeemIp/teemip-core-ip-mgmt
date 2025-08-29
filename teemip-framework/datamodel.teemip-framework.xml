@@ -938,6 +938,8 @@
       <oql>SELECT IPConfig</oql>
       <do_search>1</do_search>
       <auto_reload>fast</auto_reload>
+      <enable_class>IPConfig</enable_class>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
   <constants>
