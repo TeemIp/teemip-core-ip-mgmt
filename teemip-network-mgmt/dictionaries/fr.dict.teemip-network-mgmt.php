@@ -379,7 +379,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ConfigManagement:TeemIpNetworking' => 'Réseau',
 	'Menu:ConfigManagement:TeemIpNetworking:Interfaces' => 'Interfaces',
 	'Menu:ConfigManagement:TeemIpNetworking:Connectivity' => 'Connectivité',
-	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Nomage',
+	'Menu:ConfigManagement:TeemIpNetworking:Naming' => 'Nommage',
     'Menu:NetworkMgmt:Typology' => 'Configuration des typologies réseau',
 
 //
