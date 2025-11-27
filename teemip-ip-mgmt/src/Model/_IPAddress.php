@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,7 +31,19 @@ use WebPage;
 
 class _IPAddress extends IPObject
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPAddressComputeValuesRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Set status of IP when attached to a device
 	 *
 	 * @param null $iIpId
@@ -197,13 +209,14 @@ class _IPAddress extends IPObject
 		return "";
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function ComputeValues()
-	{
-		parent::ComputeValues();
-
+    /**
+     * Handle Compute Values event on IPAddress
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPAddressComputeValuesRequestedByIPMgmt($oEventData): void
+    {
 		// Set FQDN
 		if ($this->Get('short_name') != '') {
 			$this->Set('fqdn', DNSObject::ComputeFqdn($this->Get('short_name'), $this->Get('domain_name')));

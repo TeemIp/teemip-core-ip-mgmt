@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -21,7 +21,6 @@ use DBObjectSearch;
 use Dict;
 use IPConfig;
 use iTopWebPage;
-use MenuBlock;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
@@ -30,13 +29,28 @@ use utils;
  * Root PHP class for both the IPObject and the DNSObject branches
  */
 class _IPAbstractObject extends cmdbAbstractObject {
-	/**
-	 * @inheritdoc
-	 */
-	public function ComputeValues() {
-		parent::ComputeValues();
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
 
-		if ($this->IsNew()) {
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPAbstractObjectComputeValuesRequestedByFramework', 10, 'teemip-framework');
+    }
+
+    /**
+     * Handle Compute Values event on PatchPanel
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPAbstractObjectComputeValuesRequestedByFramework($oEventData): void
+    {
+        $aEventData = $oEventData->GetEventData();
+        if ($aEventData['is_new']) {
 			// At creation, compute ipconfig_id if attribute exists.
 			if (MetaModel::IsValidAttCode(get_class($this), 'ipconfig_id')) {
 				$iOrgId = $this->Get('org_id');

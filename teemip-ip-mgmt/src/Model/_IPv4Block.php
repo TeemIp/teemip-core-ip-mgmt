@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -34,6 +34,19 @@ use WebPage;
 
 class _IPv4Block extends IPBlock implements iTree {
 	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4BlockComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Returns icon to be displayed
 	 *
 	 * @param bool $bImgTag
@@ -1500,15 +1513,16 @@ EOF
 		}
 	}
 
-	/**
-	 * Compute attributes before writing object
-	 *
-	 * @noinspection PhpUnhandledExceptionInspection
-	 */
-	public function ComputeValues() {
-		parent::ComputeValues();
-
-		if ($this->IsNew()) {
+    /**
+     * Handle Compute Values event on IPv4Block
+     *
+     * @param $oEventData
+     * @return void
+     */
+	public function OnIPv4BlockComputeValuesRequestedByIPMgmt($oEventData): void
+    {
+        $aEventData = $oEventData->GetEventData();
+        if ($aEventData['is_new']) {
 			// At creation, compute parent_id only in the case where no delegation is done.
 			// Note that delegation is implicit when origin is LIR (origin of parent block is RIR)
 			$iParentOrgId = $this->Get('parent_org_id');

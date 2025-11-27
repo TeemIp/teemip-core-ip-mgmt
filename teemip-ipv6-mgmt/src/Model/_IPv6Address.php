@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -25,7 +25,19 @@ use utils;
  */
 class _IPv6Address extends IPAddress
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6AddressComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+    }
+
+    /**
 	 * Get the subnet mask of the subnet that the IP belongs to, if any.
 	 *
 	 * @return int|mixed|\ormLinkSet|string|null
@@ -119,13 +131,14 @@ class _IPv6Address extends IPAddress
 		return array();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function ComputeValues()
+    /**
+     * Handle Compute Values event on IPv6Address
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6AddressComputeValuesRequestedByIPv6Mgmt($oEventData): void
 	{
-		parent::ComputeValues();
-
 		$iOrgId = $this->Get('org_id');
 		$oIp = $this->Get('ip');
 		$sIp = $oIp->GetAsCannonical();

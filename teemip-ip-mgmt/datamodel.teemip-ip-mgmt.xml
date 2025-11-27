@@ -147,24 +147,30 @@
           <duplicates/>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnIPObjectComputeValuesRequestedByIPMgmt">
+          <event>EVENT_DB_COMPUTE_VALUES</event>
+          <callback>OnIPObjectComputeValuesRequestedByIPMgmt</callback>
+          <rank>20</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
-        <method id="ComputeValues">
+        <method id="OnIPObjectComputeValuesRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>protected</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function ComputeValues()
- {
- 		parent::ComputeValues();
-
-		if ($this->IsNew()) {
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnIPObjectComputeValuesRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
+    {
+        $aEventData = $oEventData->GetEventData();
+		if ($aEventData['is_new']) {
 			// Make sure IPConfig exists for the organization
 			$iOrgId = $this->Get('org_id');
-			if (($iOrgId != '') && ($this->Get('ipconfig_id') == '')) {
+			if (($iOrgId > 0) && ($this->Get('ipconfig_id') == '')) {
 				$this->Set('ipconfig_id', IPConfig::GetGlobalIPConfig($iOrgId)->GetKey());
 			}
 		}
- }]]></code>
+    }]]></code>
         </method>
         <method id="OnInsert">
           <comment/>

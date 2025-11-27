@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -27,7 +27,19 @@ use WebPage;
 
 class _Domain extends DNSObject implements iTree
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnDomainComputeValuesRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
+    }
+
+    /**
 	 * Returns index to be used within tree computations
 	 *
 	 * @return string
@@ -202,15 +214,14 @@ class _Domain extends DNSObject implements iTree
 		}
 	}
 
-	/**
-	 * Compute attributes before writing object
-	 *
-	 * @throws \CoreException
-	 */
-	public function ComputeValues():void
+    /**
+     * Handle Compute Values event on Domain
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnDomainComputeValuesRequestedByNetworkMgmt($oEventData): void
     {
-		parent::ComputeValues();
-
 		$this->Set('name', static::ComputeFqdn($this->Get('name'), $this->Get('parent_name')));
 	}
 

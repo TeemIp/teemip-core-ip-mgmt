@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,7 +37,19 @@ use WebPage;
  * Class _IPv6Block
  */
 class _IPv6Block extends IPBlock implements iTree {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6BlockComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+    }
+
+    /**
 	 * Returns icon to ne displayed
 	 *
 	 * @param bool $bImgTag
@@ -1533,13 +1545,16 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function ComputeValues() {
-		parent::ComputeValues();
-
-		if ($this->IsNew()) {
+    /**
+     * Handle Compute Values event on IPv6Block
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6BlockComputeValuesRequestedByIPv6Mgmt($oEventData): void
+    {
+        $aEventData = $oEventData->GetEventData();
+        if ($aEventData['is_new']) {
 			// Preset LastIP to save the typing of too many 'f'
 			$oFirstIp = $this->Get('firstip');
 			$oLastIp = $this->Get('lastip');

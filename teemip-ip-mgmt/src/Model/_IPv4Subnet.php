@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,7 +31,19 @@ use WebPage;
 
 class _IPv4Subnet extends IPSubnet implements iTree
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4SubnetComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
@@ -1908,7 +1920,7 @@ EOF
 	/**
 	 * @inheritDoc
 	 */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations($oPage, $bEditMode = false)
 	{
 		// Execute parent function first 
 		parent::DisplayBareRelations($oPage, $bEditMode);
@@ -1986,13 +1998,14 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function ComputeValues()
+    /**
+     * Handle Compute Values event on IPv4Subnet
+     *
+     * @param $oEventData
+     * @return void
+     */
+	public function OnIPv4SubnetComputeValuesRequestedByIPMgmt($oEventData): void
 	{
-		parent::ComputeValues();
-
 		$sIp = $this->Get('ip');
 		$iIp = IPUtils::myip2long($sIp);
 		$sMask = $this->Get('mask');

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -18,6 +18,18 @@ use IPv4Subnet;
 use MetaModel;
 
 class _IPv4Address extends IPAddress {
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4AddressComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+    }
+
     /**
      * Get the subnet mask of the subnet that the IP belongs to, if any.
      *
@@ -78,12 +90,13 @@ class _IPv4Address extends IPAddress {
     }
 
     /**
-     * @inheritdoc
+     * Handle Compute Values event on IPv4Address
+     *
+     * @param $oEventData
+     * @return void
      */
-    public function ComputeValues()
+    public function OnIPv4AddressComputeValuesRequestedByIPMgmt($oEventData): void
     {
-        parent::ComputeValues();
-
         $iOrgId = $this->Get('org_id');
         $sIp = $this->Get('ip');
 

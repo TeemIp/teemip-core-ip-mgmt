@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -35,7 +35,19 @@ use WebPage;
  */
 class _IPv6Subnet extends IPSubnet implements iTree
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6SubnetComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+    }
+
+    /**
 	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
@@ -1176,19 +1188,14 @@ EOF
 		}
 	}
 
-	/**
-	 * Compute attributes before writing object
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function ComputeValues()
-	{
-		parent::ComputeValues();
-
+    /**
+     * Handle Compute Values event on IPv6Subnet
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6SubnetComputeValuesRequestedByIPv6Mgmt($oEventData): void
+    {
 		$oIp = $this->Get('ip');
 		$iOrgId = $this->Get('org_id');
 
