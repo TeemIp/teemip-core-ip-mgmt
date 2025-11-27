@@ -28,6 +28,7 @@ class _IPv4Address extends IPAddress {
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4AddressComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_DELETE", 'OnIPv4AddressAfterDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
     /**
@@ -228,12 +229,13 @@ class _IPv4Address extends IPAddress {
     }
 
     /**
-     * @inheritdoc
+     * Handle After delete event on IPv4Address
+     *
+     * @param $oEventData
+     * @return void
      */
-    public function AfterDelete()
+    public function OnIPv4AddressAfterDeleteRequestedByIPMgmt($oEventData): void
     {
-        parent::AfterDelete();
-
         $iOrgId = $this->Get('org_id');
 
         // Look for subnet where IP belongs to (should be only one)

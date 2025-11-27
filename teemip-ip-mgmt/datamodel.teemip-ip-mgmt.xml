@@ -1408,6 +1408,13 @@
           <target_attcode>name</target_attcode>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_DELETE</event>
+          <callback>OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
         <method id="DoCheckToWrite">
           <comment>/**&#13;
@@ -1459,14 +1466,13 @@
         }
 	}]]></code>
         </method>
-        <method id="AfterDelete">
+        <method id="OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>public </access>
-          <code><![CDATA[	public function AfterDelete()
-	{
-		parent::AfterDelete();
-
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
+    {
 		$iIPSubnet1 = $this->Get('ipsubnet1_id');
 		$oIPSubnet1 = MetaModel::GetObject('IPSubnet', $iIPSubnet1, false /* MustBeFound */);
 		if (!is_null($oIPSubnet1))
@@ -3128,6 +3134,13 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_DELETE</event>
+          <callback>OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
         <method id="DoCheckToWrite">
           <comment>/**&#13;
@@ -3182,14 +3195,13 @@
         }
 	}]]></code>
         </method>
-        <method id="AfterDelete">
+        <method id="OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>public </access>
-          <code><![CDATA[	public function AfterDelete()
-	{
-		parent::AfterDelete();
-
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
+    {
 		$iIP1 = $this->Get('ip1_id');
 		$oIP1 = MetaModel::GetObject('IPAddress', $iIP1, false /* MustBeFound */);
 		if (!is_null($oIP1))
@@ -3351,6 +3363,13 @@
           <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_DELETE</event>
+          <callback>OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
         <method id="ComputeIP">
           <comment/>
@@ -3408,15 +3427,13 @@
         TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIpId);
 	}]]></code>
         </method>
-        <method id="AfterDelete">
+        <method id="OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterDelete()
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
     {
-		parent::AfterDelete();
-
 		$iIpId = $this->Get('ipaddress_id');
         TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnDetachment($iIpId);
 	}]]></code>
