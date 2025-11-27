@@ -45,6 +45,7 @@ class _IPv6Subnet extends IPSubnet implements iTree
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6SubnetComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_DELETE", 'OnIPv6SubnetCheckToDeleteRequestedByIPMgmt', 40, 'teemip-ipv6-mgmt');
     }
 
     /**
@@ -1571,23 +1572,22 @@ EOF
 		}
 	}
 
-	/**
-	 * Check validity of deletion request
-	 *
-	 * @param $oDeletionPlan
-	 *
-	 * @throws \OQLException
-	 */
-	protected function DoCheckToDelete(&$oDeletionPlan)
-	{
+    /**
+     * Handle Do check to delete event on IPv6Subnet
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6SubnetCheckToDeleteRequestedByIPMgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip')->GetAsCompressed();
 		$sBitMask = $this->Get('mask');
 		$sLastIp = $this->Get('lastip')->GetAsCompressed();
 
-		parent::DoCheckToDelete($oDeletionPlan);
-
 		// Add subnet and gateway IP to deletion plan if they exist
+        $aEventData = $oEventData->GetEventData();
+        $oDeletionPlan = $aEventData['deletion_plan'];
 		if ($sBitMask != '128') {
 			$oIpAddress = MetaModel::GetObjectFromOQL("SELECT IPv6Address AS i WHERE i.ip = :ip AND i.org_id = :org_id", array(
 				'ip' => $sIp,

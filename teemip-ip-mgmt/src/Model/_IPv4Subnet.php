@@ -41,6 +41,7 @@ class _IPv4Subnet extends IPSubnet implements iTree
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4SubnetComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_DELETE", 'OnIPv4SubnetCheckToDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
     /**
@@ -2394,21 +2395,24 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	protected function DoCheckToDelete(&$oDeletionPlan)
-	{
+    /**
+     * Handle Do check to delete event on IPv4Subnet
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4SubnetCheckToDeleteRequestedByIPMgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
 		$sIp = $this->Get('ip');
 		$sIpBroadcast = $this->Get('broadcastip');
-
-		parent::DoCheckToDelete($oDeletionPlan);
 
 		$sWriteReason = $this->Get('write_reason');
 		if ($sWriteReason != 'expand') {
 			// IPs parent is updated by DoExpand function
 			// Add subnet and broadcast IP to deletion plan if they exist
+            $aEventData = $oEventData->GetEventData();
+            $oDeletionPlan = $aEventData['deletion_plan'];
 			$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIp' AND i.org_id = $iOrgId", null, false);
 			if (!is_null($oIp)) {
 				$oDeletionPlan->AddToDelete($oIp, DEL_AUTO);
