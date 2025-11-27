@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -194,7 +194,7 @@ class ormIPv6 extends ormIP {
      */
     public function NlzToCan($sIPv6)
     {
-        if (strlen($sIPv6) < IPV6_MAX_CHAR) {
+        if (!is_null($sIPv6) && (strlen($sIPv6) < IPV6_MAX_CHAR)) {
             $aIPv6 = explode(':', $sIPv6);
             $sCanIp = '';
             $i = 1;
@@ -264,11 +264,13 @@ class ormIPv6 extends ormIP {
      */
     public function CompToNlz($sIPv6)
     {
-        if (strpos($sIPv6, '::')!==false) {
-            $sIPv6 = str_replace('::', str_repeat(':0', 8 - substr_count($sIPv6, ':')).':', $sIPv6);
-        }
-        if (strpos($sIPv6, ':')===0) {
-            $sIPv6 = '0'.$sIPv6;
+        if (!is_null($sIPv6)) {
+            if (strpos($sIPv6, '::') !== false) {
+                $sIPv6 = str_replace('::', str_repeat(':0', 8 - substr_count($sIPv6, ':')) . ':', $sIPv6);
+            }
+            if (strpos($sIPv6, ':') === 0) {
+                $sIPv6 = '0' . $sIPv6;
+            }
         }
         return $sIPv6;
     }
