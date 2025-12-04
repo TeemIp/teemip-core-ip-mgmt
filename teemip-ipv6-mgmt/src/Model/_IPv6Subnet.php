@@ -44,6 +44,8 @@ class _IPv6Subnet extends IPSubnet implements iTree
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPv6SubnetSetInitialAttributesFlagsRequestedByIPMgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6SubnetSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6SubnetComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_DELETE", 'OnIPv6SubnetCheckToDeleteRequestedByIPMgmt', 40, 'teemip-ipv6-mgmt');
     }
@@ -1607,71 +1609,54 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-	{
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
-		switch ($sAttCode) {
-			case 'gatewayip':
-				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
-				if ($sGatewayIPFormat != '') {
-					$iOrgId = $this->Get('org_id');
-					if ($iOrgId != 0) {
-						if ($sGatewayIPFormat == 'default') {
-							$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
-						}
-						if ($sGatewayIPFormat != 'free_setup') {
-							return (OPT_ATT_READONLY | $sFlagsFromParent);
-						}
-					}
-				}
-
-				return $sFlagsFromParent;
-
-			default:
-				break;
-		}
-
-		return $sFlagsFromParent;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-		switch ($sAttCode) {
-			case 'org_id':
-			case 'block_id':
-			case 'ip':
-			case 'mask':
-			case 'lastip':
-			case 'ip_occupancy':
-			case 'range_occupancy':
-				return (OPT_ATT_READONLY | $sFlagsFromParent);
-
-			case 'gatewayip':
-				$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+    /**
+     * Handle Set initial attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6SubnetSetInitialAttributesFlagsRequestedByIPMgmt($oEventData): void
+    {
+        // Handle Gateway IP
+		$sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+		if ($sGatewayIPFormat != '') {
+			$iOrgId = $this->Get('org_id');
+			if ($iOrgId != 0) {
 				if ($sGatewayIPFormat == 'default') {
-					$iOrgId = $this->Get('org_id');
 					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
 				}
 				if ($sGatewayIPFormat != 'free_setup') {
-					return (OPT_ATT_READONLY | $sFlagsFromParent);
+                    $this->AddInitialAttributeFlags('gatewayip', OPT_ATT_READONLY);
 				}
-				break;
-
-			default:
-				break;
+			}
 		}
-
-		return $sFlagsFromParent;
 	}
+
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6SubnetSetAttributeFlagsRequestedByIPv6Mgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('block_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('lastip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('mask', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('broadcastip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ip_occupancy', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('range_occupancy', OPT_ATT_READONLY);
+
+        $sGatewayIPFormat = $this->Get('ipv6_gateway_ip_format');
+        if ($sGatewayIPFormat == 'default') {
+            $iOrgId = $this->Get('org_id');
+            $sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv6_gateway_ip_format', $iOrgId);
+        }
+        if ($sGatewayIPFormat != 'free_setup') {
+            $this->AddAttributeFlags('gatewayip', OPT_ATT_READONLY);
+        }
+    }
 
 	/**
 	 * @param $iPrefix

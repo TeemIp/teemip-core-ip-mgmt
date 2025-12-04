@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -24,7 +24,19 @@ use utils;
 use WebPage;
 
 class _IPv4Range extends IPRange {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4RangeSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
@@ -647,19 +659,16 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('subnet_id');
-
-		if (!$this->IsNew() && in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4RangeSetAttributeFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('subnet_id', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * Get the previous Range if it exists

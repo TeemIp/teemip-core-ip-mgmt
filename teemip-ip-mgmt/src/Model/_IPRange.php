@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,7 +14,19 @@ use utils;
 use WebPage;
 
 class _IPRange extends IPObject {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPRangeSetAttributeFlagsRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Returns size of range
 	 *
 	 * @return int
@@ -65,19 +77,17 @@ class _IPRange extends IPObject {
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('org_id', 'occupancy');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPRangeSetAttributeFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('occupancy', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('org_id', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * Get parameters used for operation

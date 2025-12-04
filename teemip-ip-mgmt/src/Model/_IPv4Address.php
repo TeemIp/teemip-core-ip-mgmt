@@ -27,6 +27,7 @@ class _IPv4Address extends IPAddress {
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4AddressSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4AddressComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_AFTER_DELETE", 'OnIPv4AddressAfterDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
@@ -294,23 +295,16 @@ class _IPv4Address extends IPAddress {
     }
 
     /**
-     * @inheritdoc
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
      */
-    public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+    public function OnIPv4AddressSetAttributeFlagsRequestedByIPMgmt($oEventData): void
     {
-        $sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-        switch ($sAttCode) {
-            case 'ip':
-            case 'subnet_id':
-            case 'range_id':
-                return (OPT_ATT_READONLY | $sFlagsFromParent);
-
-            default:
-                break;
-        }
-
-        return $sFlagsFromParent;
+        $this->AddAttributeFlags('ip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('subnet_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('range_id', OPT_ATT_READONLY);
     }
 
     /**

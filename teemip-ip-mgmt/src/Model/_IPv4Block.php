@@ -33,7 +33,6 @@ use utils;
 use WebPage;
 
 class _IPv4Block extends IPBlock implements iTree {
-	/**
     /**
      * Register events for the class
      *
@@ -43,6 +42,7 @@ class _IPv4Block extends IPBlock implements iTree {
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4BlockSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4BlockComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
@@ -1859,19 +1859,19 @@ EOF
 		parent::AfterUpdate();
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv4_block_min_size', 'ipv4_block_cidr_aligned');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4BlockSetAttributeFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('firstip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('lastip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ipv4_block_min_size', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ipv4_block_cidr_aligned', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * Get the previous Block if it exists

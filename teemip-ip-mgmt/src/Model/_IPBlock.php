@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -22,6 +22,19 @@ use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use utils;
 use WebPage;
 class _IPBlock extends IPObject {
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPBlockSetInitialAttributesFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPBlockSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+    }
+
 	/**
 	 * Returns size of block
 	 */
@@ -402,38 +415,38 @@ class _IPBlock extends IPObject {
 		return array();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
-
-		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes)) {
-			if ($this->Get('origin') == 'lir') {
-				// If block origin is LIR at creation, it implies that delegation is in progress from a RIR block.
-				return (OPT_ATT_NORMAL | $sFlagsFromParent);
-			}
-
-			return (OPT_ATT_HIDDEN | OPT_ATT_READONLY | $sFlagsFromParent);
+    /**
+     * Handle Set initial attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPBlockSetInitialAttributesFlagsRequestedByIPMgmt($oEventData): void
+    {
+        // Handle parent_org_id
+		if ($this->Get('origin') == 'lir') {
+			// If block origin is LIR at creation, it implies that delegation is in progress from a RIR block.
+            $this->AddInitialAttributeFlags('parent_org_id', OPT_ATT_NORMAL);
+		} else {
+            $this->AddInitialAttributeFlags('parent_org_id', OPT_ATT_HIDDEN | OPT_ATT_READONLY);
 		}
-
-		return $sFlagsFromParent;
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('org_id', 'parent_org_id', 'parent_id', 'occupancy', 'children;_occupancy', 'subnet_occupancy');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPBlockSetAttributeFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('org_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('parent_org_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('parent_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('occupancy', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('children_occupancy', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('subnet_occupancy', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * @inheritdoc

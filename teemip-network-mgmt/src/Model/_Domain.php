@@ -18,12 +18,10 @@ use DBObjectSearch;
 use Dict;
 use DNSObject;
 use IPConfig;
-use iTopWebPage;
 use MetaModel;
 use TeemIp\TeemIp\Extension\Framework\Helper\IPUtils;
 use TeemIp\TeemIp\Extension\Framework\Helper\iTree;
 use utils;
-use WebPage;
 
 class _Domain extends DNSObject implements iTree
 {
@@ -32,10 +30,12 @@ class _Domain extends DNSObject implements iTree
      *
      * @return void
      */
-    protected function RegisterEventListeners()
+    protected function RegisterEventListeners(): void
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnDomainSetInitialAttributesFlagsRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnDomainSetAttributesFlagsRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnDomainComputeValuesRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
     }
 
@@ -118,7 +118,7 @@ class _Domain extends DNSObject implements iTree
      * * @inheritdoc
      *
      */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false):void
+	public function DisplayBareRelations($oPage, $bEditMode = false): void
     {
 		// Execute parent function first 
 		parent::DisplayBareRelations($oPage, $bEditMode);
@@ -443,7 +443,8 @@ class _Domain extends DNSObject implements iTree
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
 	 */
-	public function DoUndelegate() {
+	public function DoUndelegate()
+    {
 		$iParentOrgId = $this->Get('parent_org_id');
 
 		$this->Set('parent_org_id', 0);
@@ -456,32 +457,27 @@ class _Domain extends DNSObject implements iTree
 		return ($oSet);
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-		$aHiddenAndReadOnlyAttributes = array('parent_org_id');
-
-		if (in_array($sAttCode, $aHiddenAndReadOnlyAttributes)) {
-			return (OPT_ATT_HIDDEN | OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
+    /**
+     * Handle Set initial attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnDomainSetInitialAttributesFlagsRequestedByNetworkMgmt($oEventData): void
+    {
+        $this->AddInitialAttributeFlags('parent_org_id', OPT_ATT_HIDDEN | OPT_ATT_READONLY);
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('parent_org_id', 'parent_id');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnDomainSetAttributesFlagsRequestedByNetworkMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('parent_org_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('parent_id', OPT_ATT_READONLY);
 	}
 
 	/**
@@ -538,7 +534,7 @@ class _Domain extends DNSObject implements iTree
 	/**
 	 * @inheritdoc
 	 */
-	protected function DisplayActionFieldsForOperationV3(iTopWebPage $oP, $oObjectDetails, $sOperation, $aDefault)
+	protected function DisplayActionFieldsForOperationV3($oP, $oObjectDetails, $sOperation, $aDefault)
     {
 		$oMultiColumn = new MultiColumn();
 		$oP->AddUIBlock($oMultiColumn);

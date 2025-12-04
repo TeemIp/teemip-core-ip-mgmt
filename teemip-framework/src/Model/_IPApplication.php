@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,6 +13,18 @@ use FunctionalCI;
 use WebPage;
 
 class _IPApplication extends FunctionalCI {
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPApplicationSetInitialAttributesFlagsRequestedByFramework', 40, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPApplicationSetAttributesFlagsRequestedByFramework', 40, 'teemip-framework');
+    }
 	/**
 	 * @inheritdoc
 	 */
@@ -43,31 +55,26 @@ class _IPApplication extends FunctionalCI {
         $oPage->RemoveTab('Class:FunctionalCI/Tab:OpenedTickets');
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+    /**
+     * Handle Set initial attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPApplicationSetInitialAttributesFlagsRequestedByFramework($oEventData): void
+    {
+        $this->AddInitialAttributeFlags('uuid', OPT_ATT_READONLY);
+    }
 
-		if ($sAttCode == 'uuid') {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array()) {
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
-		if ($sAttCode == 'uuid') {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPApplicationSetAttributesFlagsRequestedByFramework($oEventData): void
+    {
+        $this->AddAttributeFlags('uuid', OPT_ATT_READONLY);
 	}
 
 }

@@ -38,11 +38,12 @@ class _IPAbstractObject extends cmdbAbstractObject {
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPAbstractObjectSetAttributeFlagsRequestedByFramework', 10, 'teemip-framework');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPAbstractObjectComputeValuesRequestedByFramework', 10, 'teemip-framework');
     }
 
     /**
-     * Handle Compute Values event on PatchPanel
+     * Handle Compute Values event
      *
      * @param $oEventData
      * @return void
@@ -95,18 +96,15 @@ class _IPAbstractObject extends cmdbAbstractObject {
 		return '';
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('ipconfig_id');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
+    /**
+     * Handle Set Attributes Flags event
+     *
+     * @param $oEventData
+     * @return void
+     */
+	public function OnIPAbstractObjectSetAttributeFlagsRequestedByFramework($oEventData): void
+    {
+        $this->AddAttributeFlags('ipconfig_id', OPT_ATT_READONLY);
 	}
 
 	/*

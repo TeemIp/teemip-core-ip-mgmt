@@ -46,6 +46,7 @@ class _IPv6Block extends IPBlock implements iTree {
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6BlockSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6BlockComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
     }
 
@@ -1904,19 +1905,19 @@ EOF
 		parent::AfterUpdate();
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('firstip', 'lastip', 'ipv6_block_min_prefix', 'ipv6_block_cidr_aligned');
-
-		if (in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6BlockSetAttributeFlagsRequestedByIPv6Mgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('firstip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('lastip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ipv6_block_min_prefix', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ipv6_block_cidr_aligned', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * @inheritdoc

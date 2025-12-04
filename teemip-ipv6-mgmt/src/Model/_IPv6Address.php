@@ -34,6 +34,7 @@ class _IPv6Address extends IPAddress
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6AddressSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6AddressComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
     }
 
@@ -237,20 +238,18 @@ class _IPv6Address extends IPAddress
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('ip', 'subnet_id', 'range_id');
-
-		if (!$this->IsNew() && in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6AddressSetAttributeFlagsRequestedByIPv6Mgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('ip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('subnet_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('range_id', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * @throws \ArchivedObjectException

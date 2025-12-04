@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -116,6 +116,18 @@ class _IPConfig extends cmdbAbstractObject
 
 	const DEFAULT_FUNCTION_ALLOW_BACKENDNETWORKCABLE_TO_CROSS_ORGS = 'no';
 
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPConfigSetAttributeFlagsRequestedByFramework', 40, 'teemip-framework');
+    }
+
 	/**
 	 * @inheritdoc
 	 */
@@ -180,19 +192,18 @@ class _IPConfig extends cmdbAbstractObject
 		//} 
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-		if ((!$this->IsNew()) && (($sAttCode == 'org_id'))) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set Attributes Flags event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPConfigSetAttributeFlagsRequestedByFramework($oEventData): void
+    {
+        if (!$oEventData->Get('is_new')) {
+            $this->AddAttributeFlags('org_id', OPT_ATT_READONLY);
+        }
+    }
 
 	/**
 	 * @return array

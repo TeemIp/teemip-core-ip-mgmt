@@ -40,6 +40,8 @@ class _IPv4Subnet extends IPSubnet implements iTree
     {
         parent::RegisterEventListeners();
 
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPv4SubnetSetInitialAttributesFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4SubnetSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4SubnetComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_DELETE", 'OnIPv4SubnetCheckToDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
@@ -2425,70 +2427,55 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-	{
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+    /**
+     * Handle Set initial attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4SubnetSetInitialAttributesFlagsRequestedByIPMgmt($oEventData): void
+    {
+        // Handle Gateway IP
+		$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+		if ($sGatewayIPFormat != '') {
+            $iOrgId = $this->Get('org_id');
+            if ($iOrgId != 0) {
+                if ($sGatewayIPFormat == 'default') {
+                    $sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
+                }
+                if ($sGatewayIPFormat != 'free_setup') {
+                    $this->AddInitialAttributeFlags('gatewayip', OPT_ATT_READONLY);
+                }
+            }
+        }
+        // Easier for the broadcast IP
+        $this->AddInitialAttributeFlags('broadcastip', OPT_ATT_READONLY);
+    }
 
-		switch ($sAttCode) {
-			case 'gatewayip':
-				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
-				if ($sGatewayIPFormat != '') {
-					$iOrgId = $this->Get('org_id');
-					if ($iOrgId != 0) {
-						if ($sGatewayIPFormat == 'default') {
-							$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
-						}
-						if ($sGatewayIPFormat != 'free_setup') {
-							return (OPT_ATT_READONLY | $sFlagsFromParent);
-						}
-					}
-				}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4SubnetSetAttributeFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('block_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('mask', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('broadcastip', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('ip_occupancy', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('range_occupancy', OPT_ATT_READONLY);
 
-				return $sFlagsFromParent;
-
-			default:
-				break;
+ 		$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
+		if ($sGatewayIPFormat == 'default') {
+			$iOrgId = $this->Get('org_id');
+			$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
 		}
-
-		return $sFlagsFromParent;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-		switch ($sAttCode) {
-			case 'block_id':
-			case 'ip':
-			case 'mask':
-			case 'broadcastip':
-			case 'ip_occupancy':
-			case 'range_occupancy':
-				return (OPT_ATT_READONLY | $sFlagsFromParent);
-
-			case 'gatewayip':
-				$sGatewayIPFormat = $this->Get('ipv4_gateway_ip_format');
-				if ($sGatewayIPFormat == 'default') {
-					$iOrgId = $this->Get('org_id');
-					$sGatewayIPFormat = IPConfig::GetFromGlobalIPConfig('ipv4_gateway_ip_format', $iOrgId);
-				}
-				if ($sGatewayIPFormat != 'free_setup') {
-					return (OPT_ATT_READONLY | $sFlagsFromParent);
-				}
-				break;
-
-			default:
-				break;
+		if ($sGatewayIPFormat != 'free_setup') {
+            $this->AddAttributeFlags('gatewayip', OPT_ATT_READONLY);
 		}
-
-		return $sFlagsFromParent;
-	}
+}
 
 	/**
 	 * Get the previous Subnet if it exists

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -240,55 +240,17 @@ class _IPSubnet extends IPObject
 		}
 	}
 
-	/**
-	 * @inheritDoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-		switch ($sAttCode) {
-			case 'org_id':
-			case 'last_discovery_date':
-			case 'ping_duration':
-			case 'ping_discovered':
-			case 'iplookup_duration':
-			case 'iplookup_discovered':
-			case 'scan_duration':
-			case 'scan_discovered':
-			case 'reserve_subnet_ips':
-				return (OPT_ATT_READONLY | $sFlagsFromParent);
-
-			default:
-				break;
-		}
-
-		return $sFlagsFromParent;
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-	{
-		$sFlagsFromParent = parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-
-		switch ($sAttCode) {
-			case 'last_discovery_date':
-			case 'ping_duration':
-			case 'ping_discovered':
-			case 'iplookup_duration':
-			case 'iplookup_discovered':
-			case 'scan_duration':
-			case 'scan_discovered':
-				return (OPT_ATT_HIDDEN | $sFlagsFromParent);
-
-			default:
-				break;
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPSubnetSetAttributesFlagsRequestedByIPMgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('org_id', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('reserve_subnet_ips', OPT_ATT_READONLY);
+    }
 
 	/**
 	 * Display result of IPvi calculator

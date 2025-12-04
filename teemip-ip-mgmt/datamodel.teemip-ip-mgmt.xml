@@ -1273,6 +1273,13 @@
           <duplicates/>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnIPSubnetSetAttributesFlagsRequestedByIPMgmt" _delta="define">
+          <event>EVENT_DB_SET_ATTRIBUTES_FLAGS</event>
+          <callback>OnIPSubnetSetAttributesFlagsRequestedByIPMgmt</callback>
+          <rank>30</rank>
+        </event_listener>
+      </event_listeners>
       <methods/>
       <presentation>
         <default_search>
@@ -2964,7 +2971,41 @@
           <duplicates/>
         </field>
       </fields>
-      <methods/>
+      <event_listeners>
+        <event_listener id="OnIPAddressSetInitialAttributesFlagsRequestedByIPMgmt" _delta="define">
+          <event>EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS</event>
+          <callback>OnIPAddressSetInitialAttributesFlagsRequestedByIPMgmt</callback>
+          <rank>30</rank>
+        </event_listener>
+        <event_listener id="OnIPAddressSetAttributesFlagsRequestedByIPMgmt" _delta="define">
+          <event>EVENT_DB_SET_ATTRIBUTES_FLAGS</event>
+          <callback>OnIPAddressSetAttributesFlagsRequestedByIPMgmt</callback>
+          <rank>30</rank>
+        </event_listener>
+      </event_listeners>
+      <methods>
+        <method id="OnIPAddressSetInitialAttributesFlagsRequestedByIPMgmt" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnIPAddressSetInitialAttributesFlagsRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        $this->AddInitialAttributeFlags('fqdn', OPT_ATT_READONLY);
+    }]]></code>
+        </method>
+        <method id="OnIPAddressSetAttributesFlagsRequestedByIPMgmt" _delta="define">
+          <comment/>
+          <static>false</static>
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnIPAddressSetAttributesFlagsRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData)
+    {
+        $this->AddAttributeFlags('fqdn', OPT_ATT_READONLY);
+        $this->AddAttributeFlags('org_id', OPT_ATT_READONLY);
+    }]]></code>
+        </method>
+      </methods>
       <presentation>
         <default_search>
           <items>

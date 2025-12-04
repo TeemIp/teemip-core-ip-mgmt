@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -13,6 +13,18 @@ use Typology;
 
 class _IPUsage extends Typology
 {
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPUsageSetAttributeFlagsRequestedByFramework', 40, 'teemip-framework');
+    }
+
 	/**
 	 * @inheritdoc
 	 */
@@ -36,21 +48,18 @@ class _IPUsage extends Typology
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-	{
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-
-		if ($sAttCode == 'name') {
-			$sName = $this->Get('name');
-			if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE)) {
-				return (OPT_ATT_READONLY | $sFlagsFromParent);
-			}
-		}
-
-		return $sFlagsFromParent;
-	}
+    /**
+     * Handle Set Attributes Flags event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPUsageSetAttributeFlagsRequestedByFramework($oEventData): void
+    {
+        $sName = $this->Get('name');
+        if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE)) {
+            $this->AddAttributeFlags('name', OPT_ATT_READONLY);
+        }
+    }
 
 }

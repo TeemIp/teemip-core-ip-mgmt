@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -27,7 +27,19 @@ use WebPage;
  * Class _IPv6Range
  */
 class _IPv6Range extends IPRange {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6RangeSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+    }
+
+    /**
 	 * Return standard icon or extra small one
 	 *
 	 * @param bool $bImgTag
@@ -667,19 +679,17 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '') {
-		$sFlagsFromParent = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-		$aReadOnlyAttributes = array('subnet_id');
+    /**
+     * Handle Set attributes flags
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6RangeSetAttributeFlagsRequestedByIPv6Mgmt($oEventData): void
+    {
+        $this->AddAttributeFlags('subnet_id', OPT_ATT_READONLY);
+    }
 
-		if (!$this->IsNew() && in_array($sAttCode, $aReadOnlyAttributes)) {
-			return (OPT_ATT_READONLY | $sFlagsFromParent);
-		}
-
-		return $sFlagsFromParent;
-	}
 
 	/**
 	 * Get the previous Range if it exists
