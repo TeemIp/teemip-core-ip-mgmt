@@ -301,6 +301,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDeviceVirtualInterface' => 'Network Device Virtual Interface',
 	'Class:NetworkDeviceVirtualInterface+' => 'Virtual interface attached to a network device',
+	'Class:NetworkDeviceVirtualInterface/Name' => '%2$s %1$s',
 	'Class:NetworkDeviceVirtualInterface/Attribute:status' => 'Status',
 	'Class:NetworkDeviceVirtualInterface/Attribute:status+' => '',
 	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:active' => 'Active',
