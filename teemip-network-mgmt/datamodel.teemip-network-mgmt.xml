@@ -858,6 +858,9 @@
           <sql>asnumberrange_id</sql>
           <target_class>ASNumberRange</target_class>
           <filter>SELECT ASNumberRange AS r WHERE r.org_id = :this->org_id</filter>
+          <dependencies>
+            <attribute id="org_id"/>
+          </dependencies>
           <is_null_allowed>true</is_null_allowed>
           <on_target_delete>DEL_MANUAL</on_target_delete>
         </field>
@@ -895,17 +898,21 @@
           <duplicates/>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnASNumberCheckToWriteRequestedByNetworkMgmt">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>OnASNumberCheckToWriteRequestedByNetworkMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
-        <method id="DoCheckToWrite">
+        <method id="OnASNumberCheckToWriteRequestedByNetworkMgmt">
           <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  function DoCheckToWrite()
+          <type>EventListener</type>
+          <code><![CDATA[	public function OnASNumberCheckToWriteRequestedByNetworkMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
   {
-    // Run standard iTop checks first
-    parent::DoCheckToWrite();
-
     // Make sure we are in the range, if any
     $iRangeId = $this->Get('asnumberrange_id');
     if ($iRangeId > 0) {
@@ -1183,17 +1190,21 @@
           <edit_mode/>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnASNumberRangeCheckToWriteRequestedByNetworkMgmt">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>OnASNumberRangeCheckToWriteRequestedByNetworkMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
-        <method id="DoCheckToWrite">
+        <method id="OnASNumberRangeCheckToWriteRequestedByNetworkMgmt">
           <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  function DoCheckToWrite()
+          <type>EventListener</type>
+          <code><![CDATA[	public function OnASNumberRangeCheckToWriteRequestedByNetworkMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
   {
-    // Run standard iTop checks first
-    parent::DoCheckToWrite();
-
     // Make sure first number is lower than last number
     if ($this->Get('first_number') > $this->Get('last_number')) {
         $this->AddCheckIssue(Dict::S('UI:IPManagement:Action:New:ASNumberRange:WrongNumberOrder'));

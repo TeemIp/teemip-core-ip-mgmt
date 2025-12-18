@@ -37,6 +37,7 @@ class _Domain extends DNSObject implements iTree
         $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnDomainSetInitialAttributesFlagsRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnDomainSetAttributesFlagsRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnDomainComputeValuesRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnDomainCheckToWriteRequestedByNetworkMgmt', 40, 'teemip-network-mgmt');
     }
 
     /**
@@ -215,7 +216,7 @@ class _Domain extends DNSObject implements iTree
 	}
 
     /**
-     * Handle Compute Values event on Domain
+     * Handle Compute Values event
      *
      * @param $oEventData
      * @return void
@@ -225,14 +226,14 @@ class _Domain extends DNSObject implements iTree
 		$this->Set('name', static::ComputeFqdn($this->Get('name'), $this->Get('parent_name')));
 	}
 
-	/**
-	 * Check validity of new IP attributes before creation
-	 *
-	 * @throws \CoreException
-	 */
-	public function DoCheckToWrite(): void {
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
+    /**
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnDomainCheckToWriteRequestedByNetworkMgmt($oEventData): void
+    {
 
 		$sOrgId = $this->Get('org_id');
 		$sOriginalOrgId = $this->GetOriginal('org_id');
@@ -282,7 +283,7 @@ class _Domain extends DNSObject implements iTree
 					}
 				}
 				if ($bDenyCreation) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:Domain:NameCollision');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:Domain:NameCollision'));
 
 					return;
 				}
