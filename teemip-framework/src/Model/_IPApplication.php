@@ -6,11 +6,9 @@
 
 namespace TeemIp\TeemIp\Extension\Framework\Model;
 
-//use Combodo\iTop\Application\WebPage\WebPage;
 use DBObjectSearch;
 use DBObjectSet;
 use FunctionalCI;
-use WebPage;
 
 class _IPApplication extends FunctionalCI {
     /**
@@ -22,36 +20,41 @@ class _IPApplication extends FunctionalCI {
     {
         parent::RegisterEventListeners();
 
-        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPApplicationSetInitialAttributesFlagsRequestedByFramework', 40, 'teemip-framework');
-        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPApplicationSetAttributesFlagsRequestedByFramework', 40, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPApplicationSetInitialAttributesFlagsRequestedByFramework', 20, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPApplicationSetAttributesFlagsRequestedByFramework', 20, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_BEFORE_WRITE", 'OnIPApplicationBeforeWriteRequestedByFramework', 20, 'teemip-framework');
     }
-	/**
-	 * @inheritdoc
-	 */
-	public function OnInsert() {
-		parent::OnInsert();
 
-		// Generate an ID until (very likely) it is unique amongst the existing UUID
-		//
-		$oSearchDup = DBObjectSearch::FromOQL_AllData("SELECT IPDiscovery WHERE uuid LIKE :sUUID");
-		do {
-			$sId = strtoupper(bin2hex(random_bytes(8)));
-			$sFinalId = vsprintf("%s-%s-%s-%s", str_split($sId,4));
+    /**
+     * Handle Before Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPApplicationBeforeWriteRequestedByFramework($oEventData): void
+    {
+        if ($oEventData->Get('is_new')) {
+            // Generate an ID until (very likely) it is unique amongst the existing UUID
+            $oSearchDuplicate = DBObjectSearch::FromOQL("SELECT IPApplication WHERE uuid = :sUUID");
+            $oSearchDuplicate->AllowAllData();
+            do {
+                $sId = strtoupper(bin2hex(random_bytes(8)));
+                $sFinalId = vsprintf("%s-%s-%s-%s", str_split($sId, 4));
 
-			$oDupSet = new DBObjectSet($oSearchDup, array(), array('sUUID' => $sFinalId));
-			$bFound = ($oDupSet->Count() > 0);
-		} while ($bFound);
-		$this->Set('uuid', $sFinalId);
-
+                $oDupSet = new DBObjectSet($oSearchDuplicate, array(), array('sUUID' => $sFinalId));
+                $bFound = ($oDupSet->Count() > 0);
+            } while ($bFound);
+            $this->Set('uuid', $sFinalId);
+        }
 	}
 
 	/**
 	 * @inheritdoc
 	 */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false) {
+	public function DisplayBareRelations($oPage, $bEditMode = false)
+    {
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-        /** @var \iTopWebPage $oPage */
         $oPage->RemoveTab('Class:FunctionalCI/Tab:OpenedTickets');
 	}
 

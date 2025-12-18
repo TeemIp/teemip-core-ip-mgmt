@@ -23,27 +23,28 @@ class _IPUsage extends Typology
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPUsageSetAttributeFlagsRequestedByFramework', 40, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPUsageCheckToWriteRequestedByFramework', 40, 'teemip-framework');
     }
 
-	/**
-	 * @inheritdoc
-	 */
-	function DoCheckToWrite()
-	{
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPUsageCheckToWriteRequestedByFramework($oEventData): void
+    {
 		// Only one NETWORK_IP_CODE, GATEWAY_IP_CODE and BROADCAST_IP_CODE can exist within an organization
 		$sName = $this->Get('name');
 		if (($sName == NETWORK_IP_CODE) || ($sName == GATEWAY_IP_CODE) || ($sName == BROADCAST_IP_CODE)) {
-			if ($this->IsNew()) {
+			if ($oEventData->Get('is_new')) {
 				$sOQL = 'SELECT IPUsage AS u WHERE u.name = :name AND u.org_id = :org_id';
 			} else {
 				$sOQL = 'SELECT IPUsage AS u WHERE u.name = :name AND u.org_id = :org_id AND u.id != :id';
 			}
 			$oIPUsageSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'org_id' => $this->Get('org_id'), 'id' => $this->GetKey()));
 			if ($oIPUsageSet->CountExceeds(0)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPUsage:AlreadyExists');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPUsage:AlreadyExists'));
 			}
 		}
 	}

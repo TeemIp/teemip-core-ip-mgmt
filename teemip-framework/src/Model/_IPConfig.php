@@ -126,15 +126,17 @@ class _IPConfig extends cmdbAbstractObject
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPConfigSetAttributeFlagsRequestedByFramework', 40, 'teemip-framework');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPConfigCheckToWriteRequestedByFramework', 40, 'teemip-framework');
     }
 
-	/**
-	 * @inheritdoc
-	 */
-	function DoCheckToWrite()
-	{
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
+    /**
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPConfigCheckToWriteRequestedByFramework($oEventData): void
+    {
 
 		// Only one IPConfig object can exist within an organization
 		$iOrgId = $this->Get('org_id');
@@ -144,7 +146,7 @@ class _IPConfig extends cmdbAbstractObject
 		while ($oConfig = $oConfigSet->Fetch()) {
 			// If it's a modification (keys are the same), we can proceed, otherwise, we deny the creation 
 			if ($oConfig->GetKey() != $iKey) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPConfig:AlreadyExists');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPConfig:AlreadyExists'));
 
 				return;
 			}
@@ -153,12 +155,15 @@ class _IPConfig extends cmdbAbstractObject
 		// Check validity of block_min_size
 		$iBlock4MinSize = $this->Get('ipv4_block_min_size');
 		if ($iBlock4MinSize < IPV4_BLOCK_MIN_SIZE) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall', IPV4_BLOCK_MIN_SIZE);
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall', IPV4_BLOCK_MIN_SIZE));
 		}
+        if ($iBlock4MinSize > IPV4_BLOCK_MIN_SIZE_MAX) {
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooBig',  IPV4_BLOCK_MIN_SIZE_MAX));
+        }
 		if (MetaModel::IsValidClass('IPv6Block')) {
 			$iBlock6MinPrefix = $this->Get('ipv6_block_min_prefix');
 			if ($iBlock6MinPrefix > IPV6_BLOCK_MIN_PREFIX) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall', IPV6_BLOCK_MIN_PREFIX);
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall', IPV6_BLOCK_MIN_PREFIX));
 			}
 		}
 
@@ -166,20 +171,20 @@ class _IPConfig extends cmdbAbstractObject
 		$iSubLW = $this->Get('subnet_low_watermark');
 		$iSubHW = $this->Get('subnet_high_watermark');
 		if (!((0 <= $iSubLW) && ($iSubLW <= 100)) || !((0 <= $iSubHW) && ($iSubHW <= 100))) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent'));
 		}
 		if ($iSubHW < $iSubLW) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder'));
 		}
 
 		// Check validity of IP ranges watermarks
 		$iIpRLW = $this->Get('iprange_low_watermark');
 		$iIpRHW = $this->Get('iprange_high_watermark');
 		if (!((0 <= $iIpRLW) && ($iIpRLW <= 100)) || !((0 <= $iIpRHW) && ($iIpRHW <= 100))) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent'));
 		}
 		if ($iIpRHW < $iIpRLW) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder'));
 		}
 
 		// Check server has been set if ping required
@@ -187,7 +192,7 @@ class _IPConfig extends cmdbAbstractObject
 		//{
 		// 	if ($this->Get('ping_server_id') == '')
 		// 	{
-		//		$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Modify:IPConfig:MissPingServer');
+		//		$this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Modify:IPConfig:MissPingServer'));
 		//	}
 		//} 
 	}

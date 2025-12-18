@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,13 +8,10 @@ namespace TeemIp\TeemIp\Extension\Framework\Helper;
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
-//use Combodo\iTop\Application\WebPage\WebPage;
 use DisplayBlock;
-use iTopWebPage;
 use MetaModel;
 use SetupUtils;
 use utils;
-use WebPage;
 
 class IPUtils
 {
@@ -31,9 +28,9 @@ class IPUtils
 	/**
 	 * @param $sIp
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	public static function myip2long($sIp)
+	public static function myip2long($sIp): int|false
 	{
 		return (ip2long($sIp));
 	}
@@ -43,7 +40,7 @@ class IPUtils
 	 *
 	 * @return string
 	 */
-	public static function mylong2ip($iIp)
+	public static function mylong2ip($iIp): string
 	{
 		return (long2ip($iIp));
 	}
@@ -53,9 +50,9 @@ class IPUtils
 	 *
 	 * @param $Mask
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	public static function MaskToSize($Mask)
+	public static function MaskToSize($Mask): int|false
 	{
 		switch ($Mask) {
 			case "0.0.0.0":
@@ -125,7 +122,7 @@ class IPUtils
 			case "255.255.255.255":
 				return 1;
 			default:
-				return -1;
+				return false;
 		}
 	}
 
@@ -136,7 +133,7 @@ class IPUtils
 	 *
 	 * @return string
 	 */
-	public static function BitToMask($iPrefix)
+	public static function BitToMask($iPrefix): string
 	{
 		// Provides size of subnet according to dotted string mask
 		switch ($iPrefix) {
@@ -216,9 +213,9 @@ class IPUtils
 	 *
 	 * @param $Mask
 	 *
-	 * @return int
+	 * @return int|false
 	 */
-	public static function MaskToBit($Mask)
+	public static function MaskToBit($Mask): int|false
 	{
 		// Provides number of bits within a dotted string mask
 		return IPUtils::SizeToBit(IPUtils::MaskToSize($Mask));
@@ -231,7 +228,7 @@ class IPUtils
 	 *
 	 * @return string
 	 */
-	public static function SizeToMask($Size)
+	public static function SizeToMask($Size): string
 	{
 		switch ($Size) {
 			case 4294967296:
@@ -312,7 +309,7 @@ class IPUtils
 	 *
 	 * @return int
 	 */
-	public static function SizeToBit($Size)
+	public static function SizeToBit($Size): int|false
 	{
 		switch ($Size) {
 			case 4294967296:
@@ -382,14 +379,14 @@ class IPUtils
 			case 1:
 				return 32;
 			default:
-				return -1;
+				return false;
 		}
 	}
 
-	/**
+	/*
 	 * Display the content of an object tab
 	 *
-	 * @param iTopWebPage $oP
+	 * @param $oP
 	 * @param $sName
 	 * @param $sCode
 	 * @param $sClass
@@ -400,7 +397,7 @@ class IPUtils
 	 * @throws \ApplicationException
 	 * @throws \CoreException
 	 */
-	public static function DisplayTabContent(WebPage $oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet, $bDisplayMenu = false)
+	public static function DisplayTabContent($oP, $sName, $sCode, $sClass, $sTitle, $sInfoPanel, $oSet, $bDisplayMenu = false): void
 	{
 		$iCount = $oSet->Count();
 		$sCount = ($iCount != 0) ? " ($iCount)" : "";
@@ -417,13 +414,13 @@ class IPUtils
 	}
 
 	/**
-	 * @param \iTopWebPage $oP
+	 * @param $oP
 	 * @param $oObj
 	 *
 	 * @return void
 	 * @throws \CoreException
 	 */
-	public static function DisplayDetails(iTopWebPage $oP, $oObj)
+	public static function DisplayDetails($oP, $oObj): void
 	{
 		$oObj->SetDisplayMode($oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW);
 		$oObj->DisplayDetails($oP);
@@ -482,7 +479,7 @@ class IPUtils
 	 * @return array
 	 * @throws \CoreException
 	 */
-	public static function GetListOfIPAttributes($sClass)
+	public static function GetListOfIPAttributes($sClass): array
 	{
 		$aIpsOfClass = [];
 		if (MetaModel::IsAbstract($sClass)) {

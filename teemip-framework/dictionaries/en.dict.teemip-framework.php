@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2025 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -283,6 +283,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPConfig:AlreadyExists' => 'Only one Global IP Settings object can exist within an organization!',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooSmall' => 'Minimum size of IPv4 Subnet Blocks cannot be smaller than %1$s!',
+    'UI:IPManagement:Action:Modify:IPConfig:IPv4BlockMinSizeTooBig' => 'Minimum size of IPv4 Subnet Blocks cannot be bigger than %1$s (half of the whole IPv4 space)!!!',
 	'UI:IPManagement:Action:Modify:IPConfig:IPv6BlockMinSizeTooSmall' => 'Minimum size of IPv6 Subnet Blocks cannot be smaller than %1$s!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksPercent' => 'Water Marks are percentage, please, use numbers between 0 and 100!',
 	'UI:IPManagement:Action:Modify:IPConfig:WaterMarksOrder' => 'Low Water Mark must be smaller than High one!',
