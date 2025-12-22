@@ -41,6 +41,8 @@ class _IPAddress extends IPObject
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPAddressComputeValuesRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPAddressCheckToWriteRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_WRITE", 'OnIPAddressAfterWriteRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
     }
 
     /**
@@ -210,7 +212,7 @@ class _IPAddress extends IPObject
 	}
 
     /**
-     * Handle Compute Values event on IPAddress
+     * Handle Compute Values event
      *
      * @param $oEventData
      * @return void
@@ -233,7 +235,7 @@ class _IPAddress extends IPObject
 	/**
 	 * @inheritdoc
 	 */
-	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareRelations($oPage, $bEditMode = false)
 	{
 		// Execute parent function first
 		parent::DisplayBareRelations($oPage, $bEditMode);
@@ -351,17 +353,17 @@ class _IPAddress extends IPObject
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function DoCheckToWrite()
-	{
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPAddressCheckToWriteRequestedByIPMgmt($oEventData): void
+    {
 		// Make sure name doesn't already exist (matches)
 		if (!$this->IsFqdnUnique()) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPNameCollision');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:IPNameCollision'));
 		}
 
 		return;
@@ -545,10 +547,7 @@ class _IPAddress extends IPObject
 		$sCopyCiNameToShortname = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
 		if ($sCopyCiNameToShortname == 'yes') {
 			$sName = $oCI->GetNameForIPAttribute($sIPAttribute);
-			$sOldName = $this->Get('short_name');
-			$this->Set('short_name', $sName);
-			$bIsFqdnUnique = $this->IsFqdnUnique();
-			$this->Set('short_name', $sOldName);
+			$bIsFqdnUnique = $this->IsFqdnUnique($sName);
 			if (!$bIsFqdnUnique) {
 				// FQDN won't be unique
 				return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting'));
@@ -850,44 +849,50 @@ class _IPAddress extends IPObject
 	{
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function OnUpdate()
-	{
-		parent::OnUpdate();
-
-		$sStatus = $this->Get('status');
-		if ($sStatus == 'released') {
-			$sOriginalStatus = $this->GetOriginal('status');
-			if ($sStatus != $sOriginalStatus) {
-				$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $this->Get('org_id'));
-				if ($sCopyCINameToShortName == 'yes') {
-					$this->Set('short_name', '');
-				}
-			}
-		}
+    /**
+     * Handle Before Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPAddressBeforeWriteRequestedByIPMgmt($oEventData): void
+    {
+        if (!$oEventData->Get('is_new')) {
+            $sStatus = $this->Get('status');
+            if ($sStatus == 'released') {
+                $sOriginalStatus = $this->GetOriginal('status');
+                if ($sStatus != $sOriginalStatus) {
+                    $sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $this->Get('org_id'));
+                    if ($sCopyCINameToShortName == 'yes') {
+                        $this->Set('short_name', '');
+                    }
+                }
+            }
+        }
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function AfterUpdate()
+    /**
+     * Handle After write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPAddressAfterWriteRequestedByIPMgmt($oEventData): void
 	{
-		parent::AfterUpdate();
-
-		// Remove IP from CIs & interfaces when it is released
-		$sStatus = $this->Get('status');
-		if ($sStatus == 'released') {
-			$aChanges = $this->ListPreviousValuesForUpdatedAttributes();
-			if (array_key_exists('status', $aChanges)) {
-                $this->RemoveFromInterfaces();
-                $sDetachReleasedIPFromCIs = IPConfig::GetFromGlobalIPConfig('detach_released_ip_from_cis', $this->Get('org_id'));
-                if ($sDetachReleasedIPFromCIs == 'yes') {
-                    $this->RemoveFromCIs();
+        if (!$oEventData->Get('is_new')) {
+            // Remove IP from CIs & interfaces when it is released
+            $sStatus = $this->Get('status');
+            if ($sStatus == 'released') {
+                $aChanges = $this->ListPreviousValuesForUpdatedAttributes();
+                if (array_key_exists('status', $aChanges)) {
+                    $this->RemoveFromInterfaces();
+                    $sDetachReleasedIPFromCIs = IPConfig::GetFromGlobalIPConfig('detach_released_ip_from_cis', $this->Get('org_id'));
+                    if ($sDetachReleasedIPFromCIs == 'yes') {
+                        $this->RemoveFromCIs();
+                    }
                 }
-			}
-		}
+            }
+        }
 	}
 
 	/**

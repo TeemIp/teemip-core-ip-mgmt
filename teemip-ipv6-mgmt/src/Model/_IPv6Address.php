@@ -36,6 +36,7 @@ class _IPv6Address extends IPAddress
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6AddressSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6AddressComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv6AddressCheckToWriteRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
     }
 
     /**
@@ -170,15 +171,16 @@ class _IPv6Address extends IPAddress
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6AddressCheckToWriteRequestedByIPv6Mgmt($oEventData): void
+    {
 		// For new IPs only: 
-		if ($this->IsNew()) {
+		if ($oEventData->Get('is_new')) {
 			$iOrgId = $this->Get('org_id');
 			$oIp = $this->Get('ip');
 			$sIp = $oIp->GetAsCannonical();
@@ -187,7 +189,7 @@ class _IPv6Address extends IPAddress
 			$oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.ip_text = :ip AND i.org_id = :org_id", array('ip' => $sIp, 'org_id' => $iOrgId)));
 			while ($oIpAdd = $oIpSet->Fetch()) {
 				// It's a creation -> deny it
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision'));
 
 				return;
 			}
@@ -197,7 +199,7 @@ class _IPv6Address extends IPAddress
 			if ($iSubnetId != 0) {
 				$oSubnet = MetaModel::GetObject('IPv6Subnet', $iSubnetId, true /* MustBeFound */);
 				if (!$oSubnet->DoCheckIpInSubnet($oIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet'));
 
 					return;
 				}
@@ -208,7 +210,7 @@ class _IPv6Address extends IPAddress
 			if ($iIpRangeId != 0) {
 				$oIpRange = MetaModel::GetObject('IPv6Range', $iIpRangeId, true /* MustBeFound */);
 				if (!$oIpRange->DoCheckIpInRange($oIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInRange');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInRange'));
 
 					return;
 				}
@@ -230,9 +232,7 @@ class _IPv6Address extends IPAddress
 				$aOutput = $this->DoCheckIpPings($this->Get('ip')->ToString(), TIME_TO_WAIT_FOR_PING_LONG);
 				if (!empty($aOutput)) {
 					$sOutput = '<br>'.implode('<br>', $aOutput);
-					$this->m_aCheckIssues[] = Dict::S('UI:IPManagement:Action:New:IPAddress:IPPings').$sOutput;
-
-					return;
+                    $this->AddCheckIssue(Dict::S('UI:IPManagement:Action:New:IPAddress:IPPings').$sOutput);
 				}
 			}
 		}

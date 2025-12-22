@@ -29,6 +29,7 @@ class _IPv4Address extends IPAddress {
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4AddressSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4AddressComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv4AddressCheckToWriteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_AFTER_DELETE", 'OnIPv4AddressAfterDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
@@ -118,14 +119,15 @@ class _IPv4Address extends IPAddress {
     }
 
     /**
-     * @inheritdoc
+     * Handle Check To Write event
+     *
+     * @param $oEventData
+     * @return void
      */
-    public function DoCheckToWrite()
+    public function OnIPv4AddressCheckToWriteRequestedByIPMgmt($oEventData): void
     {
-        parent::DoCheckToWrite();
-
         // For new IPs only
-        if ($this->IsNew()) {
+        if ($oEventData->Get('is_new')) {
             $iOrgId = $this->Get('org_id');
             $sIp = $this->Get('ip');
 
@@ -133,7 +135,7 @@ class _IPv4Address extends IPAddress {
             $oIpSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE i.ip = :ip AND i.org_id = :org_id"), array(), array('ip' => $sIp, 'org_id' => $iOrgId));
             while ($oIp = $oIpSet->Fetch()) {
                 // It's a creation -> deny it
-                $this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:IPCollision'));
 
                 return;
             }
@@ -144,7 +146,7 @@ class _IPv4Address extends IPAddress {
                 /** @var IPv4Subnet $oSubnet */
                 $oSubnet = MetaModel::GetObject('IPv4Subnet', $iSubnetId, true /* MustBeFound */);
                 if (!$oSubnet->DoCheckIpInSubnet($sIp)) {
-                    $this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInSubnet'));
 
                     return;
                 }
@@ -155,7 +157,7 @@ class _IPv4Address extends IPAddress {
             if ($iIpRangeId!=null) {
                 $oIpRange = MetaModel::GetObject('IPv4Range', $iIpRangeId, true /* MustBeFound */);
                 if (!$oIpRange->DoCheckIpInRange($sIp)) {
-                    $this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInRange');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:NotInRange'));
 
                     return;
                 }
@@ -180,9 +182,7 @@ class _IPv4Address extends IPAddress {
                 $aOutput = $this->DoCheckIpPings($this->Get('ip'), TIME_TO_WAIT_FOR_PING_LONG);
                 if (!empty($aOutput)) {
                     $sOutput = '<br>'.implode('<br>', $aOutput);
-                    $this->m_aCheckIssues[] = Dict::S('UI:IPManagement:Action:New:IPAddress:IPPings').$sOutput;
-
-                    return;
+                    $this->AddCheckIssue(Dict::S('UI:IPManagement:Action:New:IPAddress:IPPings').$sOutput);
                 }
             }
         }

@@ -153,6 +153,11 @@
           <callback>OnIPObjectComputeValuesRequestedByIPMgmt</callback>
           <rank>20</rank>
         </event_listener>
+        <event_listener id="OnIPObjectBeforeWriteRequestedByIPMgmt">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>OnIPObjectBeforeWriteRequestedByIPMgmt</callback>
+          <rank>20</rank>
+        </event_listener>
       </event_listeners>
       <methods>
         <method id="OnIPObjectComputeValuesRequestedByIPMgmt">
@@ -172,40 +177,29 @@
 		}
     }]]></code>
         </method>
-        <method id="OnInsert">
+        <method id="OnIPObjectBeforeWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>protected</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function OnInsert()
- {
-		parent::OnInsert();
-
-		// Set allocation and released date as required
-		$sStatus = $this->Get('status');
-		if ($sStatus == 'allocated') {
-			$this->Set('allocation_date', time());
-		} elseif ($sStatus== 'released') {
-			$this->Set('release_date', time());
-		}
- }]]></code>
-        </method>
-        <method id="OnUpdate">
-          <comment/>
-          <static>false</static>
-          <access>protected</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function OnUpdate()
- {
-		parent::OnUpdate();
-
-		// Set allocation and released date as required
-		$sStatus = $this->Get('status');
-		$soriginalStatus = $this->GetOriginal('status');
-		if (($sStatus == 'allocated') && ($soriginalStatus != 'allocated')) {
-			$this->Set('allocation_date', time());
-		} elseif (($sStatus== 'released') && ($soriginalStatus != 'released')) {
-			$this->Set('release_date', time());
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnIPObjectBeforeWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
+    {
+	    $sStatus = $this->Get('status');
+        if ($oEventData->Get('is_new')) {
+		    // Set allocation and released date as required
+		    if ($sStatus == 'allocated') {
+			    $this->Set('allocation_date', time());
+		    } elseif ($sStatus== 'released') {
+			    $this->Set('release_date', time());
+		    }
+		} else {
+            // Set allocation and released date as required
+            $soriginalStatus = $this->GetOriginal('status');
+            if (($sStatus == 'allocated') && ($soriginalStatus != 'allocated')) {
+                $this->Set('allocation_date', time());
+            } elseif (($sStatus== 'released') && ($soriginalStatus != 'released')) {
+                $this->Set('release_date', time());
+            }
 		}
  }]]></code>
         </method>
@@ -2982,6 +2976,11 @@
           <callback>OnIPAddressSetAttributesFlagsRequestedByIPMgmt</callback>
           <rank>30</rank>
         </event_listener>
+        <event_listener id="OnIPAddressBeforeWriteRequestedByIPMgmt" _delta="define">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>OnIPAddressBeforeWriteRequestedByIPMgmt</callback>
+          <rank>30</rank>
+        </event_listener>
       </event_listeners>
       <methods>
         <method id="OnIPAddressSetInitialAttributesFlagsRequestedByIPMgmt" _delta="define">
@@ -3176,6 +3175,16 @@
         </field>
       </fields>
       <event_listeners>
+        <event_listener id="OnlnkIPAdressToIPAddressCheckToWriteRequestedByIPMgmt">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>OnlnkIPAdressToIPAddressCheckToWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+        <event_listener id="OnlnkIPAdressToIPAddressAfterWriteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_WRITE</event>
+          <callback>OnlnkIPAdressToIPAddressAfterWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
         <event_listener id="OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt">
           <event>EVENT_DB_AFTER_DELETE</event>
           <callback>OnlnkIPAdressToIPAddressAfterDeleteRequestedByIPMgmt</callback>
@@ -3183,56 +3192,52 @@
         </event_listener>
       </event_listeners>
       <methods>
-        <method id="DoCheckToWrite">
-          <comment>/**&#13;
-	 * Check validity of new subnet attributes before creation&#13;
-   */</comment>
+        <method id="OnlnkIPAdressToIPAddressCheckToWriteRequestedByIPMgmt">
+          <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  function DoCheckToWrite()
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPAdressToIPAddressCheckToWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
   {
-    // Run standard iTop checks first
-    parent::DoCheckToWrite();
-
     // Make sure we don't link IP to itself
     if ($this->Get('ip1_id') == $this->Get('ip2_id'))
     {
-  		$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame');
+  		$this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPAddress:NatIPsAretheSame'));
   		return;
     }
   }]]></code>
         </method>
-        <method id="AfterInsert">
+        <method id="OnlnkIPAdressToIPAddressAfterWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>public </access>
-          <code><![CDATA[	public function AfterInsert()
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPAdressToIPAddressAfterWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
 	{
-		parent::AfterInsert();
-
-		$iIP1 = $this->Get('ip1_id');
-		$oIP1 = MetaModel::GetObject('IPAddress', $iIP1, false /* MustBeFound */);
-		if (!is_null($oIP1))
-		{
-			$iOrgId = $oIP1->Get('org_id');
-			$sIPSymetricalNAT = IPConfig::GetFromGlobalIPConfig('ip_symetrical_nat', $iOrgId);
-			if ($sIPSymetricalNAT == 'yes')
-			{
-			    // Create symmetrical IP only if ports and protocol are not specified
-			    if (is_null($this->Get('map_to_port')) AND is_null($this->Get('external_service_port')) AND is_null($this->Get('protocol'))) {
-					$iIP2 = $this->Get('ip2_id');
-					$sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
-					$oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
-					if (!$oLnkSet->CountExceeds(0))
-					{
-						$oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
-						$oLnk->Set('ip1_id', $iIP2);
-						$oLnk->Set('ip2_id', $iIP1);
-						$oLnk->DBInsert();
-					}
-		        }
-	        }
+		if ($oEventData->Get('is_new')) {
+            $iIP1 = $this->Get('ip1_id');
+            $oIP1 = MetaModel::GetObject('IPAddress', $iIP1, false /* MustBeFound */);
+            if (!is_null($oIP1))
+            {
+                $iOrgId = $oIP1->Get('org_id');
+                $sIPSymetricalNAT = IPConfig::GetFromGlobalIPConfig('ip_symetrical_nat', $iOrgId);
+                if ($sIPSymetricalNAT == 'yes')
+                {
+                    // Create symmetrical IP only if ports and protocol are not specified
+                    if (is_null($this->Get('map_to_port')) AND is_null($this->Get('external_service_port')) AND is_null($this->Get('protocol'))) {
+                        $iIP2 = $this->Get('ip2_id');
+                        $sOQL = "SELECT lnkIPAdressToIPAddress WHERE ip1_id = :ip2 AND ip2_id = :ip1";
+                        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ip1' => $iIP1, 'ip2' => $iIP2));
+                        if (!$oLnkSet->CountExceeds(0))
+                        {
+                            $oLnk = MetaModel::NewObject('lnkIPAdressToIPAddress');
+                            $oLnk->Set('ip1_id', $iIP2);
+                            $oLnk->Set('ip2_id', $iIP1);
+                            $oLnk->DBInsert();
+                        }
+                    }
+                }
+            }
         }
 	}]]></code>
         </method>
@@ -4200,7 +4205,6 @@
     <constant id="IPV4_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">1</constant>
     <constant id="IPV4_SUBNET_MAX_SIZE" xsi:type="integer" _delta="define">65536</constant>
     <constant id="IPV4_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">16</constant>
-    <constant id="ALL_ORGS" xsi:type="integer" _delta="define">65536</constant>
     <constant id="ACTION_NONE" xsi:type="integer" _delta="define">0</constant>
     <constant id="ACTION_SHRINK" xsi:type="integer" _delta="define"> 1</constant>
     <constant id="ACTION_SPLIT" xsi:type="integer" _delta="define">2</constant>
