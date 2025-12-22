@@ -94,8 +94,10 @@
 					// Change IPs name if name has changed or IP has changed
 					if (array_key_exists($sIPAttribute, $aListChanges) || array_key_exists('name', $aListChanges)) {
 						$sName = $this->GetNameForIPAttribute($sIPAttribute);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId);
-						TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iPreviousIPId);
+					    TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnAttachment($iOrgId, $sName, $iIPId);
+						if ($iPreviousIPId != $iIPId) {
+						    TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetShortNameOnDetachment($iPreviousIPId);
+						}
 					}
 				}
 			}
