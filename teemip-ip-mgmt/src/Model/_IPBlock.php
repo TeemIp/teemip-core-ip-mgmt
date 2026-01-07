@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,8 +31,8 @@ class _IPBlock extends IPObject {
     {
         parent::RegisterEventListeners();
 
-        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPBlockSetInitialAttributesFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
-        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPBlockSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPBlockSetInitialAttributesFlagsRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPBlockSetAttributeFlagsRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
     }
 
 	/**

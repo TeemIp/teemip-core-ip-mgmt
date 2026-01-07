@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -44,6 +44,8 @@ class _IPv4Block extends IPBlock implements iTree {
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4BlockSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4BlockComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv4BlockCheckToWriteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_WRITE", 'OnIPv4BlockAfterWriteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
     /**
@@ -391,22 +393,20 @@ class _IPv4Block extends IPBlock implements iTree {
 	/**
 	 * Check if block is CIDR aligned
 	 *
-	 * @param int $iNewFirstIp
-	 * @param int $iNewLastIp
+	 * @param int $iFirstIp
+	 * @param int $iLastIp
 	 *
 	 * @return bool
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	private function DoCheckCIDRAligned($iNewFirstIp = 0, $iNewLastIp = 0) {
+	private function DoCheckCIDRAligned($iFirstIp, $iLastIp) {
 		$sBlockCidrAligned = $this->Get('ipv4_block_cidr_aligned');
 		if ($sBlockCidrAligned == 'default') {
 			$iOrgId = $this->Get('org_id');
 			$sBlockCidrAligned = IPConfig::GetFromGlobalIPConfig('ipv4_block_cidr_aligned', $iOrgId);
 		}
 		if ($sBlockCidrAligned == 'bca_yes') {
-			$iFirstIp = ($iNewFirstIp == 0) ? IPUtils::myip2long($this->Get('firstip')) : $iNewFirstIp;
-			$iLastIp = ($iNewLastIp == 0) ? IPUtils::myip2long($this->Get('lastip')) : $iNewLastIp;
 			// Compute size of new block and check if it corresponds to size of a CIDR block
 			$Size = $iLastIp - $iFirstIp + 1;
 			if (($Size & ($Size - 1)) != 0) {
@@ -708,22 +708,32 @@ EOF
 			return (Dict::Format('UI:IPManagement:Action:Shrink:IPBlock:NotCIDRAligned'));
 		}
 
-		// Make sure that no child block sits accross border
+		// Make sure that no child block sits across border
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
 			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
 			$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
-			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp < $iNewLastIp) && ($iNewLastIp <= $iCurrentLastIp))) {
+			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iNewLastIp) && ($iNewLastIp < $iCurrentLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Shrink:IPBlock:BlockAccrossBorder'));
 			}
 		}
 
-		// Make sure that no child subnet sits accross border
+        // Make sure that no child block has the same borders
+        $oSRangeSet->Rewind();
+        while ($oSRange = $oSRangeSet->Fetch()) {
+            $iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
+            $iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
+            if (($iCurrentFirstIp == $iNewFirstIp) && ($iNewLastIp == $iCurrentLastIp)) {
+                return (Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision0'));
+            }
+        }
+
+		// Make sure that no child subnet sits across border
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
 			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
 			$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
-			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp < $iNewLastIp) && ($iNewLastIp <= $iCurrentLastIp))) {
+			if ((($iCurrentFirstIp < $iNewFirstIp) && ($iNewFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iNewLastIp) && ($iNewLastIp < $iCurrentLastIp))) {
 				return (Dict::Format('UI:IPManagement:Action:Shrink:IPBlock:SubnetAccrossBorder'));
 			}
 
@@ -831,7 +841,7 @@ EOF
 			return (Dict::Format('UI:IPManagement:Action:Split:IPBlock:NotCIDRAligned'));
 		}
 
-		// Make sure that no child block sits accross border
+		// Make sure that no child block sits across border
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iBlockId' AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId)"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
 			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
@@ -841,7 +851,7 @@ EOF
 			}
 		}
 
-		// Make sure that no child subnet sits accross border
+		// Make sure that no child subnet sits across border
 		$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iBlockId' AND s.org_id = $iOrgId"));
 		while ($oSubnet = $oSubnetSet->Fetch()) {
 			$iCurrentFirstIp = IPUtils::myip2long($oSubnet->Get('ip'));
@@ -1044,7 +1054,7 @@ EOF
 			}
 		}
 
-		// Make sure that no brother block sits accross new borders
+		// Make sure that no brother block sits across new borders
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND b.id != '$iBlockId' AND b.org_id = $iOrgId"));
 		while ($oSRange = $oSRangeSet->Fetch()) {
 			$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
@@ -1054,7 +1064,7 @@ EOF
 			}
 		}
 
-		// Make sure that no subnet attached to the same parent block sits accros new borders
+		// Make sure that no subnet attached to the same parent block sits across new borders
 		if ($iParentId != 0) {
 			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
 			while ($oSubnet = $oSubnetSet->Fetch()) {
@@ -1549,23 +1559,16 @@ EOF
 		}
 	}
 
-	/**
-	 * Check validity of new block attributes before creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MissingQueryArgument
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 */
-	public function DoCheckToWrite() {
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
-		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew()) {
+    /**
+     * Handle Do check to write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4BlockCheckToWriteRequestedByIPMgmt($oEventData): void
+    {
+        $iOrgId = $this->Get('org_id');
+		if ($oEventData->Get('is_new')) {
 			$iKey = -1;
 		} else {
 			$iKey = $this->GetKey();
@@ -1578,7 +1581,7 @@ EOF
 		$sOQL = "SELECT IPv4Block AS b WHERE b.name = :name AND (b.org_id = :org_id OR b.parent_org_id = :org_id) AND b.id != :id";
 		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('name' => $sName, 'id' => $iKey, 'org_id' => $iOrgId));
 		if ($oSRangeSet->CountExceeds(0)) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist'));
 
 			return;
 		}
@@ -1586,7 +1589,7 @@ EOF
 		// All modifications related to first and last IPs are done through special actions (shrink, split, expand)
 		// As a consequence:
 		//	Code of shrink, split, expand functions must check coherency of these IPs
-		//	DoCheckToWrite only checks their coherency at creation.
+        // Check To Write event only checks their coherency at creation.
 
 		// If check is performed because of split, skip checks
 		//		if ($this->m_WriteReason == ACTION_SPLIT)
@@ -1598,7 +1601,7 @@ EOF
 		if ($this->IsNew()) {
 			// Check that 1st IP is smaller than last one
 			if ($iFirstIp > $iLastIp) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Reverted');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Reverted'));
 
 				return;
 			}
@@ -1608,14 +1611,14 @@ EOF
 			$iBlockMinSize = $this->GetMinBlockSize();
 			$Size = $iLastIp - $iFirstIp + 1;
 			if ($Size < $iBlockMinSize) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinSize, $this->Get('org_name'));
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinSize, $this->Get('org_name')));
 
 				return;
 			}
 
 			// If required by global parameters, check if block needs to be CIDR aligned and check last IP if needed.
-			if (!$this->DoCheckCIDRAligned()) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NotCIDRAligned');
+			if (!$this->DoCheckCIDRAligned(IPUtils::myip2long($this->Get('firstip')), IPUtils::myip2long($this->Get('lastip')))) {
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NotCIDRAligned'));
 
 				return;
 			}
@@ -1629,7 +1632,7 @@ EOF
 					$iParentFirstIp = IPUtils::myip2long($oParent->Get('firstip'));
 					$iParentLastIp = IPUtils::myip2long($oParent->Get('lastip'));
 					if (($iFirstIp < $iParentFirstIp) || ($iParentLastIp < $iLastIp) || (($iFirstIp == $iParentFirstIp) && ($iParentLastIp == $iLastIp))) {
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NotInParent');
+                        $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NotInParent'));
 
 						return;
 					}
@@ -1656,24 +1659,24 @@ EOF
 
 				// Does the range already exist?
 				if (($iCurrentFirstIp == $iFirstIp) && ($iCurrentLastIp == $iLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision0');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision0'));
 
 					return;
 				}
 				// Is new first Ip part of an existing range?
 				if (($iCurrentFirstIp < $iFirstIp) && ($iFirstIp <= $iCurrentLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision1');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision1'));
 
 					return;
 				}
 				// Is new last Ip part of an existing range?
 				if (($iCurrentFirstIp <= $iLastIp) && ($iLastIp < $iCurrentLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision2');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision2'));
 
 					return;
 				}
 				// If new subnet range is including existing ones, the included ranges will automatically be attached
-				//	 to the one newly created because of hierarchical structure of blocks (see AfterInsert).
+				//	 to the one newly created because of hierarchical structure of blocks (see After write event)
 			}
 
 			// Make sure block doesn't contain any block delegated from another organization
@@ -1684,7 +1687,7 @@ EOF
 				'org_id' => $iOrgId,
 			));
 			if ($oSRangeSet->CountExceeds(0)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg'));
 
 				return;
 			}
@@ -1700,7 +1703,7 @@ EOF
 					'org_id' => $iOrgId,
 				));
 				if ($oSRangeSet->CountExceeds(0)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
 
 					return;
 				}
@@ -1718,7 +1721,7 @@ EOF
 					$iCurrentFirstIp = IPUtils::myip2long($oSRange->Get('firstip'));
 					$iCurrentLastIp = IPUtils::myip2long($oSRange->Get('lastip'));
 					if ((($iCurrentFirstIp < $iFirstIp) && ($iFirstIp <= $iCurrentLastIp)) || (($iCurrentFirstIp <= $iLastIp) && ($iLastIp < $iCurrentLastIp))) {
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg');
+                        $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg'));
 
 						return;
 					}
@@ -1732,7 +1735,7 @@ EOF
 					'parent_org_id' => $iParentOrgId,
 				));
 				if ($oSRangeSet->CountExceeds(0)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent'));
 
 					return;
 				}
@@ -1743,7 +1746,7 @@ EOF
 					'parent_org_id' => $iParentOrgId,
 				));
 				if ($oSRangeSet->CountExceeds(0)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent'));
 
 					return;
 				}
@@ -1751,113 +1754,92 @@ EOF
 		}
 	}
 
-	/**
-	 * Perform specific tasks related to block creation
-	 *
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function AfterInsert() {
-		parent::AfterInsert();
+    /**
+     * Handle After write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+	public function OnIPv4BlockAfterWriteRequestedByIPMgmt($oEventData): void
+    {
+        $iOrgId = $this->Get('org_id');
+        $iKey = $this->GetKey();
+        $iParentOrgId = $this->Get('parent_org_id');
+        $iParentId = $this->Get('parent_id');
+        $sFirstIp = $this->Get('firstip');
+        $sLastIp = $this->Get('lastip');
 
-		$iOrgId = $this->Get('org_id');
-		$iKey = $this->GetKey();
-		$iParentOrgId = $this->Get('parent_org_id');
-		$iParentId = $this->Get('parent_id');
-		$sFirstIp = $this->Get('firstip');
-		$sLastIp = $this->Get('lastip');
+        if ($oEventData->Get('is_new')) {
+            // Look for all blocks attached to parent of block being created and contained within new block
+            // Attach them to new block
+            $oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
+            while ($oSRange = $oSRangeSet->Fetch()) {
+                $oSRange->Set('parent_id', $iKey);
+                $oSRange->DBUpdate();
+            }
 
-		// Look for all blocks attached to parent of block being created and contained within new block
-		// Attach them to new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND (b.org_id = $iOrgId OR b.parent_org_id = $iOrgId) AND b.id != $iKey"));
-		while ($oSRange = $oSRangeSet->Fetch()) {
-			$oSRange->Set('parent_id', $iKey);
-			$oSRange->DBUpdate();
-		}
+            // If block is delegated, look for blocks from $iOrgId at the top of the tree that are contained within new block
+            // Attach them to new block
+            if ($iParentOrgId != 0) {
+                $oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = 0 AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND b.org_id = $iOrgId"));
+                while ($oSRange = $oSRangeSet->Fetch()) {
+                    $oSRange->Set('parent_id', $iKey);
+                    $oSRange->DBUpdate();
+                }
+            }
 
-		// If block is delegated, look for blocks from $iOrgId at the top of the tree that are contained within new block
-		// Attach them to new block
-		if ($iParentOrgId != 0) {
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Block AS b WHERE b.parent_id = 0 AND INET_ATON('$sFirstIp') <= INET_ATON(b.firstip) AND INET_ATON(b.lastip) <= INET_ATON('$sLastIp') AND b.org_id = $iOrgId"));
-			while ($oSRange = $oSRangeSet->Fetch()) {
-				$oSRange->Set('parent_id', $iKey);
-				$oSRange->DBUpdate();
-			}
-		}
+            // If block is not at the top (all subnets are attached to a block),
+            //	Look for all subnets attached to parent block contained within new block
+            //	Attach them to new block
+            if ($iParentId != 0) {
+                $oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(s.ip) AND INET_ATON(s.broadcastip)<= INET_ATON('$sLastIp') AND s.org_id = $iOrgId"));
+                while ($oSubnet = $oSubnetSet->Fetch()) {
+                    $oSubnet->Set('block_id', $iKey);
+                    $oSubnet->DBUpdate();
+                }
+            }
 
-		// If block is not at the top (all subnets are attached to a block),
-		//	Look for all subnets attached to parent block contained within new block
-		//	Attach them to new block
-		if ($iParentId != 0) {
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = '$iParentId' AND INET_ATON('$sFirstIp') <= INET_ATON(s.ip) AND INET_ATON(s.broadcastip)<= INET_ATON('$sLastIp') AND s.org_id = $iOrgId"));
-			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$oSubnet->Set('block_id', $iKey);
-				$oSubnet->DBUpdate();
-			}
-		}
+            // If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
+            if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId)) {
+                $iSize = $this->GetSize();
+                if ($iSize <= IPV4_SUBNET_MAX_SIZE) {
+                    $aValues = array(
+                        'org_id' => $iOrgId,
+                        'ipconfig_id' => $this->Get('ipconfig_id'),
+                        'requestor_id' => $this->Get('requestor_id'),
+                        'block_id' => $iKey,
+                        'ip' => $sFirstIp,
+                        'mask' => IPUtils::SizeToMask($iSize),
+                        'allocation_date' => time(),
+                    );
+                    $oSubnet = MetaModel::NewObject('IPv4Subnet', $aValues);
+                    $oSubnet->DBInsert();
+                }
+            }
+        } else {
+             if ($this->Get('write_reason') != 'split') {
+                $iFirstIp = ip2long($sFirstIp);
+                $iLastIp = IPUtils::myip2long($sLastIp);
 
-		// If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
-		if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId)) {
-			$iSize = $this->GetSize();
-			if ($iSize <= IPV4_SUBNET_MAX_SIZE) {
-				$aValues = array(
-					'org_id' => $iOrgId,
-					'ipconfig_id' => $this->Get('ipconfig_id'),
-					'requestor_id' => $this->Get('requestor_id'),
-					'block_id' => $iKey,
-					'ip' => $sFirstIp,
-					'mask' => IPUtils::SizeToMask($iSize),
-					'allocation_date' => time(),
-				);
-				$oSubnet = MetaModel::NewObject('IPv4Subnet', $aValues);
-				$oSubnet->DBInsert();
-			}
-		}
-	}
-
-	/**
-	 * Perform specific tasks related to block modification
-	 *
-	 * @throws \ApplicationException
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreCannotSaveObjectException
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \MySQLException
-	 * @throws \OQLException
-	 */
-	public function AfterUpdate() {
-		if ($this->Get('write_reason') != 'split') {
-			$iOrgId = $this->Get('org_id');
-			$iKey = $this->GetKey();
-			$iParentId = $this->Get('parent_id');
-			$iFirstIp = ip2long($this->Get('firstip'));
-			$iLastIp = IPUtils::myip2long($this->Get('lastip'));
-
-			// Look for all subnets attached to block that may have fallen out of block
-			//	Attach them to parent block
-			//	Note: previous check have made sure a parent block exists
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
-			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$iCurrentFirstIp = ip2long($oSubnet->Get('ip'));
-				$iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
-				if (($iCurrentLastIp < $iFirstIp) || ($iLastIp < $iCurrentFirstIp)) {
-					if ($iParentId == 0) {
-						throw new ApplicationException(Dict::Format('UI:IPManagement:Action:Modify:IPv4Block:ParentIdNull', $iKey));
-					}
-					$oSubnet->Set('block_id', $iParentId);
-					$oSubnet->DBUpdate();
-				}
-			}
-		}
-		$this->Set('write_reason', 'none');
-
-		parent::AfterUpdate();
-	}
+                // Look for all subnets attached to block that may have fallen out of block
+                //	Attach them to parent block
+                //	Note: previous check have made sure a parent block exists
+                $oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Subnet AS s WHERE s.block_id = $iKey AND s.org_id = $iOrgId"));
+                while ($oSubnet = $oSubnetSet->Fetch()) {
+                    $iCurrentFirstIp = ip2long($oSubnet->Get('ip'));
+                    $iCurrentLastIp = IPUtils::myip2long($oSubnet->Get('broadcastip'));
+                    if (($iCurrentLastIp < $iFirstIp) || ($iLastIp < $iCurrentFirstIp)) {
+                        if ($iParentId == 0) {
+                            throw new ApplicationException(Dict::Format('UI:IPManagement:Action:Modify:IPv4Block:ParentIdNull', $iKey));
+                        }
+                        $oSubnet->Set('block_id', $iParentId);
+                        $oSubnet->DBUpdate();
+                    }
+                }
+            }
+            $this->Set('write_reason', 'none');
+        }
+    }
 
     /**
      * Handle Set attributes flags
