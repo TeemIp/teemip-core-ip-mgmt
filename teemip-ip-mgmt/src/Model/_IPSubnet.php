@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -14,7 +14,19 @@ use WebPage;
 
 class _IPSubnet extends IPObject
 {
-	/**
+    /**
+     * Register events for the class
+     *
+     * @return void
+     */
+    protected function RegisterEventListeners()
+    {
+        parent::RegisterEventListeners();
+
+        $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPSubnetSetAttributesFlagsRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+    }
+
+    /**
 	 * Returns size of subnet
 	 *
 	 * @return int
@@ -198,46 +210,6 @@ class _IPSubnet extends IPObject
 	public function GetFreeIP($iCreationOffset)
 	{
 		return '';
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnInsert()
-	{
-		parent::OnInsert();
-
-		if (class_exists('IPDiscovery')) {
-			if ($this->Get('ipdiscovery_ping_enabled') == 'no') {
-				$this->Set('ping_enabled', 'no');
-			}
-			if ($this->Get('ipdiscovery_iplookup_enabled') == 'no') {
-				$this->Set('iplookup_enabled', 'no');
-			}
-			if ($this->Get('ipdiscovery_scan_enabled') == 'no') {
-				$this->Set('scan_enabled', 'no');
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	public function OnUpdate()
-	{
-		parent::OnUpdate();
-
-		if (class_exists('IPDiscovery')) {
-			if ($this->Get('ipdiscovery_ping_enabled') == 'no') {
-				$this->Set('ping_enabled', 'no');
-			}
-			if ($this->Get('ipdiscovery_iplookup_enabled') == 'no') {
-				$this->Set('iplookup_enabled', 'no');
-			}
-			if ($this->Get('ipdiscovery_scan_enabled') == 'no') {
-				$this->Set('scan_enabled', 'no');
-			}
-		}
 	}
 
     /**

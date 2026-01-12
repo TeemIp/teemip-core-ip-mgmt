@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -24,6 +24,7 @@ class _IPRange extends IPObject {
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPRangeSetAttributeFlagsRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPRangeCheckToWriteRequestedByIPMgmt', 30, 'teemip-ip-mgmt');
     }
 
     /**
@@ -184,17 +185,19 @@ class _IPRange extends IPObject {
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function DoCheckToWrite() {
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Check To Write
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPRangeCheckToWriteRequestedByIPMgmt($oEventData): void
+    {
 		// Make sure no server is set in servers_list if range is not a DHCP one
 		if ($this->Get('dhcp') == 'dhcp_no') {
 			$oServersSet = $this->Get('functionalcis_list');
 			if ($oServersSet->Count() > 0) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers'));
 			}
 
 		}

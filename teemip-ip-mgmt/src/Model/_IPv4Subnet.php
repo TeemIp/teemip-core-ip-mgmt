@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -43,6 +43,8 @@ class _IPv4Subnet extends IPSubnet implements iTree
         $this->RegisterCRUDListener("EVENT_DB_SET_INITIAL_ATTRIBUTES_FLAGS", 'OnIPv4SubnetSetInitialAttributesFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv4SubnetSetAttributeFlagsRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv4SubnetComputeValuesRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv4SubnetCheckToWriteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_WRITE", 'OnIPv4SubnetAfterWriteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_DELETE", 'OnIPv4SubnetCheckToDeleteRequestedByIPMgmt', 40, 'teemip-ip-mgmt');
     }
 
@@ -1311,7 +1313,7 @@ EOF
 			$oIpRange->DBUpdate();
 		}
 
-		// Creation of missing broadcast and subnet IPs is done by IPv4Subnet::AfterInsert or IPv4Subnet::AfterUpdate
+		// Creation of missing broadcast and subnet IPs is done by AFTER WRITE event
 
 		// Set IPs in correct subnet
 		for ($i = 1; $i < $iSplit; $i++) {
@@ -2067,16 +2069,16 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	function DoCheckToWrite()
-	{
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Do check to write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4SubnetCheckToWriteRequestedByIPMgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew()) {
+		if ($oEventData->Get('is_new')) {
 			$iKey = -1;
 		} else {
 			$iKey = $this->GetKey();
@@ -2087,13 +2089,14 @@ EOF
 		$Size = $this->GetSize();
 		$iIpBroadcast = $iIp + $Size - 1;
 		$iBlockId = $this->Get('block_id');
+        $sWriteReason = $this->Get('write_reason');
 
 		// Forbid change of subnet IP but for subnet expansion
 		//		As we look for subnet by its key, we cannot have an org mismatch
 		$oSubnet = MetaModel::GetObject('IPv4Subnet', $iKey, false /* MustBeFound */);
 		if (!is_null($oSubnet)) {
-			if (($sIp != $oSubnet->Get('ip')) && ($this->Get('write_reason') != 'expand')) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpCannotChange');
+			if (($sIp != $oSubnet->Get('ip')) && ($sWriteReason != 'expand')) {
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpCannotChange'));
 
 				return;
 			}
@@ -2101,11 +2104,10 @@ EOF
 
 		// Forbid change of subnet mask unless required by programmatic functions
 		//		As we look for subnet by its key, we cannot have an org mismatch
-		$sWriteReason = $this->Get('write_reason');
 		if (($sWriteReason != 'shrink') && ($sWriteReason != 'split') && ($sWriteReason != 'expand')) {
 			$oSubnet = MetaModel::GetObject('IPv4Subnet', $iKey, false /* MustBeFound */);
 			if (!is_null($oSubnet) && ($sMask != $oSubnet->Get('mask'))) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:MaskCannotChange');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:MaskCannotChange'));
 
 				return;
 			}
@@ -2113,7 +2115,7 @@ EOF
 
 		// Check consitency between subnet IP and mask. IP must be aligned with block defined by mask.
 		if (!$this->DoCheckCIDRAligned()) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpIncorrect');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:IpIncorrect'));
 
 			return;
 		}
@@ -2122,7 +2124,7 @@ EOF
 		$oBlock = MetaModel::GetObject('IPv4Block', $this->Get('block_id'), true /* MustBeFound */);
 		$iBlockLastIp = IPUtils::myip2long($oBlock->Get('lastip'));
 		if (($iIp < IPUtils::myip2long($oBlock->Get('firstip'))) || ($iBlockLastIp < $iIpBroadcast)) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:NotInBlock');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:NotInBlock'));
 
 			return;
 		}
@@ -2137,25 +2139,25 @@ EOF
 
 				// Does the subnet already exist?
 				if (($iCurrentIp == $iIp) && ($iCurrentIpBroadcast == $iIpBroadcast)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision0');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision0'));
 
 					return;
 				}
 				// Is the subnet IP part of an existing subnet?
 				if (($iCurrentIp <= $iIp) && ($iIp <= $iCurrentIpBroadcast) && ($sWriteReason != 'expand')) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision1');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision1'));
 
 					return;
 				}
 				// Is the broadcast IPs part of an existing subnet?
 				if (($iCurrentIp <= $iIpBroadcast) && ($iIpBroadcast <= $iCurrentIpBroadcast) && ($sWriteReason != 'expand')) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision2');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision2'));
 
 					return;
 				}
 				// Is new subnet including an existing one?
 				if (($iIp < $iCurrentIp) && ($iCurrentIpBroadcast < $iIpBroadcast) && ($sWriteReason != 'expand')) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision3');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:Collision3'));
 
 					return;
 				}
@@ -2171,234 +2173,219 @@ EOF
 			$sGatewayIp = $this->Get('gatewayip');
 			if ($sGatewayIp != '') {
 				if (!$this->DoCheckIpInSubnet($sGatewayIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:GatewayOutOfSubnet'));
 
 					return;
-				}
-			}
-		}
-
-		// Reset reason for action
-		$this->Set('write_reason', 'none');
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function AfterInsert()
-	{
-		parent::AfterInsert();
-
-		$iOrgId = $this->Get('org_id');
-		$iId = $this->GetKey();
-		$sSubnetIp = $this->Get('ip');
-		$sMask = $this->Get('mask');
-		$sGatewayIp = $this->Get('gatewayip');
-		$sIpBroadcast = $this->Get('broadcastip');
-
-		// Check if subnet and broadcast IPs need to be created / updated or not
-		if ($sMask != '255.255.255.255') {
-			$sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
-			if ($sReserveSubnetIPs == 'default') {
-				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
-			}
-			if ($sReserveSubnetIPs == 'reserve_yes') {
-				// Create or update subnet IP
-				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id", array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId), false);
-				if (is_null($oIp)) {
-					$oIp = MetaModel::NewObject('IPv4Address');
-					$oIp->Set('subnet_id', $iId);
-					$oIp->Set('ip', $sSubnetIp);
-					$oIp->Set('org_id', $iOrgId);
-					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-					$oIp->Set('status', 'reserved');
-					$oIp->Set('usage_id', $sUsageNetworkIpId);
-					$oIp->DBInsert();
-				} else {
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageNetworkIpId);
-						$oIp->DBUpdate();
-					}
-				}
-
-				if ($sMask != '255.255.255.254') {
-					// Create or update gateway IP... if one has been chosen
-					if ($sGatewayIp !=  '') {
-						$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-						$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
-						if (is_null($oIp)) {
-							$oIp = MetaModel::NewObject('IPv4Address');
-							$oIp->Set('subnet_id', $iId);
-							$oIp->Set('ip', $sGatewayIp);
-							$oIp->Set('org_id', $iOrgId);
-							$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-							$oIp->Set('status', 'reserved');
-							$oIp->Set('usage_id', $sUsageGatewayIpId);
-							$oIp->DBInsert();
-						} else {
-							if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
-								$oIp->Set('subnet_id', $iId);
-								$oIp->Set('status', 'reserved');
-								$oIp->Set('usage_id', $sUsageGatewayIpId);
-								$oIp->DBUpdate();
-							}
-						}
-					}
-				}
-
-				// Create or update broadcast IP
-				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :broadcastip AND i.org_id = :org_id", array('broadcastip' => $sIpBroadcast, 'org_id' => $iOrgId), false);
-				if (is_null($oIp)) {
-					$oIp = MetaModel::NewObject('IPv4Address');
-					$oIp->Set('subnet_id', $iId);
-					$oIp->Set('ip', $sIpBroadcast);
-					$oIp->Set('org_id', $iOrgId);
-					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-					$oIp->Set('status', 'reserved');
-					$oIp->Set('usage_id', $sUsageBroadcastIpId);
-					$oIp->DBInsert();
-				} else {
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageBroadcastIpId)) {
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageBroadcastIpId);
-						$oIp->DBUpdate();
-					}
-				}
-			}
-		}
-
-		// Make sure all IPs belonging to subnet are attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
-			if ($oIpRegistered->Get('subnet_id') != $iId) {
-				$oIpRegistered->Set('subnet_id', $iId);
-				$oIpRegistered->DBUpdate();
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function AfterUpdate()
-	{
-		parent::AfterUpdate();
-
-		$iOrgId = $this->Get('org_id');
-		$iId = $this->GetKey();
-		$sSubnetIp = $this->Get('ip');
-		$sMask = $this->Get('mask');
-		$sGatewayIp = $this->Get('gatewayip');
-		$sIpBroadcast = $this->Get('broadcastip');
-
-		if ($sMask != '255.255.255.255') {
-			$sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
-			if ($sReserveSubnetIPs == 'default') {
-				$sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
-			}
-			if ($sReserveSubnetIPs == 'reserve_yes') {
-				// Create or update subnet IP
-				$sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $iOrgId", null, false);
-				if (is_null($oIp)) {
-					$oIp = MetaModel::NewObject('IPv4Address');
-					$oIp->Set('subnet_id', $iId);
-					$oIp->Set('ip', $sSubnetIp);
-					$oIp->Set('org_id', $iOrgId);
-					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-					$oIp->Set('status', 'reserved');
-					$oIp->Set('usage_id', $sUsageNetworkIpId);
-					$oIp->DBInsert();
-				} else {
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageNetworkIpId);
-						$oIp->DBUpdate();
-					}
-				}
-
-				// Create or update gateway IP
-				$sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
-				if (is_null($oIp)) {
-                    if ($sGatewayIp != '') {
-                        $oIp = MetaModel::NewObject('IPv4Address');
-                        $oIp->Set('subnet_id', $iId);
-                        $oIp->Set('ip', $sGatewayIp);
-                        $oIp->Set('org_id', $iOrgId);
-                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-                        $oIp->Set('status', 'reserved');
-                        $oIp->Set('usage_id', $sUsageGatewayIpId);
-                        $oIp->DBInsert();
-                    }
-				} else {
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageGatewayIpId);
-						$oIp->DBUpdate();
-					}
-				}
-
-				// Create or update broadcast IP
-				$sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
-				$oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
-				if (is_null($oIp)) {
-					$oIp = MetaModel::NewObject('IPv4Address');
-					$oIp->Set('subnet_id', $iId);
-					$oIp->Set('ip', $sIpBroadcast);
-					$oIp->Set('org_id', $iOrgId);
-					$oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
-					$oIp->Set('status', 'reserved');
-					$oIp->Set('usage_id', $sUsageBroadcastIpId);
-					$oIp->DBInsert();
-				} else {
-					if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageBroadcastIpId)) {
-						$oIp->Set('subnet_id', $iId);
-						$oIp->Set('status', 'reserved');
-						$oIp->Set('usage_id', $sUsageBroadcastIpId);
-						$oIp->DBUpdate();
-					}
-				}
-			}
-		}
-
-		// Make sure all IPs belonging to subnet are attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
-			if ($oIpRegistered->Get('subnet_id') != $iId) {
-				$oIpRegistered->Set('subnet_id', $iId);
-				$oIpRegistered->DBUpdate();
-			}
-		}
-
-		// Release all subnet's IPs when subnet is released
-		$aOldValues = $this->ListPreviousValuesForUpdatedAttributes();
-		$sOriginalStatus = $this->GetOriginal('status');	// Workaround for GetOriginal bug
-		if (array_key_exists('status', $aOldValues)) {
-			$sOriginalStatus = $aOldValues['status'];
-		}
-		if (($this->Get('status') == 'released') && ($sOriginalStatus != 'released')) {
-			$sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release', $iOrgId);
-			if ($sIpRelease == 'yes') {
-				$sOQL = "SELECT IPv4Address WHERE subnet_id = :id AND status != 'released'";
-				$oIpAddressesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iId));
-				while ($oIpAddress = $oIpAddressesSet->Fetch()) {
-					$oIpAddress->Set('status', 'released');
-					$oIpAddress->DBUpdate();
 				}
 			}
 		}
 	}
 
     /**
-     * Handle Do check to delete event on IPv4Subnet
+     * Handle After write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv4SubnetAfterWriteRequestedByIPMgmt($oEventData): void
+	{
+        $iOrgId = $this->Get('org_id');
+        $iId = $this->GetKey();
+        $sSubnetIp = $this->Get('ip');
+        $sMask = $this->Get('mask');
+        $sGatewayIp = $this->Get('gatewayip');
+        $sIpBroadcast = $this->Get('broadcastip');
+
+        if ($oEventData->Get('is_new')) {
+            // Check if subnet and broadcast IPs need to be created / updated or not
+            if ($sMask != '255.255.255.255') {
+                $sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
+                if ($sReserveSubnetIPs == 'default') {
+                    $sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
+                }
+                if ($sReserveSubnetIPs == 'reserve_yes') {
+                    // Create or update subnet IP
+                    $sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+                    $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :subnetip AND i.org_id = :org_id", array('subnetip' => $sSubnetIp, 'org_id' => $iOrgId), false);
+                    if (is_null($oIp)) {
+                        $oIp = MetaModel::NewObject('IPv4Address');
+                        $oIp->Set('subnet_id', $iId);
+                        $oIp->Set('ip', $sSubnetIp);
+                        $oIp->Set('org_id', $iOrgId);
+                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                        $oIp->Set('status', 'reserved');
+                        $oIp->Set('usage_id', $sUsageNetworkIpId);
+                        $oIp->DBInsert();
+                    } else {
+                        if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageNetworkIpId);
+                            $oIp->DBUpdate();
+                        }
+                    }
+
+                    if ($sMask != '255.255.255.254') {
+                        // Create or update gateway IP... if one has been chosen
+                        if ($sGatewayIp != '') {
+                            $sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+                            $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :gatewayip AND i.org_id = :org_id", array('gatewayip' => $sGatewayIp, 'org_id' => $iOrgId), false);
+                            if (is_null($oIp)) {
+                                $oIp = MetaModel::NewObject('IPv4Address');
+                                $oIp->Set('subnet_id', $iId);
+                                $oIp->Set('ip', $sGatewayIp);
+                                $oIp->Set('org_id', $iOrgId);
+                                $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                                $oIp->Set('status', 'reserved');
+                                $oIp->Set('usage_id', $sUsageGatewayIpId);
+                                $oIp->DBInsert();
+                            } else {
+                                if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
+                                    $oIp->Set('subnet_id', $iId);
+                                    $oIp->Set('status', 'reserved');
+                                    $oIp->Set('usage_id', $sUsageGatewayIpId);
+                                    $oIp->DBUpdate();
+                                }
+                            }
+                        }
+                    }
+
+                    // Create or update broadcast IP
+                    $sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
+                    $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = :broadcastip AND i.org_id = :org_id", array('broadcastip' => $sIpBroadcast, 'org_id' => $iOrgId), false);
+                    if (is_null($oIp)) {
+                        $oIp = MetaModel::NewObject('IPv4Address');
+                        $oIp->Set('subnet_id', $iId);
+                        $oIp->Set('ip', $sIpBroadcast);
+                        $oIp->Set('org_id', $iOrgId);
+                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                        $oIp->Set('status', 'reserved');
+                        $oIp->Set('usage_id', $sUsageBroadcastIpId);
+                        $oIp->DBInsert();
+                    } else {
+                        if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageBroadcastIpId)) {
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageBroadcastIpId);
+                            $oIp->DBUpdate();
+                        }
+                    }
+                }
+            }
+
+            // Make sure all IPs belonging to subnet are attached to it
+            $oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
+            while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
+                if ($oIpRegistered->Get('subnet_id') != $iId) {
+                    $oIpRegistered->Set('subnet_id', $iId);
+                    $oIpRegistered->DBUpdate();
+                }
+            }
+        } else {
+            if ($sMask != '255.255.255.255') {
+                $sReserveSubnetIPs = $this->Get('reserve_subnet_ips');
+                if ($sReserveSubnetIPs == 'default') {
+                    $sReserveSubnetIPs = IPConfig::GetFromGlobalIPConfig('reserve_subnet_IPs', $iOrgId);
+                }
+                if ($sReserveSubnetIPs == 'reserve_yes') {
+                    // Create or update subnet IP
+                    $sUsageNetworkIpId = IPUsage::GetIpUsageId($iOrgId, NETWORK_IP_CODE);
+                    $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sSubnetIp' AND i.org_id = $iOrgId", null, false);
+                    if (is_null($oIp)) {
+                        $oIp = MetaModel::NewObject('IPv4Address');
+                        $oIp->Set('subnet_id', $iId);
+                        $oIp->Set('ip', $sSubnetIp);
+                        $oIp->Set('org_id', $iOrgId);
+                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                        $oIp->Set('status', 'reserved');
+                        $oIp->Set('usage_id', $sUsageNetworkIpId);
+                        $oIp->DBInsert();
+                    } else {
+                        if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageNetworkIpId)) {
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageNetworkIpId);
+                            $oIp->DBUpdate();
+                        }
+                    }
+
+                    // Create or update gateway IP
+                    $sUsageGatewayIpId = IPUsage::GetIpUsageId($iOrgId, GATEWAY_IP_CODE);
+                    $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sGatewayIp' AND i.org_id = $iOrgId", null, false);
+                    if (is_null($oIp)) {
+                        if ($sGatewayIp != '') {
+                            $oIp = MetaModel::NewObject('IPv4Address');
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('ip', $sGatewayIp);
+                            $oIp->Set('org_id', $iOrgId);
+                            $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageGatewayIpId);
+                            $oIp->DBInsert();
+                        }
+                    } else {
+                        if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageGatewayIpId)) {
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageGatewayIpId);
+                            $oIp->DBUpdate();
+                        }
+                    }
+
+                    // Create or update broadcast IP
+                    $sUsageBroadcastIpId = IPUsage::GetIpUsageId($iOrgId, BROADCAST_IP_CODE);
+                    $oIp = MetaModel::GetObjectFromOQL("SELECT IPv4Address AS i WHERE i.ip = '$sIpBroadcast' AND i.org_id = $iOrgId", null, false);
+                    if (is_null($oIp)) {
+                        $oIp = MetaModel::NewObject('IPv4Address');
+                        $oIp->Set('subnet_id', $iId);
+                        $oIp->Set('ip', $sIpBroadcast);
+                        $oIp->Set('org_id', $iOrgId);
+                        $oIp->Set('ipconfig_id', $this->Get('ipconfig_id'));
+                        $oIp->Set('status', 'reserved');
+                        $oIp->Set('usage_id', $sUsageBroadcastIpId);
+                        $oIp->DBInsert();
+                    } else {
+                        if (($oIp->Get('status') != 'reserved') || ($oIp->Get('usage_id') != $sUsageBroadcastIpId)) {
+                            $oIp->Set('subnet_id', $iId);
+                            $oIp->Set('status', 'reserved');
+                            $oIp->Set('usage_id', $sUsageBroadcastIpId);
+                            $oIp->DBUpdate();
+                        }
+                    }
+                }
+            }
+
+            // Make sure all IPs belonging to subnet are attached to it
+            $oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv4Address AS i WHERE INET_ATON('$sSubnetIp') <= INET_ATON(i.ip) AND INET_ATON(i.ip) <= INET_ATON('$sIpBroadcast') AND i.org_id = $iOrgId"));
+            while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
+                if ($oIpRegistered->Get('subnet_id') != $iId) {
+                    $oIpRegistered->Set('subnet_id', $iId);
+                    $oIpRegistered->DBUpdate();
+                }
+            }
+
+            // Release all subnet's IPs when subnet is released
+            $aOldValues = $this->ListPreviousValuesForUpdatedAttributes();
+            $sOriginalStatus = $this->GetOriginal('status');    // Workaround for GetOriginal bug
+            if (array_key_exists('status', $aOldValues)) {
+                $sOriginalStatus = $aOldValues['status'];
+            }
+            if (($this->Get('status') == 'released') && ($sOriginalStatus != 'released')) {
+                $sIpRelease = IPConfig::GetFromGlobalIPConfig('ip_release_on_subnet_release', $iOrgId);
+                if ($sIpRelease == 'yes') {
+                    $sOQL = "SELECT IPv4Address WHERE subnet_id = :id AND status != 'released'";
+                    $oIpAddressesSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('id' => $iId));
+                    while ($oIpAddress = $oIpAddressesSet->Fetch()) {
+                        $oIpAddress->Set('status', 'released');
+                        $oIpAddress->DBUpdate();
+                    }
+                }
+            }
+        }
+	}
+
+    /**
+     * Handle Do check to delete event
      *
      * @param $oEventData
      * @return void
