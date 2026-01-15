@@ -1404,6 +1404,16 @@
         </field>
       </fields>
       <event_listeners>
+        <event_listener id="OnlnkIPSubnetToIPSubnetCheckToWriteRequestedByIPMgmt">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>OnlnkIPSubnetToIPSubnetCheckToWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+        <event_listener id="OnlnkIPSubnetToIPSubnetAfterWriteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_WRITE</event>
+          <callback>OnlnkIPSubnetToIPSubnetAfterWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
         <event_listener id="OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt">
           <event>EVENT_DB_AFTER_DELETE</event>
           <callback>OnlnkIPSubnetToIPSubnetAfterDeleteRequestedByIPMgmt</callback>
@@ -1411,53 +1421,47 @@
         </event_listener>
       </event_listeners>
       <methods>
-        <method id="DoCheckToWrite">
-          <comment>/**&#13;
-            * Check validity of new subnet attributes before creation&#13;
-            */</comment>
+        <method id="OnlnkIPSubnetToIPSubnetCheckToWriteRequestedByIPMgmt">
+          <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[  function DoCheckToWrite()
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPSubnetToIPSubnetCheckToWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
   {
-    // Run standard iTop checks first
-    parent::DoCheckToWrite();
-
     // Make sure we don't link IP to itself
-    if ($this->Get('ipsubnet1_id') == $this->Get('ipsubnet2_id'))
-    {
-  		$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPSubnet:NatSubnetsAretheSame');
-  		return;
+    if ($this->Get('ipsubnet1_id') == $this->Get('ipsubnet2_id')) {
+  		$this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPSubnet:NatSubnetsAretheSame'));
     }
   }]]></code>
         </method>
-        <method id="AfterInsert">
+        <method id="OnlnkIPSubnetToIPSubnetAfterWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>public </access>
-          <code><![CDATA[	public function AfterInsert()
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPSubnetToIPSubnetAfterWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
 	{
-		parent::AfterInsert();
-
-		$iIPSubnet1 = $this->Get('ipsubnet1_id');
-		$oIPSubnet1 = MetaModel::GetObject('IPSubnet', $iIPSubnet1, false /* MustBeFound */);
-		if (!is_null($oIPSubnet1))
-		{
-			$iOrgId = $oIPSubnet1->Get('org_id');
-			$sSubnetSymetricalNAT = IPConfig::GetFromGlobalIPConfig('subnet_symetrical_nat', $iOrgId);
-			if ($sSubnetSymetricalNAT == 'yes')
-			{
-				$iIPSubnet2 = $this->Get('ipsubnet2_id');
-		        $sOQL = "SELECT lnkIPSubnetToIPSubnet WHERE ipsubnet1_id = :ipsubnet2 AND ipsubnet2_id = :ipsubnet1";
-		        $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ipsubnet1' => $iIPSubnet1, 'ipsubnet2' => $iIPSubnet2));
-		        if (!$oLnkSet->CountExceeds(0))
-		        {
-		            $oLnk = MetaModel::NewObject('lnkIPSubnetToIPSubnet');
-		            $oLnk->Set('ipsubnet1_id', $iIPSubnet2);
-			        $oLnk->Set('ipsubnet2_id', $iIPSubnet1);
-				    $oLnk->DBInsert();
-		        }
-	        }
+		if ($oEventData->Get('is_new')) {
+            $iIPSubnet1 = $this->Get('ipsubnet1_id');
+            $oIPSubnet1 = MetaModel::GetObject('IPSubnet', $iIPSubnet1, false /* MustBeFound */);
+            if (!is_null($oIPSubnet1))
+            {
+                $iOrgId = $oIPSubnet1->Get('org_id');
+                $sSubnetSymetricalNAT = IPConfig::GetFromGlobalIPConfig('subnet_symetrical_nat', $iOrgId);
+                if ($sSubnetSymetricalNAT == 'yes')
+                {
+                    $iIPSubnet2 = $this->Get('ipsubnet2_id');
+                    $sOQL = "SELECT lnkIPSubnetToIPSubnet WHERE ipsubnet1_id = :ipsubnet2 AND ipsubnet2_id = :ipsubnet1";
+                    $oLnkSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array(), array('ipsubnet1' => $iIPSubnet1, 'ipsubnet2' => $iIPSubnet2));
+                    if (!$oLnkSet->CountExceeds(0))
+                    {
+                        $oLnk = MetaModel::NewObject('lnkIPSubnetToIPSubnet');
+                        $oLnk->Set('ipsubnet1_id', $iIPSubnet2);
+                        $oLnk->Set('ipsubnet2_id', $iIPSubnet1);
+                        $oLnk->DBInsert();
+                    }
+                }
+            }
         }
 	}]]></code>
         </method>
@@ -2501,6 +2505,13 @@
           <is_null_allowed>false</is_null_allowed>
         </field>
       </fields>
+      <event_listeners>
+        <event_listener id="OnlnkFunctionalCIToIPRangeCheckToWriteRequestedByIPMgmt">
+          <event>EVENT_DB_CHECK_TO_WRITE</event>
+          <callback>OnlnkFunctionalCIToIPRangeCheckToWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
+      </event_listeners>
       <methods>
         <method id="OnlnkFunctionalCIToIPRangeCheckToWriteRequestedByIPMgmt">
           <comment/>
@@ -3402,6 +3413,16 @@
         </field>
       </fields>
       <event_listeners>
+        <event_listener id="OnlnkIPInterfaceToIPAddressBeforeWriteRequestedByIPMgmt">
+          <event>EVENT_DB_BEFORE_WRITE</event>
+          <callback>OnlnkIPInterfaceToIPAddressBeforeWriteRequestedByIPMgmt</callback>
+          <rank>20</rank>
+        </event_listener>
+        <event_listener id="OnlnkIPInterfaceToIPAddressAfterWriteRequestedByIPMgmt">
+          <event>EVENT_DB_AFTER_WRITE</event>
+          <callback>OnlnkIPInterfaceToIPAddressAfterWriteRequestedByIPMgmt</callback>
+          <rank>40</rank>
+        </event_listener>
         <event_listener id="OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt">
           <event>EVENT_DB_AFTER_DELETE</event>
           <callback>OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt</callback>
@@ -3428,41 +3449,27 @@
 		return $this->Get('ipaddress_fqdn');
 	}]]></code>
         </method>
-        <method id="OnInsert">
+        <method id="OnlnkIPInterfaceToIPAddressBeforeWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnInsert()
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPInterfaceToIPAddressBeforeWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
     {
-		parent::OnInsert();
-
-		$this->Set('ipaddress_ip', $this->ComputeIP());
+	    $this->Set('ipaddress_ip', $this->ComputeIP());
 	}]]></code>
         </method>
-        <method id="OnUpdate">
+        <method id="OnlnkIPInterfaceToIPAddressAfterWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
           <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function OnUpdate()
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkIPInterfaceToIPAddressAfterWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
     {
-		parent::OnUpdate();
-
-		$this->Set('ipaddress_ip', $this->ComputeIP());
-	}]]></code>
-        </method>
-        <method id="AfterInsert">
-          <comment/>
-          <static>false</static>
-          <access>public</access>
-          <type>Overload-DBObject</type>
-          <code><![CDATA[	public function AfterInsert()
-    {
-		parent::AfterInsert();
-
-        $iIpId = $this->Get('ipaddress_id');
-        TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIpId);
+		if ($oEventData->Get('is_new')) {
+		    $iIpId = $this->Get('ipaddress_id');
+            TeemIp\TeemIp\Extension\IPManagement\Model\_IPAddress::SetStatusOnAttachment($iIpId);
+        }
 	}]]></code>
         </method>
         <method id="OnlnkIPInterfaceToIPAddressAfterDeleteRequestedByIPMgmt">
