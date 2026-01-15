@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,6 +37,8 @@ class _IPv6Range extends IPRange {
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6RangeSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv6RangeCheckToWriteRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_WRITE", 'OnIPv6RangeAfterWriteRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
     }
 
     /**
@@ -536,15 +538,16 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	function DoCheckToWrite() {
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Check To Write
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6RangeCheckToWriteRequestedByIPv6Mgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew()) {
+		if ($oEventData->Get('is_new')) {
 			$iKey = -1;
 		} else {
 			$iKey = $this->GetKey();
@@ -561,7 +564,7 @@ EOF
 		} else {
 			// Check that 1st Ip is smaller than last one
 			if ($oFirstIp->IsBiggerOrEqual($oLastIp)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:Reverted');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:Reverted'));
 
 				return;
 			}
@@ -571,7 +574,7 @@ EOF
 			$oSubnetIp = $oSubnet->Get('ip');
 			$oSubnetLastIp = $oSubnet->Get('lastip');
 			if ($oFirstIp->IsSmallerStrict($oSubnetIp) || $oSubnetLastIp->IsSmallerStrict($oLastIp)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:NotInSubnet');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:NotInSubnet'));
 
 				return;
 			}
@@ -584,31 +587,31 @@ EOF
 
 				// Check that name doesn't already exist in same subnet
 				if ($oRange->Get('range') == $sRange) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:NameExist');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:NameExist'));
 
 					return;
 				}
 				// Does the range already exist?
 				if ($oCurrentFirstIp->IsEqual($oFirstIp) && $oCurrentLastIp->IsEqual($oLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:Collision0');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:Collision0'));
 
 					return;
 				}
 				// Is new first Ip part of an existing range?
 				if ($oCurrentFirstIp->IsSmallerOrEqual($oFirstIp) && $oFirstIp->IsSmallerOrEqual($oCurrentLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:Collision1');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:Collision1'));
 
 					return;
 				}
 				// Is new last Ip part of an existing range?
 				if ($oCurrentFirstIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:Collision2');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:Collision2'));
 
 					return;
 				}
 				// Is new range including an existing one?
 				if ($oFirstIp->IsSmallerStrict($oCurrentFirstIp) && $oCurrentLastIp->IsSmallerStrict($oLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPRange:Collision3');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPRange:Collision3'));
 
 					return;
 				}
@@ -616,38 +619,14 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	protected function AfterInsert() {
-		parent::AfterInsert();
-
-		$iOrgId = $this->Get('org_id');
-		$iId = $this->GetKey();
-		$sFirstIp = $this->Get('firstip')->GetAsCannonical();
-		$sLastIp = $this->Get('lastip')->GetAsCannonical();
-
-		// Make sure all IPs belonging to range are attached to it
-
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE :firstip <= i.ip_text AND i.ip_text <= :lastip AND i.org_id = :org_id", array(
-			'firstip' => $sFirstIp,
-			'lastip' => $sLastIp,
-			'org_id' => $iOrgId,
-		)));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
-			if ($oIpRegistered->Get('range_id') != $iId) {
-				$oIpRegistered->Set('range_id', $iId);
-				$oIpRegistered->DBUpdate();
-			}
-		}
-	}
-
-	/**
-	 * @inheritdoc
-	 */
-	protected function AfterUpdate() {
-		parent::AfterUpdate();
-
+    /**
+     * Handle After Write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6RangeAfterWriteRequestedByIPv6Mgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
 		$iId = $this->GetKey();
 		$sFirstIp = $this->Get('firstip')->GetAsCannonical();
@@ -667,16 +646,18 @@ EOF
 			}
 		}
 
-		// Make sure all IPs ouside of range are NOT attached to it
-		$oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.range_id = :id AND (i.ip_text < :firstip OR :lastip < i.ip_text)", array(
-			'id' => $iId,
-			'firstip' => $sFirstIp,
-			'lastip' => $sLastIp,
-		)));
-		while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
-			$oIpRegistered->Set('range_id', 0);
-			$oIpRegistered->DBUpdate();
-		}
+        if (!$oEventData->Get('is_new')) {
+            // For existing ranges, make sure all IPs ouside of range are NOT attached to it
+            $oIpRegisteredSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Address AS i WHERE i.range_id = :id AND (i.ip_text < :firstip OR :lastip < i.ip_text)", array(
+                'id' => $iId,
+                'firstip' => $sFirstIp,
+                'lastip' => $sLastIp,
+            )));
+            while ($oIpRegistered = $oIpRegisteredSet->Fetch()) {
+                $oIpRegistered->Set('range_id', 0);
+                $oIpRegistered->DBUpdate();
+            }
+        }
 	}
 
     /**

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -47,7 +47,9 @@ class _IPv6Block extends IPBlock implements iTree {
         parent::RegisterEventListeners();
 
         $this->RegisterCRUDListener("EVENT_DB_SET_ATTRIBUTES_FLAGS", 'OnIPv6BlockSetAttributeFlagsRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_CHECK_TO_WRITE", 'OnIPv6BlockCheckToWriteRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
         $this->RegisterCRUDListener("EVENT_DB_COMPUTE_VALUES", 'OnIPv6BlockComputeValuesRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
+        $this->RegisterCRUDListener("EVENT_DB_AFTER_WRITE", 'OnIPv6BlockAfterWriteRequestedByIPv6Mgmt', 40, 'teemip-ipv6-mgmt');
     }
 
     /**
@@ -1598,15 +1600,16 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function DoCheckToWrite() {
-		// Run standard iTop checks first
-		parent::DoCheckToWrite();
-
+    /**
+     * Handle Do check to write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6BlockCheckToWriteRequestedByIPv6Mgmt($oEventData): void
+    {
 		$iOrgId = $this->Get('org_id');
-		if ($this->IsNew()) {
+		if ($oEventData->Get('is_new')) {
 			$iKey = -1;
 		} else {
 			$iKey = $this->GetKey();
@@ -1619,7 +1622,7 @@ EOF
 
 		// Check IPs are IPv6
 		if (!($oFirstIp instanceof ormIPv6) || !($oLastIp instanceof ormIPv6)) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPv6Block:NotIPv6');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPv6Block:NotIPv6'));
 		}
 
 		// Check name doesn't already exist
@@ -1630,13 +1633,13 @@ EOF
 			'org_id' => $iOrgId,
 		));
 		if ($oSRangeSet->CountExceeds(0)) {
-			$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NameExist'));
 		}
 
 		// All modifications related to first and last IPs are done through special actions (shrink, split, expand)
 		// As a consequence:
 		//	Code of shrink, split, expand functions must check coherency of these IPs
-		//	DoCheckToWrite only checks their coherency at creation.
+		//	Check To Write event only checks their coherency at creation.
 
 		// If check is performed because of split, skip checks
 		if ($this->Get('write_reason') == 'split') {
@@ -1647,7 +1650,7 @@ EOF
 		if ($this->IsNew()) {
 			// Check that 1st IP is smaller than last one
 			if ($oFirstIp->IsBiggerOrEqual($oLastIp)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Reverted');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Reverted'));
 
 				return;
 			}
@@ -1656,7 +1659,7 @@ EOF
 			// Default value may be overwritten but not under absolute minimum value.
 			if (!$this->DoCheckHasMinBlockSize($oFirstIp, $oLastIp)) {
 				$iBlockMinPrefix = $this->GetMinBlockPrefix();
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinPrefix, $this->Get('org_name'));
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:SmallerThanMinSize', $iBlockMinPrefix, $this->Get('org_name')));
 
 				return;
 			}
@@ -1664,7 +1667,7 @@ EOF
 			// If required by global parameters, check if block needs to be CIDR aligned and check last IP if needed.
 			if ($this->DoCheckMustBeCIDRAligned()) {
 				if (!$this->DoCheckCIDRAligned()) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NotCIDRAligned');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NotCIDRAligned'));
 
 					return;
 				}
@@ -1679,7 +1682,7 @@ EOF
 					$oParentFirstIp = $oParent->Get('firstip');
 					$oParentLastIp = $oParent->Get('lastip');
 					if ($oFirstIp->IsSmallerStrict($oParentFirstIp) || $oParentLastIp->IsSmallerStrict($oLastIp) || ($oFirstIp->IsEqual($oParentFirstIp) && $oLastIp->IsEqual($oParentLastIp))) {
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:NotInParent');
+                        $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:NotInParent'));
 
 						return;
 					}
@@ -1706,19 +1709,19 @@ EOF
 
 				// Does the range already exist?
 				if ($oRangeFirstIp->IsEqual($oFirstIp) && $oRangeLastIp->IsEqual($oLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision0');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision0'));
 
 					return;
 				}
 				// Is new first Ip part of an existing range?
 				if ($oRangeFirstIp->IsSmallerStrict($oFirstIp) && $oFirstIp->IsSmallerOrEqual($oRangeLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision1');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision1'));
 
 					return;
 				}
 				// Is new last Ip part of an existing range?
 				if ($oRangeFirstIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerStrict($oRangeLastIp)) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision2');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:IPBlock:Collision2'));
 
 					return;
 				}
@@ -1734,7 +1737,7 @@ EOF
 				'org_id' => $iOrgId,
 			));
 			if ($oSRangeSet->CountExceeds(0)) {
-				$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg');
+                $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithDelegatedBlockFromOtherOrg'));
 
 				return;
 			}
@@ -1748,7 +1751,7 @@ EOF
 					$oCurrentFirstIp = $oSRange->Get('firstip');
 					$oCurrentLastIp = $oSRange->Get('lastip');
 					if (($oCurrentFirstIp->IsSmallerOrEqual($oFirstIp) && $oFirstIp->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerOrEqual($oCurrentLastIp))) {
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg');
+                        $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfTargetOrg'));
 
 						return;
 					}
@@ -1767,7 +1770,7 @@ EOF
 					$oCurrentFirstIp = $oSRange->Get('firstip');
 					$oCurrentLastIp = $oSRange->Get('lastip');
 					if (($oCurrentFirstIp->IsSmallerStrict($oFirstIp) && $oFirstIp->IsSmallerOrEqual($oCurrentLastIp)) || ($oCurrentFirstIp->IsSmallerOrEqual($oLastIp) && $oLastIp->IsSmallerStrict($oCurrentLastIp))) {
-						$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg');
+                        $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:ConflictWithBlocksOfParentOrg'));
 
 						return;
 					}
@@ -1779,7 +1782,7 @@ EOF
 					'lastip' => $sLastIp,
 				)));
 				if ($oSRangeSet->Count() != 0) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildBlocksInParent'));
 
 					return;
 				}
@@ -1788,7 +1791,7 @@ EOF
 					'lastip' => $sLastIp,
 				)));
 				if ($oSubnetSet->Count() != 0) {
-					$this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent');
+                    $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:Delegate:IPBlock:HasChildSubnetsInParent'));
 
 					return;
 				}
@@ -1796,113 +1799,105 @@ EOF
 		}
 	}
 
-	/**
-	 * @inheritdoc
-	 */
-	public function AfterInsert() {
-		parent::AfterInsert();
+    /**
+     * Handle After write event
+     *
+     * @param $oEventData
+     * @return void
+     */
+    public function OnIPv6BlockAfterWriteRequestedByIPv6Mgmt($oEventData): void
+    {
+        $iOrgId = $this->Get('org_id');
+        $iKey = $this->GetKey();
+        $iParentId = $this->Get('parent_id');
+        $oFirstIp = $this->Get('firstip');
+        $oLastIp = $this->Get('lastip');
 
-		$iOrgId = $this->Get('org_id');
-		$iKey = $this->GetKey();
-		$iParentOrgId = $this->Get('parent_org_id');
-		$iParentId = $this->Get('parent_id');
-		$oFirstIp = $this->Get('firstip');
-		$oLastIp = $this->Get('lastip');
-		$sFirstIp = $oFirstIp->ToString();
-		$sLastIp = $oLastIp->ToString();
+        if ($oEventData->Get('is_new')) {
+            $iParentOrgId = $this->Get('parent_org_id');
+            $sFirstIp = $oFirstIp->ToString();
+            $sLastIp = $oLastIp->ToString();
 
-		// Look for all blocks attached to parent of block being created and contained within new block
-		// Attach them to new block
-		$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.org_id = $iOrgId AND b.id != $iKey"));
-		while ($oSRange = $oSRangeSet->Fetch()) {
-			$oRangeFirstIp = $oSRange->Get('firstip');
-			$oRangeLastIp = $oSRange->Get('lastip');
+            // Look for all blocks attached to parent of block being created and contained within new block
+            // Attach them to new block
+            $oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = '$iParentId' AND b.org_id = $iOrgId AND b.id != $iKey"));
+            while ($oSRange = $oSRangeSet->Fetch()) {
+                $oRangeFirstIp = $oSRange->Get('firstip');
+                $oRangeLastIp = $oSRange->Get('lastip');
 
-			if ($oFirstIp->IsSmallerOrEqual($oRangeFirstIp) && $oRangeLastIp->IsSmallerOrEqual($oLastIp)) {
-				$oSRange->Set('parent_id', $iKey);
-				$oSRange->DBUpdate();
-			}
-		}
+                if ($oFirstIp->IsSmallerOrEqual($oRangeFirstIp) && $oRangeLastIp->IsSmallerOrEqual($oLastIp)) {
+                    $oSRange->Set('parent_id', $iKey);
+                    $oSRange->DBUpdate();
+                }
+            }
 
-		// If block is delegated, look for blocks from $iOrgId at the top of the tree that are contained within new block
-		// Attach them to new block
-		if ($iParentOrgId != 0) {
-			$oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = 0 AND :firstip <= b.firstip AND b.lastip <= :lastip AND b.org_id = $iOrgId", array(
-				'firstip' => $sFirstIp,
-				'lastip' => $sLastIp,
-			)));
-			while ($oSRange = $oSRangeSet->Fetch()) {
-				$oSRange->Set('parent_id', $iKey);
-				$oSRange->DBUpdate();
-			}
-		}
+            // If block is delegated, look for blocks from $iOrgId at the top of the tree that are contained within new block
+            // Attach them to new block
+            if ($iParentOrgId != 0) {
+                $oSRangeSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Block AS b WHERE b.parent_id = 0 AND :firstip <= b.firstip AND b.lastip <= :lastip AND b.org_id = $iOrgId", array(
+                    'firstip' => $sFirstIp,
+                    'lastip' => $sLastIp,
+                )));
+                while ($oSRange = $oSRangeSet->Fetch()) {
+                    $oSRange->Set('parent_id', $iKey);
+                    $oSRange->DBUpdate();
+                }
+            }
 
-		// If block is not at the top (all subnets are attached to a block), 
-		//	Look for all subnets attached to parent block contained within new block
-		//	Attach them to new block
-		if ($iParentId != 0) {
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
-			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$oSubnetFirstIp = $oSubnet->Get('ip');
-				$oSubnetLastIp = $oSubnet->Get('lastip');
+            // If block is not at the top (all subnets are attached to a block),
+            //	Look for all subnets attached to parent block contained within new block
+            //	Attach them to new block
+            if ($iParentId != 0) {
+                $oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iParentId' AND s.org_id = $iOrgId"));
+                while ($oSubnet = $oSubnetSet->Fetch()) {
+                    $oSubnetFirstIp = $oSubnet->Get('ip');
+                    $oSubnetLastIp = $oSubnet->Get('lastip');
 
-				if ($oFirstIp->IsSmallerOrEqual($oSubnetFirstIp) && $oSubnetLastIp->IsSmallerOrEqual($oLastIp)) {
-					$oSubnet->Set('block_id', $iKey);
-					$oSubnet->DBUpdate();
-				}
-			}
-		}
+                    if ($oFirstIp->IsSmallerOrEqual($oSubnetFirstIp) && $oSubnetLastIp->IsSmallerOrEqual($oLastIp)) {
+                        $oSubnet->Set('block_id', $iKey);
+                        $oSubnet->DBUpdate();
+                    }
+                }
+            }
 
-		// If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
-		if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId)) {
-			$iPrefix = $this->GetMinTheoriticalBlockPrefix();
-			if ($iPrefix >= IPV6_SUBNET_MAX_PREFIX) {
-				$aValues = array(
-					'org_id' => $iOrgId,
-					'ipconfig_id' => $this->Get('ipconfig_id'),
-					'requestor_id' => $this->Get('requestor_id'),
-					'block_id' => $iKey,
-					'ip' => $oFirstIp,
-					'mask' => $iPrefix,
-					'allocation_date' => time(),
-				);
-				$oSubnet = MetaModel::NewObject('IPv6Subnet', $aValues);
-				$oSubnet->DBInsert();
-			}
-		}
-	}
+            // If block has a LIR as origin at creation, we create a subnet of the same size in the mean time.
+            if (($this->Get('origin') == 'lir') && ($iParentOrgId != $iOrgId)) {
+                $iPrefix = $this->GetMinTheoriticalBlockPrefix();
+                if ($iPrefix >= IPV6_SUBNET_MAX_PREFIX) {
+                    $aValues = array(
+                        'org_id' => $iOrgId,
+                        'ipconfig_id' => $this->Get('ipconfig_id'),
+                        'requestor_id' => $this->Get('requestor_id'),
+                        'block_id' => $iKey,
+                        'ip' => $oFirstIp,
+                        'mask' => $iPrefix,
+                        'allocation_date' => time(),
+                    );
+                    $oSubnet = MetaModel::NewObject('IPv6Subnet', $aValues);
+                    $oSubnet->DBInsert();
+                }
+            }
+        } else {
+            if ($this->Get('write_reason') != 'split') {
+                // Look for all subnets attached to block that may have fallen out of block
+                //	Attach them to parent block
+                //	Note: previous check have made sure a parent block exists
+                $oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $iOrgId"));
+                while ($oSubnet = $oSubnetSet->Fetch()) {
+                    $oSubnetFirstIp = $oSubnet->Get('ip');
+                    $oSubnetLastIp = $oSubnet->Get('lastip');
 
-	/**
-	 * @inheritdoc
-	 */
-	public function AfterUpdate() {
-		if ($this->Get('write_reason') != 'split') {
-			$iOrgId = $this->Get('org_id');
-			$iKey = $this->GetKey();
-			$iParentId = $this->Get('parent_id');
-			$oFirstIp = $this->Get('firstip');
-			$oLastIp = $this->Get('lastip');
-
-			// Look for all subnets attached to block that may have fallen out of block
-			//	Attach them to parent block 
-			//	Note: previous check have made sure a parent block exists
-			$oSubnetSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT IPv6Subnet AS s WHERE s.block_id = '$iKey' AND s.org_id = $iOrgId"));
-			while ($oSubnet = $oSubnetSet->Fetch()) {
-				$oSubnetFirstIp = $oSubnet->Get('ip');
-				$oSubnetLastIp = $oSubnet->Get('lastip');
-
-				if ($oSubnetLastIp->IsSmallerStrict($oFirstIp) || $oLastIp->IsSmallerStrict($oSubnetFirstIp)) {
-					if ($iParentId == 0) {
-						throw new ApplicationException(Dict::Format('UI:IPManagement:Action:Modify:IPv6Block:ParentIdNull', $iKey));
-					}
-					$oSubnet->Set('block_id', $iParentId);
-					$oSubnet->DBUpdate();
-				}
-			}
-		}
-		$this->Set('write_reason', 'none');
-
-		parent::AfterUpdate();
+                    if ($oSubnetLastIp->IsSmallerStrict($oFirstIp) || $oLastIp->IsSmallerStrict($oSubnetFirstIp)) {
+                        if ($iParentId == 0) {
+                            throw new ApplicationException(Dict::Format('UI:IPManagement:Action:Modify:IPv6Block:ParentIdNull', $iKey));
+                        }
+                        $oSubnet->Set('block_id', $iParentId);
+                        $oSubnet->DBUpdate();
+                    }
+                }
+            }
+            $this->Set('write_reason', 'none');
+        }
 	}
 
     /**
