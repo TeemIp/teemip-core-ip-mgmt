@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1168,7 +1168,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collision : la dernière IP appartient à une plage existante !',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collision : la nouvelle plage inclut une plage existante !',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Seules les plages DHCP pevent être liées à des serveurs DHCP !',
-	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un serveur DHCP ne peut être que de classe Serveur ou Machine Virtuelle !',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un serveur DHCP ne peut être que de classe NAS, Equipement Réseau, Serveur ou Machine Virtuelle !',
 
 	// Display pointers to previous and next Ranges
 	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Précédent',

@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1168,7 +1168,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Bereichskollision: die letzte IP gehört zu einem schon existierenden Bereich!',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Bereichskollision: der Bereich umfasst einen schon bestehenden!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Nur DHCP-Bereiche können mit DHCP-Servern verknüpft werden!',
-	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Ein DHCP-Server kann nur der Klasse Server oder virtuelle Maschine angehören!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Ein DHCP-Server kann nur der Klasse NAS, Netzwerk-Gerät, Server oder virtuelle Maschine angehören!',
 
 	// Display pointers to previous and next Ranges
 	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Vorherige',

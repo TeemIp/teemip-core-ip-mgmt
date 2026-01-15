@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1184,7 +1184,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Colisão de faixa: o último IP pertence a uma faixa existente!',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Colisão de faixa: a nova faixa inclui uma existente!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Apenas faixas DHCP podem ser vinculadas a servidores DHCP!',
-	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Um servidor DHCP só pode ser da classe Servidor ou Máquina Virtual!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Um servidor DHCP só pode ser da classe NAS, Dispositivo de Red, Servidor ou Máquina Virtual!',
 
 	// Display pointers to previous and next Ranges
 	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Anterior',

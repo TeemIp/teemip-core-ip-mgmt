@@ -2502,27 +2502,25 @@
         </field>
       </fields>
       <methods>
-        <method id="DoCheckToWrite">
+        <method id="OnlnkFunctionalCIToIPRangeCheckToWriteRequestedByIPMgmt">
           <comment/>
           <static>false</static>
-          <access>protected</access>
-          <type>Overload-cmdbAbstractObject</type>
-          <code><![CDATA[ public function DoCheckToWrite()
+          <access>public</access>
+          <type>EventListener</type>
+          <code><![CDATA[    public function OnlnkFunctionalCIToIPRangeCheckToWriteRequestedByIPMgmt(Combodo\iTop\Service\Events\EventData $oEventData): void
  {
-    parent::DoCheckToWrite();
-
     $iCI = $this->Get('functionalci_id');
     $oCI = MetaModel::GetObject('FunctionalCI', $iCI, false);
     if (!is_null($oCI)) {
         if (!in_array($oCI->Get('finalclass'), array('Server', 'NAS', 'NetworkDevice', 'VirtualMachine'))) {
-            $this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass'));
         }
     }
     $iIPRange = $this->Get('iprange_id');
     $oIPRange = MetaModel::GetObject('IPRange', $iCI, false);
     if (!is_null($oIPRange)) {
         if ($oIPRange->Get('dhcp') != 'dhcp_yes') {
-            $this->m_aCheckIssues[] = Dict::Format('UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:NotDHCPRange');
+            $this->AddCheckIssue(Dict::Format('UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:NotDHCPRange'));
         }
     }
 

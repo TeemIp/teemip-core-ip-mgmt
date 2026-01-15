@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1168,7 +1168,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Collisione di intervallo: l\'ultimo IP appartiene a un intervallo esistente !',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Collisione di intevallo: il nuovo intervallo ne include uno esistente!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Solo gli intervalli DHCP possono essere collegati ai server DHCP!',
-	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un server DHCP può essere solo di classe Server o Macchina virtuale!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'Un server DHCP può essere solo di classe NAS, Dispositivo de rete, Server o Macchina virtuale!',
 
 	// Display pointers to previous and next Ranges
 	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Precedente',

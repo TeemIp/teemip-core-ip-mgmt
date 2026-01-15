@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -1184,7 +1184,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:IPManagement:Action:New:IPRange:Collision2' => 'Range collision: last IP belongs to an existing range!',
 	'UI:IPManagement:Action:New:IPRange:Collision3' => 'Range collision: new range includes an existing one!',
 	'UI:IPManagement:Action:Update:IPRange:NonDHCPRangeWithServers' => 'Only DHCP ranges can be linked to DHCP servers!',
-	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'A DHCP server can only be of Server or Virtual Machine class!',
+	'UI:IPManagement:Action:New:lnkFunctionalCIToIPRange:WrongCIClass' => 'A DHCP server can only be of NAS, NNetwork Device, Server or Virtual Machine class!',
 
 	// Display pointers to previous and next Ranges
 	'UI:IPManagement:Action:DisplayPrevious:IPRange' => 'Previous',
