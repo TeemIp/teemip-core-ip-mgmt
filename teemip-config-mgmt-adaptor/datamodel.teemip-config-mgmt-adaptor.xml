@@ -386,8 +386,8 @@
       </fields>
       <methods>
         <method id="GetAttributeParams" _delta="define">
-          <comment>/**&#13;
-	 * Provides attributes' parameters &#13;
+          <comment>/**
+	 * Provides attributes' parameters
    */</comment>
           <static>false</static>
           <access>public</access>
