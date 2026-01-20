@@ -443,6 +443,9 @@
             <item id="ipaddress" _delta="delete"/>
             <item id="ipgateway" _delta="delete"/>
             <item id="ipmask" _delta="delete"/>
+            <item id="operational_status" _delta="define">
+              <rank>20</rank>
+            </item>
           </items>
         </list>
       </presentation>
