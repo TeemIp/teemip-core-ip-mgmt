@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.2" load="strict"
-  xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/TeemIp/teemip-core-ip-mgmt/refs/heads/master/teemip-framework/doc/design.xsd">
+  xsi:noNamespaceSchemaLocation="../teemip-framework/doc/design.xsd">
   <classes>
     <class id="VirtualMachine" _delta="must_exist">
       <fields>
