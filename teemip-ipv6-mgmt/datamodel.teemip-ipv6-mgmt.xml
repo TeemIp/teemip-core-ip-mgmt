@@ -1574,12 +1574,6 @@
     </menu>
   </menus>
   <constants>
-    <constant id="IPV6_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">18446744073709551616</constant>
-    <constant id="IPV6_BLOCK_MIN_MASK" xsi:type="string" _delta="define">FFFF:FFFF:FFFF:FFFF:0000:0000:0000:0000</constant>
-    <constant id="IPV6_BLOCK_MAX_PREFIX" xsi:type="integer" _delta="define">1</constant>
-    <constant id="IPV6_BLOCK_MIN_PREFIX" xsi:type="integer" _delta="define">64</constant>
-    <constant id="IPV6_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">64</constant>
-    <constant id="IPV6_SUBNET_MIN_PREFIX" xsi:type="integer" _delta="define">128</constant>
     <constant id="IPV6_SUBNET_MASK" xsi:type="string" _delta="define">FFFF:FFFF:FFFF:FFFF:0000:0000:0000:0000</constant>
     <constant id="IPV6_SUBNET_MAX_IPS_TO_LIST" xsi:type="integer" _delta="define">1024</constant>
     <constant id="IPV6_MAX_BIT" xsi:type="integer" _delta="define">128</constant>

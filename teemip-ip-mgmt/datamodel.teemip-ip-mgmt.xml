@@ -4200,11 +4200,6 @@
   </menus>
   <constants>
     <constant id="MAX_NB_OF_IPS_TO_DISPLAY" xsi:type="integer" _delta="define">4096</constant>
-    <constant id="MAX_IPV4_VALUE" xsi:type="integer" _delta="define">4294967295</constant>
-    <constant id="IPV4_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">1</constant>
-    <constant id="IPV4_BLOCK_MIN_SIZE_MAX" xsi:type="integer" _delta="define">2147483648</constant>
-    <constant id="IPV4_SUBNET_MAX_SIZE" xsi:type="integer" _delta="define">65536</constant>
-    <constant id="IPV4_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">16</constant>
     <constant id="ACTION_NONE" xsi:type="integer" _delta="define">0</constant>
     <constant id="ACTION_SHRINK" xsi:type="integer" _delta="define"> 1</constant>
     <constant id="ACTION_SPLIT" xsi:type="integer" _delta="define">2</constant>

@@ -961,6 +961,17 @@
   </menus>
   <constants>
     <constant id="GLOBAL_CONFIG_DEFAULT_NAME" xsi:type="string" _delta="define">IP Settings</constant>
+    <constant id="MAX_IPV4_VALUE" xsi:type="integer" _delta="define">4294967295</constant>
+    <constant id="IPV4_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">1</constant>
+    <constant id="IPV4_BLOCK_MIN_SIZE_MAX" xsi:type="integer" _delta="define">2147483648</constant>
+    <constant id="IPV4_SUBNET_MAX_SIZE" xsi:type="integer" _delta="define">65536</constant>
+    <constant id="IPV4_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">16</constant>
+    <constant id="IPV6_BLOCK_MIN_SIZE" xsi:type="integer" _delta="define">18446744073709551616</constant>
+    <constant id="IPV6_BLOCK_MIN_MASK" xsi:type="string" _delta="define">FFFF:FFFF:FFFF:FFFF:0000:0000:0000:0000</constant>
+    <constant id="IPV6_BLOCK_MAX_PREFIX" xsi:type="integer" _delta="define">1</constant>
+    <constant id="IPV6_BLOCK_MIN_PREFIX" xsi:type="integer" _delta="define">64</constant>
+    <constant id="IPV6_SUBNET_MAX_PREFIX" xsi:type="integer" _delta="define">64</constant>
+    <constant id="IPV6_SUBNET_MIN_PREFIX" xsi:type="integer" _delta="define">128</constant>
     <constant id="NETWORK_IP_CODE" xsi:type="string" _delta="define">Network IP</constant>
     <constant id="NETWORK_IP_DESC" xsi:type="string" _delta="define">Subnet IP</constant>
     <constant id="GATEWAY_IP_CODE" xsi:type="string" _delta="define">Gateway</constant>
