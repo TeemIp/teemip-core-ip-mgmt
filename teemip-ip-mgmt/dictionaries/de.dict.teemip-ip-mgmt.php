@@ -1242,7 +1242,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'Die Adresse kann nicht zum CI zugewiesen werden : %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Funktionales CI existiert nicht!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'Das Attribut ist schreibgeschützt!',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Das Attribut kann nicht gespeichert werden, da es von einer externen Quelle synchronisiert wird!',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'Das Attribut kann nicht gespeichert werden, da es von der externen Quelle %1$s synchronisiert wird!',
 	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'Neuer FQDN kollidiert mit Duplikatsregeln, die in der Konfiguration definiert sind!',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'Adresse ist bereits vergeben!',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Die Adresse kann nicht freigegeben werden: %1$s',

@@ -1242,7 +1242,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'L\'adresse ne peut pas être allouée au CI: %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Le CI fonctionnel n\'existe pas !',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'L\'attribut est en lecture seule !',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut est synchronisé depuis une source externe !',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'L\'attribut est synchronisé depuis la source externe %1$s !',
 	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'Le nouveau FQDN sera en conflit avec la régle de duplication définie dans la configuration',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'L\'address est déjà allouée !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'L\'adresse ne peut pas être désallouée: %1$s',

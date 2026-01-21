@@ -1242,7 +1242,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'Cannot allocate CI to IP: %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'Functional CI does not exist!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'CI\'s attribute is R/O!',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of a synchronization!',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of synchronization %1$s !',
 	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'Il nuovo FQDN entrerà in conflitto con le regole duplicate definite nella configurazione',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'L\'indirizzo è già assegnato !',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Address cannot be un-allocated: %1$s',

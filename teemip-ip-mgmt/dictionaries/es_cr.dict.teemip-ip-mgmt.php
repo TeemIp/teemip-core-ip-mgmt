@@ -1242,7 +1242,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'No se puede asignar EC a la IP: %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'EC Functional no existe!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'CI\'s attribute is R/O!',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of a synchronization!',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'CI\'s attribute is slave of synchronization %1$s !',
 	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'New FQDN will conflict with duplicate rules defined in configuration',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'Address is already allocated!',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'Dirección no puede ser desasignada: %1$s',

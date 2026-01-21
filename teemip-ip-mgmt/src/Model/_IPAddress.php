@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -58,17 +58,18 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetStatusOnAttachment($iIpId = null)
 	{
-		/** @var \IPAddress $oIP */
-		if ($iIpId != null) {
-			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if ($oIP != null) {
-				if ($oIP->Get('status') != 'allocated') {
-					$oIP->Set('status', 'allocated');
-					$oIP->Set('allocation_date', time());
-					$oIP->DBUpdate();
-				}
-			}
-		}
+		if ($iIpId == null) return;
+
+        /** @var \IPAddress $oIP */
+		$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+		if ($oIP == null) return;
+
+        // Make sure status attribute is not read only or slave of a synchro
+        $iFlags = $oIP->GetAttributeFlags('status');
+        if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) return;
+
+		$oIP->Set('status', 'allocated');   // allocation_date is managed at IPObject level
+        $oIP->DBUpdate();
 	}
 
 	/**
@@ -83,42 +84,42 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetStatusOnDetachment($iIpId = null)
 	{
-		// Set old IP to 'released' status if
+		// Set IP to 'released' status if
 		//   - no non obsolete device is having an external key to the IP
 		//   - no non obsolete device is using the IP through one of its interface
-		/** @var \IPAddress $oIP */
-		if ($iIpId != null) {
-			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if ($oIP != null) {
-				if ($oIP->Get('status') == 'allocated') {
-					$aObsoleteStatusList = IPUtils::GetStatusThatDefineObsoleteCIs();
+		if ($iIpId == null) return;
 
-					// Check if IP is attached to other CIs through main attributes
-					//   - Can only be the case if attach_already_allocated_ips is set to 'yes', but check anyway
-					$aCIs = $oIP->GetHostingCIs();
-					foreach ($aCIs as $key => $aCI) {
-						$oCI = $aCI['ci'];
-                        if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
-						if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
-							return;
-						}
-					}
+        /** @var \IPAddress $oIP */
+        $oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+        if ($oIP == null) return;
 
-					// Check if IP is attached to other CIs through one of their interface
-					$aCIs = $oIP->GetHostingThroughInterfacesCIs();
-					foreach ($aCIs as $key => $aCI) {
-						$oCI = $aCI['ci'];
-                        if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
-                        if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) {
-                            return;
-                        }
-					}
+        // Make sure status attribute is not read only or slave of a synchro
+        $iFlags = $oIP->GetAttributeFlags('status');
+        if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) return;
 
-					$oIP->Set('status', 'released');    // release_date is managed at IPObject level
-					$oIP->DBUpdate();
-				}
-			}
-		}
+		if ($oIP->Get('status') != 'allocated') return;
+
+		$aObsoleteStatusList = IPUtils::GetStatusThatDefineObsoleteCIs();
+
+        // Check if IP is attached to other CIs through main attributes
+        //   - Can only be the case if attach_already_allocated_ips is set to 'yes', but check anyway
+		$aCIs = $oIP->GetHostingCIs();
+        foreach ($aCIs as $key => $aCI) {
+            $oCI = $aCI['ci'];
+            if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
+            if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) return;
+        }
+
+        // Check if IP is attached to other CIs through one of their interface
+        $aCIs = $oIP->GetHostingThroughInterfacesCIs();
+        foreach ($aCIs as $key => $aCI) {
+            $oCI = $aCI['ci'];
+            if (!MetaModel::IsValidAttCode(get_class($oCI), 'status')) continue;
+            if (!in_array($oCI->Get('status'), $aObsoleteStatusList)) return;
+        }
+
+		$oIP->Set('status', 'released');    // release_date is managed at IPObject level
+		$oIP->DBUpdate();
 	}
 
 	/**
@@ -137,26 +138,29 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetShortNameOnAttachment($iOrgId = null, $sShortName = '', $iIpId = null)
 	{
-		/** @var \IPAddress $oIP */
-		if ($iOrgId != null) {
-			$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
-			if ($sCopyCINameToShortName == 'yes') {
-				if ($iIpId != null) {
-					// Set short name on attached IP
-					$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-					if ($oIP != null) {
-						// Make sure name format is ok
-						$oAttDef = MetaModel::GetAttributeDef('IPAddress', 'short_name');
-						if ($oAttDef->CheckFormat($sShortName)) {
-							// Check for duplicates
-							if ($oIP->IsFqdnUnique($sShortName)) {
-								$oIP->Set('short_name', $sShortName);
-								$oIP->DBUpdate();
-							}
-						}
-					}
-				}
-			}
+		if ($iOrgId == null) return;
+        if ($iIpId == null) return;
+
+        // Does configuration allow that ?
+        $sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
+		if ($sCopyCINameToShortName != 'yes') return;
+
+        /** @var \IPAddress $oIP */
+		$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+		if ($oIP == null) return;
+
+        // Make sure short_name attribute is not read only or slave of a synchro
+        $iFlags = $oIP->GetAttributeFlags('short_name');
+        if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) return;
+
+        // Make sure name format is ok
+        $oAttDef = MetaModel::GetAttributeDef('IPAddress', 'short_name');
+        if (!$oAttDef->CheckFormat($sShortName)) return;
+
+        // Check for duplicates
+		if ($oIP->IsFqdnUnique($sShortName)) {
+			$oIP->Set('short_name', $sShortName);
+			$oIP->DBUpdate();
 		}
 	}
 
@@ -173,24 +177,28 @@ class _IPAddress extends IPObject
 	 */
 	public static function SetShortNameOnDetachment($iIpId = null)
 	{
-		/** @var \IPAddress $oIP */
-		if ($iIpId != null) {
-			$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
-			if ($oIP != null) {
-				$iOrgId = $oIP->Get('org_id');
-				$sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
-				if ($sCopyCINameToShortName == 'yes') {
-					$oIP->Set('short_name', '');
-					$sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $iOrgId);
-					if ($sComputeFqdnWithEmptyShortname == 'yes') {
-						$oIP->Set('fqdn', $oIP->Get('domain_name'));
-					} else {
-						$oIP->Reset('fqdn');
-					}
-					$oIP->DBUpdate();
-				}
-			}
-		}
+		if ($iIpId == null) return;
+
+        /** @var \IPAddress $oIP */
+		$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
+		if ($oIP == null) return;
+
+        $iOrgId = $oIP->Get('org_id');
+        $sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
+        if ($sCopyCINameToShortName != 'yes') return;
+
+        // Make sure short_name attribute is not read only or slave of a synchro
+        $iFlags = $oIP->GetAttributeFlags('short_name');
+        if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) return;
+
+        $oIP->Set('short_name', '');
+        $sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $iOrgId);
+        if ($sComputeFqdnWithEmptyShortname == 'yes') {
+            $oIP->Set('fqdn', $oIP->Get('domain_name'));
+        } else {
+            $oIP->Reset('fqdn');
+        }
+        $oIP->DBUpdate();
 	}
 
 	/**
@@ -532,10 +540,12 @@ class _IPAddress extends IPObject
 		if (is_null($oCI)) {
 			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist'));
 		}
-		$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
-		if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+        $aReasons = [];
+		$iFlags = $oCI->GetAttributeFlags($sIPAttribute, $aReasons);
+		if ($iFlags & OPT_ATT_SLAVE) {
 			// Attribute is read only because of a synchro
-			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized'));
+            $sReason = (is_array($aReasons[0]) && array_key_exists('name', $aReasons[0])) ? $aReasons[0]['name'] : '';
+			return (Dict::Format('UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized', $sReason));
 		}
 		if ($iFlags & OPT_ATT_READONLY) {
 			// Attribute is read only
@@ -583,8 +593,8 @@ class _IPAddress extends IPObject
 				$oCISearch = DBObjectSearch::FromOQL("SELECT $sCI WHERE $sIPAttribute = $iKey");
 				$oCISet = new CMDBObjectSet($oCISearch);
 				while ($oCI = $oCISet->Fetch()) {
-					$iFlags = $oCI->GetFormAttributeFlags($sIPAttribute);
-					if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+					$iFlags = $oCI->GetAttributeFlags($sIPAttribute);
+					if ($iFlags & OPT_ATT_SLAVE) {
 						// Attribute is read only because of a synchro
 						return (Dict::Format('UI:IPManagement:Action:UnAllocate:IPAddress:AttributeIsSynchronized'));
 					}
@@ -622,11 +632,8 @@ class _IPAddress extends IPObject
 		$oCI->DBUpdate();
 
 		// Update IP status
-		if ($this->Get('status') != 'allocated') {
-			$this->Set('status', 'allocated');
-			$this->Set('allocation_date', time());
-			$this->DBUpdate();
-		}
+		$this->Set('status', 'allocated');    // allocation_date is managed at IPObject level
+		$this->DBUpdate();
 	}
 
 	/**

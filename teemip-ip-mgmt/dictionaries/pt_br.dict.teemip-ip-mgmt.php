@@ -1258,7 +1258,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:IPManagement:Action:Allocate:IPAddress:CannotAllocateCI' => 'Não é possível alocar o CI ao IP: %1$s',
 	'UI:IPManagement:Action:Allocate:IPAddress:CIDoesNotExist' => 'O CI Funcional não existe!',
 	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsReadOnly' => 'O atributo do CI é Somente Leitura!',
-	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'O atributo do CI é escravo de uma sincronização!',
+	'UI:IPManagement:Action:Allocate:IPAddress:AttributeIsSynchronized' => 'O atributo do CI é escravo da sincronização %1$s !',
 	'UI:IPManagement:Action:Allocate:IPAddress:FQDNIsConflicting' => 'O novo FQDN entrará em conflito com as regras de duplicação definidas na configuração',
 	'UI:IPManagement:Action:Allocate:IPAddress:IPAlreadyAllocated' => 'O endereço já está alocado!',
 	'UI:IPManagement:Action:Unallocate:IPAddress:CannotBeUnallocated' => 'O endereço não pode ser desalocado: %1$s',
