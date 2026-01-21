@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -68,6 +68,7 @@ class _IPConfig extends cmdbAbstractObject
 	const FUNCTION_IP_ALLOW_DUPLICATE_NAME = 'ip_allow_duplicate_name';
 	const FUNCTION_PING_BEFORE_ASSIGN = 'ping_before_assign';
 	const FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME = 'ip_copy_ci_name_to_shortname';
+    const FUNCTION_IP_RESET_SHORTNAME_ON_DETACHMENT = 'ip_reset_shortname_on_detachment';
 	const FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME = 'compute_fqdn_with_empty_shortname';
 	const FUNCTION_IP_SYMETRICAL_NAT = 'ip_symetrical_nat';
 	const FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION = 'ip_allocate_on_ci_production';
@@ -78,6 +79,7 @@ class _IPConfig extends cmdbAbstractObject
 	const DEFAULT_FUNCTION_IP_ALLOW_DUPLICATE_NAME = 'ipdup_no';
 	const DEFAULT_FUNCTION_PING_BEFORE_ASSIGN = 'ping_no';
 	const DEFAULT_FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME = 'no';
+    const DEFAULT_FUNCTION_IP_RESET_SHORTNAME_ON_DETACHMENT = 'yes';
 	const DEFAULT_FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME = 'no';
 	const DEFAULT_FUNCTION_IP_SYMETRICAL_NAT = 'no';
 	const DEFAULT_FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION = 'yes';
@@ -232,6 +234,7 @@ class _IPConfig extends cmdbAbstractObject
 			static::FUNCTION_IP_ALLOW_DUPLICATE_NAME => static::DEFAULT_FUNCTION_IP_ALLOW_DUPLICATE_NAME,
 			static::FUNCTION_PING_BEFORE_ASSIGN => static::DEFAULT_FUNCTION_PING_BEFORE_ASSIGN,
 			static::FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME => static::DEFAULT_FUNCTION_IP_COPY_CI_NAME_TO_SHORTNAME,
+            static::FUNCTION_IP_RESET_SHORTNAME_ON_DETACHMENT => static::DEFAULT_FUNCTION_IP_RESET_SHORTNAME_ON_DETACHMENT,
 			static::FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME => static::DEFAULT_FUNCTION_COMPUTE_FQDN_WITH_EMPTY_SHORTNAME,
 			static::FUNCTION_IP_SYMETRICAL_NAT => static::DEFAULT_FUNCTION_IP_SYMETRICAL_NAT,
 			static::FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION => static::DEFAULT_FUNCTION_IP_ALLOCATE_ON_CI_PRODUCTION,

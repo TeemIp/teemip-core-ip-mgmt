@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2024 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -179,6 +179,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:no+' => '',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes' => 'Oui',
 	'Class:IPConfig/Attribute:ip_copy_ci_name_to_shortname/Value:yes+' => '',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment' => 'Réinitialise le nom court de l\'IP quand elle est détachée d\'un CI',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment+' => '',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment/Value:no' => 'Non',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment/Value:no+' => '',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment/Value:yes' => 'Oui',
+    'Class:IPConfig/Attribute:ip_reset_shortname_on_detachment/Value:yes+' => '',
 	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname' => 'Calcule le FQDN quand le nom court est vide',
 	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname+' => '',
 	'Class:IPConfig/Attribute:compute_fqdn_with_empty_shortname/Value:no' => 'Non',

@@ -183,22 +183,22 @@ class _IPAddress extends IPObject
 		$oIP = MetaModel::GetObject('IPAddress', $iIpId, false /* MustBeFound */);
 		if ($oIP == null) return;
 
-        $iOrgId = $oIP->Get('org_id');
-        $sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $iOrgId);
-        if ($sCopyCINameToShortName != 'yes') return;
-
         // Make sure short_name attribute is not read only or slave of a synchro
         $iFlags = $oIP->GetAttributeFlags('short_name');
         if ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE)) return;
 
-        $oIP->Set('short_name', '');
-        $sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $iOrgId);
-        if ($sComputeFqdnWithEmptyShortname == 'yes') {
-            $oIP->Set('fqdn', $oIP->Get('domain_name'));
-        } else {
-            $oIP->Reset('fqdn');
+        $iOrgId = $oIP->Get('org_id');
+        $sResetShortNameOnDetachment = IPConfig::GetFromGlobalIPConfig('ip_reset_shortname_on_detachment', $iOrgId);
+        if ($sResetShortNameOnDetachment == 'yes') {
+            $oIP->Set('short_name', '');
+            $sComputeFqdnWithEmptyShortname = IPConfig::GetFromGlobalIPConfig('compute_fqdn_with_empty_shortname', $iOrgId);
+            if ($sComputeFqdnWithEmptyShortname == 'yes') {
+                $oIP->Set('fqdn', $oIP->Get('domain_name'));
+            } else {
+                $oIP->Reset('fqdn');
+            }
+            $oIP->DBUpdate();
         }
-        $oIP->DBUpdate();
 	}
 
 	/**
@@ -653,7 +653,7 @@ class _IPAddress extends IPObject
 		$this->RemoveFromInterfaces();
 
 		// Update IP status
-		$this->Set('status', 'unassigned');
+		$this->Set('status', 'released');
 		$this->DBUpdate();
 	}
 
@@ -869,8 +869,8 @@ class _IPAddress extends IPObject
             if ($sStatus == 'released') {
                 $sOriginalStatus = $this->GetOriginal('status');
                 if ($sStatus != $sOriginalStatus) {
-                    $sCopyCINameToShortName = IPConfig::GetFromGlobalIPConfig('ip_copy_ci_name_to_shortname', $this->Get('org_id'));
-                    if ($sCopyCINameToShortName == 'yes') {
+                    $sResetShortNameOnDetachment = IPConfig::GetFromGlobalIPConfig('ip_reset_shortname_on_detachment', $this->Get('org_id'));
+                    if ($sResetShortNameOnDetachment == 'yes') {
                         $this->Set('short_name', '');
                     }
                 }

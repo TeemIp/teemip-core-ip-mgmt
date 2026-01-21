@@ -428,6 +428,20 @@
           <is_null_allowed>false</is_null_allowed>
           <display_style>radio_horizontal</display_style>
         </field>
+        <field id="ip_reset_shortname_on_detachment" xsi:type="AttributeEnum">
+          <values>
+            <value id="no">
+              <code>no</code>
+            </value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+          </values>
+          <sql>ip_reset_shortname_on_detachment</sql>
+          <default_value>yes</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
         <field id="compute_fqdn_with_empty_shortname" xsi:type="AttributeEnum">
           <values>
             <value id="no">
@@ -665,20 +679,23 @@
                     <item id="ip_copy_ci_name_to_shortname">
                       <rank>40</rank>
                     </item>
-                    <item id="compute_fqdn_with_empty_shortname">
+                    <item id="ip_reset_shortname_on_detachment">
                       <rank>50</rank>
                     </item>
-                    <item id="ip_allocate_on_ci_production">
+                    <item id="compute_fqdn_with_empty_shortname">
                       <rank>60</rank>
                     </item>
-                    <item id="ip_release_on_ci_obsolete">
+                    <item id="ip_allocate_on_ci_production">
                       <rank>70</rank>
                     </item>
-                    <item id="ip_unassign_on_no_ci">
+                    <item id="ip_release_on_ci_obsolete">
                       <rank>80</rank>
                     </item>
-                    <item id="ip_release_on_subnet_release">
+                    <item id="ip_unassign_on_no_ci">
                       <rank>90</rank>
+                    </item>
+                    <item id="ip_release_on_subnet_release">
+                      <rank>100</rank>
                     </item>
                   </items>
                 </item>
