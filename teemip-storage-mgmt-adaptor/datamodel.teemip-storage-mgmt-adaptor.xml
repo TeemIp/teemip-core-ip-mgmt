@@ -170,9 +170,6 @@
                     <item id="datacenterdevice_id">
                       <rank>30</rank>
                     </item>
-                    <item id="location_id">
-                      <rank>32</rank>
-                    </item>
                     <item id="org_id">
                       <rank>33</rank>
                     </item>

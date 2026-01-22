@@ -373,6 +373,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>ipaddress_id</ext_key_to_remote>
+          <display_style>property</display_style>
           <duplicates/>
         </field>
         <field id="macaddress" xsi:type="AttributeString" _delta="delete"/>
@@ -498,6 +499,7 @@
           <count_min>0</count_min>
           <count_max>0</count_max>
           <ext_key_to_remote>vrf_id</ext_key_to_remote>
+          <display_style>property</display_style>
           <duplicates/>
         </field>
         <field id="org_id" xsi:type="AttributeExternalField" _delta="define_if_not_exists">
@@ -515,14 +517,8 @@
             <item id="vlans_list">
               <rank>10</rank>
             </item>
-            <item id="vrfs_list">
-              <rank>20</rank>
-            </item>
-            <item id="ip_list">
-              <rank>30</rank>
-            </item>
             <item id="col:col1">
-              <rank>40</rank>
+              <rank>20</rank>
               <items>
                 <item id="fieldset:Class:NetworkInterface:baseinfo">
                   <rank>10</rank>
@@ -536,9 +532,6 @@
                     <item id="connectableci_id">
                       <rank>30</rank>
                     </item>
-                    <item id="location_id">
-                      <rank>32</rank>
-                    </item>
                      <item id="org_id">
                       <rank>33</rank>
                     </item>
@@ -550,9 +543,9 @@
               </items>
             </item>
             <item id="col:col2">
-              <rank>50</rank>
+              <rank>30</rank>
               <items>
-                <item id="fieldset:Class:NetworkInterface:moreinfo">
+                <item id="fieldset:Class:IPInterface:l2info">
                   <rank>10</rank>
                   <items>
                     <item id="macaddress">
@@ -560,6 +553,17 @@
                     </item>
                     <item id="speed">
                       <rank>20</rank>
+                    </item>
+                  </items>
+                </item>
+                <item id="fieldset:Class:IPInterface:l3info">
+                  <rank>20</rank>
+                  <items>
+                    <item id="ip_list">
+                      <rank>20</rank>
+                    </item>
+                    <item id="vrfs_list">
+                      <rank>30</rank>
                     </item>
                   </items>
                 </item>

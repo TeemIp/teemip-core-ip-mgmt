@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -310,6 +310,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:NetworkDeviceVirtualInterface/Attribute:status/Value:inactive+' => '',
 	'Class:NetworkDeviceVirtualInterface/Attribute:networkdevice_id' => 'Network device',
 	'Class:NetworkDeviceVirtualInterface/Attribute:networkdevice_id+' => '',
+    'Class:NetworkDeviceVirtualInterface/Attribute:org_id' => 'Organization',
+    'Class:NetworkDeviceVirtualInterface/Attribute:org_id+' => 'Organization that the network device belongs to',
+    'Class:NetworkDeviceVirtualInterface/Attribute:rack_id' => 'Rack',
+    'Class:NetworkDeviceVirtualInterface/Attribute:rack_id+' => 'Rack hosting the network device',
 	'Class:NetworkDeviceVirtualInterface/Attribute:vlans_list' => 'VLANs',
 	'Class:NetworkDeviceVirtualInterface/Attribute:vlans_list+' => '',
 	'Class:NetworkDeviceVirtualInterface/Attribute:vrfs_list' => 'VRFs',

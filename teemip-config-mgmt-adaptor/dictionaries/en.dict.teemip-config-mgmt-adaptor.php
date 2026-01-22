@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -45,6 +45,9 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 
 Dict::Add('EN US', 'English', 'English', array(
+    'Class:IPInterface:l1info' => 'Layer 1 Information',
+    'Class:IPInterface:l2info' => 'Layer 2 Information',
+    'Class:IPInterface:l3info' => 'Layer 3 Information',
 	'Class:IPInterface/Attribute:ip_list' => 'IP Addresses',
 	'Class:IPInterface/Attribute:ip_list+' => '',
 ));
@@ -67,9 +70,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete' => 'Obsolete',
 	'Class:PhysicalInterface/Attribute:status/Value:obsolete+' => '',
     'Class:PhysicalInterface/Attribute:org_id' => 'Organization',
-    'Class:PhysicalInterface/Attribute:org_id+' => 'Organization of the connectable CI that the interface belongs to',
+    'Class:PhysicalInterface/Attribute:org_id+' => 'Organization that the connectable CI belongs to',
     'Class:PhysicalInterface/Attribute:location_id' => 'Location',
-    'Class:PhysicalInterface/Attribute:location_id+' => 'Location of the connectable CI that the interface belongs to',
+    'Class:PhysicalInterface/Attribute:location_id+' => 'Location that the connectable CI belongs to',
 ));
 
 //

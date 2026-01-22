@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2023 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -45,6 +45,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
+    'Class:IPInterface:l1info' => 'Informazioni sul livello 1',
+    'Class:IPInterface:l2info' => 'Informazioni sul livello 2',
+    'Class:IPInterface:l3info' => 'Informazioni sul livello 3',
 	'Class:IPInterface/Attribute:ip_list' => 'Indirizzi IP',
 	'Class:IPInterface/Attribute:ip_list+' => '',
 ));
