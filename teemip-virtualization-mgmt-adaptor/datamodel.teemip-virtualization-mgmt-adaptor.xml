@@ -475,15 +475,6 @@
           <duplicates/>
         </field>
       </fields>
-      <presentation>
-        <details>
-          <items>
-            <item id="logicalinterfaces_list" _delta="define">
-              <rank>60</rank>
-            </item>
-          </items>
-        </details>
-      </presentation>
     </class>
     <class id="VRF" _delta="must_exist">
       <fields>

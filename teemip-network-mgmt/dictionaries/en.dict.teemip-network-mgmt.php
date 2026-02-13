@@ -378,6 +378,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:VLAN/Attribute:physicalinterface_list+' => 'List of all physical network interfaces attached to the VLAN',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Network device virtual interfaces',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'List of all network device virtual interfaces attached to the VLAN',
+	'Class:VLAN/Attribute:interfaces_list' => 'Network interfaces',
+	'Class:VLAN/Attribute:interfaces_list+' => 'List of all network interfaces attached to this VLAN',
 ));
 
 //
