@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -367,8 +367,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:VLAN/Attribute:physicalinterface_list+' => 'Liste aller physischen Netzwerkschnittstellen, welche dem VLAN zugeordnet sind',
-	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'virtuelle Netzwerkschnittstellen',
+	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Virtuelle Netzwerkschnittstellen',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'Liste aller virtuellen Netzwerkschnittstellen, welche dem VLAN zugeordnet sind',
+    'Class:VLAN/Attribute:interfaces_list' => 'Netzwerkschnittstellen',
+    'Class:VLAN/Attribute:interfaces_list+' => 'Liste aller Netzwerkschnittstellen, welche dem VLAN zugeordnet sind',
 ));
 
 //

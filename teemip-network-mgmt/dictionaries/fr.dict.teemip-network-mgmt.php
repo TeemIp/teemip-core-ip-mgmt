@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -369,6 +369,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:VLAN/Attribute:physicalinterface_list+' => 'Liste de toutes les interfaces physiques des CIs liés au VLAN',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Interfaces virtuelles d\'équipements réseaux',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'Liste de toutes les interfaces virtuelles des équipements réseaux liées au VLAN',
+    'Class:VLAN/Attribute:interfaces_list' => 'Interfaces réseaux',
+    'Class:VLAN/Attribute:interfaces_list+' => 'Liste de toutes les interfaces réseaux liées au VLAN',
 ));
 
 //

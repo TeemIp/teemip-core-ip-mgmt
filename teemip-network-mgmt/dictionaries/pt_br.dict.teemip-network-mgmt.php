@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2025 TeemIp
+ * @copyright   Copyright (C) 2010-2026 TeemIp
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -373,6 +373,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:VLAN/Attribute:physicalinterface_list+' => 'Lista de todas as interfaces de rede físicas anexadas à VLAN',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list' => 'Interfaces virtuais de dispositivo de rede',
 	'Class:VLAN/Attribute:networkdevicevirtualinterfaces_list+' => 'Lista de todas as interfaces virtuais de dispositivo de rede anexadas à VLAN',
+    'Class:VLAN/Attribute:interfaces_list' => 'Interfaces de rede',
+    'Class:VLAN/Attribute:interfaces_list+' => 'Lista de todas as interfaces de rede anexadas à VLAN',
 ));
 
 //
