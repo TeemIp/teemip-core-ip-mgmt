@@ -2031,13 +2031,65 @@
           <ext_key_to_remote>networkdevicevirtualinterface_id</ext_key_to_remote>
           <duplicates/>
         </field>
+        <field id="interfaces_list" xsi:type="AttributeDashboard" _delta="define" >
+          <definition>
+            <title>Class:VLAN/Attribute:interfaces_list+</title>
+            <cells>
+              <cell id="1">
+                <rank>10</rank>
+                <dashlets>
+                  <dashlet id="physicalinterfaces_list" xsi:type="DashletObjectList">
+                    <rank>10</rank>
+                    <title>Class:VLAN/Attribute:physicalinterfaces_list</title>
+                    <query><![CDATA[SELECT lnkPhysicalInterfaceToVLAN WHERE vlan_id = :this->id]]></query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="2">
+                <rank>20</rank>
+                <dashlets>
+                  <dashlet id="logicalinterfaces_list" xsi:type="DashletObjectList">
+                    <rank>10</rank>
+                    <title>Class:VLAN/Attribute:logicalinterfaces_list</title>
+                    <query><![CDATA[SELECT lnkLogicalInterfaceToVLAN WHERE vlan_id = :this->id]]></query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="3">
+                <rank>30</rank>
+                <dashlets>
+                  <dashlet id="networkdevicevirtualinterfaces_list" xsi:type="DashletObjectList">
+                    <rank>10</rank>
+                    <title>Class:VLAN/Attribute:networkdevicevirtualinterfaces_list</title>
+                    <query><![CDATA[SELECT lnkNetworkDeviceVirtualInterfaceToVLAN WHERE vlan_id = :this->id]]></query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+              <cell id="4">
+                <rank>40</rank>
+                <dashlets>
+                  <dashlet id="aggregatelinks_list" xsi:type="DashletObjectList">
+                    <rank>10</rank>
+                    <title>Class:VLAN/Attribute:aggregatelinks_list</title>
+                    <query><![CDATA[SELECT lnkAggregateLinkToVLAN WHERE vlan_id = :this->id]]></query>
+                    <menu>true</menu>
+                  </dashlet>
+                </dashlets>
+              </cell>
+            </cells>
+          </definition>
+        </field>
       </fields>
       <presentation>
         <details>
           <items>
-            <item id="networkdevicevirtualinterfaces_list" _delta="define">
-              <rank>70</rank>
+            <item id="interfaces_list" _delta="define">
+              <rank>50</rank>
             </item>
+            <item id="physicalinterfaces_list" _delta="delete_if_exists"/>
           </items>
         </details>
       </presentation>
